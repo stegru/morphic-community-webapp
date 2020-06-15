@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
-    <h1>About Morphic Community</h1>
-  </div>
+    <v-main>
+        <h1>About Morphic Community</h1>
+    </v-main>
 </template>

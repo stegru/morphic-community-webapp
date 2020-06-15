@@ -1,12 +1,21 @@
 <template>
-  <div class="home">
-    <h1>Morphic Community</h1>
-  </div>
+    <v-main>
+        <h1>Morphic Community</h1>
+        <AuthForm :submitForm="loginUser" buttonText="Login"/>
+    </v-main>
 </template>
 
 <script>
 
+import AuthForm from '@/components/AuthForm'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: {
+    AuthForm
+  },
+  methods: {
+    async loginUser (loginInfo) {}
+  }
 }
 </script>
