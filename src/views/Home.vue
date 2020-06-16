@@ -1,8 +1,8 @@
 <template>
-    <v-container>
+    <b-container>
         <h1>Morphic Community</h1>
         <AuthForm :submitForm="loginUser" buttonText="Login"/>
-    </v-container>
+    </b-container>
 </template>
 
 <script>

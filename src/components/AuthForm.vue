@@ -1,25 +1,17 @@
 <template>
-  <v-form v-model="valid">
-    <v-text-field v-model="userInfo.name" label="Name" :rules="[required('name')]"
-                  v-if="hasName" />
+  <b-form v-model="valid">
 
-    <v-text-field v-model="userInfo.email" label="Email" :rules="[required('email'), emailFormat()]"/>
+    <b-form-input v-model="userInfo.email" label="Email" placeholder="Enter your email"/>
 
-    <v-text-field v-model="userInfo.password"
-                  label="Password"
-                  :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="showPassword = !showPassword"
-                  counter=true
-                  :rules="[required('password'), minLength('password', 8)]"
-                  />
+    <b-form-input v-model="userInfo.password" label="Password" placeholder="Enter your password" type="password"/>
 
-    <v-btn @click="submitForm(userInfo)" :disabled="!valid">{{ buttonText }}</v-btn>
-  </v-form>
+    <b-button @click="submitForm(userInfo)">Login</b-button>
+  </b-form>
 </template>
 
 <script>
 
-import validations from '@/utils/validations'
+// import validations from '@/utils/validations'
 
 export default {
   data () {
@@ -29,10 +21,10 @@ export default {
       userInfo: {
         email: '',
         password: ''
-      },
-      ...validations
+      }/*,
+      ...validations*/
     }
   },
-  props: ['submitForm', 'buttonText', 'hasName']
+  props: ['submitForm']
 }
 </script>

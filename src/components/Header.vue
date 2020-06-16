@@ -1,30 +1,18 @@
 <template>
-<v-app-bar
-      app
-      color="primary"
-      dark
-    >
-    <div class="d-flex align-center">
-        <h2>Morphic Community</h2>
-    </div>
 
-    <v-spacer></v-spacer>
+  <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar-brand href="#">Morphic Community</b-navbar-brand>
 
-    <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-    </nav>
+    <b-navbar-nav>
+        <b-nav-item to="/">Home</b-nav-item>
+        <b-nav-item to="/about">About</b-nav-item>
+    </b-navbar-nav>
 
-    <v-spacer></v-spacer>
-
-    <v-btn
-        href="#"
-        text
-    >
-    <span class="mr-2">Login</span>
-        <v-icon>mdi-login</v-icon>
-    </v-btn>
-</v-app-bar>
+    <b-navbar-nav>
+        <b-nav-item to="/">Login</b-nav-item>
+        <b-nav-item to="/registration">Registration</b-nav-item>
+    </b-navbar-nav>
+</b-navbar>
 </template>
 
 <script>
@@ -33,14 +21,3 @@ export default {
   name: 'Header'
 }
 </script>
-
-<style>
-nav a {
-  font-weight: bold;
-  color: #FFFFFF !important;
-}
-
-nav a.router-link-exact-active {
-  color: #BBDEFB !important;
-}
-</style>
