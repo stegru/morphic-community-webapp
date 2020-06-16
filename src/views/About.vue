@@ -1,5 +1,5 @@
 <template>
-    <v-main>
+    <v-container>
         <h1>About Morphic Community</h1>
-    </v-main>
+    </v-container>
 </template>
