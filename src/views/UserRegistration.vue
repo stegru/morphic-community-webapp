@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <b-container>
     <h1>Register</h1>
     <AuthForm :submitForm="registerUser" buttonText="Register" hasName=true />
-  </v-container>
+  </b-container>
 </template>
 
 <script>
