@@ -5,9 +5,3 @@
     <b-link to="/" class="btn btn-primary">Login</b-link>
   </div>
 </template>
-
-<script>
-  export default {
-    name: 'InfoLogin'
-  }
-</script>

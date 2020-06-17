@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <Header />
-    <router-view/>
+    <router-view />
     <Footer />
   </b-container>
 </template>
