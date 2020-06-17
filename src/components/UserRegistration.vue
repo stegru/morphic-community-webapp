@@ -43,54 +43,53 @@
 </template>
 
 <script>
+  import { validationMixin } from 'vuelidate'
+  import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
 
-import { validationMixin } from 'vuelidate'
-import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
-
-export default {
-  mixins: [validationMixin],
-  data () {
-    return {
-      userInfo: {
-        communityName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+  export default {
+    mixins: [validationMixin],
+    data () {
+      return {
+        userInfo: {
+          communityName: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        }
       }
-    }
-  },
-  validations: {
-    userInfo: {
-      communityName: {
-        required
-      },
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(6)
-      },
-      confirmPassword: {
-        required,
-        sameAsPassword: sameAs('password')
-      }
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v.userInfo[name]
-      return $dirty ? !$error : null
     },
-    onSubmit () {
-      this.$v.userInfo.$touch()
-      if (this.$v.userInfo.$anyError) {
-        return
+    validations: {
+      userInfo: {
+        communityName: {
+          required
+        },
+        email: {
+          required,
+          email
+        },
+        password: {
+          required,
+          minLength: minLength(6)
+        },
+        confirmPassword: {
+          required,
+          sameAsPassword: sameAs('password')
+        }
       }
+    },
+    methods: {
+      validateState (name) {
+        const { $dirty, $error } = this.$v.userInfo[name]
+        return $dirty ? !$error : null
+      },
+      onSubmit () {
+        this.$v.userInfo.$touch()
+        if (this.$v.userInfo.$anyError) {
+          return
+        }
 
-      alert('Form Submitted')
+        alert('Form Submitted')
+      }
     }
   }
-}
 </script>
