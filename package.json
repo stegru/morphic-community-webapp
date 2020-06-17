@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node_modules/.bin/eslint src/ && vue-cli-service serve",
+    "dev": "node_modules/.bin/eslint src/ && NODE_ENV=local vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "node_modules/.bin/eslint src/"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
