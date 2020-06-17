@@ -12,7 +12,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: {
-      title: 'Home'
+      title: 'Home :: Morphic Community'
     }
   },
   {
@@ -20,7 +20,7 @@ const routes = [
     name: 'About',
     component: About,
     meta: {
-      title: 'About'
+      title: 'About :: Morphic Community'
     }
   },
   {
@@ -28,13 +28,19 @@ const routes = [
     name: 'Registration',
     component: Registration,
     meta: {
-      title: 'Community Registration'
+      title: 'Community Registration :: Morphic Community'
     }
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+router.afterEach((to) => {
+  Vue.nextTick(() => {
+    document.title = to.meta.title
+  })
 })
 
 export default router
