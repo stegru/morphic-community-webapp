@@ -1,21 +1,18 @@
 <template>
     <b-container>
         <h1>Morphic Community</h1>
-        <AuthForm :submitForm="loginUser" buttonText="Login"/>
+        <UserLogin/>
     </b-container>
 </template>
 
 <script>
 
-import AuthForm from '@/components/AuthForm'
+import UserLogin from '@/components/UserLogin'
 
 export default {
   name: 'Home',
   components: {
-    AuthForm
-  },
-  methods: {
-    async loginUser (loginInfo) {}
+    UserLogin
   }
 }
 </script>
