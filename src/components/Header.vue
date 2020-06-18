@@ -5,8 +5,8 @@
     </b-navbar-brand>
 
     <b-navbar-nav>
-      <b-nav-item to="/" active>Home</b-nav-item>
-      <b-nav-item to="/about">About</b-nav-item>
+      <b-nav-item to="/" exact-active-class="active">Home</b-nav-item>
+      <b-nav-item to="/about" exact-active-class="active">About</b-nav-item>
     </b-navbar-nav>
 
     <b-navbar-nav class="ml-auto">
@@ -14,7 +14,7 @@
         <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
         Login
       </b-nav-item>
-      <b-nav-item to="/registration">
+      <b-nav-item to="/registration" exact-active-class="active">
         <b-icon-person-fill></b-icon-person-fill>
         Registration
       </b-nav-item>
