@@ -14,11 +14,11 @@
 </template>
 
 <script>
-  import InfoLogin from '@/components/InfoLogin'
+import InfoLogin from '@/components/InfoLogin'
 
-  export default {
-    components: {
-      InfoLogin
-    }
+export default {
+  components: {
+    InfoLogin
   }
+}
 </script>

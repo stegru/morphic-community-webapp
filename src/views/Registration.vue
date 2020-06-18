@@ -15,13 +15,13 @@
 </template>
 
 <script>
-  import UserRegistration from '@/components/UserRegistration'
-  import InfoLogin from '@/components/InfoLogin'
+import UserRegistration from '@/components/UserRegistration'
+import InfoLogin from '@/components/InfoLogin'
 
-  export default {
-    components: {
-      UserRegistration,
-      InfoLogin
-    }
+export default {
+  components: {
+    UserRegistration,
+    InfoLogin
   }
+}
 </script>
