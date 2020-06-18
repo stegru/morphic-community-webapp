@@ -5,3 +5,4 @@ services:
       context: .
     ports:
       - "8000:80"
+      - "9180:9180"
