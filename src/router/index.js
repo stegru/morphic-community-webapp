@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import AboutMorphic from '@/views/AboutMorphic.vue'
 import AboutUs from '@/views/AboutUs.vue'
+import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
 
@@ -31,6 +32,14 @@ const routes = [
     component: AboutUs,
     meta: {
       title: 'About Us :: Morphic Community'
+    }
+  },
+  {
+    path: '/contact-us',
+    name: 'Contact Us',
+    component: Contacts,
+    meta: {
+      title: 'Contact Us :: Morphic Community'
     }
   },
   {
