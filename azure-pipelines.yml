@@ -43,13 +43,13 @@ variables:
   ${{ if eq(variables['deployRepoRef'], '') }}:
     deployRepoRef: master
 
-resources:
-  repositories:
-    - repository: deploy-morphiccommunity
-      type: github
-      endpoint: oregondesignservices
-      name: oregondesignservices/deploy-morphiccommunity
-      ref: $(deployRepoRef)
+#resources:
+#  repositories:
+#    - repository: deploy-morphiccommunity
+#      type: github
+#      endpoint: oregondesignservices
+#      name: oregondesignservices/deploy-morphiccommunity
+#      ref: $(deployRepoRef)
 
 pool:
   vmImage: "ubuntu-18.04"
