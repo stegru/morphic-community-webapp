@@ -38,13 +38,13 @@ variables:
   ${{ if eq(variables['deployRepoRef'], '') }}:
     deployRepoRef: master
 
-#resources:
-#  repositories:
-#    - repository: deploy-morphiccommunity
-#      type: github
-#      endpoint: oregondesignservices
-#      name: oregondesignservices/deploy-morphiccommunity
-#      ref: $(deployRepoRef)
+resources:
+  repositories:
+    - repository: deploy-morphicweb
+      type: github
+      endpoint: oregondesignservices
+      name: oregondesignservices/deploy-morphicweb
+      ref: $(deployRepoRef)
 
 pool:
   vmImage: "ubuntu-18.04"
@@ -67,37 +67,37 @@ stages:
               command: buildAndPush
               Dockerfile: Dockerfile
               tags: $(imageTags)
-#  - stage: update_deploy_tag
-#    jobs:
-#      - job: update_deploy_tag
-#        condition: ne(variables['newDeployTag'], '')
-#        steps:
-#          - checkout: deploy-morphiccommunity
-#            persistCredentials: true
-#            path: deploy-morphiccommunity
-#          - task: Bash@3
-#            env:
-#              NEWTAG: $(newDeployTag)
-#              BRANCH: $(deployRepoRef)
-#            inputs:
-#              targetType: 'inline'
-#              workingDirectory: base/
-#              script: |
-#                set -e
-#                set -x
-#                echo "installing kustomize"
-#                wget "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" -O install_kustomize.sh
-#                bash install_kustomize.sh
-#
-#                git checkout ${BRANCH}
-#
-#                ls -al
-#                echo "setting new image tag"
-#                ./kustomize edit set image morphicworld/morphiccommunity=morphicworld/morphiccommunity:${NEWTAG}
-#
-#                cat kustomization.yaml
-#
-#                git config --global user.email "buildmaster@raisingthefloor.org"
-#                git config --global user.name "buildmaster"
-#                git commit kustomization.yaml -m "buildmaster: updating tag to ${NEWTAG}"
-#                git push
+  - stage: update_deploy_tag
+    jobs:
+      - job: update_deploy_tag
+        condition: ne(variables['newDeployTag'], '')
+        steps:
+          - checkout: deploy-morphicweb
+            persistCredentials: true
+            path: deploy-morphicweb
+          - task: Bash@3
+            env:
+              NEWTAG: $(newDeployTag)
+              BRANCH: $(deployRepoRef)
+            inputs:
+              targetType: 'inline'
+              workingDirectory: base/
+              script: |
+                set -e
+                set -x
+                echo "installing kustomize"
+                wget "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" -O install_kustomize.sh
+                bash install_kustomize.sh
+
+                git checkout ${BRANCH}
+
+                ls -al
+                echo "setting new image tag"
+                ./kustomize edit set image morphicworld/morphiccommunity=morphicworld/morphiccommunity:${NEWTAG}
+
+                cat kustomization.yaml
+
+                git config --global user.email "buildmaster@raisingthefloor.org"
+                git config --global user.name "buildmaster"
+                git commit kustomization.yaml -m "buildmaster: updating community tag to ${NEWTAG}"
+                git push
