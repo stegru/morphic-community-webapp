@@ -5,6 +5,7 @@
         <b-nav>
           <b-nav-item to="/" active>Home</b-nav-item>
           <b-nav-item to="/about">About</b-nav-item>
+          <b-nav-item to="/terms-of-use">Terms of Use</b-nav-item>
         </b-nav>
       </b-col>
       <b-col class="text-right">

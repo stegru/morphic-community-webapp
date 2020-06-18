@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
+import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
 
 Vue.use(VueRouter)
@@ -21,6 +22,14 @@ const routes = [
     component: About,
     meta: {
       title: 'About :: Morphic Community'
+    }
+  },
+  {
+    path: '/terms-of-use',
+    name: 'Terms of Use',
+    component: Terms,
+    meta: {
+      title: 'Terms Of Use :: Morphic Community'
     }
   },
   {
