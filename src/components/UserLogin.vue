@@ -37,50 +37,54 @@
 </template>
 
 <script>
-  import { validationMixin } from 'vuelidate'
-  import { required, minLength, email } from 'vuelidate/lib/validators'
-  import { login } from '@/services/userService'
+import { validationMixin } from 'vuelidate'
+import { required, minLength, email } from 'vuelidate/lib/validators'
+import { login } from '@/services/userService'
 
-  export default {
-    mixins: [validationMixin],
-    data () {
-      return {
-        userInfo: {
-          email: '',
-          password: '',
-          keep_logged: 1
-        }
-      }
-    },
-    validations: {
+export default {
+  mixins: [validationMixin],
+  data () {
+    return {
       userInfo: {
-        email: {
-          required,
-          email
-        },
-        password: {
-          required,
-          minLength: minLength(6)
-        }
+        email: '',
+        password: '',
+        keep_logged: 1
       }
-    },
-    methods: {
-      validateState (name) {
-        const { $dirty, $error } = this.$v.userInfo[name]
-        return $dirty ? !$error : null
+    }
+  },
+  validations: {
+    userInfo: {
+      email: {
+        required,
+        email
       },
-      async onSubmit () {
-        this.$v.userInfo.$touch()
-        if (this.$v.userInfo.$anyError) {
-          return
-        }
-        try {
-          let response = await login(this.$v.userInfo.$model)
-          alert('Successful login')
-        } catch (error) {
+      password: {
+        required,
+        minLength: minLength(6)
+      }
+    }
+  },
+  methods: {
+    validateState (name) {
+      const { $dirty, $error } = this.$v.userInfo[name]
+      return $dirty ? !$error : null
+    },
+    async onSubmit () {
+      this.$v.userInfo.$touch()
+      if (this.$v.userInfo.$anyError) {
+        return
+      }
+      try {
+        let response = await login(this.$v.userInfo.$model)
+        alert('Successful login')
+      } catch (error) {
+        if (error.response) {
           console.log(error.response)
+        } else {
+          console.log('error::Network Error')
         }
       }
     }
   }
+}
 </script>
