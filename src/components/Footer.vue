@@ -5,6 +5,7 @@
         <b-nav>
           <b-nav-item to="/" active>Home</b-nav-item>
           <b-nav-item to="/about-morphic">About Morphic</b-nav-item>
+          <b-nav-item to="/our-communities">Our Communities</b-nav-item>
           <b-nav-item to="/about-us">About Us</b-nav-item>
           <b-nav-item to="/contact-us">Contact Us</b-nav-item>
           <b-nav-item to="/terms-of-use">Terms of Use</b-nav-item>

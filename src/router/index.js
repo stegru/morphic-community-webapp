@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import AboutMorphic from '@/views/AboutMorphic.vue'
+import Communities from '@/views/Communities.vue'
 import AboutUs from '@/views/AboutUs.vue'
 import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
@@ -24,6 +25,14 @@ const routes = [
     component: AboutMorphic,
     meta: {
       title: 'About Morphic :: Morphic Community'
+    }
+  },
+  {
+    path: '/our-communities',
+    name: 'Our Communities',
+    component: Communities,
+    meta: {
+      title: 'Our Communities :: Morphic Community'
     }
   },
   {
