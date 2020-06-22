@@ -6,20 +6,7 @@
         <br/>
         <p>Etiam gravida, orci ut fermentum pharetra, diam mauris aliquam ex, in malesuada felis sem in libero. Aliquam ac risus scelerisque, suscipit enim eget, facilisis orci. Ut dignissim consectetur neque, id dapibus nisl efficitur a. Aenean lobortis tempus libero, vitae mattis risus aliquet ut. Nunc egestas arcu nunc, ut eleifend enim pharetra a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus suscipit neque non tortor vestibulum pharetra. Integer laoreet enim quis nisi scelerisque laoreet. Morbi sit amet enim quis mauris viverra venenatis quis vitae nisl.</p>
         <br/>
-        <ul id="list">
-          <div v-for="item in items">
-            <div>
-              {{ item.community }}
-              <b-link>{{ item.url }}</b-link>
-              type:
-              {{ item.type }}
-              members:
-              {{ item.members }}
-              <b-button v-if="item.status === 'joinable'" variant="success">Ask to join</b-button>
-              <b-button v-else>Full</b-button>
-            </div>
-          </div>
-        </ul>
+        <Pagination :items="items"/>
       </b-col>
       <b-col cols="3">
         <InfoLogin />
@@ -30,11 +17,13 @@
 
 <script>
 import InfoLogin from '@/components/InfoLogin'
+import Pagination from '@/components/Pagination'
 import { getPublicCommunities } from '@/services/communityService'
 
 export default {
   components: {
-    InfoLogin
+    InfoLogin,
+    Pagination
   },
   data: () => ({
     items: null
