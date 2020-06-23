@@ -21,7 +21,7 @@
         <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
         Login
       </b-nav-item>
-      <b-nav-item to="/registration" exact-active-class="active">
+      <b-nav-item v-if="!isLoggedIn" to="/registration" exact-active-class="active">
         <b-icon-person-fill></b-icon-person-fill>
         Registration
       </b-nav-item>

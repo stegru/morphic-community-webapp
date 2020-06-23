@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { HTTP } from '@/services/index'
-import { login } from '@/services/userService'
+import { login, register } from '@/services/userService'
 
 Vue.use(Vuex)
 
@@ -12,8 +12,13 @@ export default new Vuex.Store({
     user: {}
   },
   mutations: {
-    auth_success (state) {
-      state.status = 'loading'
+    auth_request (state) {
+      state.status = 'pending'
+    },
+    auth_success (state, token, user) {
+      state.status = 'success'
+      state.token = token
+      state.user = user
     },
     auth_error (state) {
       state.status = 'error'
@@ -24,11 +29,30 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    register ({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        register(user)
+          .then(resp => {
+            const token = resp.data.token || 'TS9LoD"!Fz5!|rED4cS{y:o2#M*l.t' // only for dev purposes
+            const user = resp.data.user
+            localStorage.setItem('token', token)
+            HTTP.defaults.headers.common.Authorization = token
+            commit('auth_success', token, user)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit('auth_error', err)
+            localStorage.removeItem('token')
+            reject(err)
+          })
+      })
+    },
     login ({ commit }, user) {
       return new Promise((resolve, reject) => {
         login(user)
           .then(resp => {
-            const token = resp.data.token || 'TS9LoD"!Fz5!|rED4cS{y:o2#M*l.t'
+            const token = resp.data.token || 'TS9LoD"!Fz5!|rED4cS{y:o2#M*l.t' // only for dev purposes
             const user = resp.data.user
             localStorage.setItem('token', token)
             HTTP.defaults.headers.common.Authorization = token

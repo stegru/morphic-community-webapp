@@ -45,7 +45,6 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
-import { register } from '@/services/userService'
 
 export default {
   mixins: [validationMixin],
@@ -88,16 +87,9 @@ export default {
       if (this.$v.form.$anyError) {
         return
       }
-      try {
-        let response = await register(this.$v.form.$model)
-        alert('Form Submitted')
-      } catch (error) {
-        if (error.response) {
-          console.log(error.response)
-        } else {
-          console.log('error::Network Error')
-        }
-      }
+      this.$store.dispatch('register', this.$v.form.$model)
+        .then(() => this.$router.push('/'))
+        .catch(err => console.log(err))
     }
   }
 }

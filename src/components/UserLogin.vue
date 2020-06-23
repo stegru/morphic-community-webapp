@@ -74,9 +74,7 @@ export default {
         return
       }
       this.$store.dispatch('login', this.$v.userInfo.$model)
-        .then(() => {
-          location.reload()
-        })
+        .then(() => this.$router.push('/our-communities'))
         .catch(err => console.log(err))
     }
   }
