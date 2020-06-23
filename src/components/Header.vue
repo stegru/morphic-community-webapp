@@ -13,7 +13,11 @@
     </b-navbar-nav>
 
     <b-navbar-nav class="ml-auto">
-      <b-nav-item to="/">
+      <b-nav-item v-if="isLoggedIn" @click="logout">
+        <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
+        Logout
+      </b-nav-item>
+      <b-nav-item v-else to="/">
         <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
         Login
       </b-nav-item>
@@ -24,3 +28,19 @@
     </b-navbar-nav>
   </b-navbar>
 </template>
+
+<script>
+export default {
+  computed: {
+    isLoggedIn: function () { return this.$store.getters.isLoggedIn }
+  },
+  methods: {
+    logout: function () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/')
+        })
+    }
+  }
+}
+</script>
