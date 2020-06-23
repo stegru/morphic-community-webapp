@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 import Home from '@/views/Home.vue'
 import AboutMorphic from '@/views/AboutMorphic.vue'
 import Communities from '@/views/Communities.vue'
@@ -32,7 +33,8 @@ const routes = [
     name: 'Our Communities',
     component: Communities,
     meta: {
-      title: 'Our Communities :: Morphic Community'
+      title: 'Our Communities :: Morphic Community',
+      authRoute: true
     }
   },
   {
@@ -71,6 +73,18 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.authRoute)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/')
+  } else {
+    next()
+  }
 })
 
 router.afterEach((to) => {

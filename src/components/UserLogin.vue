@@ -39,7 +39,6 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email } from 'vuelidate/lib/validators'
-import { login } from '@/services/userService'
 
 export default {
   mixins: [validationMixin],
@@ -69,21 +68,16 @@ export default {
       const { $dirty, $error } = this.$v.userInfo[name]
       return $dirty ? !$error : null
     },
-    async onSubmit () {
+    onSubmit () {
       this.$v.userInfo.$touch()
       if (this.$v.userInfo.$anyError) {
         return
       }
-      try {
-        let response = await login(this.$v.userInfo.$model)
-        alert('Successful login')
-      } catch (error) {
-        if (error.response) {
-          console.log(error.response)
-        } else {
-          console.log('error::Network Error')
-        }
-      }
+      this.$store.dispatch('login', this.$v.userInfo.$model)
+        .then(() => {
+          location.reload()
+        })
+        .catch(err => console.log(err))
     }
   }
 }
