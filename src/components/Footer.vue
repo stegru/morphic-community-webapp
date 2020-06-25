@@ -1,19 +1,36 @@
 <template>
-  <footer class="mt-5 p-1 bg-light">
+  <footer class="mt-3 mb-3 pt-4 pb-4 pl-5 pr-5 text-light">
     <b-row>
-      <b-col>
-        <b-nav>
-          <b-nav-item to="/" active>Home</b-nav-item>
-          <b-nav-item to="/about-morphic">About Morphic</b-nav-item>
-          <b-nav-item to="/our-communities">Our Communities</b-nav-item>
-          <b-nav-item to="/about-us">About Us</b-nav-item>
-          <b-nav-item to="/contact-us">Contact Us</b-nav-item>
-          <b-nav-item to="/terms-of-use">Terms of Use</b-nav-item>
+      <b-col cols="3">
+        <h5 class="text-warning">Morphic Community:</h5>
+        <b-nav vertical>
+          <b-nav-item to="/" active link-classes="text-light">Home</b-nav-item>
+          <b-nav-item to="/about-morphic" link-classes="text-light">About Morphic</b-nav-item>
+          <b-nav-item to="/our-communities" link-classes="text-light">Our Communities</b-nav-item>
+          <b-nav-item to="/about-us" link-classes="text-light">About Us</b-nav-item>
+          <b-nav-item to="/contact-us" link-classes="text-light">Contact Us</b-nav-item>
+          <b-nav-item to="/terms-of-use" link-classes="text-light">Terms of Use</b-nav-item>
         </b-nav>
       </b-col>
-      <b-col class="text-right">
-        <p class="pt-2 pr-3">Copyrights Morphic Community &copy; 2020</p>
+      <b-col cols="3">
+        <h5 class="text-warning">Morphic Lite:</h5>
+        <b-nav vertical>
+          <b-nav-item to="/" active link-classes="text-light">Home</b-nav-item>
+          <b-nav-item to="/about-morphic" link-classes="text-light">About Morphic Lite</b-nav-item>
+          <b-nav-item to="/" link-classes="text-light">Download</b-nav-item>
+          <b-nav-item to="/" link-classes="text-light">Open Source</b-nav-item>
+        </b-nav>
+      </b-col>
+      <b-col cols="6" class="text-right align-text-bottom">
+        &copy; 2020 Morphic Lite Team. All Rights Reserved.
       </b-col>
     </b-row>
   </footer>
 </template>
+
+<style>
+  footer {
+    border-radius: .3rem;
+    background-color: #002957;
+  }
+</style>

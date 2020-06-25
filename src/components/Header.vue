@@ -1,10 +1,11 @@
 <template>
-  <b-navbar toggleable="lg" type="light" variant="light" class="mb-5">
-    <b-navbar-brand href="/" title="Morphic Community">
-      <img src="/img/logo.svg" alt="Morphic Community">
+  <b-navbar toggleable="lg" type="light" variant="light" id="top">
+    <b-navbar-brand to="/" title="Morphic Community">
+      <img src="/img/logo.svg" alt="logo">
+      Morphic Community
     </b-navbar-brand>
 
-    <b-navbar-nav>
+    <b-navbar-nav class="mr-auto">
       <b-nav-item to="/" exact-active-class="active">Home</b-nav-item>
       <b-nav-item to="/about-morphic" exact-active-class="active">About Morphic</b-nav-item>
       <b-nav-item to="/our-communities" exact-active-class="active">Our Communities</b-nav-item>
@@ -12,7 +13,7 @@
       <b-nav-item to="/contact-us" exact-active-class="active">Contact Us</b-nav-item>
     </b-navbar-nav>
 
-    <b-navbar-nav class="ml-auto">
+    <b-navbar-nav>
       <b-nav-item v-if="isLoggedIn" @click="logout">
         <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
         Logout
@@ -28,6 +29,17 @@
     </b-navbar-nav>
   </b-navbar>
 </template>
+
+<style>
+  nav#top {
+    margin: 1rem 0;
+    border-radius: .3rem;
+  }
+  
+  .navbar-brand img {
+    height: 2rem;
+  }
+</style>
 
 <script>
 export default {

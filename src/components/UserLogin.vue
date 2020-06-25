@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="mb-3">Login to your Community</h4>
+    <h3 class="mb-3">Login</h3>
     <b-form @submit.stop.prevent="onSubmit">
       <b-form-group>
         <b-form-input
@@ -32,6 +32,7 @@
       </b-form-checkbox-group>
       <br>
       <b-button type="submit" variant="primary">Login</b-button>
+      <b-button to="/lost-password" variant="success">Lost Password</b-button>
     </b-form>
   </div>
 </template>
