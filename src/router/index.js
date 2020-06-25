@@ -34,7 +34,7 @@ const routes = [
     component: Communities,
     meta: {
       title: 'Our Communities :: Morphic Community',
-      authRoute: true
+      authRoute: false
     }
   },
   {

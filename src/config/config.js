@@ -5,7 +5,7 @@ const CONF = {
     BACKEND_URL: 'http://localhost:3000'
   },
   DEVELOPMENT: {
-    BACKEND_URL: ''
+    BACKEND_URL: 'http://localhost:3000'
   },
   PRODUCTION: {
     BACKEND_URL: ''
