@@ -1,7 +1,6 @@
 <template>
   <b-container>
     <Header />
-    <BlockLoginRegister />
     <router-view />
     <Footer />
   </b-container>
@@ -25,19 +24,13 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import BlockLoginRegister from '@/components/BlockLoginRegister'
 
 export default {
   name: 'App',
 
   components: {
     Header,
-    Footer,
-    BlockLoginRegister
-  },
-
-  data: () => ({
-    //
-  }),
+    Footer
+  }
 };
 </script>

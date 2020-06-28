@@ -1,6 +1,5 @@
 <template>
   <b-jumbotron bg-variant="light" id="login-register">
-    <b-button-close />
     <b-row>
       <b-col lg="4"></b-col>
       <b-col md="6" lg="4">

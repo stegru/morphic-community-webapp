@@ -57,7 +57,6 @@ export default new Vuex.Store({
             localStorage.setItem('token', token)
             HTTP.defaults.headers.common.Authorization = token
             commit('auth_success', token, user)
-            console.log(resp)
             resolve(resp)
           })
           .catch(err => {
