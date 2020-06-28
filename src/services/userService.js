@@ -8,11 +8,14 @@ export function login ({ email, password }) {
   return HTTP.post('/user/authenticate', auth)
 }
 
-export function register ({ communityName, email, password }) {
+export function register (user) {
   const auth = {
-    community: communityName,
-    email: email,
-    password: password
+    community: user.communityName,
+    fullName: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    subscriptionPlan: user.subscriptionPlan,
+    paymentOptions: user.paymentOptions,
+    password: user.password
   }
   return HTTP.post('/user/register', auth)
 }

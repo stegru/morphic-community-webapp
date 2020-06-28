@@ -29,7 +29,7 @@
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-    <b-collapse visible id="collapse-login-block">
+    <b-collapse id="collapse-login-block">
       <b-button-close v-b-toggle.collapse-login-block />
       <BlockLoginRegister />
     </b-collapse>

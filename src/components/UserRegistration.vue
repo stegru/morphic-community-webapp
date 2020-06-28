@@ -17,6 +17,24 @@
     </b-form-group>
     <b-form-group>
       <b-form-input
+        v-model="$v.form.firstName.$model"
+        :state="validateState('firstName')"
+        label="First name"
+        placeholder="First name"
+      />
+      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input
+        v-model="$v.form.lastName.$model"
+        :state="validateState('lastName')"
+        label="Last name"
+        placeholder="Last name"
+      />
+      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input
         v-model="$v.form.email.$model"
         :state="validateState('email')"
         label="Email"
@@ -44,6 +62,16 @@
       />
       <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
     </b-form-group>
+    <b-form-group label="Subscription Plan">
+      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="bronze" value="bronze">Bronze</b-form-radio>
+      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="silver" value="silver">Silver</b-form-radio>
+      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="gold" value="gold">Gold</b-form-radio>
+      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+    </b-form-group>
+    <b-form-group label="Subscription Plan">
+      <b-form-radio v-model="$v.form.paymentOptions.$model" name="stripe" value="stripe">Stripe</b-form-radio>
+      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+    </b-form-group>
     <b-button type="submit" variant="primary">Create new Community</b-button>
   </b-form>
 </template>
@@ -60,8 +88,12 @@ export default {
       form: {
         communityName: '',
         email: '',
+        firstName: '',
+        lastName: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        subscriptionPlan: 'bronze',
+        paymentOptions: 'stripe'
       },
       errorAlert: false,
       successAlert: false,
@@ -72,6 +104,12 @@ export default {
   validations: {
     form: {
       communityName: {
+        required
+      },
+      firstName: {
+        required
+      },
+      lastName: {
         required
       },
       email: {
@@ -85,6 +123,12 @@ export default {
       confirmPassword: {
         required,
         sameAsPassword: sameAs('password')
+      },
+      subscriptionPlan: {
+        required
+      },
+      paymentOptions: {
+        required
       }
     }
   },
