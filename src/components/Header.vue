@@ -15,11 +15,15 @@
       </b-navbar-nav>
 
       <b-navbar-nav>
+        <b-nav-item v-if="isLoggedIn" to="/my-community">
+          <b-icon-person-fill></b-icon-person-fill>
+          My Community
+        </b-nav-item>
         <b-nav-item v-if="isLoggedIn" @click="logout">
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Logout
         </b-nav-item>
-        <b-nav-item v-else v-b-toggle.collapse-login-block>
+        <b-nav-item v-if="!isLoggedIn" v-b-toggle.collapse-login-block>
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Login
         </b-nav-item>

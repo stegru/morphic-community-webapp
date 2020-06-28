@@ -8,6 +8,7 @@ import AboutUs from '@/views/AboutUs.vue'
 import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
+import MyCommunity from '@/views/MyCommunity.vue'
 
 Vue.use(VueRouter)
 
@@ -67,6 +68,15 @@ const routes = [
     component: Registration,
     meta: {
       title: 'Community Registration :: Morphic Community'
+    }
+  },
+  {
+    path: '/my-community',
+    name: 'My Community',
+    component: MyCommunity,
+    meta: {
+      title: 'My Community :: Morphic Community',
+      authRoute: true
     }
   }
 ]
