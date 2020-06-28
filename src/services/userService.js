@@ -19,3 +19,10 @@ export function register (user) {
   }
   return HTTP.post('/user/register', auth)
 }
+
+export function resetPassword ({ email }) {
+  const data = {
+    email: email
+  }
+  return HTTP.post('/user/reset-password', data)
+}

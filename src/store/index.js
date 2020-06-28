@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { HTTP } from '@/services/index'
-import { login, register } from '@/services/userService'
+import { login, register, resetPassword } from '@/services/userService'
 
 Vue.use(Vuex)
 
@@ -26,6 +26,12 @@ export default new Vuex.Store({
     logout (state) {
       state.status = ''
       state.token = ''
+    },
+    reset_password (state) {
+      state.status = 'reset_password'
+    },
+    reset_password_error (state) {
+      state.status = 'reset_password_failed'
     }
   },
   actions: {
@@ -72,6 +78,19 @@ export default new Vuex.Store({
         localStorage.removeItem('token')
         delete HTTP.defaults.headers.common.Authorization
         resolve()
+      })
+    },
+    resetPassword ({ commit }, email) {
+      return new Promise((resolve, reject) => {
+        resetPassword(email)
+          .then(resp => {
+            commit('reset_password')
+            resolve()
+          })
+          .catch(err => {
+            commit('reset_password_error')
+            reject(err)
+          })
       })
     }
   },

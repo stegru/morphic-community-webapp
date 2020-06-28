@@ -9,6 +9,7 @@ import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
 import MyCommunity from '@/views/MyCommunity.vue'
+import ResetPassword from '@/views/ResetPassword.vue'
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,14 @@ const routes = [
     meta: {
       title: 'My Community :: Morphic Community',
       authRoute: true
+    }
+  },
+  {
+    path: '/reset-password',
+    name: 'Reset Password',
+    component: ResetPassword,
+    meta: {
+      title: 'Reset Password :: Morphic Community'
     }
   }
 ]

@@ -7,5 +7,7 @@ export const ERROR_MAP = {
 }
 export const MESSAGES = {
   successfulLogin: 'Successfully logged in',
-  successfulRegistration: 'Registration completed successfully'
+  successfulRegistration: 'Registration completed successfully',
+  successfulReset: 'Reset password successful',
+  emailValidationError: 'This is a required field and must be a valid email address.'
 }
