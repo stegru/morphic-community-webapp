@@ -42,8 +42,6 @@
     </b-navbar>
     <b-collapse id="collapse-login-block" v-model="visible">
       <b-button-close
-      :class="visible ? null : 'collapsed'"
-      :aria-expanded="visible ? 'true' : 'false'"
       aria-controls="collapse-login-block"
       @click="visible = false"
       />
