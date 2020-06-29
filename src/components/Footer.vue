@@ -1,7 +1,7 @@
 <template>
   <footer class="mt-3 mb-3 pt-4 pb-4 pl-5 pr-5 text-light">
     <b-row>
-      <b-col cols="3">
+      <b-col md="3">
         <h5 class="text-warning">Morphic Community:</h5>
         <b-nav vertical>
           <b-nav-item to="/" active link-classes="text-light">Home</b-nav-item>
@@ -12,7 +12,7 @@
           <b-nav-item to="/terms-of-use" link-classes="text-light">Terms of Use</b-nav-item>
         </b-nav>
       </b-col>
-      <b-col cols="3">
+      <b-col md="3">
         <h5 class="text-warning">Morphic Lite:</h5>
         <b-nav vertical>
           <b-nav-item to="/" active link-classes="text-light">Home</b-nav-item>
@@ -21,7 +21,7 @@
           <b-nav-item to="/" link-classes="text-light">Open Source</b-nav-item>
         </b-nav>
       </b-col>
-      <b-col cols="6" class="text-right align-text-bottom">
+      <b-col md="6" class="text-right align-text-bottom">
         &copy; 2020 Morphic Lite Team. All Rights Reserved.
       </b-col>
     </b-row>

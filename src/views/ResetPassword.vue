@@ -1,35 +1,36 @@
 <template>
   <b-jumbotron class="bg-light">
-    <b-card
-    title="Reset Password"
-    tag="form"
-    style="max-width: 30rem;"
-    class="mb-2 text-center mx-auto"
-    >
-      <br/>
-      <b-card-text>
-        Enter your email address and we will send you a link to reset your password.
-      </b-card-text>
-      <b-form @submit.stop.prevent="onSubmit">
-        <b-alert variant="danger" :show="errorAlert">
-          {{ errorMessage }}
-        </b-alert>
-        <b-alert variant="success" :show="successAlert">
-          {{ successMessage }}
-        </b-alert>
-        <b-form-group>
-          <b-form-input
-            v-model="$v.form.email.$model"
-            :state="validateState('email')"
-            label="Email"
-            placeholder="Enter your email address"
-          />
-          <b-form-invalid-feedback>{{ emailValidationError }}</b-form-invalid-feedback>
-        </b-form-group>
-        <br/>
-        <b-button type="submit" variant="primary">Send password reset email</b-button>
-      </b-form>
-    </b-card>
+    <b-row>
+      <b-col md="7">
+        <h3>Reset your password</h3>
+        <p class="lead">Please enter the email address you are registered with and we will send you message with your temporary password.</p>
+        <br />
+        <b-form @submit.stop.prevent="onSubmit">
+          <b-alert variant="danger" :show="errorAlert">
+            {{ errorMessage }}
+          </b-alert>
+          <b-alert variant="success" :show="successAlert">
+            {{ successMessage }}
+          </b-alert>
+          <b-form-group>
+            <b-form-input
+              v-model="$v.form.email.$model"
+              :state="validateState('email')"
+              label="Email"
+              placeholder="Enter your email address"
+            />
+            <b-form-invalid-feedback>{{ emailValidationError }}</b-form-invalid-feedback>
+          </b-form-group>
+          <br/>
+          <b-button type="submit" variant="primary">Reset Password</b-button>
+        </b-form>
+      </b-col>
+      <b-col md="4" offset="1">
+        <h4 class="mt-3 text-info">Important Notice</h4>
+        <p>Nulla laoreet eros in nibh elementum feugiat. Pellentesque maximus in nisi et aliquet.</p>
+        <p>Phasellus id odio non arcu sollicitudin rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse vel pretium urna.</p>
+      </b-col>
+    </b-row>
   </b-jumbotron>
 </template>
 
@@ -77,7 +78,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = err.response.message || 'Something went wrong'
+            this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : 'Something went wrong')); 
           } else {
             this.errorMessage = ERROR_MAP[500]
           }

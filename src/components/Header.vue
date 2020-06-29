@@ -42,8 +42,9 @@
     </b-navbar>
     <b-collapse id="collapse-login-block" v-model="visible">
       <b-button-close
-      aria-controls="collapse-login-block"
-      @click="visible = false"
+        aria-controls="collapse-login-block"
+        @click="visible = false"
+        class="mr-3 mt-3"
       />
       <BlockLoginRegister />
     </b-collapse>

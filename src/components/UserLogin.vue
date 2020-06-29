@@ -38,7 +38,7 @@
       </b-form-checkbox-group>
       <br>
       <b-button type="submit" variant="primary">Login</b-button>
-      <b-button to="/reset-password" variant="success">Lost Password</b-button>
+      <b-button to="/reset-password" variant="success" class="ml-1">Lost Password</b-button>
     </b-form>
   </div>
 </template>
