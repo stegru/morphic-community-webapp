@@ -34,7 +34,7 @@
       </b-navbar-nav>
     </b-navbar>
     <b-collapse id="collapse-login-block">
-      <b-button-close v-b-toggle.collapse-login-block />
+      <b-button-close v-b-toggle.collapse-login-block class="mr-3 mt-3" />
       <BlockLoginRegister />
     </b-collapse>
   </div>

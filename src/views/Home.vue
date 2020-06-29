@@ -10,7 +10,7 @@
           <p>Phasellus tincidunt maximus orci in scelerisque. Nulla enim nisi, dignissim vel quam eu, aliquet efficitur sapien. Morbi eleifend ligula sit amet justo vestibulum euismod.</p>
           <p>
             <b-button to="/registration" size="lg" variant="primary" class="mb-2">Register Community</b-button>
-            <b-button to="/registration" size="lg" variant="success" class="mb-2">Download Morphic Lite</b-button>
+            <b-button to="/registration" size="lg" variant="success" class="mb-2 ml-1">Download Morphic Lite</b-button>
           </p>
         </b-col>
       </b-row>
