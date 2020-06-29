@@ -68,7 +68,8 @@ const routes = [
     name: 'Registration',
     component: Registration,
     meta: {
-      title: 'Community Registration :: Morphic Community'
+      title: 'Community Registration :: Morphic Community',
+      locked: true
     }
   },
   {
@@ -97,6 +98,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.authRoute)) {
     if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/')
+  } else if (to.matched.some(record => record.meta.locked)) {
+    if (!store.getters.isLoggedIn) {
       next()
       return
     }

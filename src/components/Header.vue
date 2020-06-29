@@ -23,18 +23,29 @@
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Logout
         </b-nav-item>
-        <b-nav-item v-if="!isLoggedIn" v-b-toggle.collapse-login-block>
+        <b-nav-item
+          v-if="!isLoggedIn"
+          @click="visible = !visible"
+        >
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Login
         </b-nav-item>
-        <b-nav-item v-if="!isLoggedIn" to="/registration" exact-active-class="active">
+        <b-nav-item
+          v-if="!isLoggedIn"
+          to="/registration"
+          exact-active-class="active"
+        >
           <b-icon-person-fill></b-icon-person-fill>
           Registration
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-    <b-collapse id="collapse-login-block">
-      <b-button-close v-b-toggle.collapse-login-block class="mr-3 mt-3" />
+    <b-collapse id="collapse-login-block" v-model="visible">
+      <b-button-close
+        aria-controls="collapse-login-block"
+        @click="visible = false"
+        class="mr-3 mt-3"
+      />
       <BlockLoginRegister />
     </b-collapse>
   </div>
@@ -58,8 +69,18 @@ export default {
   components: {
     BlockLoginRegister
   },
+  data () {
+    return {
+      visible: false
+    }
+  },
   computed: {
     isLoggedIn: function () { return this.$store.getters.isLoggedIn }
+  },
+  watch: {
+    $route (to, from) {
+      this.visible = false
+    }
   },
   methods: {
     logout: function () {
