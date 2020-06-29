@@ -34,7 +34,7 @@ export default {
         {
           communityName: 'Old Community',
           communityUrl: 'old-community' + '.' + window.location.hostname + '.com',
-          subscriptionPlan: 'Bronz'
+          subscriptionPlan: 'Bronze'
         }, {
           communityName: 'New Community',
           communityUrl: 'new-community' + '.' + window.location.hostname + '.com',
