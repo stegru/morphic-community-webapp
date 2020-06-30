@@ -103,7 +103,7 @@
     background: white;
     border: 1px solid #ddd;
     padding: 1rem 1rem 1rem 2.5rem;
-    margin-bottom: .5rem; 
+    margin-bottom: .5rem;
   }
   #subscription-plans label {
     width: 100%;

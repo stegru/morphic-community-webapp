@@ -88,6 +88,9 @@ export default {
       this.$store.dispatch('login', this.$v.userInfo.$model)
         .then(() => {
           this.successAlert = true
+          setTimeout(() => {
+            this.$router.push('/my-community')
+          }, 1000)
         })
         .catch(err => {
           if (err.response) {
