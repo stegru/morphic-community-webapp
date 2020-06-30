@@ -89,6 +89,9 @@ export default {
         .then(() => {
           this.successAlert = true
           setTimeout(() => {
+            this.successAlert = false
+            this.userInfo.email = ''
+            this.userInfo.password = ''
             this.$router.push('/my-community')
           }, 1000)
         })
