@@ -57,6 +57,15 @@
     border-radius: .3rem;
   }
 
+  nav#top a.nav-link:focus {
+    outline: 0;
+  }
+  nav#top a.nav-link.active {
+    color: white;
+    background: #002957;
+    border-bottom: 3px solid #84c661;
+  }
+
   .navbar-brand img {
     height: 2rem;
   }

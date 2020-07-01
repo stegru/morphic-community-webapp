@@ -19,6 +19,18 @@
     background-color: #84c661 !important;
     border-color: #84c661 !important;
   }
+
+  .text-bronze {
+    color: #cd7f32;
+  }
+
+  .text-gold {
+    color: gold;
+  }
+
+  .text-silver {
+    color: silver;
+  }
 </style>
 
 <script>
@@ -32,5 +44,5 @@ export default {
     Header,
     Footer
   }
-};
+}
 </script>

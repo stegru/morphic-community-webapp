@@ -9,7 +9,7 @@
       small
     >
       <template v-slot:cell(actions)="row">
-        <b-button size="sm" variant="success">
+        <b-button size="sm" variant="success" :to="'/join/' + row.item.id">
           Ask to Join
         </b-button>
       </template>
