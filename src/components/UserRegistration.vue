@@ -95,9 +95,6 @@
 </template>
 
 <style>
-  .text-bronze {
-    color: #cd7f32;
-  }
   #subscription-plans .custom-radio,
   #payment-gateways .custom-radio {
     background: white;

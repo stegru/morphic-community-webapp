@@ -27,7 +27,7 @@ export default {
   }),
   async mounted () {
     try {
-      let communities = await getPublicCommunities()
+      const communities = await getPublicCommunities()
       this.items = communities.data
     } catch (err) {
       if (err.response) {

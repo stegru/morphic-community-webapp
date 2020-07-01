@@ -78,7 +78,7 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : 'Something went wrong')); 
+            this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : 'Something went wrong'))
           } else {
             this.errorMessage = ERROR_MAP[500]
           }
