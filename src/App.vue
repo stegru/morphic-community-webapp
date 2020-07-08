@@ -20,6 +20,10 @@
     border-color: #84c661 !important;
   }
 
+  .bg-silver {
+    background: #eee;
+  }
+
   .text-bronze {
     color: #cd7f32;
   }
@@ -30,6 +34,10 @@
 
   .text-silver {
     color: silver;
+  }
+
+  .rounded {
+    border-radius: 1rem;
   }
 </style>
 

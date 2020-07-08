@@ -1,5 +1,6 @@
 <template>
   <footer class="mt-3 mb-3 pt-4 pb-4 pl-5 pr-5 text-light">
+    <!--
     <b-row>
       <b-col md="3">
         <h5 class="text-warning">Morphic Community:</h5>
@@ -25,6 +26,8 @@
         &copy; 2020 Morphic Lite Team. All Rights Reserved.
       </b-col>
     </b-row>
+    -->
+    &copy; 2020 Morphic Lite Team. All Rights Reserved.
   </footer>
 </template>
 
