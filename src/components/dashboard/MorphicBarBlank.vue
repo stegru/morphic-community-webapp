@@ -1,10 +1,10 @@
 <template>
   <div class="morphicBarBlank bg-white text-center p-2">
-    <div class="placeholder pt-4 pb-4">&nbsp;</div>
-    <div class="placeholder pt-4 pb-4">&nbsp;</div>
-    <div class="placeholder pt-4 pb-4">&nbsp;</div>
-    <div class="placeholder pt-4 pb-4">&nbsp;</div>
-    <div class="placeholder pt-4 pb-4">&nbsp;</div>
+    <div class="placeholder pt-4 pb-5">&nbsp;</div>
+    <div class="placeholder pt-4 pb-5">&nbsp;</div>
+    <div class="placeholder pt-4 pb-5">&nbsp;</div>
+    <div class="placeholder pt-4 pb-5">&nbsp;</div>
+    <div class="placeholder pt-4 pb-5">&nbsp;</div>
   </div>
 </template>
 

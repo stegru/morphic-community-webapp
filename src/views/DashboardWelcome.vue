@@ -1,11 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col md="4">
-        <div class="bg-light rounded p-3">
-        </div>
-      </b-col>
-      <b-col md="8">
+      <b-col md="12">
         <div class="bg-silver rounded p-3">
           <article>
             <b-img src="/img/dashboard-intro.jpg" fluid rounded alt="Dashboard Intro Image"></b-img>

@@ -1,11 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col md="4">
-        <div class="bg-light rounded p-3">
-        </div>
-      </b-col>
-      <b-col md="8">
+      <b-col md="12">
         <div class="bg-silver rounded p-3">
           <h4 class="mb-3">Pick any of these Morphic Bar's, or start with a fresh one</h4>
           <MorphicBarPicker />
