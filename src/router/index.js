@@ -28,9 +28,9 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: DashboardWelcome, // temporary replacing the Home component
     meta: {
-      title: 'Home :: Morphic Community'
+      title: 'Dashboard'
     }
   },
   {
