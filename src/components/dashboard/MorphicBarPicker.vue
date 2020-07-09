@@ -1,14 +1,14 @@
 <template>
   <div>
-    <MorphicBarPreview />
+    <MorphicBarPreview :options="bar.options" />
     <b-row>
       <b-col md="8">
-        <strong>Preconfigured Morphic Bar Name</strong><br>
-        <p class="small mb-0">This Morphic Bar is designed to match your needs when using it as...</p>
+        <strong>{{ bar.name }}</strong><br>
+        <p class="small mb-0">{{ bar.desc }}</p>
       </b-col>
       <b-col md="4">
         <div class="text-right">
-          <b-button to="/dashboard/morphicbar-editor" size="sm" variant="primary">Start with this Bar</b-button>
+          <b-button :to="'/dashboard/morphicbar-editor/' + bar.id" size="sm" variant="primary">Start with this Bar</b-button>
         </div>
       </b-col>
     </b-row>
@@ -20,6 +20,12 @@ import MorphicBarPreview from '@/components/dashboard/MorphicBarPreview'
 
 export default {
   name: 'MorphicBarPicker',
+  props: {
+    bar: Object,
+    default: function () {
+      return {}
+    }
+  },
   components: {
     MorphicBarPreview
   }
