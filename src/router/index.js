@@ -21,6 +21,7 @@ import MorphicBarChoose from '@/views/MorphicBarChoose.vue'
 import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
 import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
 import MemberInvite from '@/views/MemberInvite.vue'
+import MemberEditor from '@/views/MemberEditor.vue'
 
 Vue.use(VueRouter)
 
@@ -104,7 +105,7 @@ const routes = [
   // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
   {
     path: '/dashboard/welcome',
-    name: 'Dashboard',
+    name: 'Dashboard Welcome',
     component: DashboardWelcome, // empty dashboard
     meta: {
       title: 'Dashboard'
@@ -151,7 +152,7 @@ const routes = [
     }
   },
   {
-    path: '/dashboard/morphicbar-editor/',
+    path: '/dashboard/morphicbar-editor/:barId',
     name: 'MorphicBar Editor',
     component: MorphicBarEditor,
     meta: {
@@ -164,6 +165,14 @@ const routes = [
     component: MemberInvite,
     meta: {
       title: 'Member Invite'
+    }
+  },
+  {
+    path: '/dashboard/member/:memberId',
+    name: 'Member Editor',
+    component: MemberEditor,
+    meta: {
+      title: 'Member Editor'
     }
   }
 ]

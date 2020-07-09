@@ -42,44 +42,20 @@
           <b-tab title="Step 2: Attach Morphic Bar">
             <b-card-text>
               <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
-              <div class="barPicker p-2 mb-3" v-bind:class="{ active: memberBar == 1 }">
-                <MorphicBarPreview />
-                <b-row>
-                  <b-col md="6">
-                    <strong>Morphic Bar Name</strong><br>
-                  </b-col>
-                  <b-col md="6">
-                    <div class="text-right">
-                      <b-button @click="memberBar = 1" variant="primary" class="ml-1">Pick this Morphic Bar</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
-              </div>
-              <div class="barPicker p-2 mb-3" v-bind:class="{ active: memberBar == 2 }">
-                <MorphicBarPreview />
-                <b-row>
-                  <b-col md="6">
-                    <strong>Morphic Bar Name</strong><br>
-                  </b-col>
-                  <b-col md="6">
-                    <div class="text-right">
-                      <b-button @click="memberBar = 2" variant="primary" class="ml-1">Pick this Morphic Bar</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
-              </div>
-              <div class="barPicker p-2 mb-3" v-bind:class="{ active: memberBar == 3 }">
-                <MorphicBarPreview />
-                <b-row>
-                  <b-col md="6">
-                    <strong>Morphic Bar Name</strong><br>
-                  </b-col>
-                  <b-col md="6">
-                    <div class="text-right">
-                      <b-button @click="memberBar = 3" variant="primary" class="ml-1">Pick this Morphic Bar</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
+              <div v-for="bar in bars">
+                <div class="barPicker p-2 mb-3" v-bind:class="{ active: memberBar == bar.id }">
+                  <MorphicBarPreview :options="bar.options" />
+                  <b-row>
+                    <b-col md="6">
+                      <strong>{{ bar.name }}</strong><br>
+                    </b-col>
+                    <b-col md="6">
+                      <div class="text-right">
+                        <b-button @click="memberBar = bar.id" variant="primary" class="ml-1">Pick this Morphic Bar</b-button>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </div>
               </div>
               <hr>
               <b-row>
@@ -106,7 +82,7 @@
                 Email:
                 <b>{{ memberEmail }}</b>
               </p>
-              <MorphicBarPreview />
+              <MorphicBarPreview :options="getBarOptionsById(memberBar)" />
               <b-row>
                 <b-col md="6">
                   <b-form-checkbox
@@ -172,7 +148,27 @@ export default {
       memberName: 'John Smith',
       memberEmail: 'john.smith@gmail.com',
       memberBar: 1,
-      sendEmailCopy: 0
+      sendEmailCopy: 0,
+      bars: [
+        {
+          id: 1,
+          name: "Basic MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
+        },
+        {
+          id: 2,
+          name: "Magnifier and Text Zoom MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          options: ["Magnifier", "Text Zoom", "High Contrast", "Read Aloud", "Sound Volume"],
+        },
+        {
+          id: 3,
+          name: "High Contrast & Text Zoom MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          options: ["High Contrast", "Text Zoom", "Read Aloud", "Sound Volume", "Magnifier"],
+        }
+      ]
     }
   },
   components: {
@@ -181,6 +177,16 @@ export default {
   methods: {
     sendConfirmFunc(bvModalEvt) {
       this.$router.push('/dashboard/full')
+    },
+    getBarOptionsById(barId) {
+      if (barId > 0 && this.bars) {
+        for (var i = this.bars.length - 1; i >= 0; i--) {
+          if (this.bars[i].id === barId) {
+            return this.bars[i].options;
+          }
+        }
+      }
+      return [];
     }
   }
 }

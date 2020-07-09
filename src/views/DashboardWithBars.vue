@@ -20,8 +20,10 @@
       <b-col md="8">
         <div class="bg-silver rounded p-3">
           <h4 class="mb-3">Customized Morphic Bars</h4>
-          <MorphicBarListItem class="mb-3" />
-          <hr class="mt-5 mb-5">
+          <div v-for="bar in list">
+            <MorphicBarListItem class="mb-3" :bar=bar />
+            <hr class="mt-5 mb-5">
+          </div>
           <div class="text-right">
             <b-button to="/dashboard/morphicbar-preconfigured" variant="primary">Pick or Make a new Morphic Bar</b-button>
           </div>
@@ -38,6 +40,17 @@ export default {
   name: 'Dashboard',
   components: {
     MorphicBarListItem
+  },
+  data() {
+    return {
+      list: [
+        {
+          id: 1,
+          name: "My First MorphicBar",
+          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
+        }
+      ]
+    }
   }
 }
 </script>

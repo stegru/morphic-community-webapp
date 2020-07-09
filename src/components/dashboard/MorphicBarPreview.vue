@@ -1,11 +1,7 @@
 <template>
   <div class="morphicBarPreview bg-white text-center p-2 mb-2">
-    <div class="option pt-4 pb-4">Text Zoom</div>
-    <div class="option pt-4 pb-4">Magnifier</div>
-    <div class="option pt-4 pb-4">Read Aloud</div>
-    <div class="option pt-4 pb-4">Sound Volume</div>
-    <div class="option pt-4 pb-4">High Contrast</div>
-    </div>
+    <div v-for="option in options" class="option pt-4 pb-4">{{ option }}</div>
+  </div>
 </template>
 
 <style>
@@ -22,3 +18,16 @@
     font-size: .85rem;
   }
 </style>
+
+<script>
+
+export default {
+  name: 'MorphicBarPreview',
+  props: {
+    options: Array,
+    default: function () {
+      return ['Text Zoom', 'Magnifier', 'Read Aloud', 'Sound Volume', 'High Contrast']
+    }
+  }
+}
+</script>
