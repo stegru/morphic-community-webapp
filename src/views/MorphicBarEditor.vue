@@ -33,7 +33,7 @@
     </div>
     <b-row class="mt-3">
       <b-col md="6">
-        <b-button to="/dashboard/with-bars" variant="primary">Save Changes</b-button>
+        <b-button @click="addBar" variant="primary">Save Changes</b-button>
       </b-col>
       <b-col md="6" class="text-right">
         <b-button to="/dashboard/welcome" size="sm" variant="outline-secondary">Cancel</b-button>
@@ -95,6 +95,14 @@
       return {
         name: ''
       }
-    }
+    },
+    methods: {
+      addBar: function() {
+        this.$store.dispatch('addBar')
+        .then(() => {
+          this.$router.push('/dashboard/with-bars')
+        })
+      }
+    } 
   }
 </script>

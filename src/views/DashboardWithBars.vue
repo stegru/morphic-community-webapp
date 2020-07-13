@@ -43,13 +43,7 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          name: "My First MorphicBar",
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
-        }
-      ]
+      list: this.$store.getters.getBars
     }
   }
 }

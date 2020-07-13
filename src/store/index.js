@@ -9,7 +9,14 @@ export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
-    user: {}
+    user: {},
+    bars: [
+      {
+        id: 1,
+        name: "My First MorphicBar",
+        options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
+      }
+    ]
   },
   mutations: {
     auth_request (state) {
@@ -32,6 +39,10 @@ export default new Vuex.Store({
     },
     reset_password_error (state) {
       state.status = 'reset_password_failed'
+    },
+    // DASHBOARD mutations
+    addBar (state, barData) {
+      state.bars.push(barData);
     }
   },
   actions: {
@@ -92,10 +103,22 @@ export default new Vuex.Store({
             reject(err)
           })
       })
+    },
+    // DASHBOARD actions
+    addBar({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit('addBar', {
+          id: 2,
+          name: "Added new bar",
+          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
+        })
+        resolve()
+      })
     }
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    getBars: state => state.bars
   }
 })
