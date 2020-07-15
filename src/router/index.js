@@ -27,7 +27,8 @@ const routes = [
     name: 'Home',
     component: Home, // temporary replacing the Home component
     meta: {
-      title: 'Home :: Morphic Community'
+      title: 'Home :: Morphic Community',
+      locked: true
     }
   },
   {
@@ -165,7 +166,7 @@ router.beforeEach((to, from, next) => {
       next()
       return
     }
-    next('/')
+    next('/dashboard')
   } else {
     next()
   }

@@ -11,7 +11,7 @@
             <p class="text-center mt-5">
               <b-button to="/dashboard/morphicbar-editor" variant="primary">I want to make my own</b-button>
               <b-button to="/dashboard/morphicbar-preconfigured" variant="success" class="ml-1">Let me look at several options first</b-button>
-              <b-button to="/dashboard/welcome" variant="outline-secondary" class="ml-1">Cancel</b-button>
+              <b-button to="/dashboard" variant="outline-secondary" class="ml-1">Cancel</b-button>
             </p>
           </article>
         </div>

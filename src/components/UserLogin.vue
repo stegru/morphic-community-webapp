@@ -92,7 +92,7 @@ export default {
             this.successAlert = false
             this.userInfo.email = ''
             this.userInfo.password = ''
-            this.$router.push('/my-community')
+            this.$router.push('/dashboard')
           }, 1000)
         })
         .catch(err => {

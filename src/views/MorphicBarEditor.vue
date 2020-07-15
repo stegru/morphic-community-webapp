@@ -36,14 +36,14 @@
         <b-button to="/dashboard/with-bars" variant="primary">Save Changes</b-button>
       </b-col>
       <b-col md="6" class="text-right">
-        <b-button to="/dashboard/welcome" size="sm" variant="outline-secondary">Cancel</b-button>
+        <b-button to="/dashboard" size="sm" variant="outline-secondary">Cancel</b-button>
       </b-col>
     </b-row>
   </div>
 </template>
 
 <style>
-  .no-border { 
+  .no-border {
     border: none !important;
   }
   .morphicBarBlank {
@@ -90,11 +90,11 @@
 </style>
 
 <script>
-  export default {
-    data() {
-      return {
-        name: ''
-      }
+export default {
+  data () {
+    return {
+      name: ''
     }
   }
+}
 </script>
