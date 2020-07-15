@@ -39,6 +39,22 @@
   .rounded {
     border-radius: 1rem;
   }
+
+  .text-blue {
+    color: #002957;
+  }
+  .text-red {
+    color: maroon;
+  }
+  .text-teal {
+    color: teal;
+  }
+  .text-orange {
+    color: orange;
+  }
+  .text-green {
+    color: green;
+  }
 </style>
 
 <script>

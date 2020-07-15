@@ -1,5 +1,5 @@
 <template>
-  <div class="MorphicBarPreview">
+  <div class="MorphicLaunchPreview">
     <ul class="small">
       <li v-for="option in options">
         <span :class="'text-' + option.color">{{ option.text }}</span>
@@ -11,7 +11,7 @@
 <script>
 
 export default {
-  name: 'MorphicBarPreview',
+  name: 'MorphicLaunchPreview',
   props: {
     options: Array,
     default: function () {

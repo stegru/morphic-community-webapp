@@ -16,7 +16,7 @@ import ResetPassword from '@/views/ResetPassword.vue'
 // Dashboard Components
 import DashboardWelcome from '@/views/DashboardWelcome.vue'
 import DashboardWithBars from '@/views/DashboardWithBars.vue'
-import DashboardFull from '@/views/DashboardFull.vue'
+import DashboardFull from '@/views/Dashboard.vue'
 import MorphicBarChoose from '@/views/MorphicBarChoose.vue'
 import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
 import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
