@@ -71,7 +71,8 @@ const routes = [
     name: 'Dashboard Welcome',
     component: DashboardWelcome, // empty dashboard
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      authRoute: true
     }
   },
   {
@@ -79,7 +80,8 @@ const routes = [
     name: 'Dashboard (with MorphicBars)',
     component: DashboardWithBars, // dashboard with MorphicBars added, but no members
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      authRoute: true
     }
   },
   {
@@ -87,7 +89,8 @@ const routes = [
     name: 'Dashboard (with MorphicBars and Members)',
     component: DashboardFull, // dashboard with MorphicBars and Members added
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      authRoute: true
     }
   },
   {
@@ -95,7 +98,8 @@ const routes = [
     name: 'Dashboard',
     component: DashboardWelcome,
     meta: {
-      title: 'Dashboard Morphic Community'
+      title: 'Dashboard Morphic Community',
+      authRoute: true
     }
   },
   {
@@ -103,7 +107,8 @@ const routes = [
     name: 'MorphicBar Choose',
     component: MorphicBarChoose,
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      authRoute: true
     }
   },
   {
@@ -111,7 +116,8 @@ const routes = [
     name: 'MorphicBar Preconfigured',
     component: MorphicBarPreconfigured,
     meta: {
-      title: 'MorphicBar Preconfigured'
+      title: 'MorphicBar Preconfigured',
+      authRoute: true
     }
   },
   {
@@ -119,7 +125,8 @@ const routes = [
     name: 'MorphicBar Editor',
     component: MorphicBarEditor,
     meta: {
-      title: 'MorphicBar Editor'
+      title: 'MorphicBar Editor',
+      authRoute: true
     }
   },
   {
@@ -127,7 +134,8 @@ const routes = [
     name: 'Member Invite',
     component: MemberInvite,
     meta: {
-      title: 'Member Invite'
+      title: 'Member Invite',
+      authRoute: true
     }
   },
   {
@@ -135,7 +143,8 @@ const routes = [
     name: 'Member Editor',
     component: MemberEditor,
     meta: {
-      title: 'Member Editor'
+      title: 'Member Editor',
+      authRoute: true
     }
   }
 ]
