@@ -4,10 +4,6 @@ import store from '@/store'
 
 // General Marketing, Login and Register Components
 import Home from '@/views/Home.vue'
-import AboutMorphic from '@/views/AboutMorphic.vue'
-import Communities from '@/views/Communities.vue'
-import AboutUs from '@/views/AboutUs.vue'
-import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
 import MyCommunity from '@/views/MyCommunity.vue'
@@ -29,42 +25,9 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: DashboardWelcome, // temporary replacing the Home component
+    component: Home, // temporary replacing the Home component
     meta: {
-      title: 'Dashboard'
-    }
-  },
-  {
-    path: '/about-morphic',
-    name: 'About Morphic',
-    component: AboutMorphic,
-    meta: {
-      title: 'About Morphic :: Morphic Community'
-    }
-  },
-  {
-    path: '/our-communities',
-    name: 'Our Communities',
-    component: Communities,
-    meta: {
-      title: 'Our Communities :: Morphic Community',
-      authRoute: false
-    }
-  },
-  {
-    path: '/about-us',
-    name: 'About Us',
-    component: AboutUs,
-    meta: {
-      title: 'About Us :: Morphic Community'
-    }
-  },
-  {
-    path: '/contact-us',
-    name: 'Contact Us',
-    component: Contacts,
-    meta: {
-      title: 'Contact Us :: Morphic Community'
+      title: 'Home :: Morphic Community'
     }
   },
   {
@@ -176,8 +139,6 @@ const routes = [
     }
   }
 ]
-
-
 
 const router = new VueRouter({
   routes

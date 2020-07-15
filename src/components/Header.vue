@@ -7,14 +7,7 @@
       </b-navbar-brand>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item to="/dashboard/welcome" exact-active-class="active"><b>Dashboard</b></b-nav-item>
-        <!--
-        <b-nav-item to="/" exact-active-class="active">Home</b-nav-item>
-        <b-nav-item to="/about-morphic" exact-active-class="active">About Morphic</b-nav-item>
-        <b-nav-item to="/our-communities" exact-active-class="active">Our Communities</b-nav-item>
-        <b-nav-item to="/about-us" exact-active-class="active">About Us</b-nav-item>
-        <b-nav-item to="/contact-us" exact-active-class="active">Contact Us</b-nav-item>
-        -->
+        <b-nav-item to="/dashboard/welcome" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard</b></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -26,31 +19,8 @@
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Logout
         </b-nav-item>
-        <b-nav-item
-          v-if="!isLoggedIn"
-          @click="visible = !visible"
-        >
-          <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
-          Login
-        </b-nav-item>
-        <b-nav-item
-          v-if="!isLoggedIn"
-          to="/registration"
-          exact-active-class="active"
-        >
-          <b-icon-person-fill></b-icon-person-fill>
-          Registration
-        </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-    <b-collapse id="collapse-login-block" v-model="visible">
-      <b-button-close
-        aria-controls="collapse-login-block"
-        @click="visible = false"
-        class="mr-3 mt-3"
-      />
-      <BlockLoginRegister />
-    </b-collapse>
   </div>
 </template>
 
@@ -75,24 +45,10 @@
 </style>
 
 <script>
-import BlockLoginRegister from '@/components/BlockLoginRegister'
 
 export default {
-  components: {
-    BlockLoginRegister
-  },
-  data () {
-    return {
-      visible: false
-    }
-  },
   computed: {
     isLoggedIn: function () { return this.$store.getters.isLoggedIn }
-  },
-  watch: {
-    $route (to, from) {
-      this.visible = false
-    }
   },
   methods: {
     logout: function () {
