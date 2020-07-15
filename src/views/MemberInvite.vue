@@ -33,7 +33,7 @@
                 <b-col md="6">
                   <div class="small text-right">
                     <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
-                    <b-button to="/dashboard/with-bars" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
                   </div>
                 </b-col>
               </b-row>
@@ -65,7 +65,7 @@
                 </b-col>
                 <b-col md="6">
                   <div class="small text-right">
-                    <b-button to="/dashboard/with-bars" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
                   </div>
                 </b-col>
               </b-row>
@@ -113,7 +113,7 @@
                 </b-col>
                 <b-col md="6">
                   <div class="small text-right">
-                    <b-button to="/dashboard/with-bars" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
                   </div>
                 </b-col>
               </b-row>
@@ -176,7 +176,7 @@ export default {
   },
   methods: {
     sendConfirmFunc(bvModalEvt) {
-      this.$router.push('/dashboard/full')
+      this.$router.push('/dashboard')
     },
     getBarOptionsById(barId) {
       if (barId > 0 && this.bars) {

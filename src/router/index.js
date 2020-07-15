@@ -14,10 +14,7 @@ import MyCommunity from '@/views/MyCommunity.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 
 // Dashboard Components
-import DashboardWelcome from '@/views/DashboardWelcome.vue'
-import DashboardWithBars from '@/views/DashboardWithBars.vue'
-import DashboardFull from '@/views/DashboardFull.vue'
-import MorphicBarChoose from '@/views/MorphicBarChoose.vue'
+import Dashboard from '@/views/Dashboard.vue'
 import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
 import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
 import MemberInvite from '@/views/MemberInvite.vue'
@@ -29,7 +26,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: DashboardWelcome, // temporary replacing the Home component
+    component: Dashboard, // temporary replacing the Home component
     meta: {
       title: 'Dashboard'
     }
@@ -104,43 +101,11 @@ const routes = [
 
   // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
   {
-    path: '/dashboard/welcome',
-    name: 'Dashboard Welcome',
-    component: DashboardWelcome, // empty dashboard
-    meta: {
-      title: 'Dashboard'
-    }
-  },
-  {
-    path: '/dashboard/with-bars',
-    name: 'Dashboard (with MorphicBars)',
-    component: DashboardWithBars, // dashboard with MorphicBars added, but no members
-    meta: {
-      title: 'Dashboard'
-    }
-  },
-  {
-    path: '/dashboard/full',
-    name: 'Dashboard (with MorphicBars and Members)',
-    component: DashboardFull, // dashboard with MorphicBars and Members added
-    meta: {
-      title: 'Dashboard'
-    }
-  },
-  {
     path: '/dashboard',
     name: 'Dashboard',
-    component: DashboardWelcome,
+    component: Dashboard,
     meta: {
       title: 'Dashboard Morphic Community'
-    }
-  },
-  {
-    path: '/dashboard/morphicbar-choose',
-    name: 'MorphicBar Choose',
-    component: MorphicBarChoose,
-    meta: {
-      title: 'Dashboard'
     }
   },
   {
@@ -176,8 +141,6 @@ const routes = [
     }
   }
 ]
-
-
 
 const router = new VueRouter({
   routes

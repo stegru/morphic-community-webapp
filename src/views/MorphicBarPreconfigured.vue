@@ -22,7 +22,7 @@
           </b-row>
 
           <div class="text-right">
-            <b-button to="/dashboard/welcome" variant="outline-secondary" class="ml-1">Cancel</b-button>
+            <b-button to="/dashboard" variant="outline-secondary" class="ml-1">Cancel</b-button>
           </div>
         </div>
       </b-col>

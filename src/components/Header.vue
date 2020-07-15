@@ -7,14 +7,7 @@
       </b-navbar-brand>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item to="/dashboard/welcome" exact-active-class="active"><b>Dashboard</b></b-nav-item>
-        <!--
-        <b-nav-item to="/" exact-active-class="active">Home</b-nav-item>
-        <b-nav-item to="/about-morphic" exact-active-class="active">About Morphic</b-nav-item>
-        <b-nav-item to="/our-communities" exact-active-class="active">Our Communities</b-nav-item>
-        <b-nav-item to="/about-us" exact-active-class="active">About Us</b-nav-item>
-        <b-nav-item to="/contact-us" exact-active-class="active">Contact Us</b-nav-item>
-        -->
+        <b-nav-item to="/dashboard" exact-active-class="active"><b>Dashboard</b></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
