@@ -40,7 +40,7 @@ export default new Vuex.Store({
         commit('auth_request')
         register(user)
           .then(resp => {
-            const token = resp.data.token || 'TS9LoD"!Fz5!|rED4cS{y:o2#M*l.t' // only for dev purposes
+            const token = resp.data.token
             const user = resp.data.user
             localStorage.setItem('token', token)
             HTTP.defaults.headers.common.Authorization = token
@@ -58,7 +58,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         login(user)
           .then(resp => {
-            const token = resp.data.token || 'TS9LoD"!Fz5!|rED4cS{y:o2#M*l.t' // only for dev purposes
+            const token = resp.data.token
             const user = resp.data.user
             localStorage.setItem('token', token)
             HTTP.defaults.headers.common.Authorization = token

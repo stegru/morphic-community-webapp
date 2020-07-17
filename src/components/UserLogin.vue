@@ -45,7 +45,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, minLength, email } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 import { ERROR_MAP, MESSAGES } from '@/utils/constants'
 
 export default {
@@ -66,8 +66,7 @@ export default {
   validations: {
     userInfo: {
       email: {
-        required,
-        email
+        required
       },
       password: {
         required,
