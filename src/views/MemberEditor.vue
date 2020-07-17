@@ -54,8 +54,8 @@
       <br>
       <b-row>
         <b-col md="6">
-          <b-button to="/dashboard/full" variant="primary">Save Changes</b-button>
-          <b-button to="/dashboard/full" variant="outline-secondary" class="ml-1">Cancel</b-button>
+          <b-button to="/dashboard" variant="primary">Save Changes</b-button>
+          <b-button to="/dashboard" variant="outline-secondary" class="ml-1">Cancel</b-button>
         </b-col>
         <b-col md="6">
           <p class="text-right small">
