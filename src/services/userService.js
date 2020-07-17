@@ -1,9 +1,9 @@
 import { HTTP } from '@/services/index'
 
-export function login ({ email, password }) {
+export function login (user) {
   const auth = {
-    username: email,
-    password: password
+    username: user.username,
+    password: user.password
   }
   return HTTP.post('/v1/auth/username', auth)
 }

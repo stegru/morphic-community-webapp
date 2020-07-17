@@ -183,9 +183,15 @@ export default {
       this.$store.dispatch('register', this.$v.form.$model)
         .then(() => {
           this.successAlert = true
-          setTimeout(() => {
-            this.$router.push('/')
-          }, 1000)
+          this.$store.dispatch('login', this.$v.form.$model)
+            .then(() => {
+              setTimeout(() => {
+                this.$store.dispatch('newCommunity', this.$v.form.$model.communityName)
+                  .then(() => {
+                    this.$router.push('/dashboard')
+                  })
+              }, 1000)
+            })
         })
         .catch(err => {
           if (err.response) {

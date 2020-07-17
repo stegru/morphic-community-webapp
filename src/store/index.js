@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { HTTP } from '@/services/index'
 import { login, register, resetPassword } from '@/services/userService'
+import { createNewCommunity } from '@/services/communityService'
 
 Vue.use(Vuex)
 
@@ -9,19 +10,22 @@ export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
-    user: {}
+    user: {},
+    community: {},
+    errorMessage: {}
   },
   mutations: {
     auth_request (state) {
       state.status = 'pending'
     },
-    auth_success (state, token, user) {
+    auth_success (state, data) {
       state.status = 'success'
-      state.token = token
-      state.user = user
+      state.token = data.token
+      state.user = data.user
     },
-    auth_error (state) {
-      state.status = 'error'
+    auth_error (state, error) {
+      state.status = 'authentication failed'
+      state.status = error
     },
     logout (state) {
       state.status = ''
@@ -32,6 +36,13 @@ export default new Vuex.Store({
     },
     reset_password_error (state) {
       state.status = 'reset_password_failed'
+    },
+    new_community (state, community) {
+      state.status = 'created_new_community'
+      state.community = community
+    },
+    community_error (state) {
+      state.status = 'create_new_community_failed'
     }
   },
   actions: {
@@ -40,16 +51,14 @@ export default new Vuex.Store({
         commit('auth_request')
         register(user)
           .then(resp => {
-            const token = resp.data.token
-            const user = resp.data.user
-            localStorage.setItem('token', token)
-            HTTP.defaults.headers.common.Authorization = token
-            commit('auth_success', token, user)
+            const data = {
+              user: resp.data.user
+            }
+            commit('auth_success', data)
             resolve(resp)
           })
           .catch(err => {
             commit('auth_error', err)
-            localStorage.removeItem('token')
             reject(err)
           })
       })
@@ -58,15 +67,17 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         login(user)
           .then(resp => {
-            const token = resp.data.token
-            const user = resp.data.user
-            localStorage.setItem('token', token)
-            HTTP.defaults.headers.common.Authorization = token
-            commit('auth_success', token, user)
+            const data = {
+              user: resp.data.user,
+              token: resp.data.token
+            }
+            localStorage.setItem('token', data.token)
+            HTTP.defaults.headers.common.Authorization = `Bearer ${data.token}`
+            commit('auth_success', data)
             resolve(resp)
           })
           .catch(err => {
-            commit('auth_error')
+            commit('auth_error', err)
             localStorage.removeItem('token')
             reject(err)
           })
@@ -89,6 +100,20 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit('reset_password_error')
+            reject(err)
+          })
+      })
+    },
+    newCommunity ({ commit }, name) {
+      return new Promise((resolve, reject) => {
+        createNewCommunity(name)
+          .then(resp => {
+            const community = resp.data.community
+            commit('new_community', community)
+            resolve()
+          })
+          .catch(err => {
+            commit('community_error')
             reject(err)
           })
       })
