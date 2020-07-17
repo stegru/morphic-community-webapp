@@ -10,12 +10,12 @@
     <b-form @submit.stop.prevent="onSubmit">
       <b-form-group>
         <b-form-input
-          v-model="$v.userInfo.email.$model"
-          :state="validateState('email')"
-          label="Email"
-          placeholder="Enter your email"
+          v-model="$v.userInfo.username.$model"
+          :state="validateState('username')"
+          label="Username"
+          placeholder="Enter your username"
         />
-        <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
+        <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
       </b-form-group>
       <b-form-group>
         <b-form-input
@@ -45,7 +45,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, minLength, email } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 import { ERROR_MAP, MESSAGES } from '@/utils/constants'
 
 export default {
@@ -53,7 +53,7 @@ export default {
   data () {
     return {
       userInfo: {
-        email: '',
+        username: '',
         password: '',
         keep_logged: 1
       },
@@ -65,9 +65,8 @@ export default {
   },
   validations: {
     userInfo: {
-      email: {
-        required,
-        email
+      username: {
+        required
       },
       password: {
         required,
@@ -90,9 +89,9 @@ export default {
           this.successAlert = true
           setTimeout(() => {
             this.successAlert = false
-            this.userInfo.email = ''
+            this.userInfo.username = ''
             this.userInfo.password = ''
-            this.$router.push('/my-community')
+            this.$router.push('/dashboard')
           }, 1000)
         })
         .catch(err => {

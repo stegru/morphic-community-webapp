@@ -1,23 +1,22 @@
 import { HTTP } from '@/services/index'
 
-export function login ({ email, password }) {
+export function login (user) {
   const auth = {
-    email: email,
-    password: password
+    username: user.username,
+    password: user.password
   }
-  return HTTP.post('/user/authenticate', auth)
+  return HTTP.post('/v1/auth/username', auth)
 }
 
 export function register (user) {
   const auth = {
-    community: user.communityName,
-    fullName: `${user.firstName} ${user.lastName}`,
+    username: user.username,
+    password: user.password,
     email: user.email,
-    subscriptionPlan: user.subscriptionPlan,
-    paymentOptions: user.paymentOptions,
-    password: user.password
+    first_name: user.firstName,
+    last_name: user.lastName
   }
-  return HTTP.post('/user/register', auth)
+  return HTTP.post('/v1/register/username', auth)
 }
 
 export function resetPassword ({ email }) {

@@ -1,7 +1,7 @@
 <template>
   <div class="memberPills p-2 mb-2">
     <div v-if="members && members.length > 0">
-      <b-button v-for="member in members" :to="'/dashboard/member/' + member.id" pill variant="outline-dark" class="mr-1 mb-1">
+      <b-button v-for="member in members" v-bind:key="member.id" :to="'/dashboard/member/' + member.id" pill variant="outline-dark" class="mr-1 mb-1">
         <b-icon-person-fill></b-icon-person-fill>
         {{ member.name }}
         <b class="small text-primary">({{ member.status }})</b>
@@ -23,7 +23,7 @@ export default {
       return []
     }
   },
-  data() {
+  data () {
     return {
       showMembers: true
     }

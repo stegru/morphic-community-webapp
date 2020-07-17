@@ -7,7 +7,7 @@
           <div v-for="bar in list">
             <MorphicBarPicker :bar=bar />
             <hr class="mt-4 mb-4">
-          </div>          
+          </div>
           <MorphicBarBlank class="mb-2" />
           <b-row>
             <b-col md="8">
@@ -40,7 +40,7 @@ export default {
     MorphicBarPicker,
     MorphicBarBlank
   },
-  data() {
+  data () {
     return {
       list: [
         {

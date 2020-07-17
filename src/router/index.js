@@ -4,10 +4,6 @@ import store from '@/store'
 
 // General Marketing, Login and Register Components
 import Home from '@/views/Home.vue'
-import AboutMorphic from '@/views/AboutMorphic.vue'
-import Communities from '@/views/Communities.vue'
-import AboutUs from '@/views/AboutUs.vue'
-import Contacts from '@/views/Contacts.vue'
 import Terms from '@/views/Terms.vue'
 import Registration from '@/views/Registration.vue'
 import MyCommunity from '@/views/MyCommunity.vue'
@@ -26,42 +22,10 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Dashboard, // temporary replacing the Home component
+    component: Home,
     meta: {
-      title: 'Dashboard'
-    }
-  },
-  {
-    path: '/about-morphic',
-    name: 'About Morphic',
-    component: AboutMorphic,
-    meta: {
-      title: 'About Morphic :: Morphic Community'
-    }
-  },
-  {
-    path: '/our-communities',
-    name: 'Our Communities',
-    component: Communities,
-    meta: {
-      title: 'Our Communities :: Morphic Community',
-      authRoute: false
-    }
-  },
-  {
-    path: '/about-us',
-    name: 'About Us',
-    component: AboutUs,
-    meta: {
-      title: 'About Us :: Morphic Community'
-    }
-  },
-  {
-    path: '/contact-us',
-    name: 'Contact Us',
-    component: Contacts,
-    meta: {
-      title: 'Contact Us :: Morphic Community'
+      title: 'Home :: Morphic Community',
+      locked: true
     }
   },
   {
@@ -105,7 +69,8 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: {
-      title: 'Dashboard Morphic Community'
+      title: 'Dashboard Morphic Community',
+      authRoute: true
     }
   },
   {
@@ -113,7 +78,8 @@ const routes = [
     name: 'MorphicBar Preconfigured',
     component: MorphicBarPreconfigured,
     meta: {
-      title: 'MorphicBar Preconfigured'
+      title: 'MorphicBar Preconfigured',
+      authRoute: true
     }
   },
   {
@@ -121,7 +87,8 @@ const routes = [
     name: 'MorphicBar Editor',
     component: MorphicBarEditor,
     meta: {
-      title: 'MorphicBar Editor'
+      title: 'MorphicBar Editor',
+      authRoute: true
     }
   },
   {
@@ -129,7 +96,8 @@ const routes = [
     name: 'Member Invite',
     component: MemberInvite,
     meta: {
-      title: 'Member Invite'
+      title: 'Member Invite',
+      authRoute: true
     }
   },
   {
@@ -137,7 +105,8 @@ const routes = [
     name: 'Member Editor',
     component: MemberEditor,
     meta: {
-      title: 'Member Editor'
+      title: 'Member Editor',
+      authRoute: true
     }
   }
 ]
@@ -158,7 +127,7 @@ router.beforeEach((to, from, next) => {
       next()
       return
     }
-    next('/')
+    next('/dashboard')
   } else {
     next()
   }

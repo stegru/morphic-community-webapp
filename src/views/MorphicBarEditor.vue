@@ -43,7 +43,7 @@
 </template>
 
 <style>
-  .no-border { 
+  .no-border {
     border: none !important;
   }
   .morphicBarBlank {
@@ -90,11 +90,11 @@
 </style>
 
 <script>
-  export default {
-    data() {
-      return {
-        name: ''
-      }
+export default {
+  data () {
+    return {
+      name: ''
     }
   }
+}
 </script>

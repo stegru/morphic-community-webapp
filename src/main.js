@@ -12,7 +12,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 const token = localStorage.getItem('token')
 if (token) {
-  HTTP.defaults.headers.common.Authorization = token
+  HTTP.defaults.headers.common.Authorization = `Bearer ${token}`
 }
 
 Vue.use(BootstrapVue)

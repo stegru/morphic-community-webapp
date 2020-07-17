@@ -20,21 +20,26 @@
     </b-form-group>
     <b-form-group>
       <b-form-input
-        v-model="$v.form.firstName.$model"
-        :state="validateState('firstName')"
-        label="First name"
-        placeholder="First name"
+        v-model="$v.form.username.$model"
+        :state="validateState('username')"
+        label="Username"
+        placeholder="Username"
       />
       <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
-        v-model="$v.form.lastName.$model"
-        :state="validateState('lastName')"
+        v-model="form.firstName"
+        label="First name"
+        placeholder="First name"
+      />
+    </b-form-group>
+    <b-form-group>
+      <b-form-input
+        v-model="form.lastName"
         label="Last name"
         placeholder="Last name"
       />
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -65,7 +70,7 @@
       />
       <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
     </b-form-group>
-    <br>
+<!--     <br>
     <legend>Subscription Plan</legend>
     <b-form-group id="subscription-plans">
       <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="bronze" value="bronze">
@@ -89,7 +94,7 @@
         <img src="/img/payment-icon-stripe.svg" alt="Stripe">
       </b-form-radio>
       <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
-    </b-form-group>
+    </b-form-group> -->
     <b-button type="submit" variant="primary">Create new Community</b-button>
   </b-form>
 </template>
@@ -122,13 +127,14 @@ export default {
     return {
       form: {
         communityName: '',
+        username: '',
         email: '',
         firstName: '',
         lastName: '',
         password: '',
-        confirmPassword: '',
-        subscriptionPlan: 'bronze',
-        paymentOptions: 'stripe'
+        confirmPassword: ''
+        // subscriptionPlan: 'bronze',
+        // paymentOptions: 'stripe'
       },
       errorAlert: false,
       successAlert: false,
@@ -141,10 +147,7 @@ export default {
       communityName: {
         required
       },
-      firstName: {
-        required
-      },
-      lastName: {
+      username: {
         required
       },
       email: {
@@ -158,13 +161,13 @@ export default {
       confirmPassword: {
         required,
         sameAsPassword: sameAs('password')
-      },
-      subscriptionPlan: {
-        required
-      },
-      paymentOptions: {
-        required
       }
+      // subscriptionPlan: {
+      //   required
+      // },
+      // paymentOptions: {
+      //   required
+      // }
     }
   },
   methods: {
@@ -180,9 +183,15 @@ export default {
       this.$store.dispatch('register', this.$v.form.$model)
         .then(() => {
           this.successAlert = true
-          setTimeout(() => {
-            this.$router.push('/')
-          }, 1000)
+          this.$store.dispatch('login', this.$v.form.$model)
+            .then(() => {
+              setTimeout(() => {
+                this.$store.dispatch('newCommunity', this.$v.form.$model.communityName)
+                  .then(() => {
+                    this.$router.push('/dashboard')
+                  })
+              }, 1000)
+            })
         })
         .catch(err => {
           if (err.response) {
