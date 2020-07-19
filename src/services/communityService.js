@@ -10,3 +10,7 @@ export function createNewCommunity (name) {
   }
   return HTTP.post('/v1/communities', data)
 }
+
+export function deleteUserCommunity (communityId) {
+  return HTTP.delete(`/v1/communities/${communityId}`)
+}

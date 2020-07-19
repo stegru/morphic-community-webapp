@@ -44,7 +44,7 @@
           <b-button :href="'https://' + community.name + '.' + host" variant="success">
             <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
           </b-button>
-          <b-button variant="danger" disabled class="ml-1">Delete</b-button>
+          <b-button variant="danger" class="ml-1" @click="deleteCommunity(community.id)">Delete</b-button>
         </b-card-text>
       </b-card>
     </b-card-group>
@@ -53,7 +53,7 @@
 
 <script>
 
-import { getUserCommunities } from '@/services/communityService'
+import { getUserCommunities, deleteUserCommunity } from '@/services/communityService'
 
 export default {
   data () {
@@ -73,6 +73,20 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  methods: {
+    deleteCommunity: function (communityId) {
+      deleteUserCommunity(communityId)
+        .then(resp => {
+          if (resp.status) {
+            const index = this.communities.map(item => item.id).indexOf(communityId)
+            this.communities.splice(index, 1)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>
