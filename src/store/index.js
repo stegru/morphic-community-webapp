@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
+    userId: localStorage.getItem('userId') || '',
     user: {},
     community: {},
     errorMessage: {}
@@ -22,6 +23,7 @@ export default new Vuex.Store({
       state.status = 'success'
       state.token = data.token
       state.user = data.user
+      state.userId = data.user.id
     },
     auth_error (state, error) {
       state.status = 'authentication failed'
@@ -30,6 +32,7 @@ export default new Vuex.Store({
     logout (state) {
       state.status = ''
       state.token = ''
+      state.userId = ''
     },
     reset_password (state) {
       state.status = 'reset_password'
@@ -72,6 +75,7 @@ export default new Vuex.Store({
               token: resp.data.token
             }
             localStorage.setItem('token', data.token)
+            localStorage.setItem('userId', data.user.id)
             HTTP.defaults.headers.common.Authorization = `Bearer ${data.token}`
             commit('auth_success', data)
             resolve(resp)
@@ -87,6 +91,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('logout')
         localStorage.removeItem('token')
+        localStorage.removeItem('userId')
         delete HTTP.defaults.headers.common.Authorization
         resolve()
       })
@@ -121,6 +126,7 @@ export default new Vuex.Store({
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    userId: state => state.userId
   }
 })
