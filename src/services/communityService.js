@@ -30,3 +30,7 @@ export function getCommunityBar (communityId, barId) {
 export function getCommunityMembers (communityId) {
   return HTTP.get(`/v1/communities/${communityId}/members`)
 }
+
+export function addCommunityMember (communityId, member) {
+  return HTTP.post(`/v1/communities/${communityId}/members`, member)
+}

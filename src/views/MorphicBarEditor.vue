@@ -2,7 +2,7 @@
   <div class="bg-silver rounded p-3">
     <h4 class="mb-3">Morphic Bar Editor</h4>
     <p>Click on any of the empty spaces on the Morphic Bar to put the desired option there.</p>
-    <b-form-input v-model="name" placeholder="Morphic Bar Name"></b-form-input>
+    <b-form-input v-model="barDetails.name" placeholder="Morphic Bar Name"></b-form-input>
     <div class="morphicBarBlank bg-white text-center p-2 mt-2">
       <div class="option pt-5 pb-5">Text Zoom</div>
       <div class="empty active pt-5 pb-5">Click to Add</div>
@@ -90,11 +90,25 @@
 </style>
 
 <script>
+import { getCommunityBar } from '@/services/communityService'
+
 export default {
   data () {
     return {
-      name: ''
+      barDetails: {}
     }
+  },
+  computed: {
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    getCommunityBar(this.communityId, this.$route.params.barId)
+      .then(resp => {
+        this.barDetails = resp.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

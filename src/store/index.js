@@ -11,9 +11,9 @@ export default new Vuex.Store({
     status: '',
     token: localStorage.getItem('token') || '',
     userId: localStorage.getItem('userId') || '',
+    communityId: localStorage.getItem('communityId') || {},
     user: {},
     community: {},
-    communityId: {},
     errorMessage: {}
   },
   mutations: {
