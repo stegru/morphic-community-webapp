@@ -9,8 +9,8 @@
     <b-card-group columns>
       <b-card
       v-for="community in communities"
-      :key="community.communityName"
-      :title="community.communityName"
+      :key="community.id"
+      :title="community.name"
       tag="article"
       style="width: 20rem;"
       class="mb-5"
@@ -18,14 +18,14 @@
         <b-card-text>
           Community Page:
           <br/>
-          <a :href="'https://' + community.communityUrl" class="card-link">{{ community.communityUrl }}</a>
+          <a :href="'https://' + community.name + '.' + host" class="card-link">{{ community.name + '.' + host }}</a>
         </b-card-text>
-        <b-card-text>
+        <!-- <b-card-text>
           Subscription Plan:
           <br/>
           <b :class="'text-' + community.subscriptionIdent">{{ community.subscriptionPlan }}</b>
-        </b-card-text>
-        <b-card-text>
+        </b-card-text> -->
+        <!-- <b-card-text>
           Next Payment:
           <br>
           <b>
@@ -34,17 +34,17 @@
               (<i class="text-danger">Overdue</i>)
             </span>
           </b>
-        </b-card-text>
-        <b-card-text>
+        </b-card-text> -->
+        <!-- <b-card-text>
           Members:
           <br>
           <b>{{ community.memberCurrent }}</b> / {{ community.memberLimit }}
-        </b-card-text>
+        </b-card-text> -->
         <b-card-text>
-          <b-button :href="'https://' + community.communityUrl" variant="success">
+          <b-button :href="'https://' + community.name + '.' + host" variant="success">
             <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
           </b-button>
-          <b-button variant="danger" disabled class="ml-1">Delete</b-button>
+          <b-button variant="danger" class="ml-1" @click="deleteCommunity(community.id)">Delete</b-button>
         </b-card-text>
       </b-card>
     </b-card-group>
@@ -52,31 +52,40 @@
 </template>
 
 <script>
+
+import { getUserCommunities, deleteUserCommunity } from '@/services/communityService'
+
 export default {
   data () {
     return {
-      communities: [
-        {
-          communityName: 'Old Community',
-          communityUrl: 'old-community' + '.' + window.location.hostname + '.com',
-          subscriptionPlan: 'Bronze',
-          subscriptionIdent: 'bronze',
-          paymentNext: '7/22/2020',
-          paymentOk: true,
-          memberLimit: 10,
-          memberCurrent: 7
-        },
-        {
-          communityName: 'New Community',
-          communityUrl: 'new-community' + '.' + window.location.hostname + '.com',
-          subscriptionPlan: 'Gold',
-          subscriptionIdent: 'gold',
-          paymentNext: '6/29/2020',
-          paymentOk: false,
-          memberLimit: 50,
-          memberCurrent: 22
-        }
-      ]
+      communities: [],
+      host: `${window.location.hostname}.com`
+    }
+  },
+  computed: {
+    userId: function () { return this.$store.getters.userId }
+  },
+  mounted () {
+    getUserCommunities(this.userId)
+      .then(resp => {
+        this.communities = resp.data.communities
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  methods: {
+    deleteCommunity: function (communityId) {
+      deleteUserCommunity(communityId)
+        .then(resp => {
+          if (resp.status) {
+            const index = this.communities.map(item => item.id).indexOf(communityId)
+            this.communities.splice(index, 1)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }

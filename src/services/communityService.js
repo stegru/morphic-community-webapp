@@ -1,7 +1,7 @@
 import { HTTP } from '@/services/index'
 
-export function getPublicCommunities () {
-  return HTTP.get('/communities/getList')
+export function getUserCommunities (userId) {
+  return HTTP.get(`/v1/users/${userId}/communities`)
 }
 
 export function createNewCommunity (name) {
@@ -9,4 +9,8 @@ export function createNewCommunity (name) {
     name: name
   }
   return HTTP.post('/v1/communities', data)
+}
+
+export function deleteUserCommunity (communityId) {
+  return HTTP.delete(`/v1/communities/${communityId}`)
 }
