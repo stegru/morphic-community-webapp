@@ -36,7 +36,7 @@
         label="Current Morphic Bar:"
         label-for="morphic-bar"
       >
-        <MorphicBarPreview :options="member.currentMorphicBar.options" />
+        <RenderList :items="member.currentMorphicBar.items" class="bg-white p-3" />
       </b-form-group>
       <b-row>
         <b-col md="6">
@@ -71,12 +71,14 @@
 
 <script>
 
-import MorphicBarPreview from '@/components/dashboard/MorphicBarPreview'
+import RenderList from '@/components/dashboard/RenderList'
+
+import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MemberEditor',
   components: {
-    MorphicBarPreview
+    RenderList
   },
   methods: {
     gotoEditor(bvModalEvt) {
@@ -85,7 +87,13 @@ export default {
   },
   data() {
     return {
-      member: {
+      availableItems: availableItems
+      
+    }
+  },
+  computed: {
+    member() {
+      return {
         name: "John Smith",
         email: "john.smith@gmail.com",
         joined: "2020-07-09",
@@ -94,7 +102,7 @@ export default {
         notes: "Example notes for this member...",
         currentMorphicBar: {
           id: 1,
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"]
+          items: this.availableItems
         }
       }
     }

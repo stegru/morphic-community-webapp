@@ -11,6 +11,10 @@
     font-family: 'Open Sans', sans-serif !important;
   }
 
+  .fill-height {
+  	min-height: 100%;
+  }
+
   .btn-primary {
     background-color: #002957 !important;
     border-color: #002957 !important;
