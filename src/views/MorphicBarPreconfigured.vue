@@ -36,28 +36,28 @@ export default {
     }
   },
   computed: {
-    list() {
+    list () {
       return [
         {
           id: 1,
-          name: "Basic MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          name: 'Basic MorphicBar',
+          desc: 'This Morphic Bar is designed to match your needs when using it as...',
           is_shared: true,
-          items: this.availableItems,
+          items: this.availableItems
         },
         {
           id: 2,
-          name: "Magnifier and Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          name: 'Magnifier and Text Zoom MorphicBar',
+          desc: 'This Morphic Bar is designed to match your needs when using it as...',
           is_shared: true,
-          items: this.availableItems,
+          items: this.availableItems
         },
         {
           id: 3,
-          name: "High Contrast & Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          name: 'High Contrast & Text Zoom MorphicBar',
+          desc: 'This Morphic Bar is designed to match your needs when using it as...',
           is_shared: true,
-          items: this.availableItems,
+          items: this.availableItems
         }
       ]
     }

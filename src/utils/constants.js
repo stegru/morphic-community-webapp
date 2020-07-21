@@ -13,66 +13,66 @@ export const MESSAGES = {
 }
 export const availableItems = [
   {
-    kind: "link",
+    kind: 'link',
     is_primary: true,
-    label: "Open Reddit",
-    value: "https://www.reddit.com/",
+    label: 'Open Reddit',
+    value: 'https://www.reddit.com/',
     configuration: {}
   },
   {
-    kind: "link",
+    kind: 'link',
     is_primary: false,
-    label: "Open Facebook",
-    value: "https://www.facebook.com/",
+    label: 'Open Facebook',
+    value: 'https://www.facebook.com/',
     configuration: {}
   },
   {
-    kind: "link",
+    kind: 'link',
     is_primary: true,
-    label: "Photo Gallery",
-    value: "https://www.flickr.com/photos/karadaliev",
+    label: 'Photo Gallery',
+    value: 'https://www.flickr.com/photos/karadaliev',
     configuration: {}
   },
   {
-    kind: "application",
+    kind: 'application',
     is_primary: true,
-    label: "Call Skype",
-    value: "...",
+    label: 'Call Skype',
+    value: '...',
     configuration: {}
   },
   {
-    kind: "application",
+    kind: 'application',
     is_primary: false,
-    label: "Call Telegram",
-    value: "...",
+    label: 'Call Telegram',
+    value: '...',
     configuration: {}
   },
   {
-    kind: "application",
+    kind: 'application',
     is_primary: true,
-    label: "Call Viber",
-    value: "...",
+    label: 'Call Viber',
+    value: '...',
     configuration: {}
   },
   {
-    kind: "action",
+    kind: 'action',
     is_primary: false,
-    label: "Open Task Manager",
-    value: "...",
+    label: 'Open Task Manager',
+    value: '...',
     configuration: {}
   },
   {
-    kind: "action",
+    kind: 'action',
     is_primary: false,
-    label: "Take Screenshot",
-    value: "...",
+    label: 'Take Screenshot',
+    value: '...',
     configuration: {}
   },
   {
-    kind: "action",
+    kind: 'action',
     is_primary: true,
-    label: "Magnifier",
-    value: "...",
+    label: 'Magnifier',
+    value: '...',
     configuration: {}
   }
 ]

@@ -37,7 +37,7 @@
           <h4>Customized Morphic Bars</h4>
         </b-col>
       </b-row>
-      <div class="morphicBarItem mb-3" v-for="bar in list">
+      <div class="morphicBarItem mb-3" v-for="bar in list" :key="bar.id">
         <b-row>
           <b-col :md="leftColumnSize">
             <div class="bg-light rounded p-3 fill-height">
@@ -100,23 +100,23 @@ export default {
     MorphicBarListItem
   },
   methods: {
-    isFirstBar: function() {
+    isFirstBar: function () {
       if (this.list.length === 1) {
         if (this.list[0].members) {
-          return false;
+          return false
         } else {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
-    isListEmpty: function() {
+    isListEmpty: function () {
       if (this.list.length > 0) {
-        return false;
+        return false
       }
-      return true;
+      return true
     },
-    autoHideDetails: function(data, showFirstOne) {
+    autoHideDetails: function (data, showFirstOne) {
       if (data && data.length > 0) {
         for (var i = data.length - 1; i >= 0; i--) {
           if (showFirstOne && i === 0) {
@@ -130,17 +130,17 @@ export default {
     },
 
     // DEBUG methods (to change the different lists)
-    debugDashboardEmpty: function() {
-      this.list = [];
+    debugDashboardEmpty: function () {
+      this.list = []
     },
-    debugDashboardWithBar: function() {
-      this.list = this.listWithBar;
+    debugDashboardWithBar: function () {
+      this.list = this.listWithBar
     },
-    debugDashboardFull: function() {
-      this.list = this.listFull;
+    debugDashboardFull: function () {
+      this.list = this.listFull
     }
   },
-  data() {
+  data () {
     return {
       // main rendering list
       list: [],
@@ -149,10 +149,10 @@ export default {
       welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
       availableItems: availableItems,
       community: {
-        name: "My Community",
-        url: "my-community",
-        plan: "Silver",
-        nextPaymentDate: "9/20/2020",
+        name: 'My Community',
+        url: 'my-community',
+        plan: 'Silver',
+        nextPaymentDate: '9/20/2020',
         members: 3,
         maxMembers: 10
       }
@@ -160,11 +160,11 @@ export default {
   },
   computed: {
     // predefined list with one bar without members
-    listWithBar() {
-      let data = [
+    listWithBar () {
+      const data = [
         {
           id: 1,
-          name: "My First MorphicBar",
+          name: 'My First MorphicBar',
           is_shared: false,
           items: this.availableItems
         }
@@ -172,53 +172,53 @@ export default {
       return this.autoHideDetails(data, true)
     },
     // predefined fully filled bar list with members and such
-    listFull() {
-      let data = [
+    listFull () {
+      const data = [
         {
           id: 1,
-          name: "My First MorphicBar",
+          name: 'My First MorphicBar',
           is_shared: false,
           items: this.availableItems,
           members: [
             {
               id: 1,
-              name: "John Smith",
-              status: "invited"
+              name: 'John Smith',
+              status: 'invited'
             },
             {
               id: 2,
-              name: "Karoline",
-              status: "invited"
+              name: 'Karoline',
+              status: 'invited'
             },
             {
               id: 3,
-              name: "Dan McDan",
-              status: "accepted"
+              name: 'Dan McDan',
+              status: 'accepted'
             }
           ]
         },
         {
           id: 2,
-          name: "My Second MorphicBar",
+          name: 'My Second MorphicBar',
           is_shared: false,
           items: this.availableItems,
           members: []
         },
         {
           id: 3,
-          name: "Basic MorphicBar",
+          name: 'Basic MorphicBar',
           is_shared: true,
           items: this.availableItems,
           members: [
             {
               id: 4,
-              name: "Jody La Forge",
-              status: "accepted"
+              name: 'Jody La Forge',
+              status: 'accepted'
             },
             {
               id: 5,
-              name: "Cp. Kirk",
-              status: "accepted"
+              name: 'Cp. Kirk',
+              status: 'accepted'
             }
           ]
         }
@@ -226,5 +226,5 @@ export default {
       return this.autoHideDetails(data, true)
     }
   }
-}  
+}
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="morphicBarPreview bg-white text-center p-2 mb-2">
-    <div v-for="option in options" class="option pt-4 pb-4">{{ option }}</div>
+    <div v-for="option in options" class="option pt-4 pb-4" :key="option.label">{{ option }}</div>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div id="memberList">
     <ul v-if="members && members.length > 0" class="list-unstyled mb-0">
-      <li v-for="member in members">
+      <li v-for="member in members" :key="member.id">
         <RenderMember :member="member" />
       </li>
     </ul>
