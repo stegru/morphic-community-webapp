@@ -43,15 +43,16 @@
             <b-card-text>
               <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
               <div v-for="bar in bars">
-                <div class="barPicker p-2 mb-3" v-bind:class="{ active: memberBar == bar.id }">
-                  <MorphicBarPreview :options="bar.options" />
+                <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: memberBar == bar.id }">
+                  <h5><b>{{ bar.name }}</b></h5>
                   <b-row>
-                    <b-col md="6">
-                      <strong>{{ bar.name }}</strong><br>
+                    <b-col md="9">
+                      <RenderList :items="bar.items" />
                     </b-col>
-                    <b-col md="6">
+                    <b-col md="3">
                       <div class="text-right">
-                        <b-button @click="memberBar = bar.id" variant="primary" class="ml-1">Pick this Morphic Bar</b-button>
+                        <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
+                        <b-button @click="memberBar = bar.id" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
                       </div>
                     </b-col>
                   </b-row>
@@ -82,7 +83,9 @@
                 Email:
                 <b>{{ memberEmail }}</b>
               </p>
-              <MorphicBarPreview :options="getBarOptionsById(memberBar)" />
+              <div class="bg-silver rounded p-3 mb-3">
+                <RenderList :items="getBarItemsById(memberBar)" />
+              </div>
               <b-row>
                 <b-col md="6">
                   <b-form-checkbox
@@ -138,7 +141,9 @@
 
 <script>
 
-import MorphicBarPreview from '@/components/dashboard/MorphicBarPreview'
+import RenderList from '@/components/dashboard/RenderList'
+
+import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MemberInvite',
@@ -149,44 +154,52 @@ export default {
       memberEmail: 'john.smith@gmail.com',
       memberBar: 1,
       sendEmailCopy: 0,
-      bars: [
-        {
-          id: 1,
-          name: "Basic MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
-        },
-        {
-          id: 2,
-          name: "Magnifier and Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["Magnifier", "Text Zoom", "High Contrast", "Read Aloud", "Sound Volume"],
-        },
-        {
-          id: 3,
-          name: "High Contrast & Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["High Contrast", "Text Zoom", "Read Aloud", "Sound Volume", "Magnifier"],
-        }
-      ]
+      availableItems: availableItems
     }
   },
   components: {
-    MorphicBarPreview
+    RenderList
   },
   methods: {
     sendConfirmFunc(bvModalEvt) {
       this.$router.push('/dashboard')
     },
-    getBarOptionsById(barId) {
+    getBarItemsById(barId) {
       if (barId > 0 && this.bars) {
         for (var i = this.bars.length - 1; i >= 0; i--) {
           if (this.bars[i].id === barId) {
-            return this.bars[i].options;
+            return this.bars[i].items;
           }
         }
       }
       return [];
+    }
+  },
+  computed: {
+    bars() {
+      return [
+        {
+          id: 1,
+          name: "Basic MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          is_shared: true,
+          items: this.availableItems,
+        },
+        {
+          id: 2,
+          name: "Magnifier and Text Zoom MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          is_shared: true,
+          items: this.availableItems,
+        },
+        {
+          id: 3,
+          name: "High Contrast & Text Zoom MorphicBar",
+          desc: "This Morphic Bar is designed to match your needs when using it as...",
+          is_shared: true,
+          items: this.availableItems,
+        }
+      ]
     }
   }
 }

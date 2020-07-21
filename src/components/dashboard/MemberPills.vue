@@ -1,12 +1,10 @@
 <template>
-  <div class="memberPills p-2 mb-2">
-    <div v-if="members && members.length > 0">
-      <b-button v-for="member in members" v-bind:key="member.id" :to="'/dashboard/member/' + member.id" pill variant="outline-dark" class="mr-1 mb-1">
-        <b-icon-person-fill></b-icon-person-fill>
-        {{ member.first_name }} {{ member.last_name }}
-        <!-- <b class="small text-primary">({{ member.state }})</b> -->
-      </b-button>
-    </div>
+  <div id="memberList">
+    <ul v-if="members && members.length > 0" class="list-unstyled mb-0">
+      <li v-for="member in members" :key="member.id">
+        <RenderMember :member="member" />
+      </li>
+    </ul>
     <div v-else>
       You don't have any members attached to this Morphic Bar.
     </div>
@@ -16,8 +14,13 @@
 <script>
 import { getCommunityMembers } from '@/services/communityService'
 
+import RenderMember from '@/components/dashboard/RenderMember'
+
 export default {
   name: 'MemberPills',
+  components: {
+    RenderMember
+  },
   props: {
     bar: Object
   },
