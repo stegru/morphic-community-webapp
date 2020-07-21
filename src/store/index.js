@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { HTTP } from '@/services/index'
 import { login, register, resetPassword } from '@/services/userService'
-import { createNewCommunity } from '@/services/communityService'
+import { createNewCommunity, getUserCommunities } from '@/services/communityService'
 
 Vue.use(Vuex)
 
@@ -13,6 +13,7 @@ export default new Vuex.Store({
     userId: localStorage.getItem('userId') || '',
     user: {},
     community: {},
+    communityId: {},
     errorMessage: {}
   },
   mutations: {
@@ -33,6 +34,7 @@ export default new Vuex.Store({
       state.status = ''
       state.token = ''
       state.userId = ''
+      state.communityId = {}
     },
     reset_password (state) {
       state.status = 'reset_password'
@@ -46,6 +48,9 @@ export default new Vuex.Store({
     },
     community_error (state) {
       state.status = 'create_new_community_failed'
+    },
+    communities (state, communityId) {
+      state.communityId = communityId
     }
   },
   actions: {
@@ -92,6 +97,7 @@ export default new Vuex.Store({
         commit('logout')
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
+        localStorage.removeItem('communityId')
         delete HTTP.defaults.headers.common.Authorization
         resolve()
       })
@@ -122,11 +128,26 @@ export default new Vuex.Store({
             reject(err)
           })
       })
+    },
+    userCommunities ({ commit }, userId) {
+      return new Promise((resolve, reject) => {
+        getUserCommunities(userId)
+          .then(resp => {
+            const communities = resp.data.communities
+            localStorage.setItem('communityId', communities[0].id)
+            commit('communities', communities[0].id)
+            resolve(communities)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
   },
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    userId: state => state.userId
+    userId: state => state.userId,
+    communityId: state => state.communityId
   }
 })

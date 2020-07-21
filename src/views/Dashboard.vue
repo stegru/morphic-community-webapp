@@ -24,7 +24,7 @@
       </b-row>
     </div>
     <div id="morphicBarList" v-if="list.length > 0">
-      <div class="morphicBarItem mb-3" v-for="bar in list">
+      <div class="morphicBarItem mb-3" v-for="bar in list" :key="bar.id">
         <b-row>
           <b-col md="5">
             <div class="bg-light rounded p-3">
@@ -33,7 +33,7 @@
               </div>
               <div v-else>
                 <h4>Your Community</h4>
-                <MemberPills :members=bar.members />
+                <MemberPills :bar=bar />
               </div>
             </div>
           </b-col>
@@ -60,12 +60,6 @@
         </b-row>
       </div>
     </div>
-    <div>
-      <b class="text-danger small">DEBUG:</b><br>
-      <b-button @click="debugDashboardEmpty()" variant="primary" size="sm">Empty Dashboard</b-button>
-      <b-button @click="debugDashboardWithBar()" variant="primary" size="sm" class="ml-1">MorphicBar Added</b-button>
-      <b-button @click="debugDashboardFull()" variant="primary" size="sm" class="ml-1">Full Dashboard</b-button>
-    </div>
   </div>
 </template>
 
@@ -76,6 +70,7 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
+import { getUserCommunities, getCommunityBars } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
@@ -87,97 +82,49 @@ export default {
     MorphicBarListItem
   },
   methods: {
-    isFirstBar: function() {
+    isFirstBar: function () {
       if (this.list.length === 1) {
         if (this.list[0].members) {
-          return false;
+          return false
         } else {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
-    isListEmpty: function() {
+    isListEmpty: function () {
       if (this.list.length > 0) {
-        return false;
+        return false
       }
-      return true;
-    },
-
-    // DEBUG methods (to change the different lists)
-    debugDashboardEmpty: function() {
-      this.list = [];
-    },
-    debugDashboardWithBar: function() {
-      this.list = this.listWithBar;
-    },
-    debugDashboardFull: function() {
-      this.list = this.listFull;
+      return true
     }
   },
-  data() {
+  data () {
     return {
       // main rendering list
       list: [],
-      welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
-
-      // predefined list with one bar without members
-      listWithBar: [
-        {
-          id: 1,
-          name: "My First MorphicBar",
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
-        }
-      ],
-      // predefined fully filled bar list with members and such
-      listFull: [
-        {
-          id: 1,
-          name: "My First MorphicBar",
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
-          members: [
-            {
-              id: 1,
-              name: "John Smith",
-              status: "invited"
-            },
-            {
-              id: 2,
-              name: "Karoline",
-              status: "invited"
-            },
-            {
-              id: 3,
-              name: "Dan McDan",
-              status: "accepted"
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: "My Second MorphicBar",
-          options: ["Magnifier", "Text Zoom", "High Contrast", "Read Aloud", "Sound Volume"],
-          members: []
-        },
-        {
-          id: 3,
-          name: "My Third MorphicBar",
-          options: ["High Contrast", "Text Zoom", "Read Aloud", "Sound Volume", "Magnifier"],
-          members: [
-            {
-              id: 4,
-              name: "Jody La Forge",
-              status: "accepted"
-            },
-            {
-              id: 5,
-              name: "Cp. Kirk",
-              status: "accepted"
-            }
-          ]
-        }
-      ]
+      communityId: '',
+      welcomeOrPickBar: true // if we are on the welcome page show the welcome text first
     }
+  },
+  computed: {
+    userId: function () { return this.$store.getters.userId }
+  },
+  mounted () {
+    this.$store.dispatch('userCommunities', this.userId)
+      .then((communities) => {
+        this.communityId = communities[0].id
+        getCommunityBars(this.communityId)
+          .then(resp => {
+            this.list = resp.data.bars
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
-}  
+}
 </script>
