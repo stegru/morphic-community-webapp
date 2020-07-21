@@ -11,3 +11,68 @@ export const MESSAGES = {
   successfulReset: 'Reset password successful',
   emailValidationError: 'This is a required field and must be a valid email address.'
 }
+export const availableItems = [
+  {
+    kind: "link",
+    is_primary: true,
+    label: "Open Reddit",
+    value: "https://www.reddit.com/",
+    configuration: {}
+  },
+  {
+    kind: "link",
+    is_primary: false,
+    label: "Open Facebook",
+    value: "https://www.facebook.com/",
+    configuration: {}
+  },
+  {
+    kind: "link",
+    is_primary: true,
+    label: "Photo Gallery",
+    value: "https://www.flickr.com/photos/karadaliev",
+    configuration: {}
+  },
+  {
+    kind: "application",
+    is_primary: true,
+    label: "Call Skype",
+    value: "...",
+    configuration: {}
+  },
+  {
+    kind: "application",
+    is_primary: false,
+    label: "Call Telegram",
+    value: "...",
+    configuration: {}
+  },
+  {
+    kind: "application",
+    is_primary: true,
+    label: "Call Viber",
+    value: "...",
+    configuration: {}
+  },
+  {
+    kind: "action",
+    is_primary: false,
+    label: "Open Task Manager",
+    value: "...",
+    configuration: {}
+  },
+  {
+    kind: "action",
+    is_primary: false,
+    label: "Take Screenshot",
+    value: "...",
+    configuration: {}
+  },
+  {
+    kind: "action",
+    is_primary: true,
+    label: "Magnifier",
+    value: "...",
+    configuration: {}
+  }
+]

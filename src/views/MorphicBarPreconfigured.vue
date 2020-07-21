@@ -1,38 +1,28 @@
 <template>
-  <div>
-    <b-row>
-      <b-col md="12">
-        <div class="bg-silver rounded p-3">
-          <h4 class="mb-3">Pick any of these Morphic Bar's, or start with a fresh one</h4>
-          <div v-for="bar in list">
-            <MorphicBarPicker :bar=bar />
-            <hr class="mt-4 mb-4">
-          </div>
-          <MorphicBarBlank class="mb-2" />
-          <b-row>
-            <b-col md="8">
-              <strong>Start with a blank bar</strong><br>
-              <p class="small mb-0">If you are a power user, you might wish to start with a blank Morphic Bar and manually pick witch options you want to include in it.</p>
-            </b-col>
-            <b-col md="4">
-              <div class="text-right">
-                <b-button to="/dashboard/morphicbar-editor/0" size="sm" variant="success">Start with blank bar</b-button>
-              </div>
-            </b-col>
-          </b-row>
-
+  <div id="MorphicBarPreconfigured">
+    <h4 class="mb-3">Pick any of these Morphic Bar's, or start with a fresh one</h4>
+    <MorphicBarPicker v-for="bar in list" :bar=bar class="mb-2" />
+    <div class="bg-silver rounded p-3">
+      <b-row>
+        <b-col md="8">
+          <strong>Start with a blank bar</strong><br>
+          <p class="small mb-0">If you are a power user, you might wish to start with a blank Morphic Bar and manually pick witch options you want to include in it.</p>
+        </b-col>
+        <b-col md="4">
           <div class="text-right">
-            <b-button to="/dashboard" variant="outline-secondary" class="ml-1">Cancel</b-button>
+            <b-button to="/dashboard/morphicbar-editor/0" size="sm" variant="primary">Start with blank bar</b-button>
           </div>
-        </div>
-      </b-col>
-    </b-row>
+        </b-col>
+      </b-row>
+    </div>
   </div>
 </template>
 
 <script>
 import MorphicBarPicker from '@/components/dashboard/MorphicBarPicker'
 import MorphicBarBlank from '@/components/dashboard/MorphicBarBlank'
+
+import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MorphicBarPreconfigured',
@@ -42,24 +32,32 @@ export default {
   },
   data () {
     return {
-      list: [
+      availableItems: availableItems
+    }
+  },
+  computed: {
+    list() {
+      return [
         {
           id: 1,
           name: "Basic MorphicBar",
           desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["Text Zoom", "Magnifier", "Read Aloud", "Sound Volume", "High Contrast"],
+          is_shared: true,
+          items: this.availableItems,
         },
         {
           id: 2,
           name: "Magnifier and Text Zoom MorphicBar",
           desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["Magnifier", "Text Zoom", "High Contrast", "Read Aloud", "Sound Volume"],
+          is_shared: true,
+          items: this.availableItems,
         },
         {
           id: 3,
           name: "High Contrast & Text Zoom MorphicBar",
           desc: "This Morphic Bar is designed to match your needs when using it as...",
-          options: ["High Contrast", "Text Zoom", "Read Aloud", "Sound Volume", "Magnifier"],
+          is_shared: true,
+          items: this.availableItems,
         }
       ]
     }
