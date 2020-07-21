@@ -17,7 +17,7 @@
       </b-col>
       <b-col md="3">
         <div class="text-right">
-          <b-button size="sm" variant="secondary" class="btn-block mt-1">Make a Copy</b-button>
+          <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="duplicateBar">Make a Copy</b-button>
           <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
           <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
         </div>
@@ -28,7 +28,7 @@
 
 <script>
 import RenderList from '@/components/dashboard/RenderList'
-import { getCommunityBar } from '@/services/communityService'
+import { getCommunityBar, createCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'MorphicBarListItem',
@@ -54,6 +54,12 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  methods: {
+    duplicateBar: function () {
+      this.barDetails.name = `${this.barDetails.name} - copy`
+      createCommunityBar(this.communityId, this.barDetails)
+    }
   }
 }
 </script>

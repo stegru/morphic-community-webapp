@@ -19,6 +19,10 @@ export function getCommunityBars (communityId) {
   return HTTP.get(`/v1/communities/${communityId}/bars`)
 }
 
+export function createCommunityBar (communityId, data) {
+  return HTTP.post(`/v1/communities/${communityId}/bars`, data)
+}
+
 export function getCommunityBar (communityId, barId) {
   return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`)
 }
