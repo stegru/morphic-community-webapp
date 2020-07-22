@@ -70,7 +70,7 @@ const routes = [
     component: Dashboard,
     meta: {
       title: 'Dashboard Morphic Community',
-      authRoute: true
+      authRoute: false
     }
   },
   {
@@ -79,7 +79,7 @@ const routes = [
     component: MorphicBarPreconfigured,
     meta: {
       title: 'MorphicBar Preconfigured',
-      authRoute: true
+      authRoute: false
     }
   },
   {
@@ -88,7 +88,7 @@ const routes = [
     component: MorphicBarEditor,
     meta: {
       title: 'MorphicBar Editor',
-      authRoute: true
+      authRoute: false
     }
   },
   {

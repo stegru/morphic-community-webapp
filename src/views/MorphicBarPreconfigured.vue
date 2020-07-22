@@ -1,7 +1,7 @@
 <template>
   <div id="MorphicBarPreconfigured">
     <h4 class="mb-3">Pick any of these Morphic Bar's, or start with a fresh one</h4>
-    <MorphicBarPicker v-for="bar in list" :bar=bar class="mb-2" />
+    <MorphicBarPicker v-for="bar in list" :key="bar.id" :bar=bar class="mb-2" />
     <div class="bg-silver rounded p-3">
       <b-row>
         <b-col md="8">
@@ -19,16 +19,15 @@
 </template>
 
 <script>
+
 import MorphicBarPicker from '@/components/dashboard/MorphicBarPicker'
-import MorphicBarBlank from '@/components/dashboard/MorphicBarBlank'
 
 import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MorphicBarPreconfigured',
   components: {
-    MorphicBarPicker,
-    MorphicBarBlank
+    MorphicBarPicker
   },
   data () {
     return {

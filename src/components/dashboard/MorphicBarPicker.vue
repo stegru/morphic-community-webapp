@@ -21,10 +21,7 @@ import RenderList from '@/components/dashboard/RenderList'
 export default {
   name: 'MorphicBarPicker',
   props: {
-    bar: Object,
-    default: function () {
-      return {}
-    }
+    bar: Object
   },
   components: {
     RenderList
