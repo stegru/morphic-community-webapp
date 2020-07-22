@@ -135,7 +135,7 @@ export default {
         this.community = communities[0]
         getCommunityBars(communities[0].id)
           .then(resp => {
-            this.list = resp.data.bars
+            this.list = this.autoHideDetails(resp.data.bars, true)
           })
           .catch(err => {
             console.log(err)

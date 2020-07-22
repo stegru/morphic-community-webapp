@@ -1,5 +1,8 @@
 <template>
   <b-jumbotron class="bg-light">
+    <b-modal id="deleteConfirm" @ok="deleteCommunity" title="Delete a community" footer-bg-variant="light" ok-title="Delete community">
+      <p class="my-4">Please confirm deletion of that community?</p>
+    </b-modal>
     <h3>My Communities</h3>
     <p>Sed bibendum neque vel lorem maximus, ut euismod dui ultricies. Vestibulum sed ipsum in arcu facilisis posuere id sit amet risus. In sed cursus turpis. Duis ligula magna, tempor id mattis non, sollicitudin vel nisl. </p>
     <b-button variant="primary" disabled>
@@ -44,7 +47,7 @@
           <b-button :href="'https://' + community.name + '.' + host" variant="success">
             <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
           </b-button>
-          <b-button variant="danger" class="ml-1" @click="deleteCommunity(community.id)">Delete</b-button>
+          <b-button variant="danger" class="ml-1" v-b-modal.deleteConfirm @click="setCommunityId(community.id)">Delete</b-button>
         </b-card-text>
       </b-card>
     </b-card-group>
@@ -59,6 +62,7 @@ export default {
   data () {
     return {
       communities: [],
+      communityId: '',
       host: `${window.location.hostname}.com`
     }
   },
@@ -75,11 +79,14 @@ export default {
       })
   },
   methods: {
-    deleteCommunity: function (communityId) {
-      deleteUserCommunity(communityId)
+    setCommunityId: function (communityId) {
+      this.communityId = communityId
+    },
+    deleteCommunity: function () {
+      deleteUserCommunity(this.communityId)
         .then(resp => {
           if (resp.status) {
-            const index = this.communities.map(item => item.id).indexOf(communityId)
+            const index = this.communities.map(item => item.id).indexOf(this.communityId)
             this.communities.splice(index, 1)
           }
         })

@@ -127,8 +127,8 @@
               <b-row>
                 <b-col md="6">
                   <b-button @click="tabIndex = 1" variant="success">Back</b-button>
-                  <b-button v-b-modal.sendConfirm variant="primary" class="ml-1">Send email invitation</b-button>
                   <b-button v-b-modal.addMember variant="primary" class="ml-1">Add member</b-button>
+                  <b-button v-b-modal.sendConfirm variant="primary" class="ml-1">Send email invitation</b-button>
                 </b-col>
                 <b-col md="6">
                   <div class="small text-right">
