@@ -14,42 +14,66 @@
           <b-tab title="Step 1: Personal Information">
             <b-card-text>
               <h4 class="mb-3">Who do you want to invite?</h4>
-              <b-form-group
-                id="first-name"
-                label="First Name"
-                label-for="firstName"
-              >
-                <b-form-input v-model="firstName" id="firstName" placeholder="First Name"></b-form-input>
-              </b-form-group>
-              <b-form-group
-                id="last-name"
-                label="Last Name"
-                label-for="lastName"
-              >
-                <b-form-input v-model="lastName" id="lastName" placeholder="Last Name"></b-form-input>
-              </b-form-group>
-              <b-form-group
-                id="member-email"
-                label="Email"
-                label-for="memberEmail"
-              >
-                <b-form-input v-model="memberEmail" type="email" id="memberEmail" placeholder="Email Address"></b-form-input>
-              </b-form-group>
-              <hr>
-              <b-row>
-                <b-col md="6">
-                  <b-button @click="tabIndex = 1" variant="primary">Next</b-button>
-                </b-col>
-                <b-col md="6">
-                  <div class="small text-right">
-                    <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
-                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-                  </div>
-                </b-col>
-              </b-row>
+              <b-form @submit.stop.prevent="onSubmit">
+                <b-form-group
+                  id="first-name"
+                  label="First Name"
+                  label-for="firstName"
+                >
+                  <b-form-input
+                    v-model="$v.firstName.$model"
+                    :state="validateState('firstName')"
+                    id="firstName"
+                    placeholder="First Name"
+                  >
+                  </b-form-input>
+                <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group
+                  id="last-name"
+                  label="Last Name"
+                  label-for="lastName"
+                >
+                  <b-form-input
+                    v-model="$v.lastName.$model"
+                    :state="validateState('lastName')"
+                    id="lastName"
+                    placeholder="Last Name"
+                    >
+                  </b-form-input>
+                <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group
+                  id="member-email"
+                  label="Email"
+                  label-for="memberEmail"
+                >
+                  <b-form-input
+                    v-model="$v.memberEmail.$model"
+                    :state="validateState('memberEmail')"
+                    type="email"
+                    id="memberEmail"
+                    placeholder="Email Address"
+                  >
+                  </b-form-input>
+                <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
+                </b-form-group>
+                <hr>
+                <b-row>
+                  <b-col md="6">
+                    <b-button type="submit" variant="primary">Next</b-button>
+                  </b-col>
+                  <b-col md="6">
+                    <div class="small text-right">
+                      <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
+                      <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                    </div>
+                  </b-col>
+                </b-row>
+              </b-form>
             </b-card-text>
           </b-tab>
-          <b-tab title="Step 2: Attach Morphic Bar">
+          <b-tab :disabled="this.$v.$invalid" title="Step 2: Attach Morphic Bar">
             <b-card-text>
               <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
               <div v-for="bar in bars" :key="bar.id">
@@ -82,7 +106,7 @@
               </b-row>
             </b-card-text>
           </b-tab>
-          <b-tab title="Step 3: Preview and Send">
+          <b-tab :disabled="this.$v.$invalid" title="Step 3: Preview and Send">
             <b-card-text>
               <h4 class="mb-3">Does this looks alright?</h4>
               <p>
@@ -111,16 +135,6 @@
                   >
                     Send me a copy of the invitation email
                   </b-form-checkbox>
-                </b-col>
-                <b-col md="6">
-                  <p class="text-right small">
-                    <b class="text-danger">DEBUG:</b>
-                    First Name: <b>{{ firstName }}</b>;
-                    Last Name: <b>{{ lastName }}</b>;
-                    Email: <b>{{ memberEmail }}</b>;
-                    MorphicBar: <b>{{ memberBar }}</b>;
-                    Copy: <b>{{ sendEmailCopy }}</b>
-                  </p>
                 </b-col>
               </b-row>
               <hr>
@@ -159,10 +173,16 @@
 
 import RenderList from '@/components/dashboard/RenderList'
 import { addCommunityMember } from '@/services/communityService'
+import { validationMixin } from 'vuelidate'
+import { required, email } from 'vuelidate/lib/validators'
 import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MemberInvite',
+  mixins: [validationMixin],
+  components: {
+    RenderList
+  },
   data () {
     return {
       tabIndex: 0,
@@ -174,10 +194,30 @@ export default {
       availableItems: availableItems
     }
   },
-  components: {
-    RenderList
+  validations: {
+    firstName: {
+      required
+    },
+    lastName: {
+      required
+    },
+    memberEmail: {
+      required,
+      email
+    }
   },
   methods: {
+    validateState (name) {
+      const { $dirty, $error } = this.$v[name]
+      return $dirty ? !$error : null
+    },
+    onSubmit () {
+      this.$v.$touch()
+      if (this.$v.$anyError) {
+        return
+      }
+      this.tabIndex = 1
+    },
     sendConfirmFunc (bvModalEvt) {
       this.$router.push('/dashboard')
     },
