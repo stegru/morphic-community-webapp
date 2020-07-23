@@ -34,7 +34,7 @@ export default {
     communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
-    getCommunityMembers(this.communityId, this.bar.id)
+    getCommunityMembers(this.communityId)
       .then(resp => {
         this.members = resp.data.members
       })

@@ -38,7 +38,7 @@
               </div>
               <div v-else>
                 <h4>Your Community</h4>
-                <MemberPills :bar="bar" />
+                <MemberPills />
               </div>
             </div>
           </b-col>

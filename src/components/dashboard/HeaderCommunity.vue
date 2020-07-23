@@ -12,11 +12,11 @@
           </b-col>
           <b-col md="6">
             <div class="text-right small">
-              <b>{{ community.members}}</b> / {{ community.maxMembers }} members
+              <b>{{ members }}</b> / {{ maxMembers }} members
             </div>
           </b-col>
         </b-row>
-        <b-progress :value="community.members" :max="community.maxMembers" variant="success" striped></b-progress>
+        <b-progress :value="members" :max="maxMembers" variant="success" striped></b-progress>
       </b-col>
       <b-col md="1">
         <div class="text-right mt-2">
@@ -28,11 +28,30 @@
 </template>
 
 <script>
+import { getCommunityMembers } from '@/services/communityService'
 
 export default {
   name: 'HeaderCommunity',
   props: {
     community: Object
+  },
+  data () {
+    return {
+      maxMembers: 10,
+      members: null
+    }
+  },
+  computed: {
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    getCommunityMembers(this.communityId)
+      .then(resp => {
+        this.members = resp.data.members.length
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

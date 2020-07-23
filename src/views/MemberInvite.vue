@@ -182,7 +182,6 @@ export default {
       this.$router.push('/dashboard')
     },
     addMember (bvModalEvt) {
-      console.log(bvModalEvt)
       const member = {
         first_name: this.firstName,
         last_name: this.lastName
