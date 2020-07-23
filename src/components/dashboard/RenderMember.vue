@@ -4,8 +4,7 @@
       <b-icon-person-circle></b-icon-person-circle>
       {{ member.first_name }} {{ member.last_name }}
     </b-link>
-    <b v-if="member.state" class="small">({{ member.state }})</b>
-    <b else class="small">(uninvited)</b>
+    <b class="small">({{ member.state }})</b>
   </span>
 </template>
 

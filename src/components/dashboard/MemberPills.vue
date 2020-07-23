@@ -2,7 +2,7 @@
   <div id="memberList">
     <ul v-if="members && members.length > 0" class="list-unstyled mb-0">
       <li v-for="member in members" :key="member.id">
-        <RenderMember :member="member" />
+        <RenderMember v-if="member.bar_id === bar.id" :member="member" />
       </li>
     </ul>
     <div v-else>

@@ -45,7 +45,7 @@
                 <BlockFirstMember />
               </div>
               <div v-else>
-                <MemberPills />
+                <MemberPills :bar="bar" />
               </div>
             </div>
           </b-col>
