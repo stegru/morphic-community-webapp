@@ -77,16 +77,16 @@
             <b-card-text>
               <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
               <div v-for="bar in bars" :key="bar.id">
-                <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: memberBar == bar.id }">
+                <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
                   <h5><b>{{ bar.name }}</b></h5>
                   <b-row>
                     <b-col md="9">
-                      <RenderList :items="bar.items" />
+                      <RenderList :barId="bar.id" />
                     </b-col>
                     <b-col md="3">
                       <div class="text-right">
                         <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
-                        <b-button @click="memberBar = bar.id" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
+                        <b-button @click="selectedBar = bar.id" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
                       </div>
                     </b-col>
                   </b-row>
@@ -122,7 +122,7 @@
                 <b>{{ memberEmail }}</b>
               </p>
               <div class="bg-silver rounded p-3 mb-3">
-                <RenderList :items="getBarItemsById(memberBar)" />
+                <RenderList v-if="tabIndex === 2" :barId="selectedBar" />
               </div>
               <b-row>
                 <b-col md="6">
@@ -172,7 +172,7 @@
 <script>
 
 import RenderList from '@/components/dashboard/RenderList'
-import { addCommunityMember } from '@/services/communityService'
+import { addCommunityMember, getCommunityBars } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
 import { availableItems } from '@/utils/constants'
@@ -185,11 +185,12 @@ export default {
   },
   data () {
     return {
+      bars: {},
       tabIndex: 0,
       firstName: '',
       lastName: '',
       memberEmail: '',
-      memberBar: 1,
+      selectedBar: null,
       sendEmailCopy: 0,
       availableItems: availableItems
     }
@@ -235,45 +236,21 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    getBarItemsById (barId) {
-      if (barId > 0 && this.bars) {
-        for (var i = this.bars.length - 1; i >= 0; i--) {
-          if (this.bars[i].id === barId) {
-            return this.bars[i].items
-          }
-        }
-      }
-      return []
     }
   },
   computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    bars () {
-      return [
-        {
-          id: 1,
-          name: "Basic MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          is_shared: true,
-          items: this.availableItems
-        },
-        {
-          id: 2,
-          name: "Magnifier and Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          is_shared: true,
-          items: this.availableItems
-        },
-        {
-          id: 3,
-          name: "High Contrast & Text Zoom MorphicBar",
-          desc: "This Morphic Bar is designed to match your needs when using it as...",
-          is_shared: true,
-          items: this.availableItems
-        }
-      ]
-    }
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    getCommunityBars(this.communityId)
+      .then(resp => {
+        this.bars = resp.data.bars
+        // default selected bar
+        this.selectedBar = this.bars[0].id
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

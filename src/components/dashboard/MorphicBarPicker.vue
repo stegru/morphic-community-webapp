@@ -1,6 +1,6 @@
 <template>
   <div class="bg-silver rounded p-3">
-    <RenderList :items="bar.items" />
+    <RenderList :barId="bar.id" />
     <b-row>
       <b-col md="10">
         <strong>{{ bar.name }}</strong><br>

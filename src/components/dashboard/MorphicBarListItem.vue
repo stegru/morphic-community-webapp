@@ -13,7 +13,7 @@
     </b-row>
     <b-row :class="{ 'd-none': bar.showDetails === false }">
       <b-col md="9">
-        <RenderList v-if="barDetails.items" :items="barDetails.items" />
+        <RenderList v-if="barDetails.items" :barId="bar.id" />
       </b-col>
       <b-col md="3">
         <div class="text-right">

@@ -4,7 +4,7 @@
       <b-col md="5">
         <h6><b>Morphic Bar buttons</b></h6>
         <ul class="small list-unstyled mb-0">
-          <li v-for="item in buttons" class="item" :key="item.id">
+          <li v-for="item in primaryItems" class="item" :key="item.id">
             <RenderListItem :item="item" />
           </li>
         </ul>
@@ -12,7 +12,7 @@
       <b-col md="7">
         <h6><b>Extra Panel buttons</b></h6>
         <ul class="small list-unstyled mb-0">
-          <li v-for="item in extra" class="item" :key="item.id">
+          <li v-for="item in extraItems" class="item" :key="item.id">
             <RenderListItem :item="item" />
           </li>
         </ul>
@@ -23,38 +23,42 @@
 
 <script>
 import RenderListItem from '@/components/dashboard/RenderListItem'
+import { getCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'RenderList',
   props: {
-    items: Array
+    barId: String
   },
   components: {
     RenderListItem
   },
-  computed: {
-    buttons () {
-      const list = []
-      if (this.items.length > 0) {
-        for (var i = this.items.length - 1; i >= 0; i--) {
-          if (this.items[i].is_primary) {
-            list.push(this.items[i])
-          }
-        }
-      }
-      return list
-    },
-    extra () {
-      const list = []
-      if (this.items.length > 0) {
-        for (var i = this.items.length - 1; i >= 0; i--) {
-          if (this.items[i].is_primary === false) {
-            list.push(this.items[i])
-          }
-        }
-      }
-      return list
+  data () {
+    return {
+      primaryItems: [],
+      extraItems: []
     }
+  },
+  computed: {
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    getCommunityBar(this.communityId, this.barId)
+      .then(resp => {
+        const items = resp.data.items
+        if (items.length > 0) {
+          for (var i = items.length - 1; i >= 0; i--) {
+            if (items[i].is_primary) {
+              this.primaryItems.push(items[i])
+            } else {
+              this.extraItems.push(items[i])
+            }
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
