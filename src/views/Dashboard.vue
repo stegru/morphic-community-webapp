@@ -29,6 +29,14 @@
       </b-row>
     </div>
     <div id="morphicBarList" v-if="list.length > 0">
+      <b-row>
+        <b-col :md="leftColumnSize">
+          <h4>Your Community</h4>
+        </b-col>
+        <b-col :md="rightColumnSize">
+          <h4>Customized Morphic Bars</h4>
+        </b-col>
+      </b-row>
       <div class="morphicBarItem mb-3" v-for="bar in list" :key="bar.id">
         <b-row>
           <b-col :md="leftColumnSize">
@@ -37,7 +45,6 @@
                 <BlockFirstMember />
               </div>
               <div v-else>
-                <h4>Your Community</h4>
                 <MemberPills />
               </div>
             </div>
