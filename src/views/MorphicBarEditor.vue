@@ -1,5 +1,11 @@
 <template>
   <div class="bg-silver rounded p-3">
+    <b-modal id="saveConfirm" @ok="updateBar" title="Save the Bar" footer-bg-variant="light" ok-title="Save">
+      <p class="my-4">Please confirm updating the bar?</p>
+    </b-modal>
+    <b-alert variant="success" :show="successAlert">
+      {{ successMessage }}
+    </b-alert>
     <h4 class="mb-3">Morphic Bar Editor</h4>
     <p>Click on any of the empty spaces on the Morphic Bar to put the desired option there.</p>
     <b-form-input v-model="barDetails.name" placeholder="Morphic Bar Name"></b-form-input>
@@ -33,7 +39,7 @@
     </div>
     <b-row class="mt-3">
       <b-col md="6">
-        <b-button to="/dashboard" variant="primary">Save Changes</b-button>
+        <b-button v-b-modal.saveConfirm variant="primary">Save Changes</b-button>
       </b-col>
       <b-col md="6" class="text-right">
         <b-button to="/dashboard" size="sm" variant="outline-secondary">Cancel</b-button>
@@ -90,12 +96,15 @@
 </style>
 
 <script>
-import { getCommunityBar } from '@/services/communityService'
+import { getCommunityBar, updateCommunityBar } from '@/services/communityService'
+import { MESSAGES } from '@/utils/constants'
 
 export default {
   data () {
     return {
-      barDetails: {}
+      barDetails: {},
+      successAlert: false,
+      successMessage: MESSAGES.successfulBarSave
     }
   },
   computed: {
@@ -109,6 +118,19 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  methods: {
+    updateBar: function () {
+      updateCommunityBar(this.communityId, this.barDetails.id, this.barDetails)
+        .then(resp => {
+          if (resp.status === 200) {
+            this.successAlert = true
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>
