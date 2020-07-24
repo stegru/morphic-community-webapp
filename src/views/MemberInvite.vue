@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="sendConfirm" @ok="sendConfirmFunc" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
+    <b-modal id="sendConfirm" @ok="inviteMember" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
       <p class="my-4">Please confirm this member invitation?</p>
     </b-modal>
     <b-modal id="addMember" @ok="addMember" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
@@ -172,7 +172,7 @@
 <script>
 
 import RenderList from '@/components/dashboard/RenderList'
-import { addCommunityMember, getCommunityBars } from '@/services/communityService'
+import { addCommunityMember, getCommunityBars, inviteCommunityMember } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
 import { availableItems } from '@/utils/constants'
@@ -219,23 +219,50 @@ export default {
       }
       this.tabIndex = 1
     },
-    sendConfirmFunc (bvModalEvt) {
-      this.$router.push('/dashboard')
-    },
-    addMember (bvModalEvt) {
-      const member = {
-        first_name: this.firstName,
-        last_name: this.lastName
-      }
-      addCommunityMember(this.communityId, member)
+    inviteMember () {
+      this.addMember(true)
         .then(resp => {
-          if (resp.status === 200) {
-            this.$router.push('/dashboard')
+          const member = {
+            member_id: resp.id,
+            email: this.memberEmail
           }
+          inviteCommunityMember(this.communityId, member)
+            .then(resp => {
+              if (resp.status === 200) {
+                setTimeout(() => {
+                  this.$router.push('/dashboard')
+                }, 500)
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    addMember (BvModalEvent, invite) {
+      return new Promise((resolve, reject) => {
+        const member = {
+          first_name: this.firstName,
+          last_name: this.lastName
+        }
+        addCommunityMember(this.communityId, member)
+          .then(resp => {
+            if (resp.status === 200) {
+              if (!invite) {
+                setTimeout(() => {
+                  this.$router.push('/dashboard')
+                }, 500)
+              }
+              resolve(resp.data.member)
+            }
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
   },
   computed: {

@@ -34,3 +34,7 @@ export function getCommunityMembers (communityId) {
 export function addCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/members`, member)
 }
+
+export function inviteCommunityMember (communityId, member) {
+  return HTTP.post(`/v1/communities/${communityId}/invitations`, member)
+}

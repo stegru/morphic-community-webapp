@@ -42,16 +42,32 @@ export default {
     }
   },
   computed: {
+    userId: function () { return this.$store.getters.userId },
     communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
-    getCommunityMembers(this.communityId)
-      .then(resp => {
-        this.members = resp.data.members.length
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    if (typeof (this.communityId) === 'string') {
+      this.communityMembersLength(this.communityId)
+    } else {
+      this.$store.dispatch('userCommunities', this.userId)
+        .then((communities) => {
+          this.communityMembersLength(communities[0].id)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  methods: {
+    communityMembersLength: function (communityId) {
+      getCommunityMembers(communityId)
+        .then(resp => {
+          this.members = resp.data.members.length
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>
