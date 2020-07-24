@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-modal id="sendConfirm" @ok="inviteMember" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
+    <b-modal id="inviteConfirm" @ok="addMember(true)" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
       <p class="my-4">Please confirm this member invitation?</p>
     </b-modal>
-    <b-modal id="addMember" @ok="addMember" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
+    <b-modal id="memberConfirm" @ok="addMember(false)" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
       <p class="my-4">Please confirm adding this member?</p>
     </b-modal>
 
@@ -141,8 +141,8 @@
               <b-row>
                 <b-col md="6">
                   <b-button @click="tabIndex = 1" variant="success">Back</b-button>
-                  <b-button v-b-modal.addMember variant="primary" class="ml-1">Add member</b-button>
-                  <b-button v-b-modal.sendConfirm variant="primary" class="ml-1">Add member & Send email invitation</b-button>
+                  <b-button v-b-modal.memberConfirm variant="primary" class="ml-1">Add member</b-button>
+                  <b-button v-b-modal.inviteConfirm variant="primary" class="ml-1">Add member & Send email invitation</b-button>
                 </b-col>
                 <b-col md="6">
                   <div class="small text-right">
@@ -172,7 +172,7 @@
 <script>
 
 import RenderList from '@/components/dashboard/RenderList'
-import { addCommunityMember, getCommunityBars, inviteCommunityMember } from '@/services/communityService'
+import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
 import { availableItems } from '@/utils/constants'
@@ -219,50 +219,45 @@ export default {
       }
       this.tabIndex = 1
     },
-    inviteMember () {
-      this.addMember(true)
+    addMember (invite) {
+      console.log('invite: ', invite)
+      let member = {
+        first_name: this.firstName,
+        last_name: this.lastName
+      }
+      addCommunityMember(this.communityId, member)
         .then(resp => {
-          const member = {
-            member_id: resp.id,
+          member = {
+            member_id: resp.data.member.id,
             email: this.memberEmail
           }
-          inviteCommunityMember(this.communityId, member)
-            .then(resp => {
-              if (resp.status === 200) {
-                setTimeout(() => {
-                  this.$router.push('/dashboard')
-                }, 500)
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
+          if (resp.status === 200) {
+            if (invite) {
+              inviteCommunityMember(this.communityId, member)
+            }
+            setTimeout(() => {
+              this.attachBar(resp.data.member)
+            }, 500)
+          }
         })
         .catch(err => {
           console.log(err)
         })
     },
-    addMember (BvModalEvent, invite) {
-      return new Promise((resolve, reject) => {
-        const member = {
-          first_name: this.firstName,
-          last_name: this.lastName
-        }
-        addCommunityMember(this.communityId, member)
-          .then(resp => {
-            if (resp.status === 200) {
-              if (!invite) {
-                setTimeout(() => {
-                  this.$router.push('/dashboard')
-                }, 500)
-              }
-              resolve(resp.data.member)
-            }
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+    attachBar (resp) {
+      const member = {
+        first_name: resp.first_name,
+        last_name: resp.last_name,
+        bar_id: this.selectedBar,
+        role: resp.role
+      }
+      updateCommunityMember(this.communityId, resp.id, member)
+        .then(resp => {
+          this.$router.push('/dashboard')
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   computed: {

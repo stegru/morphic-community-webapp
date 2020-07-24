@@ -39,6 +39,10 @@ export function addCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/members`, member)
 }
 
+export function updateCommunityMember (communityId, memberId, member) {
+  return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member)
+}
+
 export function inviteCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/invitations`, member)
 }
