@@ -50,7 +50,7 @@
             </div>
           </b-col>
           <b-col :md="rightColumnSize">
-            <MorphicBarListItem :bar="bar" />
+            <MorphicBarListItem :bar="bar" @reload-bars="loadData" />
           </b-col>
         </b-row>
       </div>
@@ -93,7 +93,39 @@ export default {
     MemberPills,
     MorphicBarListItem
   },
+  data () {
+    return {
+      list: [],
+      community: {},
+      leftColumnSize: 4, // members column
+      rightColumnSize: 8, // bar's column
+      welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
+      availableItems: availableItems
+    }
+  },
+  computed: {
+    userId: function () { return this.$store.getters.userId }
+  },
+  mounted () {
+    this.loadData()
+  },
   methods: {
+    loadData: function () {
+      this.$store.dispatch('userCommunities', this.userId)
+        .then((communities) => {
+          this.community = communities[0]
+          getCommunityBars(communities[0].id)
+            .then(resp => {
+              this.list = this.autoHideDetails(resp.data.bars, true)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     isFirstBar: function () {
       if (this.list.length === 1) {
         if (this.list[0].members) {
@@ -122,35 +154,6 @@ export default {
       }
       return data
     }
-  },
-  data () {
-    return {
-      list: [],
-      community: {},
-      leftColumnSize: 4, // members column
-      rightColumnSize: 8, // bar's column
-      welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
-      availableItems: availableItems
-    }
-  },
-  computed: {
-    userId: function () { return this.$store.getters.userId }
-  },
-  mounted () {
-    this.$store.dispatch('userCommunities', this.userId)
-      .then((communities) => {
-        this.community = communities[0]
-        getCommunityBars(communities[0].id)
-          .then(resp => {
-            this.list = this.autoHideDetails(resp.data.bars, true)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 }
 </script>

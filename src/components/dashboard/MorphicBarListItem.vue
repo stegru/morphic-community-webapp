@@ -59,6 +59,14 @@ export default {
     duplicateBar: function () {
       this.barDetails.name = `${this.barDetails.name} - copy`
       createCommunityBar(this.communityId, this.barDetails)
+        .then(resp => {
+          if (resp.status === 200) {
+            this.$emit('reload-bars')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
