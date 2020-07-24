@@ -5,10 +5,10 @@ const CONF = {
     BACKEND_URL: 'http://localhost:5002'
   },
   DEVELOPMENT: {
-    BACKEND_URL: 'http://localhost:5002'
+    BACKEND_URL: 'https://dev-morphic.morphiclite-oregondesignservices.org'
   },
   PRODUCTION: {
-    BACKEND_URL: ''
+    BACKEND_URL: 'https://dev-morphic.morphiclite-oregondesignservices.org'
   }
 }
 
