@@ -46,7 +46,7 @@ export default {
     communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
-    if (typeof (this.communityId) === 'string') {
+    if (this.communityId) {
       this.communityMembersLength(this.communityId)
     } else {
       this.$store.dispatch('userCommunities', this.userId)
