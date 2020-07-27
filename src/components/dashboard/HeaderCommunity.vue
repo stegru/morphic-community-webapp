@@ -62,7 +62,7 @@ export default {
     communityMembersLength: function (communityId) {
       getCommunityMembers(communityId)
         .then(resp => {
-          this.members = resp.data.members.length
+          this.members = resp.data.members.length - 1
         })
         .catch(err => {
           console.log(err)
