@@ -15,6 +15,15 @@ if (token) {
   HTTP.defaults.headers.common.Authorization = `Bearer ${token}`
 }
 
+HTTP.interceptors.response.use(undefined, function (err) {
+  return new Promise((resolve, reject) => {
+    if (err.status === 401) {
+      this.$store.dispatch('logout')
+    }
+    throw err
+  })
+})
+
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate)
