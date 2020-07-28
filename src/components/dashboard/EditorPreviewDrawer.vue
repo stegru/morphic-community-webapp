@@ -1,6 +1,6 @@
 <template>
   <div id="drawer" class="p-3">
-    <span v-for="button in items">
+    <span v-for="button in items" v-bind:key="button.id">
       <EditorPreviewButton :button="button" class="m-2" />
     </span>
   </div>
