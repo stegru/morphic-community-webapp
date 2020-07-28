@@ -10,7 +10,7 @@ export const MESSAGES = {
   successfulRegistration: 'Registration completed successfully',
   successfulReset: 'Reset password successful',
   emailValidationError: 'This is a required field and must be a valid email address.',
-  successfulBarSave: 'Successfully saved'
+  successfulSave: 'Successfully saved'
 }
 export const availableItems = [
   {

@@ -43,6 +43,10 @@ export function addCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/members`, member)
 }
 
+export function getCommunityMember (communityId, memberId) {
+  return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`)
+}
+
 export function updateCommunityMember (communityId, memberId, member) {
   return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member)
 }

@@ -4,7 +4,7 @@
       <b-col md="5">
         <h6><b>Morphic Bar buttons</b></h6>
         <ul class="small list-unstyled mb-0">
-          <li v-for="item in primaryItems" class="item" :key="item.id">
+          <li v-for="item in primaryItems" class="item" :key="item.label">
             <RenderListItem :item="item" />
           </li>
         </ul>
@@ -12,7 +12,7 @@
       <b-col md="7">
         <h6><b>Extra Panel buttons</b></h6>
         <ul class="small list-unstyled mb-0">
-          <li v-for="item in extraItems" class="item" :key="item.id">
+          <li v-for="item in extraItems" class="item" :key="item.label">
             <RenderListItem :item="item" />
           </li>
         </ul>
