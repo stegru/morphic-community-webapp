@@ -1,7 +1,7 @@
 <template>
   <div>
-    <HeaderCommunity :community="community" class="mb-3" />
-    <div id="welcome" v-if="list.length === 0">
+    <HeaderCommunity :community="community" :key="community.id" class="mb-3" />
+    <div id="welcome" v-if="list.length === 0" :key="list.length">
       <b-row>
         <b-col :md="leftColumnSize">
           <div class="bg-light rounded p-3 fill-height">
@@ -80,7 +80,7 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
-import { getCommunityBars } from '@/services/communityService'
+import { getCommunityBars, getCommunity } from '@/services/communityService'
 import { availableItems } from '@/utils/constants'
 
 export default {
@@ -104,23 +104,47 @@ export default {
     }
   },
   computed: {
-    userId: function () { return this.$store.getters.userId }
+    userId: function () { return this.$store.getters.userId },
+    communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
     this.loadData()
   },
   methods: {
     loadData: function () {
-      this.$store.dispatch('userCommunities', this.userId)
-        .then((communities) => {
-          this.community = communities[0]
-          getCommunityBars(communities[0].id)
-            .then(resp => {
-              this.list = this.autoHideDetails(resp.data.bars, true)
-            })
-            .catch(err => {
-              console.log(err)
-            })
+      if (!this.$route.params.community && !this.communityId) {
+        this.$store.dispatch('userCommunities', this.userId)
+          .then((communities) => {
+            this.community = communities[0]
+            this.loadBars()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else if (this.$route.params.community) {
+        this.community = this.$route.params.community
+        this.$store.dispatch('activeCommunity', this.community.id)
+          .then(() => {
+            this.loadBars()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        getCommunity(this.communityId)
+          .then((community) => {
+            this.community = community.data
+            this.loadBars()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    loadBars: function () {
+      getCommunityBars(this.community.id)
+        .then(resp => {
+          this.list = this.autoHideDetails(resp.data.bars, true)
         })
         .catch(err => {
           console.log(err)

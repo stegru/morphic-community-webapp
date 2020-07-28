@@ -220,7 +220,6 @@ export default {
       this.tabIndex = 1
     },
     addMember (invite) {
-      console.log('invite: ', invite)
       let member = {
         first_name: this.firstName,
         last_name: this.lastName

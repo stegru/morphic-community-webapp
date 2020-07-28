@@ -11,7 +11,7 @@ export default new Vuex.Store({
     status: '',
     token: localStorage.getItem('token') || '',
     userId: localStorage.getItem('userId') || '',
-    communityId: localStorage.getItem('communityId') || {},
+    communityId: localStorage.getItem('communityId') || '',
     user: {},
     community: {},
     errorMessage: {}
@@ -34,7 +34,7 @@ export default new Vuex.Store({
       state.status = ''
       state.token = ''
       state.userId = ''
-      state.communityId = {}
+      state.communityId = ''
     },
     reset_password (state) {
       state.status = 'reset_password'
@@ -49,7 +49,7 @@ export default new Vuex.Store({
     community_error (state) {
       state.status = 'create_new_community_failed'
     },
-    communities (state, communityId) {
+    community (state, communityId) {
       state.communityId = communityId
     }
   },
@@ -135,12 +135,19 @@ export default new Vuex.Store({
           .then(resp => {
             const communities = resp.data.communities
             localStorage.setItem('communityId', communities[0].id)
-            commit('communities', communities[0].id)
+            commit('community', communities[0].id)
             resolve(communities)
           })
           .catch(err => {
             reject(err)
           })
+      })
+    },
+    activeCommunity ({ commit }, communityId) {
+      return new Promise((resolve, reject) => {
+        localStorage.setItem('communityId', communityId)
+        commit('community', communityId)
+        resolve()
       })
     }
   },

@@ -46,7 +46,7 @@ export default {
     communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
-    if (typeof (this.communityId) === 'string') {
+    if (this.communityId) {
       this.communityMembersLength(this.communityId)
     } else {
       this.$store.dispatch('userCommunities', this.userId)
@@ -62,7 +62,7 @@ export default {
     communityMembersLength: function (communityId) {
       getCommunityMembers(communityId)
         .then(resp => {
-          this.members = resp.data.members.length
+          this.members = resp.data.members.length - 1
         })
         .catch(err => {
           console.log(err)

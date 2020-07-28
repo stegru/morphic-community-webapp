@@ -44,7 +44,8 @@
           <b>{{ community.memberCurrent }}</b> / {{ community.memberLimit }}
         </b-card-text> -->
         <b-card-text>
-          <b-button :href="'https://' + community.name + '.' + host" variant="success">
+          <!-- <b-button :href="'https://' + community.name + '.' + host" variant="success"> -->
+          <b-button :to="{ name: 'Dashboard', params: { community: community }}"   variant="success">
             <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
           </b-button>
           <b-button variant="danger" class="ml-1" v-b-modal.deleteConfirm @click="setCommunityId(community.id)">Delete</b-button>
