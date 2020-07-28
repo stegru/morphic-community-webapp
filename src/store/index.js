@@ -134,9 +134,13 @@ export default new Vuex.Store({
         getUserCommunities(userId)
           .then(resp => {
             const communities = resp.data.communities
-            localStorage.setItem('communityId', communities[0].id)
-            commit('community', communities[0].id)
-            resolve(communities)
+            if (communities.length !== 0) {
+              localStorage.setItem('communityId', communities[0].id)
+              commit('community', communities[0].id)
+              resolve(communities)
+            } else {
+              reject(new Error('User doesn\'t have communities.'))
+            }
           })
           .catch(err => {
             reject(err)

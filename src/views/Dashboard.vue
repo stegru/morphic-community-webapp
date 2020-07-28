@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderCommunity :community="community" :key="community.id" class="mb-3" />
+    <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
     <div id="welcome" v-if="list.length === 0" :key="list.length">
       <b-row>
         <b-col :md="leftColumnSize">
