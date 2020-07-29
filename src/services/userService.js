@@ -10,7 +10,7 @@ export function login (user) {
 
 export function register (user) {
   const auth = {
-    username: user.username,
+    username: user.email,
     password: user.password,
     email: user.email,
     first_name: user.firstName,
