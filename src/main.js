@@ -5,7 +5,9 @@ import router from './router'
 import store from './store'
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import Vuelidate from 'vuelidate'
+import { VueReCaptcha } from 'vue-recaptcha-v3'
 import { HTTP } from '@/services/index'
+import { RECAPTCHATOKEN } from '@/config/config'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -19,6 +21,7 @@ Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate)
 Vue.use(Vuex)
+Vue.use(VueReCaptcha, { siteKey: RECAPTCHATOKEN })
 
 Vue.config.productionTip = false
 new Vue({
