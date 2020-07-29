@@ -2,9 +2,9 @@ import { CONFIG } from '@/config/config'
 
 export const BASE_URL = CONFIG.BACKEND_URL
 export const ERROR_MAP = {
-  1: 'Incorect username or password',
-  2: 'That email address already exists',
-  3: 'Username already exists',
+  1: 'Incorrect username or password!',
+  2: 'That email address already exists!',
+  3: 'Username already exists!',
   404: 'Cannot connect to the server right now! Please try again in couple of minutes.',
   500: 'Network error, cannot connect to the server! Please check your internet connection.'
 }
