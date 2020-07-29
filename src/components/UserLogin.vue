@@ -96,7 +96,11 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            if (err.response.data.error === 'invalid_credentials') {
+              this.errorMessage = ERROR_MAP[1]
+            } else {
+              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            }
           } else {
             this.errorMessage = ERROR_MAP[500]
           }
