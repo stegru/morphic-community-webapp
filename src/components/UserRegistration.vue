@@ -195,7 +195,13 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            if (err.response.data.error === 'existing_email') {
+              this.errorMessage = ERROR_MAP[2]
+            } else if (err.response.data.error === 'existing_username') {
+              this.errorMessage = ERROR_MAP[3]
+            } else {
+              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            }
           } else {
             this.errorMessage = ERROR_MAP[500]
           }
