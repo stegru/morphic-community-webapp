@@ -8,24 +8,24 @@
     </b-alert>
     <legend>Basic Information</legend>
     <b-form-group>
-      <b-input-group append=".morphic-community.com" class="mb-2 mr-sm-2 mb-sm-0">
+      <b-input-group>
         <b-form-input
           v-model="$v.form.communityName.$model"
           :state="validateState('communityName')"
           label="my-community"
           placeholder="my-community"
         />
+        <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
       </b-input-group>
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
-        v-model="$v.form.username.$model"
-        :state="validateState('username')"
-        label="Username"
-        placeholder="Username"
+        v-model="$v.form.email.$model"
+        :state="validateState('email')"
+        label="Email"
+        placeholder="Enter your email"
       />
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -40,15 +40,6 @@
         label="Last name"
         placeholder="Last name"
       />
-    </b-form-group>
-    <b-form-group>
-      <b-form-input
-        v-model="$v.form.email.$model"
-        :state="validateState('email')"
-        label="Email"
-        placeholder="Enter your email"
-      />
-      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -95,7 +86,17 @@
       </b-form-radio>
       <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group> -->
-    <b-button type="submit" variant="primary">Create new Community</b-button>
+    <b-row>
+      <b-col md="6">
+        <b-button type="submit" variant="primary">Create new Community</b-button>
+        <b-button to="/" variant="success" class="ml-1">Login</b-button>
+      </b-col>
+      <b-col md="6">
+        <div class="small text-right">
+          <b-button to="/" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+        </div>
+      </b-col>
+    </b-row>
   </b-form>
 </template>
 
@@ -127,7 +128,6 @@ export default {
     return {
       form: {
         communityName: '',
-        username: '',
         email: '',
         firstName: '',
         lastName: '',
@@ -145,9 +145,6 @@ export default {
   validations: {
     form: {
       communityName: {
-        required
-      },
-      username: {
         required
       },
       email: {

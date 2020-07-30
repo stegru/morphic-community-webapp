@@ -3,7 +3,7 @@
     <b-row>
       <b-col md="7">
         <b>{{ community.name }}</b><br>
-        <b-link :href="'https://' + community.name + '.morphic-community.com/'">{{ community.name }}.morphic-community.com</b-link>
+        <!-- <b-link :href="'https://' + community.name + '.morphic-community.com/'">{{ community.name }}.morphic-community.com</b-link> -->
       </b-col>
       <b-col md="4">
         <b-row>
