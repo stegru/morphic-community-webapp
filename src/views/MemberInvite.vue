@@ -7,7 +7,7 @@
       <p class="my-4">Please confirm adding this member?</p>
     </b-modal>
 
-    <div class="bg-silver rounded p-3">
+    <div class="bg-silver rounded p-3" v-if="!chooseBar">
       <h4 class="mb-3">Member Invite</h4>
       <b-card no-body>
         <b-tabs v-model="tabIndex" card>
@@ -21,13 +21,11 @@
                   label-for="firstName"
                 >
                   <b-form-input
-                    v-model="$v.firstName.$model"
-                    :state="validateState('firstName')"
+                    v-model="firstName"
                     id="firstName"
                     placeholder="First Name"
                   >
                   </b-form-input>
-                <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group
                   id="last-name"
@@ -35,13 +33,11 @@
                   label-for="lastName"
                 >
                   <b-form-input
-                    v-model="$v.lastName.$model"
-                    :state="validateState('lastName')"
+                    v-model="lastName"
                     id="lastName"
                     placeholder="Last Name"
                     >
                   </b-form-input>
-                <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group
                   id="member-email"
@@ -73,40 +69,7 @@
               </b-form>
             </b-card-text>
           </b-tab>
-          <b-tab :disabled="this.$v.$invalid" title="Step 2: Attach Morphic Bar">
-            <b-card-text>
-              <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
-              <div v-for="bar in bars" :key="bar.id">
-                <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
-                  <h5><b>{{ bar.name }}</b></h5>
-                  <b-row>
-                    <b-col md="9">
-                      <RenderList :barId="bar.id" />
-                    </b-col>
-                    <b-col md="3">
-                      <div class="text-right">
-                        <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
-                        <b-button @click="selectedBar = bar.id" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
-                      </div>
-                    </b-col>
-                  </b-row>
-                </div>
-              </div>
-              <hr>
-              <b-row>
-                <b-col md="6">
-                  <b-button @click="tabIndex = 0" variant="success">Back</b-button>
-                  <b-button @click="tabIndex = 2" variant="primary" class="ml-1">Next</b-button>
-                </b-col>
-                <b-col md="6">
-                  <div class="small text-right">
-                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-                  </div>
-                </b-col>
-              </b-row>
-            </b-card-text>
-          </b-tab>
-          <b-tab :disabled="this.$v.$invalid" title="Step 3: Preview and Send">
+          <b-tab :disabled="this.$v.$invalid" title="Step 2: Preview and Send">
             <b-card-text>
               <h4 class="mb-3">Does this looks alright?</h4>
               <p>
@@ -122,7 +85,7 @@
                 <b>{{ memberEmail }}</b>
               </p>
               <div class="bg-silver rounded p-3 mb-3">
-                <RenderList v-if="tabIndex === 2" :barId="selectedBar" />
+                <RenderList v-if="tabIndex === 1" :barId="selectedBar" />
               </div>
               <b-row>
                 <b-col md="6">
@@ -135,6 +98,11 @@
                   >
                     Send me a copy of the invitation email
                   </b-form-checkbox>
+                </b-col>
+                <b-col md="6">
+                  <div class="text-right">
+                    <b-button variant="primary" class="ml-1" @click="chooseBar = !chooseBar">Change</b-button>
+                  </div>
                 </b-col>
               </b-row>
               <hr>
@@ -154,6 +122,35 @@
           </b-tab>
         </b-tabs>
       </b-card>
+    </div>
+    <div v-else>
+      <b-card-text>
+        <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
+        <div v-for="bar in bars" :key="bar.id">
+          <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
+            <h5><b>{{ bar.name }}</b></h5>
+            <b-row>
+              <b-col md="9">
+                <RenderList :barId="bar.id" />
+              </b-col>
+              <b-col md="3">
+                <div class="text-right">
+                  <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
+                  <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
+                </div>
+              </b-col>
+            </b-row>
+          </div>
+        </div>
+        <hr>
+        <b-row>
+          <b-col md="6">
+            <div class="small text-right">
+              <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
+            </div>
+          </b-col>
+        </b-row>
+      </b-card-text>
     </div>
   </div>
 </template>
@@ -192,16 +189,11 @@ export default {
       memberEmail: '',
       selectedBar: null,
       sendEmailCopy: 0,
-      availableItems: availableItems
+      availableItems: availableItems,
+      chooseBar: false
     }
   },
   validations: {
-    firstName: {
-      required
-    },
-    lastName: {
-      required
-    },
     memberEmail: {
       required,
       email
@@ -218,6 +210,10 @@ export default {
         return
       }
       this.tabIndex = 1
+    },
+    pickBar (barId) {
+      this.selectedBar = barId
+      this.chooseBar = !this.chooseBar
     },
     addMember (invite) {
       let member = {
