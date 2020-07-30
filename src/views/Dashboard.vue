@@ -2,31 +2,10 @@
   <div>
     <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
     <div id="welcome" v-if="list.length === 0" :key="list.length">
-      <b-row>
-        <b-col :md="leftColumnSize">
-          <div class="bg-light rounded p-3 fill-height">
-          </div>
-        </b-col>
-        <b-col :md="rightColumnSize">
-          <div class="bg-silver rounded p-3">
-            <b-img src="/img/dashboard-intro.jpg" fluid rounded alt="Dashboard Intro Image"></b-img>
-            <div id="welcome-text" v-if="welcomeOrPickBar">
-              <BlockWelcome />
-              <p class="text-center mt-5">
-                <b-button @click="welcomeOrPickBar = false" variant="primary" size="lg">Get started with custom Morphic Bar</b-button>
-              </p>
-            </div>
-            <div id="welcome-pick" v-if="welcomeOrPickBar === false">
-              <BlockPredefinedOrNew />
-              <p class="text-center mt-5">
-                <b-button to="/dashboard/morphicbar-editor/0" variant="primary">I want to make my own</b-button>
-                <b-button to="/dashboard/morphicbar-preconfigured" variant="success" class="ml-1">Let me look at several options first</b-button>
-                <b-button @click="welcomeOrPickBar = true" variant="outline-secondary" class="ml-1">Cancel</b-button>
-              </p>
-            </div>
-          </div>
-        </b-col>
-      </b-row>
+      <div class="text-center pt-5 pb-5 bg-silver rounded">
+        <b-spinner variant="success" label="..."></b-spinner><br><br>
+        Loading data, please wait...
+      </div>
     </div>
     <div id="morphicBarList" v-if="list.length > 0">
       <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
@@ -84,7 +63,6 @@ import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
 import { getCommunityBars, getCommunity, createCommunityBar } from '@/services/communityService'
-import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'Dashboard',
@@ -102,8 +80,6 @@ export default {
       community: {},
       leftColumnSize: 4, // members column
       rightColumnSize: 8, // bar's column
-      welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
-      availableItems: availableItems
     }
   },
   computed: {
