@@ -4,7 +4,7 @@
     <span v-else-if="item.kind === 'application'"><b-icon-app></b-icon-app></span>
     <span v-else><b-icon-controller></b-icon-controller></span>
     <span style="color: navy;">
-      {{ item.label }}
+      {{ item.configuration.label }}
     </span>
   </span>
 </template>

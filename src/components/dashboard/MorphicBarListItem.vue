@@ -2,7 +2,10 @@
   <div class="bg-silver rounded p-3">
     <b-row>
       <b-col md="9">
-        <h5><b>{{ barDetails.name }}</b></h5>
+        <h5>
+          <b v-if="barDetails.name == 'Default'">Starter Bar fo Morphic Community</b>
+          <b v-else>{{ barDetails.name }}</b>
+        </h5>
       </b-col>
       <b-col md="3">
         <div class="text-right small">
@@ -14,9 +17,13 @@
     <b-row :class="{ 'd-none': bar.showDetails === false }">
       <b-col md="9">
         <RenderList v-if="barDetails.items" :barId="bar.id" />
+        <!--<PreviewList v-if="barDetails.items" :barId="bar.id" />-->
       </b-col>
       <b-col md="3">
-        <div class="text-right">
+        <div v-if="barDetails.name == 'Default'">
+          <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="secondary" class="btn-block mt-1">Customize Starter Bar</b-button>
+        </div>
+        <div v-else class="text-right">
           <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="duplicateBar">Make a Copy</b-button>
           <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
           <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
@@ -28,12 +35,14 @@
 
 <script>
 import RenderList from '@/components/dashboard/RenderList'
+import PreviewList from '@/components/dashboard/PreviewList'
 import { getCommunityBar, createCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'MorphicBarListItem',
   components: {
-    RenderList
+    RenderList,
+    PreviewList
   },
   props: {
     bar: Object

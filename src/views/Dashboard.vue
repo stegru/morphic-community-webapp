@@ -60,7 +60,6 @@ import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
 import { getCommunityBars, getCommunity } from '@/services/communityService'
-import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'Dashboard',
@@ -78,7 +77,6 @@ export default {
       community: {},
       leftColumnSize: 4, // members column
       rightColumnSize: 8, // bar's column
-      availableItems: availableItems
     }
   },
   computed: {
