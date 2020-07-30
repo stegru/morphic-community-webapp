@@ -2,15 +2,18 @@ import { CONFIG } from '@/config/config'
 
 export const BASE_URL = CONFIG.BACKEND_URL
 export const ERROR_MAP = {
-  500: 'Network error, cannot connect to the server! Please check your internet connection.',
-  404: 'Cannot connect to the server right now! Please try again in couple of minutes.'
+  1: 'Incorrect username or password!',
+  2: 'That email address already exists!',
+  3: 'Username already exists!',
+  404: 'Cannot connect to the server right now! Please try again in couple of minutes.',
+  500: 'Network error, cannot connect to the server! Please check your internet connection.'
 }
 export const MESSAGES = {
   successfulLogin: 'Successfully logged in',
   successfulRegistration: 'Registration completed successfully',
   successfulReset: 'Reset password successful',
   emailValidationError: 'This is a required field and must be a valid email address.',
-  successfulBarSave: 'Successfully saved'
+  successfulSave: 'Successfully saved'
 }
 
 export const availableItems = [

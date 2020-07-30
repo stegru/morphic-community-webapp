@@ -21,10 +21,10 @@
       </b-col>
       <b-col md="3">
         <div v-if="barDetails.name == 'Default'">
-          <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="secondary" class="btn-block mt-1">Customize Starter Bar</b-button>
+          <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Customize Starter Bar</b-button>
         </div>
         <div v-else class="text-right">
-          <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="duplicateBar">Make a Copy</b-button>
+          <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="emitModalEvent">Make a Copy</b-button>
           <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
           <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
         </div>
@@ -36,7 +36,7 @@
 <script>
 import RenderList from '@/components/dashboard/RenderList'
 import PreviewList from '@/components/dashboard/PreviewList'
-import { getCommunityBar, createCommunityBar } from '@/services/communityService'
+import { getCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'MorphicBarListItem',
@@ -65,17 +65,8 @@ export default {
       })
   },
   methods: {
-    duplicateBar: function () {
-      this.barDetails.name = `${this.barDetails.name} - copy`
-      createCommunityBar(this.communityId, this.barDetails)
-        .then(resp => {
-          if (resp.status === 200) {
-            this.$emit('reload-bars')
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    emitModalEvent: function () {
+      this.$emit('open-modal', this.barDetails)
     }
   }
 }

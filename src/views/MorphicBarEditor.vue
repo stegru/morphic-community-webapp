@@ -104,7 +104,7 @@ export default {
     return {
       barDetails: {},
       successAlert: false,
-      successMessage: MESSAGES.successfulBarSave
+      successMessage: MESSAGES.successfulSave
     }
   },
   computed: {

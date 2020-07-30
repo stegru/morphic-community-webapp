@@ -1,6 +1,6 @@
 <template>
   <b-jumbotron class="bg-light">
-    <b-row>
+    <b-row class="justify-content-md-center">
       <b-col md="7">
         <h3>Reset your password</h3>
         <p class="lead">Please enter the email address you are registered with and we will send you message with your temporary password.</p>
@@ -22,13 +22,18 @@
             <b-form-invalid-feedback>{{ emailValidationError }}</b-form-invalid-feedback>
           </b-form-group>
           <br/>
-          <b-button type="submit" variant="primary">Reset Password</b-button>
+          <b-row>
+            <b-col md="6">
+              <b-button type="submit" variant="primary">Reset Password</b-button>
+              <b-button to="/" variant="success" class="ml-1">Login</b-button>
+            </b-col>
+            <b-col md="6">
+              <div class="small text-right">
+                <b-button to="/" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+              </div>
+            </b-col>
+          </b-row>
         </b-form>
-      </b-col>
-      <b-col md="4" offset="1">
-        <h4 class="mt-3 text-info">Important Notice</h4>
-        <p>Nulla laoreet eros in nibh elementum feugiat. Pellentesque maximus in nisi et aliquet.</p>
-        <p>Phasellus id odio non arcu sollicitudin rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse vel pretium urna.</p>
       </b-col>
     </b-row>
   </b-jumbotron>

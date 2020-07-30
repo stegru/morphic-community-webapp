@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderCommunity :community="community" :key="community.id" class="mb-3" />
+    <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
     <div id="welcome" v-if="list.length === 0" :key="list.length">
       <div class="text-center pt-5 pb-5 bg-silver rounded">
         <b-spinner variant="success" label="..."></b-spinner><br><br>
@@ -8,6 +8,9 @@
       </div>
     </div>
     <div id="morphicBarList" v-if="list.length > 0">
+      <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
+        <p class="my-4">Please confirm the copying of the bar?</p>
+      </b-modal>
       <b-row>
         <b-col :md="leftColumnSize">
           <h4>Your Community</h4>
@@ -29,7 +32,7 @@
             </div>
           </b-col>
           <b-col :md="rightColumnSize">
-            <MorphicBarListItem :bar="bar" @reload-bars="loadData" />
+            <MorphicBarListItem :bar="bar" @open-modal="openModal" />
           </b-col>
         </b-row>
       </div>
@@ -59,7 +62,7 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
-import { getCommunityBars, getCommunity } from '@/services/communityService'
+import { getCommunityBars, getCommunity, createCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
@@ -87,6 +90,26 @@ export default {
     this.loadData()
   },
   methods: {
+    openModal: function (bar) {
+      this.barToCopy = bar
+      this.$bvModal.show('copyConfirm')
+    },
+    duplicateBar: function () {
+      const newBar = {
+        name: `${this.barToCopy.name} - copy`,
+        is_shared: this.barToCopy.is_shared,
+        items: this.barToCopy.items
+      }
+      createCommunityBar(this.communityId, newBar)
+        .then(resp => {
+          if (resp.status === 200) {
+            this.loadData()
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     loadData: function () {
       if (!this.$route.params.community && !this.communityId) {
         this.$store.dispatch('userCommunities', this.userId)
