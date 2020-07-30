@@ -16,13 +16,36 @@ export const MESSAGES = {
   successfulSave: 'Successfully saved'
 }
 
+export const colors = {
+  teal: "#006770",
+  blue: "#002957",
+  purple: "#662261",
+  red: "#8c191b",
+  green: "#46622d",
+  orange: "#a33e1f"
+}
+
+export const icons = {
+  chat: "chat",
+  family: "people-fill",
+  gallery: "images",
+  calendar: "calendar3",
+  url: "link",
+  app: "app",
+  call: "headphones",
+  video: "camera-video-fill",
+  camera: "camera-fill"
+}
+
 export const availableItems = [
   {
     'kind': 'link',
     'is_primary': true,
     'configuration': {
       'label': 'Open Reddit',
-      'url': 'https://www.reddit.com/',
+      'color': colors.orange,
+      'image_url': icons.url,
+      'url': 'https://www.reddit.com/'
     }
   },
   {
@@ -38,6 +61,8 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Photo Gallery',
+      'color': colors.purple,
+      'image_url': icons.gallery, 
       'url': 'https://www.flickr.com/photos/karadaliev',
     }
   },
