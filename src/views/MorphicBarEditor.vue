@@ -111,25 +111,44 @@
               </div>
             </b-tab>
           </b-tabs>
-          <div class="d-none">
-            <h4 class="text-danger">DEBUG</h4>
-            <pre class="bg-white"><code>{{ buttonStorage }}</code></pre>
-          </div>
           <div id="preview-holder">
             <b-row>
               <b-col md="8">
+                <br>
                 <div id="preview-drawer">
-                  <!--<EditorPreviewDrawer :settings=preview.drawer :items=fillUpDrawer() class="mt-3" />-->
+                  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                    <b-row>
+                      <b-col md="6">
+                        <div v-for="(item, index) in bar.items" :key="item.configuration.label">
+                          <div v-if="index < preview.drawer.h && item.is_primary === false" class="previewHolder mb-3">
+                            <PreviewItem :item="item" />
+                            <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                          </div>
+                        </div>
+                      </b-col>
+                      <b-col md="6">
+                        <div v-for="(item, index) in bar.items" :key="item.configuration.label">
+                          <div v-if="index >= preview.drawer.h && item.is_primary === false" class="previewHolder mb-3">
+                            <PreviewItem :item="item" />
+                            <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                          </div>
+                        </div>
+                        <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
+                      </b-col>
+                    </b-row>
+                  </div>
                 </div>
               </b-col>
               <b-col md="4">
                 <br>
                 <div id="preview-bar">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-                    <div v-for="(item, index) in bar.items" :key="item.configuration.label" class="previewHolder mb-3">
-                      <PreviewItem :item="item" />
-                      <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                    </div>
+                    <div v-for="(item, index) in bar.items" :key="item.configuration.label">
+                        <div v-if="item.is_primary === true" class="previewHolder mb-3">
+                          <PreviewItem :item="item" />
+                          <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                        </div>
+                      </div>
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block">Add to Bar</b-button>
                     <p v-else>
                       Click on the buttons on the left to add them to the bar.
@@ -184,8 +203,11 @@ export default {
   methods: {
     predefinedClicked: function(buttonData) {
       this.buttonStorage = buttonData
-      if (this.bar.items.length < this.preview.bar.h) {
+      if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
         this.addToBar = true
+      }
+      if (this.getDrawerButtonsCount() < (this.preview.drawer.w * this.preview.drawer.h)) {
+        this.addToDrawer = true
       }
     },
     addToBarOrDrawer: function(is_primary) {
@@ -205,6 +227,24 @@ export default {
         return this.bar.members.length
       }
       return 0
+    },
+    getPrimaryButtonsCount: function() {
+      let count = 0
+      for (let i = 0; i < this.bar.items.length; i++) {
+        if (this.bar.items[i].is_primary === true) {
+          count++
+        }
+      }
+      return count;
+    },
+    getDrawerButtonsCount: function() {
+      let count = 0
+      for (let i = 0; i < this.bar.items.length; i++) {
+        if (this.bar.items[i].is_primary === false) {
+          count++
+        }
+      }
+      return count;
     }
   },
   components: {
@@ -218,7 +258,7 @@ export default {
       buttonStorage: {},
       preview: {
         drawer: {
-          w: 3,
+          w: 2,
           h: 5
         },
         bar: {
