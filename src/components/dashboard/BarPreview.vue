@@ -1,6 +1,8 @@
 <template>
   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-    <PreviewItem v-for="item in bar.items" :key="item.configuration.label" :item="item" class="mb-3" />
+    <div v-for="item in bar.items" :key="item.configuration.label">
+      <PreviewItem v-if="item.is_primary" :item="item" class="mb-3" />
+    </div>
     <div class="logoHolder text-center mt-5 m-3">
       <b-img src="/img/logo-color.svg" />
     </div>
