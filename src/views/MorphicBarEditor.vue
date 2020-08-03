@@ -33,7 +33,7 @@
           <div id="bar-info">
             <h5>
               <b>
-                {{ bar.name }}
+                {{ barDetails.name }}
               </b>
               <span class="d-none small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
@@ -67,7 +67,7 @@
               <div v-else>
                 <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
                 <ul class="small mb-0">
-                  <li v-for="member in bar.members" v-bind:key="member.id">
+                  <li v-for="member in barDetails.members" v-bind:key="member.id">
                     <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
                   </li>
                 </ul>
@@ -115,7 +115,7 @@
                 <p class="small">
                   Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
                 </p>
-                <b-button to="/dashboard" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
+                <b-button @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
               </div>
             </b-tab>
           </b-tabs>
@@ -130,7 +130,7 @@
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index < preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
-                            <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                           </div>
                         </div>
                       </b-col>
@@ -138,7 +138,7 @@
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index >= preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
-                            <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                           </div>
                         </div>
                       </b-col>
@@ -157,7 +157,7 @@
                     <div v-for="(item, index) in primaryItems" :key="item.configuration.label">
                         <div class="previewHolder mb-3">
                           <PreviewItem :item="item" />
-                          <b-icon-trash @click="buttonToRemove(index)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                          <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                         </div>
                       </div>
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block">Add to Bar</b-button>
@@ -228,16 +228,27 @@
 
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
+import { getCommunityBar, updateCommunityBar } from '@/services/communityService'
 import { availableItems, colors, icons } from '@/utils/constants'
+import predefinedBars from '@/utils/predefined'
 
 export default {
   name: 'MemberInvite',
   methods: {
+    saveBar: function () {
+      updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
+        .then((resp) => {
+          console.log(resp)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     predefinedClicked: function(index) {
       this.clearPredefinedActive()
       this.buttonStorage = this.predefinedButtons[index]
       this.predefinedButtons[index].isActive = true
-      
+
       if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
         this.addToBar = true
       }
@@ -250,30 +261,36 @@ export default {
         this.predefinedButtons[i].isActive = false
       }
     },
-    addToBarOrDrawer: function(is_primary) {
+    addToBarOrDrawer: function (is_primary) {
       this.clearPredefinedActive()
       if (this.buttonStorage) {
         this.buttonStorage.is_primary = is_primary
-        this.bar.items.push(this.buttonStorage)
+        this.barDetails.items.push(this.buttonStorage)
         this.buttonStorage = {}
       }
       this.addToBar = false
       this.addToDrawer = false
     },
-    buttonToRemove: function(index) {
-      this.bar.items.splice(index, 1)
+    buttonToRemove: function (label) {
+      let index = 0
+      for (let i = 0; i < this.barDetails.items.length; i++) {
+        if (this.barDetails.items[i].configuration.label === label) {
+          index = i
+        }
+      }
+      this.barDetails.items.splice(index, 1)
     },
-    getMembersCount: function() {
-      if (this.bar.members && this.bar.members.length > 0) {
-        return this.bar.members.length
+    getMembersCount: function () {
+      if (this.barDetails.members && this.barDetails.members.length > 0) {
+        return this.barDetails.members.length
       }
       return 0
     },
-    getPrimaryButtonsCount: function() {
-      return this.primaryItems.length;
+    getPrimaryButtonsCount: function () {
+      return this.primaryItems.length
     },
-    getDrawerButtonsCount: function() {
-      return this.drawerItems.length;
+    getDrawerButtonsCount: function () {
+      return this.drawerItems.length
     }
   },
   components: {
@@ -281,12 +298,13 @@ export default {
     PreviewItem
   },
   computed: {
+    communityId: function () { return this.$store.getters.communityId },
     primaryItems: function() {
       let data = [];
-      if (this.bar.items && this.bar.items.length > 0) {
-        for (let i = 0; i < this.bar.items.length; i++) {
-          if (this.bar.items[i].is_primary === true) {
-            data.push(this.bar.items[i])
+      if (this.barDetails.items && this.barDetails.items.length > 0) {
+        for (let i = 0; i < this.barDetails.items.length; i++) {
+          if (this.barDetails.items[i].is_primary === true) {
+            data.push(this.barDetails.items[i])
           }
         }
       }
@@ -294,21 +312,40 @@ export default {
     },
     drawerItems: function() {
       let data = [];
-      if (this.bar.items && this.bar.items.length > 0) {
-        for (let i = 0; i < this.bar.items.length; i++) {
-          if (this.bar.items[i].is_primary === false) {
-            data.push(this.bar.items[i])
+      if (this.barDetails.items && this.barDetails.items.length > 0) {
+        for (let i = 0; i < this.barDetails.items.length; i++) {
+          if (this.barDetails.items[i].is_primary === false) {
+            data.push(this.barDetails.items[i])
           }
         }
       }
       return data
     }
   },
-  data() {
+  mounted () {
+    if (this.$route.params.barId.indexOf('predifined') !== -1) {
+      console.log(this.$route.params.barId)
+      for (let i = 0; i < this.predefinedBars.length; i++) {
+        if (this.predefinedBars[i].id === this.$route.params.barId) {
+          this.barDetails.items = this.predefinedBars[i].items
+        }
+      }
+    } else {
+      getCommunityBar(this.communityId, this.$route.params.barId)
+        .then(resp => {
+          this.barDetails = resp.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  data () {
     return {
       addToBar: false,
       addToDrawer: false,
       buttonStorage: {},
+      barDetails: {},
       preview: {
         drawer: {
           w: 2,
@@ -318,30 +355,7 @@ export default {
           h: 6
         }
       },
-      memberData: {
-        id: 1,
-        first_name: "John",
-        last_name: "Smith",
-        email: "john.smith@gmail.com",
-        joined: "06/01/2020"
-      },
       bar: {
-        id: 1,
-        name: "My First Bar",
-        is_shared: false,
-        items: [],
-        members: [
-          {
-            id: 1,
-            first_name: "John",
-            last_name: "Smith"
-          },
-          {
-            id: 2,
-            first_name: "Jane",
-            last_name: "Adams"
-          }
-        ],
         settings: {
           barOnRight: true,
           cannotClose: false,
@@ -349,6 +363,7 @@ export default {
         }
       },
       predefinedButtons: availableItems,
+      predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
       makeButtonList: [

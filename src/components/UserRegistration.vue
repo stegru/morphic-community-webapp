@@ -6,7 +6,6 @@
     <b-alert variant="success" :show="successAlert">
       {{ successMessage }}
     </b-alert>
-    <legend>Basic Information</legend>
     <b-form-group>
       <b-input-group>
         <b-form-input
@@ -86,17 +85,7 @@
       </b-form-radio>
       <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group> -->
-    <b-row>
-      <b-col md="6">
-        <b-button type="submit" variant="primary">Create new Community</b-button>
-        <b-button to="/" variant="success" class="ml-1">Login</b-button>
-      </b-col>
-      <b-col md="6">
-        <div class="small text-right">
-          <b-button to="/" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-        </div>
-      </b-col>
-    </b-row>
+    <b-button type="submit" variant="primary">Create new Community</b-button>
   </b-form>
 </template>
 

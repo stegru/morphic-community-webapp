@@ -23,10 +23,10 @@
           <div class="taskbarMac"></div>
           <b-row>
             <b-col md="6">
-              <div class="iconHolder text-center mt-3">
+              <div class="desktopHolder text-center mt-3">
                 <img src="/img/logo-color.svg" alt="icon" class="iconMorphic"><br>
                 <p>Open Morphic</p>
-              </div> 
+              </div>
             </b-col>
             <b-col md="6">
               <BarPreview :bar="bar" />
@@ -54,7 +54,7 @@
 <style lang="scss">
   .desktop {
     background: url(/img/wallpaper.jpg) no-repeat bottom right;
-    .iconHolder {
+    .desktopHolder {
       width: 100px;
       .iconMorphic {
         background: white;

@@ -1,12 +1,6 @@
 <template>
   <div>
     <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
-    <div id="welcome" v-if="list.length === 0" :key="list.length">
-      <div class="text-center pt-5 pb-5 bg-silver rounded">
-        <b-spinner variant="success" label="..."></b-spinner><br><br>
-        Loading data, please wait...
-      </div>
-    </div>
     <div id="morphicBarList" v-if="list.length > 0">
       <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
         <p class="my-4">Please confirm the copying of the bar?</p>
@@ -51,6 +45,12 @@
         </b-row>
       </div>
     </div>
+    <div v-else id="welcome">
+      <div class="text-center pt-5 pb-5 bg-silver rounded">
+        <b-spinner variant="success" label="..."></b-spinner><br><br>
+        Loading data, please wait...
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,7 +62,7 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
-import { getCommunityBars, getCommunity, createCommunityBar } from '@/services/communityService'
+import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
@@ -80,6 +80,7 @@ export default {
       community: {},
       leftColumnSize: 4, // members column
       rightColumnSize: 8, // bar's column
+      members: []
     }
   },
   computed: {
@@ -111,39 +112,62 @@ export default {
         })
     },
     loadData: function () {
-      if (!this.$route.params.community && !this.communityId) {
-        this.$store.dispatch('userCommunities', this.userId)
-          .then((communities) => {
-            this.community = communities[0]
-            this.loadBars()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else if (this.$route.params.community) {
-        this.community = this.$route.params.community
-        this.$store.dispatch('activeCommunity', this.community.id)
-          .then(() => {
-            this.loadBars()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        getCommunity(this.communityId)
-          .then((community) => {
-            this.community = community.data
-            this.loadBars()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+      return new Promise((resolve, reject) => {
+        if (!this.$route.params.community && !this.communityId) {
+          this.$store.dispatch('userCommunities', this.userId)
+            .then((communities) => {
+              this.community = communities[0]
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else if (this.$route.params.community) {
+          this.community = this.$route.params.community
+          this.$store.dispatch('activeCommunity', this.community.id)
+            .then(() => {
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else {
+          getCommunity(this.communityId)
+            .then((community) => {
+              this.community = community.data
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        }
+      })
     },
     loadBars: function () {
       getCommunityBars(this.community.id)
         .then(resp => {
-          this.list = this.autoHideDetails(resp.data.bars, true)
+          const bars = resp.data.bars
+          getCommunityMembers(this.communityId)
+            .then((resp) => {
+              this.list = this.autoHideDetails(bars, true)
+              this.members = resp.data.members
+              if (this.members.length > 0 && this.list.length > 0) {
+                for (let i = 0; i < this.list.length; i++) {
+                  this.list[i].members = []
+                  for (let j = 0; j < this.members.length; j++) {
+                    if (this.list[i].id === this.members[j].bar_id) {
+                      this.list[i].members.push(this.members[j])
+                    }
+                  }
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
         })
         .catch(err => {
           console.log(err)
@@ -151,6 +175,7 @@ export default {
     },
     isFirstBar: function () {
       if (this.list.length === 1) {
+        console.log(this.list)
         if (this.list[0].members) {
           return false
         } else {

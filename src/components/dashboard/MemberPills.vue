@@ -1,8 +1,8 @@
 <template>
   <div id="memberList">
-    <ul v-if="members && members.length > 0" class="list-unstyled mb-0">
-      <li v-for="member in members" :key="member.id">
-        <RenderMember v-if="member.bar_id === bar.id" :member="member" />
+    <ul v-if="bar.members && bar.members.length > 0" class="list-unstyled mb-0">
+      <li v-for="member in bar.members" :key="member.id">
+        <RenderMember :member="member" />
       </li>
     </ul>
     <div v-else>
@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import { getCommunityMembers } from '@/services/communityService'
-
 import RenderMember from '@/components/dashboard/RenderMember'
 
 export default {
@@ -23,24 +21,6 @@ export default {
   },
   props: {
     bar: Object
-  },
-  data () {
-    return {
-      members: [],
-      showMembers: true
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    getCommunityMembers(this.communityId)
-      .then(resp => {
-        this.members = resp.data.members
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 }
 </script>
