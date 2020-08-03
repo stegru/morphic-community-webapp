@@ -17,13 +17,13 @@
               <b-form @submit.stop.prevent="onSubmit">
                 <b-form-group
                   id="first-name"
-                  label="First Name"
+                  label="First Name or Nickname (only seen by Community Managers)"
                   label-for="firstName"
                 >
                   <b-form-input
                     v-model="firstName"
                     id="firstName"
-                    placeholder="First Name"
+                    placeholder="First Name or Nickname (only seen by Community Managers)"
                   >
                   </b-form-input>
                 </b-form-group>
