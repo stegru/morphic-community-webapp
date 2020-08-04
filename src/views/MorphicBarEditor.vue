@@ -12,7 +12,7 @@
           </b-input-group>
           <h6><b>Make-a-Button</b></h6>
           <ul class="list-unstyled mb-3">
-            <li v-for="button in makeButtonList" v-bind:key="button.label" class="mb-1">
+            <li v-for="button in makeButtonList" :key="button.label" class="mb-1">
               <b-link disabled class="text-disabled">
                 <b-icon :icon="button.icon"></b-icon>
                 {{ button.label }}
@@ -31,7 +31,8 @@
         </b-col>
         <b-col md="9">
           <div id="bar-info">
-            <h5>
+            <b-form-input v-if="newBar" v-model="barDetails.name" placeholder="Enter new bar name"></b-form-input>
+            <h5 v-else>
               <b>
                 {{ barDetails.name }}
               </b>
@@ -115,7 +116,8 @@
                 <p class="small">
                   Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
                 </p>
-                <b-button @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
+                <b-button v-if="newBar" @click="addBar" variant="primary" size="sm">Add new bar</b-button>
+                <b-button v-else @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
               </div>
             </b-tab>
           </b-tabs>
@@ -154,7 +156,7 @@
                 <br>
                 <div id="preview-bar">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-                    <div v-for="(item, index) in primaryItems" :key="item.configuration.label">
+                    <div v-for="item in primaryItems" :key="item.configuration.label">
                         <div class="previewHolder mb-3">
                           <PreviewItem :item="item" />
                           <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
@@ -228,23 +230,36 @@
 
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar, updateCommunityBar } from '@/services/communityService'
+import { getCommunityBar, updateCommunityBar, createCommunityBar } from '@/services/communityService'
 import { availableItems, colors, icons } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
 export default {
   name: 'MemberInvite',
   methods: {
-    saveBar: function () {
-      updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
+    addBar: function () {
+      createCommunityBar(this.communityId, this.barDetails)
         .then((resp) => {
-          console.log(resp)
+          if (resp.status === 200) {
+            this.$router.push('/dashboard')
+          }
         })
         .catch(err => {
           console.log(err)
         })
     },
-    predefinedClicked: function(index) {
+    saveBar: function () {
+      updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.$router.push('/dashboard')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    predefinedClicked: function (index) {
       this.clearPredefinedActive()
       this.buttonStorage = this.predefinedButtons[index]
       this.predefinedButtons[index].isActive = true
@@ -256,7 +271,7 @@ export default {
         this.addToDrawer = true
       }
     },
-    clearPredefinedActive: function() {
+    clearPredefinedActive: function () {
       for (let i = 0; i < this.predefinedButtons.length; i++) {
         this.predefinedButtons[i].isActive = false
       }
@@ -299,8 +314,8 @@ export default {
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
-    primaryItems: function() {
-      let data = [];
+    primaryItems: function () {
+      const data = []
       if (this.barDetails.items && this.barDetails.items.length > 0) {
         for (let i = 0; i < this.barDetails.items.length; i++) {
           if (this.barDetails.items[i].is_primary === true) {
@@ -310,8 +325,8 @@ export default {
       }
       return data
     },
-    drawerItems: function() {
-      let data = [];
+    drawerItems: function () {
+      const data = []
       if (this.barDetails.items && this.barDetails.items.length > 0) {
         for (let i = 0; i < this.barDetails.items.length; i++) {
           if (this.barDetails.items[i].is_primary === false) {
@@ -323,10 +338,14 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.barId.indexOf('predifined') !== -1) {
-      console.log(this.$route.params.barId)
+    if (this.$route.params.barId === 'new') {
+      this.newBar = true
+      this.barDetails = this.newBarDetails
+    } else if (this.$route.params.barId.indexOf('predifined') !== -1) {
       for (let i = 0; i < this.predefinedBars.length; i++) {
         if (this.predefinedBars[i].id === this.$route.params.barId) {
+          this.newBar = true
+          this.barDetails = this.newBarDetails
           this.barDetails.items = this.predefinedBars[i].items
         }
       }
@@ -342,10 +361,16 @@ export default {
   },
   data () {
     return {
+      // flags
       addToBar: false,
       addToDrawer: false,
+      newBar: false,
+
+      // storage
       buttonStorage: {},
       barDetails: {},
+
+      // configurations
       preview: {
         drawer: {
           w: 2,
@@ -354,6 +379,11 @@ export default {
         bar: {
           h: 6
         }
+      },
+      newBarDetails: {
+        name: 'New Bar',
+        is_shared: false,
+        items: []
       },
       bar: {
         settings: {
@@ -368,33 +398,33 @@ export default {
       icons: icons,
       makeButtonList: [
         {
-          label: "Button to start a call...",
-          icon: "chat"
+          label: 'Button to start a call...',
+          icon: 'chat'
         },
         {
-          label: "Button to join a meeting...",
-          icon: "people-fill"
+          label: 'Button to join a meeting...',
+          icon: 'people-fill'
         },
         {
-          label: "Button to open online photo album...",
-          icon: "images"
+          label: 'Button to open online photo album...',
+          icon: 'images'
         },
         {
-          label: "Button to open calendar...",
-          icon: "calendar3"
+          label: 'Button to open calendar...',
+          icon: 'calendar3'
         },
         {
-          label: "Button to open web page...",
-          icon: "link"
+          label: 'Button to open web page...',
+          icon: 'link'
         },
         {
-          label: "Button to open an app...",
-          icon: "app"
+          label: 'Button to open an app...',
+          icon: 'app'
         },
         {
-          label: "Button to make all distractions go away...",
-          icon: "headphones"
-        },
+          label: 'Button to make all distractions go away...',
+          icon: 'headphones'
+        }
       ]
     }
   }

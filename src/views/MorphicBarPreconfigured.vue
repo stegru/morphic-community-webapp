@@ -11,7 +11,6 @@
         </div>
       </b-col>
     </b-row>
-    
     <div class="bg-silver rounded p-3">
       <b-row>
         <b-col md="8">
@@ -20,7 +19,7 @@
         </b-col>
         <b-col md="4">
           <div class="text-right">
-            <b-button to="/dashboard/morphicbar-editor/0" variant="primary">Customize starting with an empty Bar</b-button>
+            <b-button to="/dashboard/morphicbar-editor/new" variant="primary">Customize starting with an empty Bar</b-button>
           </div>
         </b-col>
       </b-row>
