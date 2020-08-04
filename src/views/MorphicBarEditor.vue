@@ -60,15 +60,16 @@
               <div v-else-if="getMembersCount() === 1">
                 <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by only one user</b></h5>
                 <p class="mb-0">
-                  <b>{{ memberData.first_name }} {{ memberData.last_name }}</b><br>
-                  {{ memberData.email }}<br>
-                  Joined: {{ memberData.joined }}
+                  <b-link :key="memberDetails.id" :to="'/dashboard/member/' + memberDetails.id" pill variant="outline-dark" class="mr-1 mb-1">
+                    <b-icon-person-circle></b-icon-person-circle>
+                    {{ memberDetails.first_name }} {{ memberDetails.last_name }}
+                  </b-link>
                 </p>
               </div>
               <div v-else>
                 <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
                 <ul class="small mb-0">
-                  <li v-for="member in barDetails.members" v-bind:key="member.id">
+                  <li v-for="member in members" v-bind:key="member.id">
                     <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
                   </li>
                 </ul>
@@ -233,12 +234,16 @@
 
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar, updateCommunityBar, createCommunityBar } from '@/services/communityService'
+import { getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
 export default {
   name: 'MemberInvite',
+  components: {
+    EditorPreviewDrawer,
+    PreviewItem
+  },
   methods: {
     addBar: function () {
       createCommunityBar(this.communityId, this.barDetails)
@@ -305,8 +310,8 @@ export default {
       this.barDetails.items.splice(index, 1)
     },
     getMembersCount: function () {
-      if (this.barDetails.members && this.barDetails.members.length > 0) {
-        return this.barDetails.members.length
+      if (this.members && this.members.length > 0) {
+        return this.members.length
       }
       return 0
     },
@@ -315,11 +320,36 @@ export default {
     },
     getDrawerButtonsCount: function () {
       return this.drawerItems.length
+    },
+    loadBarMembers: function () {
+      getCommunityMembers(this.communityId)
+        .then((resp) => {
+          // this.members = resp.data.members
+          if (resp.data.members.length > 0) {
+            for (let i = 0; i < resp.data.members.length; i++) {
+              if (this.$route.params.barId === resp.data.members[i].bar_id) {
+                this.members.push(resp.data.members[i])
+                // this.barDetails.members.push(this.members[i])
+              }
+              if (this.members.length === 1) {
+                this.loadMemberData()
+              }
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    loadMemberData: function () {
+      getCommunityMember(this.communityId, this.members[0].id)
+        .then((resp) => {
+          this.memberDetails = resp.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
-  },
-  components: {
-    EditorPreviewDrawer,
-    PreviewItem
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
@@ -367,6 +397,7 @@ export default {
           console.log(err)
         })
     }
+    this.loadBarMembers()
   },
   data () {
     return {
@@ -381,6 +412,8 @@ export default {
       // storage
       buttonStorage: {},
       barDetails: {},
+      members: [],
+      memberDetails: {},
 
       // configurations
       preview: {
