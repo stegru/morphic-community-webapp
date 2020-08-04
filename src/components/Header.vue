@@ -11,10 +11,12 @@
       </b-navbar-nav>
 
       <b-navbar-nav>
+        <!--
         <b-nav-item v-if="isLoggedIn" exact-active-class="active" to="/my-community">
           <b-icon-person-fill></b-icon-person-fill>
           My Community
         </b-nav-item>
+        -->
         <b-nav-item v-if="isLoggedIn" @click="logout">
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Logout

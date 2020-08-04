@@ -13,7 +13,9 @@ export const MESSAGES = {
   successfulRegistration: 'Registration completed successfully',
   successfulReset: 'Reset password successful',
   emailValidationError: 'This is a required field and must be a valid email address.',
-  successfulSave: 'Successfully saved'
+  successfulSave: 'Successfully saved',
+  barUpdated: 'Bar successfully saved, you will be returned to Dashboard soon...',
+  barAdded: 'Bar successfully added, you will be returned to Dashboard soon...'
 }
 
 export const colors = {

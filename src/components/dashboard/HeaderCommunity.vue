@@ -5,7 +5,7 @@
         <b>{{ community.name }}</b><br>
         <!-- <b-link :href="'https://' + community.name + '.morphic-community.com/'">{{ community.name }}.morphic-community.com</b-link> -->
       </b-col>
-      <b-col md="4">
+      <b-col md="5">
         <b-row>
           <b-col md="6">
             <b>{{ community.plan }}</b> Plan
@@ -18,11 +18,13 @@
         </b-row>
         <b-progress :value="members" :max="maxMembers" variant="success" striped></b-progress>
       </b-col>
+      <!--
       <b-col md="1">
         <div class="text-right mt-2">
           <b-button to="/my-community" variant="primary" size="sm">Manage</b-button>
         </div>
       </b-col>
+      -->
     </b-row>
   </div>
 </template>
@@ -37,7 +39,7 @@ export default {
   },
   data () {
     return {
-      maxMembers: 10,
+      maxMembers: 25,
       members: null
     }
   },

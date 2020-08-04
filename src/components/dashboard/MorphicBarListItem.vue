@@ -3,7 +3,7 @@
     <b-row>
       <b-col md="9">
         <div v-if="barDetails.name == 'Default'">
-          <h5><b>Starter Bar fo Morphic Community</b></h5>
+          <h5><b>Starter Bar for Morphic Community</b></h5>
           <p>When you invite somebody to your community, this is the default Morphic Bar they will see. You can customize this Bar and make a personal bar for specific people.</p>
         </div>
         <div v-else>

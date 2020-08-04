@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal id="goToEditorConfirm" @ok="gotoEditor" title="Go to editor" footer-bg-variant="light" ok-title="Go">
-      <p class="my-4">If you leave the member editor all of your changes will be lost. Are you sure you want to go now?</p>
+      <p class="my-4">If you leave the member details all of your changes will be lost. Are you sure you want to go now?</p>
     </b-modal>
     <b-modal id="saveConfirm" @ok="editMember" title="Save changes" footer-bg-variant="light" ok-title="Save">
       <p class="my-4">Are you sure you want to save changes?</p>
@@ -10,11 +10,10 @@
       <b-alert variant="success" :show="successAlert">
         {{ successMessage }}
       </b-alert>
-      <h4 class="mb-3">Member Editor</h4>
+      <h4 class="mb-3">Member Details</h4>
       <h5>{{ member.first_name }} {{ member.last_name }}</h5>
       <b-link v-if="member.email" :href="'mailto:'+member.email">{{ member.email }}</b-link>
       <hr>
-      <br>
       <b-form @submit.stop.prevent="onSubmit">
         <b-form-group
           id="first-name"
