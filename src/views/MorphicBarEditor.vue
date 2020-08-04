@@ -112,6 +112,9 @@
                 <b>&nbsp;Save &amp; Update</b>
               </template>
               <div>
+                <b-alert variant="success" :show="successAlert">
+                  {{ successMessage }}
+                </b-alert>
                 <h5><b-icon-cloud-upload></b-icon-cloud-upload> <b>Save bar &amp; Update bar for all users</b></h5>
                 <p class="small">
                   Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
@@ -231,7 +234,7 @@
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBar, updateCommunityBar, createCommunityBar } from '@/services/communityService'
-import { availableItems, colors, icons } from '@/utils/constants'
+import { availableItems, colors, icons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
 export default {
@@ -241,7 +244,10 @@ export default {
       createCommunityBar(this.communityId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
-            this.$router.push('/dashboard')
+            this.successAlert = true
+            setTimeout(() => {
+              this.$router.push('/dashboard')
+            }, 1000)
           }
         })
         .catch(err => {
@@ -252,7 +258,10 @@ export default {
       updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
-            this.$router.push('/dashboard')
+            this.successAlert = true
+            setTimeout(() => {
+              this.$router.push('/dashboard')
+            }, 1000)
           }
         })
         .catch(err => {
@@ -361,10 +370,13 @@ export default {
   },
   data () {
     return {
+      successMessage: MESSAGES.successfulSave,
+
       // flags
       addToBar: false,
       addToDrawer: false,
       newBar: false,
+      successAlert: false,
 
       // storage
       buttonStorage: {},
