@@ -11,21 +11,23 @@
       <h4 class="mb-3">Member Invite</h4>
       <b-card no-body>
         <b-tabs v-model="tabIndex" card>
-          <b-tab title="Step 1: Personal Information">
+          <b-tab title="Fill the member information">
             <b-card-text>
               <h4 class="mb-3">Who do you want to invite?</h4>
               <b-form @submit.stop.prevent="onSubmit">
                 <b-form-group
                   id="first-name"
-                  label="First Name"
+                  label="Name or Nickname (only seen by the Community Manager)"
                   label-for="firstName"
                 >
                   <b-form-input
-                    v-model="firstName"
+                    v-model="$v.firstName.$model"
+                    :state="validateState('firstName')"
                     id="firstName"
-                    placeholder="First Name"
+                    placeholder="Name"
                   >
                   </b-form-input>
+                  <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group
                   id="last-name"
@@ -52,7 +54,7 @@
                     placeholder="Email Address"
                   >
                   </b-form-input>
-                <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
+                  <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
                 </b-form-group>
                 <hr>
                 <b-row>
@@ -69,14 +71,14 @@
               </b-form>
             </b-card-text>
           </b-tab>
-          <b-tab :disabled="this.$v.$invalid" title="Step 2: Preview and Send">
+          <b-tab :disabled="this.$v.$invalid" title="Preview and Send">
             <b-card-text>
               <h4 class="mb-3">Does this looks alright?</h4>
               <p>
                 First Name:
                 <b>{{ firstName }}</b>
               </p>
-              <p>
+              <p v-if="lastName">
                 Last Name:
                 <b>{{ lastName }}</b>
               </p>
@@ -124,10 +126,10 @@
       </b-card>
     </div>
     <div v-else>
-      <b-card-text>
+      <div class="bg-silver rounded p-3">
         <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
         <div v-for="bar in bars" :key="bar.id">
-          <div class="barPicker bg-silver rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
+          <div class="barPicker bg-light rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
             <h5><b>{{ bar.name }}</b></h5>
             <b-row>
               <b-col md="9">
@@ -142,15 +144,10 @@
             </b-row>
           </div>
         </div>
-        <hr>
-        <b-row>
-          <b-col md="6">
-            <div class="small text-right">
-              <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
-            </div>
-          </b-col>
-        </b-row>
-      </b-card-text>
+        <div class="text-right">
+          <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -194,6 +191,9 @@ export default {
     }
   },
   validations: {
+    firstName: {
+      required
+    },
     memberEmail: {
       required,
       email
