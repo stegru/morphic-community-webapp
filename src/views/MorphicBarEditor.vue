@@ -25,6 +25,7 @@
               <b-link @click="predefinedClicked(index)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                 <b-icon :icon="button.configuration.image_url || 'bootstrap'"></b-icon>
                 {{ button.configuration.label }}
+                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
             </li>
           </ul>
@@ -193,6 +194,7 @@
 
 <style lang="scss">
   $primary-color: #002957;
+  $secondary-color: #84c661;
 
   #preview-drawer, #preview-bar {
     .barPreview {
@@ -233,8 +235,15 @@
   .linkList {
     li.active {
       background: white;
-      border-top: 1px solid $primary-color;
-      border-bottom: 1px solid $primary-color;
+      padding: 10px;
+      border: 1px solid $primary-color;
+      outline: 0 !important;
+      border-radius: .5rem;
+      .plus {
+        float: right;
+        font-size: 1.5rem;
+        color: $secondary-color;
+      }
     }
   }
 </style>
@@ -281,7 +290,10 @@ export default {
     predefinedClicked: function (index) {
       this.clearPredefinedActive()
       this.buttonStorage = this.predefinedButtons[index]
+      const currentLabel = this.predefinedButtons[index].configuration.label
+      this.predefinedButtons[index].configuration.label = "[ACTIVE]"
       this.predefinedButtons[index].isActive = true
+      this.predefinedButtons[index].configuration.label = currentLabel
 
       if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
         this.addToBar = true
@@ -298,8 +310,24 @@ export default {
     addToBarOrDrawer: function (is_primary) {
       this.clearPredefinedActive()
       if (this.buttonStorage) {
+        // setting the primary attribute based on which bar it's added to
         this.buttonStorage.is_primary = is_primary
+        // checking if this button already exists
+        if (this.barDetails.items.length > 0) {
+          let existingIndex = -1;
+          for (let i = 0; i < this.barDetails.items.length; i++) {
+            if (this.barDetails.items[i].configuration.label == this.buttonStorage.configuration.label) {
+              existingIndex = i
+            }
+          }
+          if (existingIndex !== -1) {
+            // removing the old version
+            this.barDetails.items.splice(existingIndex, 1)
+          }
+        }
+        // adding the item
         this.barDetails.items.push(this.buttonStorage)
+        // cleaning up the storage
         this.buttonStorage = {}
       }
       this.addToBar = false
@@ -354,6 +382,17 @@ export default {
         }
       }
       return data
+    },
+    predefinedButtons: function() {
+      let buttons = []
+      if (availableItems && availableItems.length > 0) {
+        for (let i = 0; i < availableItems.length; i++) {
+          let item = availableItems[i]
+          item.isActive = false
+          buttons.push(item)
+        }
+      }
+      return buttons
     }
   },
   mounted () {
@@ -415,7 +454,6 @@ export default {
           startsOpen: false
         }
       },
-      predefinedButtons: availableItems,
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
