@@ -175,7 +175,7 @@ export default {
     },
     isFirstBar: function () {
       if (this.list.length === 1) {
-        if (this.list[0].members) {
+        if (this.list[0].members && this.list[0].members.length > 0) {
           return false
         } else {
           return true

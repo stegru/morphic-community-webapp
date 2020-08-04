@@ -31,11 +31,12 @@
         </b-col>
         <b-col md="9">
           <div id="bar-info">
-            <b-form-input v-if="newBar" v-model="barDetails.name" placeholder="Enter new bar name"></b-form-input>
+            <b-form-group v-if="newBar" label="Bar Name" label-for="barName">
+              <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
+            </b-form-group>
             <h5 v-else>
-              <b>
-                {{ barDetails.name }}
-              </b>
+              <b v-if="barDetails.name === 'Default'">Starter Bar for Morphic Community</b>
+              <b v-else>{{ barDetails.name }}</b>
               <span class="d-none small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
           </div>
@@ -114,7 +115,8 @@
               </template>
               <div>
                 <b-alert variant="success" :show="successAlert">
-                  {{ successMessage }}
+                  <span v-if="newBar">{{ successAddMessage }}</span>
+                  <span v-else>{{ successUpdateMessage }}</span>
                 </b-alert>
                 <h5><b-icon-cloud-upload></b-icon-cloud-upload> <b>Save bar &amp; Update bar for all users</b></h5>
                 <p class="small">
@@ -129,8 +131,13 @@
             <b-row>
               <b-col md="8">
                 <br>
+                <h6><b>Moprhic Drawer</b></h6>
                 <div id="preview-drawer">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
+                    <div v-else class="p-4 text-center">
+                      Click on the buttons on the left<br> to add them to the drawer.
+                    </div>
                     <b-row v-if="drawerItems.length > 0">
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
@@ -149,27 +156,24 @@
                         </div>
                       </b-col>
                     </b-row>
-                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <div v-else class="pt-5 pb-5 text-center">
-                      Click on the buttons on the left to add them to the drawer.
-                    </div>
                   </div>
                 </div>
               </b-col>
               <b-col md="4">
                 <br>
+                <h6><b>Morphic Bar <span class="small">(primary)</span></b></h6>
                 <div id="preview-bar">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                    <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
+                    <p v-else class="pt-4 pb-4 mb-0 text-center">
+                      Click on the buttons on the left to add them to the bar.
+                    </p>
                     <div v-for="item in primaryItems" :key="item.configuration.label">
                         <div class="previewHolder mb-3">
                           <PreviewItem :item="item" />
                           <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                         </div>
                       </div>
-                    <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block">Add to Bar</b-button>
-                    <p v-else>
-                      Click on the buttons on the left to add them to the bar.
-                    </p>
                     <div class="logoHolder text-center mt-5 m-3">
                       <b-img src="/img/logo-color.svg" />
                     </div>
@@ -180,7 +184,7 @@
           </div>
           <div class="text-right">
             <br>
-            <b-button to="/dashboard" variant="outline-secondary">Cancel</b-button>
+            <b-button to="/dashboard" variant="primary">Discard Changes &amp; Go back to Dashboard</b-button>
           </div>
         </b-col>
       </b-row>
@@ -190,6 +194,12 @@
 
 <style lang="scss">
   $primary-color: #002957;
+
+  #preview-drawer, #preview-bar {
+    .barPreview {
+      min-height: 500px;
+    }
+  }
 
   .previewHolder {
     position: relative;
@@ -252,7 +262,7 @@ export default {
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
-            }, 1000)
+            }, 3000)
           }
         })
         .catch(err => {
@@ -266,7 +276,7 @@ export default {
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
-            }, 1000)
+            }, 3000)
           }
         })
         .catch(err => {
@@ -324,12 +334,10 @@ export default {
     loadBarMembers: function () {
       getCommunityMembers(this.communityId)
         .then((resp) => {
-          // this.members = resp.data.members
           if (resp.data.members.length > 0) {
             for (let i = 0; i < resp.data.members.length; i++) {
               if (this.$route.params.barId === resp.data.members[i].bar_id) {
                 this.members.push(resp.data.members[i])
-                // this.barDetails.members.push(this.members[i])
               }
               if (this.members.length === 1) {
                 this.loadMemberData()
@@ -401,7 +409,8 @@ export default {
   },
   data () {
     return {
-      successMessage: MESSAGES.successfulSave,
+      successUpdateMessage: MESSAGES.barUpdated,
+      successAddMessage: MESSAGES.barAdded,
 
       // flags
       addToBar: false,
