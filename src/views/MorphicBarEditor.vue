@@ -23,7 +23,8 @@
           <ul class="linkList list-unstyled mb-0">
             <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
               <b-link @click="predefinedClicked(index)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-icon :icon="button.configuration.image_url || 'bootstrap'"></b-icon>
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
                 <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
@@ -234,6 +235,10 @@
   }
 
   .linkList {
+    img {
+      max-width: 1rem;
+      height: 1rem;
+    }
     li.active {
       background: white;
       padding: 10px;
