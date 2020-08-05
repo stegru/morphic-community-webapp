@@ -34,7 +34,7 @@
                 </div>
 
                 <h6><b>Picture for button</b></h6>
-                <div v-if="editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
+                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
                   <div
                     v-for="(filename, icon) in editSubKindIcons" 
                     :key="icon" 
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="editSubKindIcons && editDialogSubkindIcons" class="text-center pt-2">
+                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="text-center pt-2">
                   <b-button @click="editDialogSubkindIcons = false" variant="outline-dark" size="sm">Pick from more pictures</b-button>
                 </div>
               </div>
@@ -235,6 +235,7 @@
                           <div v-if="index < preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
                         </div>
                       </b-col>
@@ -243,6 +244,7 @@
                           <div v-if="index >= preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
                         </div>
                       </b-col>
