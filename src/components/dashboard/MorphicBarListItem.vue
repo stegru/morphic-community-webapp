@@ -29,7 +29,7 @@
               </div>
             </b-col>
             <b-col md="6">
-              <BarPreview :bar="bar" />
+              <BarPreview :barId="bar.id" />
             </b-col>
           </b-row>
           <div class="taskbarWindows"></div>

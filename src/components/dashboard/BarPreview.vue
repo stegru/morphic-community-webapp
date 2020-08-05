@@ -30,14 +30,32 @@
 
 <script>
 import PreviewItem from '@/components/dashboard/PreviewItem'
+import { getCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'BarPreview',
+  data () {
+    return {
+      bar: {}
+    }
+  },
   props: {
-    bar: Object
+    barId: String
   },
   components: {
     PreviewItem
+  },
+  computed: {
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    getCommunityBar(this.communityId, this.barId)
+      .then(resp => {
+        this.bar = resp.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

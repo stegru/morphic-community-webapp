@@ -8,10 +8,10 @@
       <p class="mb-3">This the bar and the drawer should look like when opened.</p>
       <b-row>
         <b-col md="8">
-          <DrawerPreview :bar="barPreviewData" />
+          <DrawerPreview :barId="barPreviewData.id" />
         </b-col>
         <b-col md="4">
-          <BarPreview :bar="barPreviewData" />
+          <BarPreview :barId="barPreviewData.id" />
         </b-col>
       </b-row>
     </b-modal>
