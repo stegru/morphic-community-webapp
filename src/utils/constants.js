@@ -49,12 +49,18 @@ export const icons = {
   'youtube': 'youtube.svg'
 }
 
+export const subkindIcons = {
+  'gmail': ['gmail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'outlook': ['outlook', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'yahoo-mail': ['yahoo-mail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open']
+}
+
 export const availableItems = [
   {
     'kind': 'link',
     'is_primary': true,
     'configuration': {
-      'subkind': 'mail',
+      'subkind': 'gmail',
       'label': 'Gmail',
       'color': colors.red,
       'image_url': 'gmail',
@@ -65,7 +71,7 @@ export const availableItems = [
     'kind': 'link',
     'is_primary': true,
     'configuration': {
-      'subkind': 'mail',
+      'subkind': 'outlook',
       'label': 'Outlook',
       'color': colors.blue,
       'image_url': 'outlook',
@@ -76,7 +82,7 @@ export const availableItems = [
     'kind': 'link',
     'is_primary': true,
     'configuration': {
-      'subkind': 'mail',
+      'subkind': 'yahoo-mail',
       'label': 'Yahoo Mail',
       'color': colors.purple,
       'image_url': 'yahoo-mail',

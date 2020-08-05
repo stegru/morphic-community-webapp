@@ -12,7 +12,7 @@
         <b-form-input
           v-model="$v.userInfo.email.$model"
           :state="validateState('email')"
-          label="email"
+          label="Email"
           placeholder="Enter your email"
         />
         <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
