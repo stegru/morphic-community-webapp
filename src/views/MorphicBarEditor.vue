@@ -1,5 +1,94 @@
 <template>
   <div>
+    <!-- MODALs: BEGIN -->
+    <b-modal id="modalEditGeneric" @ok="refreshButton" @cancel="refreshButton" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
+      <div v-if="buttonEditStorage">
+        <b-row>
+          <b-col md="6">
+            <h5><b>{{ buttonEditStorage.configuration.label }}</b></h5>
+            <p>What text do you want on the button?</p>
+            <div role="group" class="mb-3">
+              <label for="modalEditGenericLabel">Text on the button</label>
+              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" />
+            </div>
+            <div class="bg-silver rounded p-3">
+              <p v-if="editDialogDetails" class="text-right small mb-0">
+                (<b-link @click="editDialogDetails = false">Hide</b-link>)
+              </p>
+              <p v-else class="small">
+                Optional: <b-link @click="editDialogDetails = true">Customize the button (color &amp; picture)</b-link>
+              </p>
+              <div v-if="editDialogDetails">
+                <h6><b>Color for button</b></h6>
+                <div class="bg-white rounded p-3 mb-4">
+                  <div
+                    v-for="(hex, name) in colors"
+                    :key="name" 
+                    @click="editChangeColor(hex)"
+                    :title="name" 
+                    :class="{ active: (buttonEditStorage.configuration.color || colors.blue) === hex }"
+                    class="colorBoxHolder"
+                    >
+                    <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
+                  </div>
+                </div>
+
+                <h6><b>Picture for button</b></h6>
+                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
+                  <div
+                    v-for="(filename, icon) in editSubKindIcons" 
+                    :key="icon" 
+                    @click="editChangeIcon(icon)"
+                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
+                    class="iconBoxHolder"
+                    >
+                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
+                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="bg-white rounded p-3 compactIconHolder">
+                  <div class="iconBoxHolder" :class="{ active: (!buttonEditStorage.configuration.image_url) }">
+                    <div
+                      @click="editChangeIcon('')"
+                      :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'"
+                      class="iconBox"
+                      >
+                      <p>No image</p>
+                    </div>
+                  </div>
+                  <div
+                    v-for="(filename, icon) in icons" 
+                    :key="icon" 
+                    @click="editChangeIcon(icon)"
+                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
+                    class="iconBoxHolder"
+                    >
+                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
+                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
+                    </div>
+                  </div>
+                </div>
+                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="text-center pt-2">
+                  <b-button @click="editDialogSubkindIcons = false" variant="outline-dark" size="sm">Pick from more pictures</b-button>
+                </div>
+              </div>
+            </div>
+          </b-col>
+          <b-col md="6">
+            <div class="max-height bg-silver rounded p-3 pt-5 text-center">
+              <p class="mt-5 mb-1">This is the button you are making</p>
+              <div class="barPreview p-5 rounded">
+                <PreviewItem :item="buttonEditStorage" />
+              </div>
+            </div>
+          </b-col>
+        </b-row>
+      </div>
+    </b-modal>
+    <!-- MODALs: END -->
+
+    <!-- EDITOR -->
     <h5>Morphic Bar Editor</h5>
     <div class="bg-silver rounded p-3">
       <b-row>
@@ -23,7 +112,8 @@
           <ul class="linkList list-unstyled mb-0">
             <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
               <b-link @click="predefinedClicked(index)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-icon :icon="button.configuration.image_url || 'bootstrap'"></b-icon>
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
                 <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
@@ -135,7 +225,7 @@
                 <h6><b>Moprhic Drawer</b></h6>
                 <div id="preview-drawer">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
+                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
                     <div v-else class="p-4 text-center">
                       Click on the buttons on the left<br> to add them to the drawer.
                     </div>
@@ -145,6 +235,7 @@
                           <div v-if="index < preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
                         </div>
                       </b-col>
@@ -153,6 +244,7 @@
                           <div v-if="index >= preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
                         </div>
                       </b-col>
@@ -173,6 +265,7 @@
                         <div class="previewHolder mb-3">
                           <PreviewItem :item="item" />
                           <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                          <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                         </div>
                       </div>
                     <div class="logoHolder text-center mt-5 m-3">
@@ -197,6 +290,70 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  .max-height {
+    height: 100%;
+  }
+
+  .compactIconHolder {
+    height: 22rem;
+    overflow-y: auto;
+    .iconBoxHolder {
+      margin-left: .5rem !important;
+    }
+  }
+
+  .colorBoxHolder {
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 .25rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    .colorBox {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .iconBoxHolder {
+    display: inline-block;
+    cursor: pointer;
+    width: 5.25rem;
+    height: 5.25rem;
+    margin: .75rem 0 .75rem .75rem;
+    .iconBox {
+      background: white;
+      border: 1px solid black;
+      border-radius: 100%;
+      padding: .75rem;
+      width: 4.5rem;
+      height: 4.5rem;
+      text-align: center;
+      img {
+        width: 3rem;
+        height: 3rem;
+      }
+      p {
+        width: 3rem;
+        height: 3rem;
+        line-height: 100%;
+        margin: 0;
+      }
+    }
+  }
+
+  .colorBoxHolder, .iconBoxHolder {
+    padding: .3rem;
+    &.active {
+      padding: .1rem;
+      border: .2rem solid green;
+    }
+  }
+
+  #modalEditGeneric {
+    padding: .5rem 1rem 0 0;
+    border-bottom: none;
+  }
+
   #preview-drawer, #preview-bar {
     .barPreview {
       min-height: 500px;
@@ -219,8 +376,11 @@
         color: #d60000 !important;
       }
     }
-    .icon-delete {
+    .icon-delete, .icon-edit {
       right: 10px;
+    }
+    .icon-edit {
+      top: 40px;
     }
   }
 
@@ -234,6 +394,10 @@
   }
 
   .linkList {
+    img {
+      max-width: 1rem;
+      height: 1rem;
+    }
     li.active {
       background: white;
       padding: 10px;
@@ -254,7 +418,7 @@
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
-import { availableItems, colors, icons, MESSAGES } from '@/utils/constants'
+import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
 export default {
@@ -338,14 +502,38 @@ export default {
       this.addToBar = false
       this.addToDrawer = false
     },
-    buttonToRemove: function (label) {
-      let index = 0
+    findButtonByLabel: function(label) {
+      let index = -1
       for (let i = 0; i < this.barDetails.items.length; i++) {
         if (this.barDetails.items[i].configuration.label === label) {
           index = i
         }
       }
-      this.barDetails.items.splice(index, 1)
+      return index
+    },
+    buttonToRemove: function (label) {
+      let index = this.findButtonByLabel(label)
+      if (index !== -1) {
+        this.barDetails.items.splice(index, 1)
+      }
+    },
+    buttonToEdit: function (label) {
+      let index = this.findButtonByLabel(label)
+      if (index !== -1) {
+        this.buttonEditStorage = this.barDetails.items[index]
+        this.$bvModal.show('modalEditGeneric')
+      }
+    },
+    refreshButton: function() {
+      // updating the data in a button (on edit)
+      this.editDialogDetails = false
+      this.editDialogSubkindIcons = true
+    },
+    editChangeColor: function(hex) {
+      this.buttonEditStorage.configuration.color = hex
+    },
+    editChangeIcon: function(icon) {
+      this.buttonEditStorage.configuration.image_url = icon
     },
     getMembersCount: function () {
       if (this.members && this.members.length > 0) {
@@ -421,6 +609,15 @@ export default {
         }
       }
       return buttons
+    },
+    editSubKindIcons: function() {
+      let data = {}
+      if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
+        for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
+          data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]
+        }
+      }
+      return data
     }
   },
   mounted () {
@@ -456,9 +653,16 @@ export default {
       addToDrawer: false,
       newBar: false,
       successAlert: false,
+      editDialogDetails: false,
+      editDialogSubkindIcons: true,
 
       // storage
       buttonStorage: {},
+      buttonEditStorage: {
+        configuration: {
+          label: ''
+        }
+      },
       barDetails: {},
       members: [],
       memberDetails: {},
@@ -488,6 +692,7 @@ export default {
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
+      subkindIcons: subkindIcons,
       makeButtonList: [
         {
           label: 'Button to start a call...',

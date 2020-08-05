@@ -15,7 +15,6 @@
         </b-col>
       </b-row>
     </b-modal>
-
     <!-- MODALs: END -->
 
     <!-- INLINE HEADER -->
