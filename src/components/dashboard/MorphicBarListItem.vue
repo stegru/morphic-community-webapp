@@ -43,7 +43,7 @@
         </div>
         <div v-else class="text-right">
           <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="emitModalEvent">Make a Copy</b-button>
-          <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
+          <b-button size="sm" variant="light" class="btn-block" @click="emitPreviewEvent">Preview</b-button>
           <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
         </div>
       </b-col>
@@ -113,6 +113,9 @@ export default {
   methods: {
     emitModalEvent: function () {
       this.$emit('open-modal', this.barDetails)
+    },
+    emitPreviewEvent: function () {
+      this.$emit('preview-modal', this.barDetails)
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-    <div v-if="bar.items.length > 0">
+    <div v-if="bar.items && bar.items.length > 0">
       <div v-for="item in bar.items" :key="item.configuration.label">
         <PreviewItem v-if="item.is_primary" :item="item" class="mb-3" />
       </div>
