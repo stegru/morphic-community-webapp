@@ -5,7 +5,7 @@
     <b-row class="mb-3">
       <b-col md="3" v-for="bar in list" v-bind:key="bar.id">
         <div class="bg-silver rounded p-3">
-          <BarPreview :bar="bar" />
+          <BarPreview :barData="bar" />
           <p> {{ bar.desc }}</p>
           <b-button :to="'/dashboard/morphicbar-editor/' + bar.id" variant="primary" class="btn-block">Start customizing this Bar</b-button>
         </div>
