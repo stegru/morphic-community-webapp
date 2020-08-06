@@ -96,7 +96,7 @@ const routes = [
     name: 'Member Invite',
     component: MemberInvite,
     meta: {
-      title: 'Member Invite',
+      title: 'Member Invite :: Morphic Community',
       authRoute: true
     }
   },
