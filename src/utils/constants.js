@@ -52,7 +52,8 @@ export const icons = {
 export const subkindIcons = {
   'gmail': ['gmail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
   'outlook': ['outlook', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
-  'yahoo-mail': ['yahoo-mail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open']
+  'yahoo-mail': ['yahoo-mail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'aolmail': ['envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open']
 }
 
 export const availableItems = [
@@ -64,7 +65,7 @@ export const availableItems = [
       'label': 'Gmail',
       'color': colors.red,
       'image_url': 'gmail',
-      'url': 'https://mail.google.com/'
+      'url': 'https://mail.google.com/mail/u/0/#inbox'
     }
   },
   {
@@ -75,7 +76,7 @@ export const availableItems = [
       'label': 'Outlook',
       'color': colors.blue,
       'image_url': 'outlook',
-      'url': 'https://www.outlook.com/'
+      'url': 'https://outlook.live.com/mail/0/inbox'
     }
   },
   {
@@ -87,6 +88,16 @@ export const availableItems = [
       'color': colors.purple,
       'image_url': 'yahoo-mail',
       'url': 'https://mail.yahoo.com/'
+    }
+  },
+  {
+    'kind': 'link',
+    'is_primary': true,
+    'configuration': {
+      'subkind': 'aolmail',
+      'label': 'AOL Mail',
+      'image_url': 'envelope',
+      'url': 'https://mail.aol.com/webmail-std/en-us/suite'
     }
   },
   {
