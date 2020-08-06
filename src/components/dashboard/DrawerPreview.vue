@@ -1,6 +1,6 @@
 <template>
   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-    <b-row v-if="drawerItems.length > 0">
+    <b-row v-if="drawerItems && drawerItems.length > 0">
       <b-col md="6">
         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
           <div v-if="index < preview.drawer.h" class="previewHolder mb-3">

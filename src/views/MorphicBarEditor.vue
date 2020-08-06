@@ -100,18 +100,21 @@
             </b-input-group-append>
           </b-input-group>
           <h6><b>Make-a-Button</b></h6>
-          <ul class="list-unstyled mb-3">
-            <li v-for="button in makeButtonList" :key="button.label" class="mb-1">
-              <b-link disabled class="text-disabled">
-                <b-icon :icon="button.icon"></b-icon>
-                {{ button.label }}
+          <ul class="linkList list-unstyled mb-0">
+            <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
+              <b-link @click="predefinedClicked(index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
+                {{ button.configuration.label }}
+                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
             </li>
           </ul>
+          <br>
           <h6><b>Predefined Buttons</b></h6>
           <ul class="linkList list-unstyled mb-0">
             <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link @click="predefinedClicked(index)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+              <b-link @click="predefinedClicked(index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                 <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
@@ -234,6 +237,8 @@
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index < preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
+                            <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
+                            <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                             <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
@@ -243,6 +248,8 @@
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index >= preview.drawer.h" class="previewHolder mb-3">
                             <PreviewItem :item="item" />
+                            <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
+                            <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
                             <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                             <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                           </div>
@@ -261,9 +268,11 @@
                     <p v-else class="pt-4 pb-4 mb-0 text-center">
                       Click on the buttons on the left to add them to the bar.
                     </p>
-                    <div v-for="item in primaryItems" :key="item.configuration.label">
+                    <div v-for="(item, index) in primaryItems" :key="index">
                         <div class="previewHolder mb-3">
                           <PreviewItem :item="item" />
+                          <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
+                          <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
                           <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
                           <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                         </div>
@@ -382,6 +391,12 @@
     .icon-edit {
       top: 40px;
     }
+    .icon-up, .icon-down {
+      left: 10px;
+    }
+    .icon-down {
+      top: 40px;
+    }
   }
 
   .text-disabled {
@@ -456,13 +471,21 @@ export default {
           console.log(err)
         })
     },
-    predefinedClicked: function (index) {
+    predefinedClicked: function (index, makeAButtons) {
       this.clearPredefinedActive()
-      this.buttonStorage = this.predefinedButtons[index]
-      const currentLabel = this.predefinedButtons[index].configuration.label
-      this.predefinedButtons[index].configuration.label = "[ACTIVE]"
-      this.predefinedButtons[index].isActive = true
-      this.predefinedButtons[index].configuration.label = currentLabel
+      if (makeAButtons) {
+        this.buttonStorage = this.makeAButtons[index]
+        const currentLabel = this.makeAButtons[index].configuration.label
+        this.makeAButtons[index].configuration.label = "[ACTIVE]"
+        this.makeAButtons[index].isActive = true
+        this.makeAButtons[index].configuration.label = currentLabel
+      } else {
+        this.buttonStorage = this.predefinedButtons[index]
+        const currentLabel = this.predefinedButtons[index].configuration.label
+        this.predefinedButtons[index].configuration.label = "[ACTIVE]"
+        this.predefinedButtons[index].isActive = true
+        this.predefinedButtons[index].configuration.label = currentLabel
+      }
 
       if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
         this.addToBar = true
@@ -475,6 +498,9 @@ export default {
       for (let i = 0; i < this.predefinedButtons.length; i++) {
         this.predefinedButtons[i].isActive = false
       }
+      for (let i = 0; i < this.makeAButtons.length; i++) {
+        this.makeAButtons[i].isActive = false
+      }
     },
     addToBarOrDrawer: function (is_primary) {
       this.clearPredefinedActive()
@@ -483,7 +509,7 @@ export default {
         this.buttonStorage.is_primary = is_primary
         // checking if this button already exists
         if (this.barDetails.items.length > 0) {
-          let existingIndex = -1;
+          let existingIndex = -1
           for (let i = 0; i < this.barDetails.items.length; i++) {
             if (this.barDetails.items[i].configuration.label == this.buttonStorage.configuration.label) {
               existingIndex = i
@@ -515,6 +541,36 @@ export default {
       let index = this.findButtonByLabel(label)
       if (index !== -1) {
         this.barDetails.items.splice(index, 1)
+      }
+    },
+    buttonToMoveUp: function (label) {
+      let index = this.findButtonByLabel(label)
+      if (index > 0) { // you cannot move button that can't be found (-1), or it's the first one (0)
+        // getting the current and previous item
+        let item = this.barDetails.items[index],
+            isPrimary = this.barDetails.items[index].is_primary,
+            itemOnTop = this.barDetails.items[index-1]
+        // moving the current item up, and the one from the top to the current index
+        this.barDetails.items[index-1] = item
+        this.barDetails.items[index-1].is_primary = !isPrimary
+        this.barDetails.items[index-1].is_primary = isPrimary
+        this.barDetails.items[index] = itemOnTop
+      }
+    },
+    buttonToMoveDown: function (label) {
+      let index = this.findButtonByLabel(label),
+          itemsCount = this.barDetails.items.length
+
+      if (index !== -1 && index < (itemsCount -1 )) { // you cannot move button that can't be found (-1), or it's the last one
+        // getting the current and next item
+        let item = this.barDetails.items[index],
+            isPrimary = this.barDetails.items[index].is_primary,
+            itemOnBottom = this.barDetails.items[index+1]
+        // moving the current item up, and the one from the top to the current index
+        this.barDetails.items[index+1] = item
+        this.barDetails.items[index+1].is_primary = !isPrimary
+        this.barDetails.items[index+1].is_primary = isPrimary
+        this.barDetails.items[index] = itemOnBottom
       }
     },
     buttonToEdit: function (label) {
@@ -573,6 +629,16 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    generateId: function(item) {
+      let id = ""
+      if (item) {
+        id+= Math.floor(Math.random() * Math.floor(99999999))
+        id+= "-" + item.configuration.label.toLowerCase()
+        id+= "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind")
+        id+= "-" + Math.floor(Math.random() * Math.floor(99999999))
+      }
+      return id
     }
   },
   computed: {
@@ -582,7 +648,9 @@ export default {
       if (this.barDetails.items && this.barDetails.items.length > 0) {
         for (let i = 0; i < this.barDetails.items.length; i++) {
           if (this.barDetails.items[i].is_primary === true) {
-            data.push(this.barDetails.items[i])
+            let newItem = this.barDetails.items[i]
+            newItem.id = this.generateId(newItem)
+            data.push(newItem)
           }
         }
       }
@@ -593,19 +661,36 @@ export default {
       if (this.barDetails.items && this.barDetails.items.length > 0) {
         for (let i = 0; i < this.barDetails.items.length; i++) {
           if (this.barDetails.items[i].is_primary === false) {
-            data.push(this.barDetails.items[i])
+            let newItem = this.barDetails.items[i]
+            newItem.id = this.generateId(newItem)
+            data.push(newItem)
           }
         }
       }
       return data
     },
+    makeAButtons: function() {
+      let buttons = []
+      if (availableItems && availableItems.length > 0) {
+        for (let i = 0; i < availableItems.length; i++) {
+          if (availableItems[i].configuration.subkind) {
+            let item = availableItems[i]
+            item.isActive = false
+            buttons.push(item)
+          }
+        }
+      }
+      return buttons
+    },
     predefinedButtons: function() {
       let buttons = []
       if (availableItems && availableItems.length > 0) {
         for (let i = 0; i < availableItems.length; i++) {
-          let item = availableItems[i]
-          item.isActive = false
-          buttons.push(item)
+          if (!availableItems[i].configuration.subkind) {
+            let item = availableItems[i]
+            item.isActive = false
+            buttons.push(item)
+          }
         }
       }
       return buttons
