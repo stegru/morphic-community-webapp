@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -19,6 +21,7 @@ Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate)
 Vue.use(Vuex)
+Vue.use(VueLodash, { lodash: lodash })
 
 Vue.config.productionTip = false
 new Vue({
