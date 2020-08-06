@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <b-modal id="modalEditGeneric" @ok="refreshButton" @cancel="refreshButton" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
+    <b-modal id="modalEditGeneric" @ok="refreshButton" @cancel="cancelEditButton" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
       <div v-if="buttonEditStorage">
         <b-row>
           <b-col md="6">
@@ -474,7 +474,7 @@ export default {
     predefinedClicked: function (index, makeAButtons) {
       this.clearPredefinedActive()
       if (makeAButtons) {
-        this.buttonStorage = this.makeAButtons[index]
+        this.buttonStorage = this._.cloneDeep(this.makeAButtons[index])
         const currentLabel = this.makeAButtons[index].configuration.label
         this.makeAButtons[index].configuration.label = "[ACTIVE]"
         this.makeAButtons[index].isActive = true
@@ -576,12 +576,25 @@ export default {
     buttonToEdit: function (label) {
       let index = this.findButtonByLabel(label)
       if (index !== -1) {
-        this.buttonEditStorage = this.barDetails.items[index]
+        this.buttonEditStorage = this._.cloneDeep(this.barDetails.items[index])
+        this.buttonEditIndex = index
         this.$bvModal.show('modalEditGeneric')
       }
     },
     refreshButton: function() {
       // updating the data in a button (on edit)
+      if (this.buttonEditStorage && this.buttonEditIndex !== -1) {
+        console.log(this.barDetails.items[this.buttonEditIndex])
+        console.log(this.buttonEditIndex)
+        this.barDetails.items[this.buttonEditIndex] = this._.cloneDeep(this.buttonEditStorage)
+        console.log(this.barDetails.items[this.buttonEditIndex])
+        this.buttonEditIndex = -1
+      }
+      this.editDialogDetails = false
+      this.editDialogSubkindIcons = true
+    },
+    cancelEditButton: function() {
+      // clearning up the edit dialog flags
       this.editDialogDetails = false
       this.editDialogSubkindIcons = true
     },
@@ -743,6 +756,7 @@ export default {
 
       // storage
       buttonStorage: {},
+      buttonEditIndex: -1,
       buttonEditStorage: {
         configuration: {
           label: ''
