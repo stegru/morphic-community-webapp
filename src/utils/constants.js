@@ -96,6 +96,7 @@ export const availableItems = [
     'configuration': {
       'subkind': 'aolmail',
       'label': 'AOL Mail',
+      'color': colors.blue,
       'image_url': 'envelope',
       'url': 'https://mail.aol.com/webmail-std/en-us/suite'
     }
@@ -115,17 +116,9 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Open Facebook',
+      'color': colors.blue,
       'image_url': 'facebook',
       'url': 'https://www.facebook.com/',
-    }
-  },
-  {
-    'kind': 'link',
-    'is_primary': true,
-    'configuration': {
-      'label': 'Photo Gallery',
-      'color': colors.purple,
-      'url': 'https://www.flickr.com/photos/karadaliev',
     }
   },
   {
@@ -133,6 +126,7 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Call Skype',
+      'color': colors.blue,
       'image_url': 'skype',
       'default': 'skype',
     }

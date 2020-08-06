@@ -676,6 +676,8 @@ export default {
           if (availableItems[i].configuration.subkind) {
             let item = availableItems[i]
             item.isActive = false
+            item.configuration.color = item.configuration.color || ''
+            item.configuration.image_url = item.configuration.image_url || ''
             buttons.push(item)
           }
         }
@@ -689,6 +691,8 @@ export default {
           if (!availableItems[i].configuration.subkind) {
             let item = availableItems[i]
             item.isActive = false
+            item.configuration.color = item.configuration.color || ''
+            item.configuration.image_url = item.configuration.image_url || ''
             buttons.push(item)
           }
         }
@@ -745,7 +749,9 @@ export default {
       buttonStorage: {},
       buttonEditStorage: {
         configuration: {
-          label: ''
+          label: '',
+          color: '',
+          image_url: ''
         }
       },
       barDetails: {},
