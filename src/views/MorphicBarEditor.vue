@@ -134,10 +134,9 @@
               <span class="d-none small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
           </div>
-          <b-tabs content-class="bg-light p-3" small>
-            <b-tab active>
-              <template v-slot:title>
-                <b-icon-person-circle></b-icon-person-circle>
+          <div>
+            <b-nav tabs>
+              <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
                 <span v-if="getMembersCount() === 0">
                   Unused Bar
                 </span>
@@ -147,80 +146,71 @@
                 <span v-else>
                   Users ({{ getMembersCount() }})
                 </span>
-              </template>
-              <div v-if="getMembersCount() === 0">
-                <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
-                <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
-              </div>
-              <div v-else-if="getMembersCount() === 1">
-                <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by only one user</b></h5>
-                <p class="mb-0">
-                  <b-link :key="memberDetails.id" :to="'/dashboard/member/' + memberDetails.id" pill variant="outline-dark" class="mr-1 mb-1">
-                    <b-icon-person-circle></b-icon-person-circle>
-                    {{ memberDetails.first_name }} {{ memberDetails.last_name }}
-                  </b-link>
-                </p>
-              </div>
-              <div v-else>
-                <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
-                <ul class="small mb-0">
-                  <li v-for="member in members" v-bind:key="member.id">
-                    <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
-                  </li>
-                </ul>
-              </div>
-            </b-tab>
-            <b-tab disabled>
-              <template v-slot:title>
-                <b-icon-gear-fill></b-icon-gear-fill>
-                Bar Settings
-              </template>
-              <div>
-                <h5><b-icon-gear-fill></b-icon-gear-fill> <b>Morphic Bar settings</b></h5>
-                <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
-                  Bar on the right of the screen
-                </b-form-checkbox>
-                <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-                  Person cannot close bar
-                </b-form-checkbox>
-                <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
-                  Morphic Bar always starts open
-                </b-form-checkbox>
-              </div>
-            </b-tab>
-            <b-tab disabled>
-              <template v-slot:title>
-                <b-icon-fullscreen></b-icon-fullscreen>
-                Try it
-              </template>
-              <div>
-                <h5><b-icon-fullscreen></b-icon-fullscreen> <b>Try this bar on your own computer</b></h5>
-                <p>
-                  You need to have Morphic installed on your computer to try out bars in your community.
-                  <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>.
-                </p>
-                <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
-              </div>
-            </b-tab>
-            <b-tab>
-              <template v-slot:title>
-                <b-icon-cloud-upload></b-icon-cloud-upload>
-                <b>&nbsp;Save &amp; Update</b>
-              </template>
-              <div>
-                <b-alert variant="success" :show="successAlert">
-                  <span v-if="newBar">{{ successAddMessage }}</span>
-                  <span v-else>{{ successUpdateMessage }}</span>
-                </b-alert>
-                <h5><b-icon-cloud-upload></b-icon-cloud-upload> <b>Save bar &amp; Update bar for all users</b></h5>
-                <p class="small">
-                  Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
-                </p>
-                <b-button v-if="newBar" @click="addBar" variant="primary" size="sm">Add new bar</b-button>
-                <b-button v-else @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
-              </div>
-            </b-tab>
-          </b-tabs>
+              </b-nav-item>
+              <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
+              <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
+              <b-nav-item :active="tab === 4" @click="tab = 4"><b-icon-cloud-upload></b-icon-cloud-upload> <b>&nbsp;Save &amp; Update</b></b-nav-item>
+            </b-nav>
+          </div>
+          <div v-if="tab === 1" class="bg-light p-3">
+            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
+            <div v-if="getMembersCount() === 0">
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
+              <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
+            </div>
+            <div v-else-if="getMembersCount() === 1">
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by only one user</b></h5>
+              <p class="mb-0">
+                <b-link :key="memberDetails.id" :to="'/dashboard/member/' + memberDetails.id" pill variant="outline-dark" class="mr-1 mb-1">
+                  <b-icon-person-circle></b-icon-person-circle>
+                  {{ memberDetails.first_name }} {{ memberDetails.last_name }}
+                </b-link>
+              </p>
+            </div>
+            <div v-else>
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
+              <ul class="small mb-0">
+                <li v-for="member in members" v-bind:key="member.id">
+                  <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div v-else-if="tab === 2" class="bg-light p-3">
+            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
+            <h5><b-icon-gear-fill></b-icon-gear-fill> <b>Morphic Bar settings</b></h5>
+            <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
+              Bar on the right of the screen
+            </b-form-checkbox>
+            <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
+              Person cannot close bar
+            </b-form-checkbox>
+            <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
+              Morphic Bar always starts open
+            </b-form-checkbox>
+          </div>
+          <div v-else-if="tab === 3" class="bg-light p-3">
+            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
+            <h5><b-icon-fullscreen></b-icon-fullscreen> <b>Try this bar on your own computer</b></h5>
+            <p>
+              You need to have Morphic installed on your computer to try out bars in your community.
+              <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>.
+            </p>
+            <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
+          </div>
+          <div v-else-if="tab === 4" class="bg-light p-3">
+            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
+            <b-alert variant="success" :show="successAlert">
+              <span v-if="newBar">{{ successAddMessage }}</span>
+              <span v-else>{{ successUpdateMessage }}</span>
+            </b-alert>
+            <h5><b-icon-cloud-upload></b-icon-cloud-upload> <b>Save bar &amp; Update bar for all users</b></h5>
+            <p class="small">
+              Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
+            </p>
+            <b-button v-if="newBar" @click="addBar" variant="primary" size="sm">Add new bar</b-button>
+            <b-button v-else @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
+          </div>
           <div id="preview-holder">
             <b-row>
               <b-col md="8">
@@ -744,6 +734,7 @@ export default {
       successAlert: false,
       editDialogDetails: false,
       editDialogSubkindIcons: true,
+      tab: 0,
 
       // storage
       buttonStorage: {},
