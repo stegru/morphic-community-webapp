@@ -23,9 +23,9 @@
                 <div class="bg-white rounded p-3 mb-4">
                   <div
                     v-for="(hex, name) in colors"
-                    :key="name" 
+                    :key="name"
                     @click="editChangeColor(hex)"
-                    :title="name" 
+                    :title="name"
                     :class="{ active: (buttonEditStorage.configuration.color || colors.blue) === hex }"
                     class="colorBoxHolder"
                     >
@@ -36,8 +36,8 @@
                 <h6><b>Picture for button</b></h6>
                 <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
                   <div
-                    v-for="(filename, icon) in editSubKindIcons" 
-                    :key="icon" 
+                    v-for="(filename, icon) in editSubKindIcons"
+                    :key="icon"
                     @click="editChangeIcon(icon)"
                     :class="{ active: buttonEditStorage.configuration.image_url === icon }"
                     class="iconBoxHolder"
@@ -58,8 +58,8 @@
                     </div>
                   </div>
                   <div
-                    v-for="(filename, icon) in icons" 
-                    :key="icon" 
+                    v-for="(filename, icon) in icons"
+                    :key="icon"
                     @click="editChangeIcon(icon)"
                     :class="{ active: buttonEditStorage.configuration.image_url === icon }"
                     class="iconBoxHolder"
@@ -102,7 +102,7 @@
           <h6><b>Make-a-Button</b></h6>
           <ul class="linkList list-unstyled mb-0">
             <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link @click="predefinedClicked(index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+              <b-link draggable v-on:dragstart="dragElement($event, index, true)" @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                 <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
@@ -114,7 +114,7 @@
           <h6><b>Predefined Buttons</b></h6>
           <ul class="linkList list-unstyled mb-0">
             <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link @click="predefinedClicked(index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+              <b-link draggable v-on:dragstart="dragElement($event, index, false)" @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                 <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
@@ -217,7 +217,7 @@
                 <br>
                 <h6><b>Moprhic Drawer</b></h6>
                 <div id="preview-drawer">
-                  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                  <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, false)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
                     <div v-else class="p-4 text-center">
                       Click on the buttons on the left<br> to add them to the drawer.
@@ -253,7 +253,7 @@
                 <br>
                 <h6><b>Morphic Bar <span class="small">(primary)</span></b></h6>
                 <div id="preview-bar">
-                  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                  <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, true)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
                     <p v-else class="pt-4 pb-4 mb-0 text-center">
                       Click on the buttons on the left to add them to the bar.
@@ -461,22 +461,27 @@ export default {
           console.log(err)
         })
     },
-    predefinedClicked: function (index, makeAButtons) {
+    predefinedClicked: function (event, index, makeAButtons) {
       this.clearPredefinedActive()
+      let currentLabel
       if (makeAButtons) {
         this.buttonStorage = this.makeAButtons[index]
-        const currentLabel = this.makeAButtons[index].configuration.label
-        this.makeAButtons[index].configuration.label = "[ACTIVE]"
-        this.makeAButtons[index].isActive = true
-        this.makeAButtons[index].configuration.label = currentLabel
+        currentLabel = this.makeAButtons[index].configuration.label
       } else {
         this.buttonStorage = this.predefinedButtons[index]
-        const currentLabel = this.predefinedButtons[index].configuration.label
-        this.predefinedButtons[index].configuration.label = "[ACTIVE]"
-        this.predefinedButtons[index].isActive = true
-        this.predefinedButtons[index].configuration.label = currentLabel
+        currentLabel = this.predefinedButtons[index].configuration.label
       }
-
+      if (event.type === 'click') {
+        if (makeAButtons) {
+          this.makeAButtons[index].configuration.label = '[ACTIVE]'
+          this.makeAButtons[index].isActive = true
+          this.makeAButtons[index].configuration.label = currentLabel
+        } else {
+          this.predefinedButtons[index].configuration.label = '[ACTIVE]'
+          this.predefinedButtons[index].isActive = true
+          this.predefinedButtons[index].configuration.label = currentLabel
+        }
+      }
       if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
         this.addToBar = true
       }
@@ -629,6 +634,17 @@ export default {
         id+= "-" + Math.floor(Math.random() * Math.floor(99999999))
       }
       return id
+    },
+    dragElement: function (event, index, makeAButtons) {
+      this.predefinedClicked(event, index, makeAButtons)
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+    },
+    dropElement: function (event, isPrimary) {
+      this.addToBarOrDrawer(isPrimary)
+    },
+    allowDrop: function (event) {
+      event.preventDefault()
     }
   },
   computed: {
