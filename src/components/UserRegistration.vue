@@ -6,26 +6,25 @@
     <b-alert variant="success" :show="successAlert">
       {{ successMessage }}
     </b-alert>
-    <legend>Basic Information</legend>
     <b-form-group>
-      <b-input-group append=".morphic-community.com" class="mb-2 mr-sm-2 mb-sm-0">
+      <b-input-group>
         <b-form-input
           v-model="$v.form.communityName.$model"
           :state="validateState('communityName')"
           label="my-community"
           placeholder="my-community"
         />
+        <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
       </b-input-group>
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
-        v-model="$v.form.username.$model"
-        :state="validateState('username')"
-        label="Username"
-        placeholder="Username"
+        v-model="$v.form.email.$model"
+        :state="validateState('email')"
+        label="Email"
+        placeholder="Enter your email"
       />
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -40,15 +39,6 @@
         label="Last name"
         placeholder="Last name"
       />
-    </b-form-group>
-    <b-form-group>
-      <b-form-input
-        v-model="$v.form.email.$model"
-        :state="validateState('email')"
-        label="Email"
-        placeholder="Enter your email"
-      />
-      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -127,7 +117,6 @@ export default {
     return {
       form: {
         communityName: '',
-        username: '',
         email: '',
         firstName: '',
         lastName: '',
@@ -145,9 +134,6 @@ export default {
   validations: {
     form: {
       communityName: {
-        required
-      },
-      username: {
         required
       },
       email: {
@@ -195,7 +181,13 @@ export default {
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            if (err.response.data.error === 'existing_email') {
+              this.errorMessage = ERROR_MAP[2]
+            } else if (err.response.data.error === 'existing_username') {
+              this.errorMessage = ERROR_MAP[3]
+            } else {
+              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            }
           } else {
             this.errorMessage = ERROR_MAP[500]
           }

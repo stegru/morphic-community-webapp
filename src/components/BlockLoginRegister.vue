@@ -1,14 +1,12 @@
 <template>
   <b-jumbotron bg-variant="light" id="login-register">
     <b-row>
-      <b-col lg="4"></b-col>
-      <b-col md="6" lg="4">
-        <h3>Register Community</h3>
-        <p>Phasellus tincidunt maximus orci in scelerisque. Nulla enim nisi, dignissim vel quam eu, aliquet efficitur sapien. Morbi eleifend ligula sit amet justo vestibulum euismod.</p>
-        <p>
-          <b-button to="/registration" variant="primary">Registration Form</b-button>
-        </p>
+      <b-col lg="1"></b-col>
+      <b-col md="6" lg="6">
+        <h3 class="mb-3">Register Community</h3>
+        <UserRegistration />
       </b-col>
+      <b-col lg="1"></b-col>
       <b-col md="6" lg="4">
         <UserLogin />
       </b-col>
@@ -25,11 +23,13 @@
 
 <script>
 import UserLogin from '@/components/UserLogin'
+import UserRegistration from '@/components/UserRegistration'
 
 export default {
   name: 'BlockLoginRegister',
   components: {
-    UserLogin
+    UserLogin,
+    UserRegistration
   }
 }
 </script>

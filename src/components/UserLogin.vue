@@ -10,12 +10,12 @@
     <b-form @submit.stop.prevent="onSubmit">
       <b-form-group>
         <b-form-input
-          v-model="$v.userInfo.username.$model"
-          :state="validateState('username')"
-          label="Username"
-          placeholder="Enter your username"
+          v-model="$v.userInfo.email.$model"
+          :state="validateState('email')"
+          label="Email"
+          placeholder="Enter your email"
         />
-        <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+        <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
       </b-form-group>
       <b-form-group>
         <b-form-input
@@ -45,7 +45,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required, email, minLength } from 'vuelidate/lib/validators'
 import { ERROR_MAP, MESSAGES } from '@/utils/constants'
 
 export default {
@@ -53,7 +53,7 @@ export default {
   data () {
     return {
       userInfo: {
-        username: '',
+        email: '',
         password: '',
         keep_logged: 1
       },
@@ -65,8 +65,9 @@ export default {
   },
   validations: {
     userInfo: {
-      username: {
-        required
+      email: {
+        required,
+        email
       },
       password: {
         required,
@@ -89,14 +90,18 @@ export default {
           this.successAlert = true
           setTimeout(() => {
             this.successAlert = false
-            this.userInfo.username = ''
+            this.userInfo.email = ''
             this.userInfo.password = ''
             this.$router.push('/dashboard')
           }, 1000)
         })
         .catch(err => {
           if (err.response) {
-            this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            if (err.response.data.error === 'invalid_credentials') {
+              this.errorMessage = ERROR_MAP[1]
+            } else {
+              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+            }
           } else {
             this.errorMessage = ERROR_MAP[500]
           }

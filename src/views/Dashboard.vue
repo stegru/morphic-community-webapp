@@ -1,33 +1,26 @@
 <template>
   <div>
-    <HeaderCommunity :community="community" class="mb-3" />
-    <div id="welcome" v-if="list.length === 0">
+    <!-- MODALs: BEGIN -->
+    <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
+      <p class="my-4">Please confirm the copying of the bar?</p>
+    </b-modal>
+    <b-modal id="previewModal" @ok="clearPreviewData" title="Bar Preview" footer-bg-variant="light" size="lg">
+      <p class="mb-3">This the bar and the drawer should look like when opened.</p>
       <b-row>
-        <b-col :md="leftColumnSize">
-          <div class="bg-light rounded p-3 fill-height">
-          </div>
+        <b-col md="8">
+          <DrawerPreview :barId="barPreviewData.id" />
         </b-col>
-        <b-col :md="rightColumnSize">
-          <div class="bg-silver rounded p-3">
-            <b-img src="/img/dashboard-intro.jpg" fluid rounded alt="Dashboard Intro Image"></b-img>
-            <div id="welcome-text" v-if="welcomeOrPickBar">
-              <BlockWelcome />
-              <p class="text-center mt-5">
-                <b-button @click="welcomeOrPickBar = false" variant="primary" size="lg">Get started with custom Morphic Bar</b-button>
-              </p>
-            </div>
-            <div id="welcome-pick" v-if="welcomeOrPickBar === false">
-              <BlockPredefinedOrNew />
-              <p class="text-center mt-5">
-                <b-button to="/dashboard/morphicbar-editor/0" variant="primary">I want to make my own</b-button>
-                <b-button to="/dashboard/morphicbar-preconfigured" variant="success" class="ml-1">Let me look at several options first</b-button>
-                <b-button @click="welcomeOrPickBar = true" variant="outline-secondary" class="ml-1">Cancel</b-button>
-              </p>
-            </div>
-          </div>
+        <b-col md="4">
+          <BarPreview :barId="barPreviewData.id" />
         </b-col>
       </b-row>
-    </div>
+    </b-modal>
+    <!-- MODALs: END -->
+
+    <!-- INLINE HEADER -->
+    <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
+
+    <!-- BAR LIST -->
     <div id="morphicBarList" v-if="list.length > 0">
       <b-row>
         <b-col :md="leftColumnSize">
@@ -50,10 +43,12 @@
             </div>
           </b-col>
           <b-col :md="rightColumnSize">
-            <MorphicBarListItem :bar="bar" @reload-bars="loadData" />
+            <MorphicBarListItem :bar="bar" @open-modal="openModal" @preview-modal="showPreview" />
           </b-col>
         </b-row>
       </div>
+
+      <!-- INVITE and ADD bar buttons -->
       <div id="listButtons" v-if="isFirstBar() === false">
         <b-row>
           <b-col :md="leftColumnSize">
@@ -69,6 +64,14 @@
         </b-row>
       </div>
     </div>
+
+    <!-- LOADING DIALOG -->
+    <div v-else id="welcome">
+      <div class="text-center pt-5 pb-5 bg-silver rounded">
+        <b-spinner variant="success" label="..."></b-spinner><br><br>
+        Loading data, please wait...
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,8 +83,9 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
-import { getCommunityBars } from '@/services/communityService'
-import { availableItems } from '@/utils/constants'
+import BarPreview from '@/components/dashboard/BarPreview'
+import DrawerPreview from '@/components/dashboard/DrawerPreview'
+import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
@@ -91,32 +95,111 @@ export default {
     BlockPredefinedOrNew,
     BlockFirstMember,
     MemberPills,
-    MorphicBarListItem
+    MorphicBarListItem,
+    BarPreview,
+    DrawerPreview
   },
   data () {
     return {
+      // settings
+      leftColumnSize: 4, // members column size
+      rightColumnSize: 8, // bar's column size
+
+      // data
       list: [],
       community: {},
-      leftColumnSize: 4, // members column
-      rightColumnSize: 8, // bar's column
-      welcomeOrPickBar: true, // if we are on the welcome page show the welcome text first
-      availableItems: availableItems
+      members: [],
+      barPreviewData: {}
     }
   },
   computed: {
-    userId: function () { return this.$store.getters.userId }
+    userId: function () { return this.$store.getters.userId },
+    communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
     this.loadData()
   },
   methods: {
+    openModal: function (bar) {
+      this.barToCopy = bar
+      this.$bvModal.show('copyConfirm')
+    },
+    showPreview: function (bar) {
+      this.barPreviewData = bar
+      this.$bvModal.show('previewModal')
+    },
+    clearPreviewData: function (bar) {
+      this.barPreviewData = {}
+    },
+    duplicateBar: function () {
+      const newBar = {
+        name: `${this.barToCopy.name} - copy`,
+        is_shared: this.barToCopy.is_shared,
+        items: this.barToCopy.items
+      }
+      createCommunityBar(this.communityId, newBar)
+        .then(resp => {
+          if (resp.status === 200) {
+            this.loadData()
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     loadData: function () {
-      this.$store.dispatch('userCommunities', this.userId)
-        .then((communities) => {
-          this.community = communities[0]
-          getCommunityBars(communities[0].id)
-            .then(resp => {
-              this.list = this.autoHideDetails(resp.data.bars, true)
+      return new Promise((resolve, reject) => {
+        if (!this.$route.params.community && !this.communityId) {
+          this.$store.dispatch('userCommunities', this.userId)
+            .then((communities) => {
+              this.community = communities[0]
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else if (this.$route.params.community) {
+          this.community = this.$route.params.community
+          this.$store.dispatch('activeCommunity', this.community.id)
+            .then(() => {
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else {
+          getCommunity(this.communityId)
+            .then((community) => {
+              this.community = community.data
+              this.loadBars()
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        }
+      })
+    },
+    loadBars: function () {
+      getCommunityBars(this.community.id)
+        .then(resp => {
+          const bars = resp.data.bars
+          getCommunityMembers(this.communityId)
+            .then((resp) => {
+              this.list = this.autoHideDetails(bars, true)
+              this.members = resp.data.members
+              if (this.members.length > 0 && this.list.length > 0) {
+                for (let i = 0; i < this.list.length; i++) {
+                  this.list[i].members = []
+                  for (let j = 0; j < this.members.length; j++) {
+                    if (this.list[i].id === this.members[j].bar_id) {
+                      this.list[i].members.push(this.members[j])
+                    }
+                  }
+                }
+              }
             })
             .catch(err => {
               console.log(err)
@@ -128,7 +211,7 @@ export default {
     },
     isFirstBar: function () {
       if (this.list.length === 1) {
-        if (this.list[0].members) {
+        if (this.list[0].members && this.list[0].members.length > 0) {
           return false
         } else {
           return true

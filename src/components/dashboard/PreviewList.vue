@@ -5,7 +5,7 @@
         <h6><b>Morphic Bar buttons</b></h6>
         <ul class="small list-unstyled mb-0">
           <li v-for="item in primaryItems" class="item" :key="item.configuration.label">
-            <RenderListItem :item="item" />
+            <PreviewItem :item="item" />
           </li>
         </ul>
       </b-col>
@@ -13,7 +13,7 @@
         <h6><b>Extra Panel buttons</b></h6>
         <ul class="small list-unstyled mb-0">
           <li v-for="item in extraItems" class="item" :key="item.configuration.label">
-            <RenderListItem :item="item" />
+            <PreviewItem :item="item" />
           </li>
         </ul>
       </b-col>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import RenderListItem from '@/components/dashboard/RenderListItem'
+import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBar } from '@/services/communityService'
 
 export default {
@@ -31,7 +31,7 @@ export default {
     barId: String
   },
   components: {
-    RenderListItem
+    PreviewItem
   },
   data () {
     return {

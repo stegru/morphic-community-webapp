@@ -11,6 +11,10 @@ export function createNewCommunity (name) {
   return HTTP.post('/v1/communities', data)
 }
 
+export function getCommunity (communityId) {
+  return HTTP.get(`/v1/communities/${communityId}`)
+}
+
 export function deleteUserCommunity (communityId) {
   return HTTP.delete(`/v1/communities/${communityId}`)
 }
@@ -37,6 +41,10 @@ export function getCommunityMembers (communityId) {
 
 export function addCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/members`, member)
+}
+
+export function getCommunityMember (communityId, memberId) {
+  return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`)
 }
 
 export function updateCommunityMember (communityId, memberId, member) {
