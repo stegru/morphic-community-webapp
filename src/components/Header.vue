@@ -2,7 +2,7 @@
   <div>
     <b-navbar toggleable="lg" type="light" variant="light" id="top">
       <b-navbar-brand to="/" title="Morphic Community">
-        <img src="/img/logo.svg" alt="logo">
+        <img src="/img/logo-color.svg" alt="logo">
         Morphic Community
       </b-navbar-brand>
 
@@ -11,10 +11,12 @@
       </b-navbar-nav>
 
       <b-navbar-nav>
+        <!--
         <b-nav-item v-if="isLoggedIn" exact-active-class="active" to="/my-community">
           <b-icon-person-fill></b-icon-person-fill>
           My Community
         </b-nav-item>
+        -->
         <b-nav-item v-if="isLoggedIn" @click="logout">
           <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
           Logout

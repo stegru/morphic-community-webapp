@@ -69,7 +69,7 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: {
-      title: 'Dashboard Morphic Community',
+      title: 'Dashboard :: Morphic Community',
       authRoute: true
     }
   },
@@ -78,7 +78,7 @@ const routes = [
     name: 'MorphicBar Preconfigured',
     component: MorphicBarPreconfigured,
     meta: {
-      title: 'MorphicBar Preconfigured',
+      title: 'Pick a bar :: Morphic Community',
       authRoute: true
     }
   },
@@ -87,7 +87,7 @@ const routes = [
     name: 'MorphicBar Editor',
     component: MorphicBarEditor,
     meta: {
-      title: 'MorphicBar Editor',
+      title: 'MorphicBar Editor :: Morphic Community',
       authRoute: true
     }
   },
@@ -105,7 +105,7 @@ const routes = [
     name: 'Member Editor',
     component: MemberEditor,
     meta: {
-      title: 'Member Editor',
+      title: 'Member Details :: Morphic Community',
       authRoute: true
     }
   }

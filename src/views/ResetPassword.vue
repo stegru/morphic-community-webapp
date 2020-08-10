@@ -1,6 +1,6 @@
 <template>
   <b-jumbotron class="bg-light">
-    <b-row class="justify-content-md-center">
+    <b-row>
       <b-col md="7">
         <h3>Reset your password</h3>
         <p class="lead">Please enter the email address you are registered with and we will send you message with your temporary password.</p>
@@ -24,7 +24,7 @@
           <br/>
           <b-row>
             <b-col md="6">
-              <b-button type="submit" variant="primary">Reset Password</b-button>
+              <b-button disabled type="submit" variant="primary">Reset Password</b-button>
               <b-button to="/" variant="success" class="ml-1">Login</b-button>
             </b-col>
             <b-col md="6">

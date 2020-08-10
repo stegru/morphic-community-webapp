@@ -6,7 +6,10 @@
   </b-container>
 </template>
 
-<style>
+<style lang="scss">
+  $primary-color: #002957;
+  $secondary-color: #84c661;
+
   body {
     font-family: 'Open Sans', sans-serif !important;
   }
@@ -16,12 +19,12 @@
   }
 
   .btn-primary {
-    background-color: #002957 !important;
-    border-color: #002957 !important;
+    background-color: $primary-color !important;
+    border-color: $primary-color !important;
   }
   .btn-success {
-    background-color: #84c661 !important;
-    border-color: #84c661 !important;
+    background-color: $secondary-color !important;
+    border-color: $secondary-color !important;
   }
 
   .bg-silver {
