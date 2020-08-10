@@ -1,10 +1,27 @@
 <template>
   <div>
+    <!-- MODALs: BEGIN -->
+    <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
+      <p class="my-4">Please confirm the copying of the bar?</p>
+    </b-modal>
+    <b-modal id="previewModal" @ok="clearPreviewData" title="Bar Preview" footer-bg-variant="light" size="lg">
+      <p class="mb-3">This the bar and the drawer should look like when opened.</p>
+      <b-row>
+        <b-col md="8">
+          <DrawerPreview :barId="barPreviewData.id" />
+        </b-col>
+        <b-col md="4">
+          <BarPreview :barId="barPreviewData.id" />
+        </b-col>
+      </b-row>
+    </b-modal>
+    <!-- MODALs: END -->
+
+    <!-- INLINE HEADER -->
     <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
+
+    <!-- BAR LIST -->
     <div id="morphicBarList" v-if="list.length > 0">
-      <b-modal id="copyConfirm" @ok="duplicateBar" title="Copy the Bar" footer-bg-variant="light" ok-title="Copy">
-        <p class="my-4">Please confirm the copying of the bar?</p>
-      </b-modal>
       <b-row>
         <b-col :md="leftColumnSize">
           <h4>Your Community</h4>
@@ -26,10 +43,12 @@
             </div>
           </b-col>
           <b-col :md="rightColumnSize">
-            <MorphicBarListItem :bar="bar" @open-modal="openModal" />
+            <MorphicBarListItem :bar="bar" @open-modal="openModal" @preview-modal="showPreview" />
           </b-col>
         </b-row>
       </div>
+
+      <!-- INVITE and ADD bar buttons -->
       <div id="listButtons" v-if="isFirstBar() === false">
         <b-row>
           <b-col :md="leftColumnSize">
@@ -45,6 +64,8 @@
         </b-row>
       </div>
     </div>
+
+    <!-- LOADING DIALOG -->
     <div v-else id="welcome">
       <div class="text-center pt-5 pb-5 bg-silver rounded">
         <b-spinner variant="success" label="..."></b-spinner><br><br>
@@ -62,6 +83,8 @@ import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
 import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
 import MemberPills from '@/components/dashboard/MemberPills'
 import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
+import BarPreview from '@/components/dashboard/BarPreview'
+import DrawerPreview from '@/components/dashboard/DrawerPreview'
 import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
 
 export default {
@@ -72,15 +95,21 @@ export default {
     BlockPredefinedOrNew,
     BlockFirstMember,
     MemberPills,
-    MorphicBarListItem
+    MorphicBarListItem,
+    BarPreview,
+    DrawerPreview
   },
   data () {
     return {
+      // settings
+      leftColumnSize: 4, // members column size
+      rightColumnSize: 8, // bar's column size
+
+      // data
       list: [],
       community: {},
-      leftColumnSize: 4, // members column
-      rightColumnSize: 8, // bar's column
-      members: []
+      members: [],
+      barPreviewData: {}
     }
   },
   computed: {
@@ -94,6 +123,13 @@ export default {
     openModal: function (bar) {
       this.barToCopy = bar
       this.$bvModal.show('copyConfirm')
+    },
+    showPreview: function (bar) {
+      this.barPreviewData = bar
+      this.$bvModal.show('previewModal')
+    },
+    clearPreviewData: function (bar) {
+      this.barPreviewData = {}
     },
     duplicateBar: function () {
       const newBar = {

@@ -6,6 +6,17 @@
     <b-modal id="memberConfirm" @ok="addMember(false)" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
       <p class="my-4">Please confirm adding this member?</p>
     </b-modal>
+    <b-modal id="previewModal" title="Bar Preview" footer-bg-variant="light" size="lg">
+      <p class="mb-3">This the bar and the drawer should look like when opened.</p>
+      <b-row>
+        <b-col md="8">
+          <DrawerPreview :barId="previewBar" />
+        </b-col>
+        <b-col md="4">
+          <BarPreview :barId="previewBar" />
+        </b-col>
+      </b-row>
+    </b-modal>
 
     <div class="bg-silver rounded p-3" v-if="!chooseBar">
       <h4 class="mb-3">Member Invite</h4>
@@ -137,7 +148,7 @@
               </b-col>
               <b-col md="3">
                 <div class="text-right">
-                  <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
+                  <b-button  v-b-modal.previewModal @click="previewBar = bar.id" size="sm" variant="outline-secondary" class="btn-block">Preview</b-button>
                   <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
                 </div>
               </b-col>
@@ -166,6 +177,8 @@
 <script>
 
 import RenderList from '@/components/dashboard/RenderList'
+import BarPreview from '@/components/dashboard/BarPreview'
+import DrawerPreview from '@/components/dashboard/DrawerPreview'
 import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
@@ -175,7 +188,9 @@ export default {
   name: 'MemberInvite',
   mixins: [validationMixin],
   components: {
-    RenderList
+    RenderList,
+    BarPreview,
+    DrawerPreview
   },
   data () {
     return {
@@ -187,7 +202,8 @@ export default {
       selectedBar: null,
       sendEmailCopy: 0,
       availableItems: availableItems,
-      chooseBar: false
+      chooseBar: false,
+      previewBar: ''
     }
   },
   validations: {

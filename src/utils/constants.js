@@ -19,24 +19,41 @@ export const MESSAGES = {
 }
 
 export const colors = {
-  teal: "#006770",
-  blue: "#002957",
-  purple: "#662261",
-  red: "#8c191b",
-  green: "#46622d",
-  orange: "#a33e1f"
+  teal: '#006770',
+  blue: '#002957',
+  purple: '#662261',
+  red: '#8c191b',
+  green: '#46622d',
+  orange: '#a33e1f'
 }
 
 export const icons = {
-  chat: "chat",
-  family: "people-fill",
-  gallery: "images",
-  calendar: "calendar3",
-  url: "link",
-  app: "app",
-  call: "headphones",
-  video: "camera-video-fill",
-  camera: "camera-fill"
+  'gmail': 'gmail.svg',
+  'outlook': 'outlook.svg',
+  'yahoo-mail': 'yahoo-mail.svg',
+  'envelope': 'envelope.svg',
+  'envelope-open': 'envelope-open.svg',
+  'envelope-open-text': 'envelope-open-text.svg',
+  'envelope-outline': 'envelope-outline.svg',
+  'envelope-outline-open': 'envelope-outline-open.svg',
+  
+  'facebook': 'facebook.svg',
+  'instagram': 'instagram.svg',
+  'paypal': 'paypal.svg',
+  'reddit': 'reddit.svg',
+  'skype': 'skype.svg',
+  'telegram': 'telegram.svg',
+  'twitter': 'twitter.svg',
+  'viber': 'viber.svg',
+  'whatsapp': 'whatsapp.svg',
+  'youtube': 'youtube.svg'
+}
+
+export const subkindIcons = {
+  'gmail': ['gmail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'outlook': ['outlook', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'yahoo-mail': ['yahoo-mail', 'envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open'],
+  'aolmail': ['envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open']
 }
 
 export const availableItems = [
@@ -44,9 +61,53 @@ export const availableItems = [
     'kind': 'link',
     'is_primary': true,
     'configuration': {
+      'subkind': 'gmail',
+      'label': 'Gmail',
+      'color': colors.red,
+      'image_url': 'gmail',
+      'url': 'https://mail.google.com/mail/u/0/#inbox'
+    }
+  },
+  {
+    'kind': 'link',
+    'is_primary': true,
+    'configuration': {
+      'subkind': 'outlook',
+      'label': 'Outlook',
+      'color': colors.blue,
+      'image_url': 'outlook',
+      'url': 'https://outlook.live.com/mail/0/inbox'
+    }
+  },
+  {
+    'kind': 'link',
+    'is_primary': true,
+    'configuration': {
+      'subkind': 'yahoo-mail',
+      'label': 'Yahoo Mail',
+      'color': colors.purple,
+      'image_url': 'yahoo-mail',
+      'url': 'https://mail.yahoo.com/'
+    }
+  },
+  {
+    'kind': 'link',
+    'is_primary': true,
+    'configuration': {
+      'subkind': 'aolmail',
+      'label': 'AOL Mail',
+      'color': colors.blue,
+      'image_url': 'envelope',
+      'url': 'https://mail.aol.com/webmail-std/en-us/suite'
+    }
+  },
+  {
+    'kind': 'link',
+    'is_primary': true,
+    'configuration': {
       'label': 'Open Reddit',
       'color': colors.orange,
-      'image_url': icons.url,
+      'image_url': 'reddit',
       'url': 'https://www.reddit.com/'
     }
   },
@@ -55,17 +116,9 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Open Facebook',
+      'color': colors.blue,
+      'image_url': 'facebook',
       'url': 'https://www.facebook.com/',
-    }
-  },
-  {
-    'kind': 'link',
-    'is_primary': true,
-    'configuration': {
-      'label': 'Photo Gallery',
-      'color': colors.purple,
-      'image_url': icons.gallery, 
-      'url': 'https://www.flickr.com/photos/karadaliev',
     }
   },
   {
@@ -73,6 +126,8 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Call Skype',
+      'color': colors.blue,
+      'image_url': 'skype',
       'default': 'skype',
     }
   },
@@ -81,6 +136,8 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Call Telegram',
+      'color': colors.teal,
+      'image_url': 'telegram',
       'default': 'telegram',
     }
   },
@@ -89,6 +146,8 @@ export const availableItems = [
     'is_primary': true,
     'configuration': {
       'label': 'Call Viber',
+      'color': colors.purple,
+      'image_url': 'viber',
       'default': 'viber',
     }
   },

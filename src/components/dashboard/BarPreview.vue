@@ -1,6 +1,6 @@
 <template>
   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-    <div v-if="bar.items.length > 0">
+    <div v-if="bar && bar.items && bar.items.length > 0">
       <div v-for="item in bar.items" :key="item.configuration.label">
         <PreviewItem v-if="item.is_primary" :item="item" class="mb-3" />
       </div>
@@ -30,14 +30,38 @@
 
 <script>
 import PreviewItem from '@/components/dashboard/PreviewItem'
+import { getCommunityBar } from '@/services/communityService'
 
 export default {
   name: 'BarPreview',
+  data () {
+    return {
+      bar: {}
+    }
+  },
   props: {
-    bar: Object
+    barData: Object,
+    barId: String
   },
   components: {
     PreviewItem
+  },
+  computed: {
+    communityId: function () { return this.$store.getters.communityId }
+  },
+  mounted () {
+    if (this.barId) {
+      getCommunityBar(this.communityId, this.barId)
+        .then(resp => {
+          this.bar = resp.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      // the data comes in the bar prop
+      this.bar = this.barData
+    }
   }
 }
 </script>
