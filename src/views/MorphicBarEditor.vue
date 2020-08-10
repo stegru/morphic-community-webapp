@@ -225,7 +225,7 @@
                     <b-row v-if="drawerItems.length > 0">
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
-                          <div v-if="index < preview.drawer.h" class="previewHolder mb-3">
+                          <div v-if="index < preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
                             <PreviewItem :item="item" />
                             <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
                             <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
@@ -236,7 +236,7 @@
                       </b-col>
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
-                          <div v-if="index >= preview.drawer.h" class="previewHolder mb-3">
+                          <div v-if="index >= preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
                             <PreviewItem :item="item" />
                             <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
                             <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
@@ -259,14 +259,14 @@
                       Click on the buttons on the left to add them to the bar.
                     </p>
                     <div v-for="(item, index) in primaryItems" :key="index">
-                        <div class="previewHolder mb-3">
-                          <PreviewItem :item="item" />
-                          <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
-                          <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
-                          <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                          <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
-                        </div>
+                      <div class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
+                        <PreviewItem :item="item" />
+                        <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
+                        <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
+                        <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
+                        <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                       </div>
+                    </div>
                     <div class="logoHolder text-center mt-5 m-3">
                       <b-img src="/img/logo-color.svg" />
                     </div>
@@ -506,7 +506,7 @@ export default {
         if (this.barDetails.items.length > 0) {
           let existingIndex = -1
           for (let i = 0; i < this.barDetails.items.length; i++) {
-            if (this.barDetails.items[i].configuration.label == this.buttonStorage.configuration.label) {
+            if (this.barDetails.items[i].configuration.label === this.buttonStorage.configuration.label) {
               existingIndex = i
             }
           }
@@ -642,9 +642,16 @@ export default {
     },
     dropElement: function (event, isPrimary) {
       this.addToBarOrDrawer(isPrimary)
+      this.dragFromEditor = false
     },
     allowDrop: function (event) {
       event.preventDefault()
+    },
+    dragTransfer: function (event, button) {
+      event.dataTransfer.dropEffect = 'move'
+      event.dataTransfer.effectAllowed = 'move'
+      this.dragFromEditor = true
+      this.buttonStorage = button
     }
   },
   computed: {
@@ -751,6 +758,7 @@ export default {
       editDialogDetails: false,
       editDialogSubkindIcons: true,
       tab: 0,
+      dragFromEditor: false,
 
       // storage
       buttonStorage: {},
