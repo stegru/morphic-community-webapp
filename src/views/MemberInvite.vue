@@ -137,25 +137,20 @@
       </b-card>
     </div>
     <div v-else>
-      <div class="bg-silver rounded p-3">
-        <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
-        <div v-for="bar in bars" :key="bar.id">
-          <div class="barPicker bg-light rounded p-3 mb-3" :class="{ active: selectedBar == bar.id }">
-            <h5><b>{{ bar.name }}</b></h5>
-            <b-row>
-              <b-col md="9">
-                <RenderList :barId="bar.id" />
-              </b-col>
-              <b-col md="3">
-                <div class="text-right">
-                  <b-button  v-b-modal.previewModal @click="previewBar = bar.id" size="sm" variant="outline-secondary" class="btn-block">Preview</b-button>
-                  <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
-                </div>
-              </b-col>
-            </b-row>
-          </div>
-        </div>
-        <div class="text-right">
+      <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
+      <div class="bg-silver rounded">
+        <b-row>
+          <b-col md="3" v-for="bar in bars" :key="bar.id">
+            <div class="barPicker text-center p-3" :class="{ active: selectedBar == bar.id }">
+              <h5><b>{{ bar.name }}</b></h5>
+              <BarPreview :barId="bar.id" />
+              <br/>
+              <b-button  v-b-modal.previewModal @click="previewBar = bar.id" size="sm" variant="light" class="btn-block">Preview</b-button>
+              <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <div class="text-right pr-3 pb-3">
           <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
         </div>
       </div>
