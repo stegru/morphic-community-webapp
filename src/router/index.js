@@ -29,6 +29,16 @@ const routes = [
     }
   },
   {
+    path: '/session-timed-out',
+    name: 'Home-session-timed-out',
+    component: Home,
+    props: { messageId: 'sessionTimedOut' },
+    meta: {
+      title: 'Home :: Morphic Community',
+      locked: true
+    }
+  },
+  {
     path: '/terms-of-use',
     name: 'Terms of Use',
     component: Terms,

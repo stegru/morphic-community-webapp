@@ -99,7 +99,7 @@ export default new Vuex.Store({
         localStorage.removeItem('userId')
         localStorage.removeItem('communityId')
         delete HTTP.defaults.headers.common.Authorization
-        window.location.reload()
+        window.location.href = '/#/session-timed-out/'
         resolve()
       })
     },

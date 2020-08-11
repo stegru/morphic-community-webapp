@@ -15,7 +15,8 @@ export const MESSAGES = {
   emailValidationError: 'This is a required field and must be a valid email address.',
   successfulSave: 'Successfully saved',
   barUpdated: 'Bar successfully saved, you will be returned to Dashboard soon...',
-  barAdded: 'Bar successfully added, you will be returned to Dashboard soon...'
+  barAdded: 'Bar successfully added, you will be returned to Dashboard soon...',
+  sessionTimedOut: 'Your session was expired. Please login again.'
 }
 
 export const colors = {
