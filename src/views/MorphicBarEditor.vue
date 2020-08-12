@@ -430,6 +430,7 @@ export default {
         .then((resp) => {
           if (resp.status === 200) {
             this.successAlert = true
+            this.isChanged = false
             setTimeout(() => {
               this.$router.push('/dashboard')
             }, 3000)
@@ -444,6 +445,7 @@ export default {
         .then((resp) => {
           if (resp.status === 200) {
             this.successAlert = true
+            this.isChanged = false
             setTimeout(() => {
               this.$router.push('/dashboard')
             }, 3000)
@@ -741,6 +743,18 @@ export default {
         })
     }
     this.loadBarMembers()
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.isChanged) {
+      const confirm = window.confirm('Do you really want to leave? You have unsaved changes!')
+      if (confirm) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
   data () {
     return {
