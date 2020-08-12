@@ -14,7 +14,8 @@ export default new Vuex.Store({
     communityId: localStorage.getItem('communityId') || '',
     user: {},
     community: {},
-    errorMessage: {}
+    errorMessage: {},
+    unsavedChanges: false
   },
   mutations: {
     auth_request (state) {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     },
     community (state, communityId) {
       state.communityId = communityId
+    },
+    unsavedChanges (state, isChanged) {
+      state.unsavedChanges = isChanged
     }
   },
   actions: {
@@ -154,12 +158,16 @@ export default new Vuex.Store({
         commit('community', communityId)
         resolve()
       })
+    },
+    unsavedChanges ({ commit }, isChanged) {
+      commit('unsavedChanges', isChanged)
     }
   },
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     userId: state => state.userId,
-    communityId: state => state.communityId
+    communityId: state => state.communityId,
+    unsavedChanges: state => state.unsavedChanges
   }
 })
