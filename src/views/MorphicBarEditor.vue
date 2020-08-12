@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <b-modal id="modalEditGeneric" @ok="refreshButton" @cancel="refreshButton" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
+    <b-modal id="modalEditGeneric" @ok="refreshButton(true)" @cancel="refreshButton(false)" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
       <div v-if="buttonEditStorage">
         <b-row>
           <b-col md="6">
@@ -135,6 +135,10 @@
             </h5>
           </div>
           <div>
+            <b-alert variant="success" :show="successAlert">
+              <span v-if="newBar">{{ successAddMessage }}</span>
+              <span v-else>{{ successUpdateMessage }}</span>
+            </b-alert>
             <b-nav tabs>
               <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
                 <span v-if="getMembersCount() === 0">
@@ -149,7 +153,8 @@
               </b-nav-item>
               <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
               <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
-              <b-nav-item :active="tab === 4" @click="tab = 4"><b-icon-cloud-upload></b-icon-cloud-upload> <b>&nbsp;Save &amp; Update</b></b-nav-item>
+              <b-button v-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
+              <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
             </b-nav>
           </div>
           <div v-if="tab === 1" class="bg-light p-3">
@@ -197,19 +202,6 @@
               <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>.
             </p>
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
-          </div>
-          <div v-else-if="tab === 4" class="bg-light p-3">
-            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <b-alert variant="success" :show="successAlert">
-              <span v-if="newBar">{{ successAddMessage }}</span>
-              <span v-else>{{ successUpdateMessage }}</span>
-            </b-alert>
-            <h5><b-icon-cloud-upload></b-icon-cloud-upload> <b>Save bar &amp; Update bar for all users</b></h5>
-            <p class="small">
-              Save your changes to the buttons on the bar. This will update the bar on users' computers. Sometimes a computer will need to be restarted to get the updates.
-            </p>
-            <b-button v-if="newBar" @click="addBar" variant="primary" size="sm">Add new bar</b-button>
-            <b-button v-else @click="saveBar" variant="primary" size="sm">Save &amp; Update bar for the users ({{ getMembersCount() }})</b-button>
           </div>
           <div id="preview-holder">
             <b-row>
@@ -520,10 +512,11 @@ export default {
         // cleaning up the storage
         this.buttonStorage = {}
       }
+      this.isChanged = true
       this.addToBar = false
       this.addToDrawer = false
     },
-    findButtonByLabel: function(label) {
+    findButtonByLabel: function (label) {
       let index = -1
       for (let i = 0; i < this.barDetails.items.length; i++) {
         if (this.barDetails.items[i].configuration.label === label) {
@@ -533,9 +526,10 @@ export default {
       return index
     },
     buttonToRemove: function (label) {
-      let index = this.findButtonByLabel(label)
+      const index = this.findButtonByLabel(label)
       if (index !== -1) {
         this.barDetails.items.splice(index, 1)
+        this.isChanged = true
       }
     },
     buttonToMoveUp: function (label) {
@@ -575,10 +569,13 @@ export default {
         this.$bvModal.show('modalEditGeneric')
       }
     },
-    refreshButton: function() {
+    refreshButton: function (updated) {
       // updating the data in a button (on edit)
       this.editDialogDetails = false
       this.editDialogSubkindIcons = true
+      if (updated) {
+        this.isChanged = true
+      }
     },
     editChangeColor: function(hex) {
       this.buttonEditStorage.configuration.color = hex
@@ -759,6 +756,7 @@ export default {
       editDialogSubkindIcons: true,
       tab: 0,
       dragFromEditor: false,
+      isChanged: false,
 
       // storage
       buttonStorage: {},
