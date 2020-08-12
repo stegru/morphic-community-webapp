@@ -47,17 +47,23 @@
 </style>
 
 <script>
+import { MESSAGES } from '@/utils/constants'
 
 export default {
   computed: {
-    isLoggedIn: function () { return this.$store.getters.isLoggedIn }
+    isLoggedIn: function () { return this.$store.getters.isLoggedIn },
+    disableLogout: function () { return this.$store.getters.unsavedChanges }
   },
   methods: {
     logout: function () {
-      this.$store.dispatch('logout')
-        .then(() => {
-          this.$router.push('/')
-        })
+      if (this.disableLogout) {
+        window.confirm(MESSAGES.logoutAlert)
+      } else {
+        this.$store.dispatch('logout')
+          .then(() => {
+            this.$router.push('/')
+          })
+      }
     }
   }
 }

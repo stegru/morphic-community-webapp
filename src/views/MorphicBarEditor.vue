@@ -746,9 +746,14 @@ export default {
     }
     this.loadBarMembers()
   },
+  watch: {
+    isChanged: function () {
+      this.$store.dispatch('unsavedChanges', this.isChanged)
+    }
+  },
   beforeRouteLeave (to, from, next) {
     if (this.isChanged) {
-      const confirm = window.confirm('Do you really want to leave? You have unsaved changes!')
+      const confirm = window.confirm(this.leavePageMessage)
       if (confirm) {
         next()
       } else {
@@ -762,6 +767,7 @@ export default {
     return {
       successUpdateMessage: MESSAGES.barUpdated,
       successAddMessage: MESSAGES.barAdded,
+      leavePageMessage: MESSAGES.leavePageAlert,
 
       // flags
       addToBar: false,
