@@ -41,18 +41,6 @@
                   <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group
-                  id="last-name"
-                  label="Last Name"
-                  label-for="lastName"
-                >
-                  <b-form-input
-                    v-model="lastName"
-                    id="lastName"
-                    placeholder="Last Name"
-                    >
-                  </b-form-input>
-                </b-form-group>
-                <b-form-group
                   id="member-email"
                   label="Email"
                   label-for="memberEmail"
@@ -88,10 +76,6 @@
               <p>
                 First Name:
                 <b>{{ firstName }}</b>
-              </p>
-              <p v-if="lastName">
-                Last Name:
-                <b>{{ lastName }}</b>
               </p>
               <p>
                 Email:
