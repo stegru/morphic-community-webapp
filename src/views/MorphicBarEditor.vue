@@ -546,6 +546,7 @@ export default {
         this.barDetails.items[index-1].is_primary = !isPrimary
         this.barDetails.items[index-1].is_primary = isPrimary
         this.barDetails.items[index] = itemOnTop
+        this.isChanged = true
       }
     },
     buttonToMoveDown: function (label) {
@@ -562,6 +563,7 @@ export default {
         this.barDetails.items[index+1].is_primary = !isPrimary
         this.barDetails.items[index+1].is_primary = isPrimary
         this.barDetails.items[index] = itemOnBottom
+        this.isChanged = true
       }
     },
     buttonToEdit: function (label) {
