@@ -16,73 +16,191 @@
       </b-row>
     </b-modal>
     <!-- MODALs: END -->
+    <b-row>
+      <b-col md="3">
+        <div class="bar-people-controls fill-height bg-green p-3">
+          <h4><b>{{ community.name }}</b></h4>
+          <p class="text-right small">
+            (<b-link disabled>Community settings</b-link>)
+          </p>
+          
+          <h5>
+            <b>Community Bars</b>
+            <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
+          </h5>
+          <ul class="list-unstyled">
+            <li v-for="bar in list" :key="bar.id">
+              <b-link :to="'/dashboard/morphicbar-editor/' + bar.id">
+                {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
+              </b-link>
+            </li>
+          </ul>
 
-    <!-- INLINE HEADER -->
-    <HeaderCommunity v-if="community.id" :community="community" :key="community.id" class="mb-3" />
-
-    <!-- BAR LIST -->
-    <div id="morphicBarList" v-if="list.length > 0">
-      <b-row>
-        <b-col :md="leftColumnSize">
-          <h4>Your Community</h4>
-        </b-col>
-        <b-col :md="rightColumnSize">
-          <h4>Customized Morphic Bars</h4>
-        </b-col>
-      </b-row>
-      <div class="morphicBarItem mb-3" v-for="bar in list" :key="bar.id">
-        <b-row>
-          <b-col :md="leftColumnSize">
-            <div class="bg-light rounded p-3 fill-height">
-              <div v-if="isFirstBar()">
-                <BlockFirstMember />
+          <h5>
+            <b>People</b>
+            <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
+          </h5>
+          <ul v-if="members.length > 0" class="list-unstyled">
+            <li v-for="person in members" :key="person.id">
+              <b-link :to="'/dashboard/member/' + person.id">
+                {{ person.first_name }} {{ person.last_name }}
+              </b-link>
+            </li>
+          </ul>
+          <p v-else>
+            <i>Nobody in the community</i><br>
+            Click on the plus button just above to add somebody to your community
+          </p>
+        </div>
+      </b-col>
+      <b-col md="8">
+        <div v-if="list.length > 0 && members.length > 0" class="info-box pt-5 pb-5">
+          <!-- FULL DASHBOARD -->
+          <b-row>
+            <b-col md="7">
+              <p>The green menu on the left lists your community bars and the people in your community.</p>
+              <p>Here are some things you can do...</p>
+              
+              <h5>Invite people to your community</h5>
+              <p>Make a community! Add people to your community so they can use Morphic Bar, which you can personalize.</p>
+              <p class="text-success">To invite a person, find the word "People" in the green menu to the left and click on the green (+) button.</p>
+              
+              <br>
+              
+              <h5>Personalize a bar</h5>
+              <p>You can personalize a bar to fit needs of a person.</p>
+              <p class="text-success">To personalize a Bar, click their name or email in the green menu on the left.</p>
+              
+              <br>
+              
+              <h5>Edit a community bar</h5>
+              <p>Do you have a bar that you think several people in your community might want to use?</p>
+              <p class="text-success">To customize a community bar, click the name of a bar in the green menu on the left.</p>
+            </b-col>
+            <b-col md="5">
+              <h4>Status</h4>
+              <div v-if="membersNotInvited.length > 0">
+                <p class="mb-0"><b>{{ membersNotInvited.length }} user(s)</b> never got the invitation email:</p>
+                <ul>
+                  <li v-for="member in membersNotInvited" :key="member.id">
+                    {{ member.first_name }} {{ member.last_name }}
+                  </li>
+                </ul>
               </div>
-              <div v-else>
-                <MemberPills :bar="bar" />
+              <div v-if="membersNotAccepted.length > 0">
+                <p class="mb-0"><b>{{ membersNotAccepted.length }} user(s)</b> that have not accepted their invitation:</p>
+                <ul>
+                  <li v-for="member in membersNotAccepted" :key="member.id">
+                    {{ member.first_name }} {{ member.last_name }}
+                  </li>
+                </ul>
               </div>
-            </div>
-          </b-col>
-          <b-col :md="rightColumnSize">
-            <MorphicBarListItem :bar="bar" @open-modal="openModal" @preview-modal="showPreview" />
-          </b-col>
-        </b-row>
-      </div>
+              <p v-if="membersNotInvited.length > 0 || membersNotAccepted.length > 0">
+                Click on their names on the left to send the invitation.
+              </p>
+            </b-col>
+          </b-row>
+        </div>
+        <div v-else-if="list.length > 0 && members.length !== 0" class="info-box pt-3 pb-3">
+          <!-- NO MEMBERS DASHBOARD (only the default bar) -->
+          <b-row>
+            <b-col md="5">
+              <h5><b>Welcome to Morpic</b></h5>
+              <p>Here are some steps you can take to get started.</p>
+              <h5>Invite people to your community</h5>
+              <p>Make a community! Add people to your community so they can use Morphic Bar, which you can personalize.</p>
+              <p class="text-success">To invite a person, find the word "People" in the green menu to the left and click on the green (+) button.</p>
+              
+              <br>
 
-      <!-- INVITE and ADD bar buttons -->
-      <div id="listButtons" v-if="isFirstBar() === false">
-        <b-row>
-          <b-col :md="leftColumnSize">
-            <div class="bg-light rounded p-3">
-              <b-button to="/dashboard/member-invite" variant="primary" class="btn-block ml-1">Invite New Member</b-button>
-            </div>
-          </b-col>
-          <b-col :md="rightColumnSize">
-            <div class="bg-silver rounded p-3 text-right">
-              <b-button to="/dashboard/morphicbar-preconfigured" variant="primary" class="btn-block">Pick or Make a new Morphic Bar</b-button>
-            </div>
-          </b-col>
-        </b-row>
-      </div>
-    </div>
-
-    <!-- LOADING DIALOG -->
-    <div v-else id="welcome">
-      <div class="text-center pt-5 pb-5 bg-silver rounded">
-        <b-spinner variant="success" label="..."></b-spinner><br><br>
-        Loading data, please wait...
-      </div>
-    </div>
+              <h5>(Optional) Customize your Morphic Starter Bar</h5>
+              <p>People who join will see your community's Starter Bar (shown on this page). You can customize the Starter Bar to meet your community's needs.</p>
+              <p class="text-success">To customize your Starter Bar, click "Starter Bar" in the green menu on the left.</p>
+            </b-col>
+            <b-col md="7">
+              <div v-if="list[0]" class="desktop">
+                <div class="taskbarMac"></div>
+                <b-row>
+                  <b-col md="6">
+                    <div class="desktopHolder text-center mt-3">
+                      <img src="/img/logo-color.svg" alt="icon" class="iconMorphic"><br>
+                      <p>Open Morphic</p>
+                    </div>
+                  </b-col>
+                  <b-col md="6">
+                    <BarPreview :barId="list[0].id" />
+                  </b-col>
+                </b-row>
+                <div class="taskbarWindows"></div>
+              </div>
+            </b-col>
+          </b-row>
+        </div>
+        <div v-else id="welcome">
+          <div class="text-center pt-5 pb-5 bg-silver rounded">
+            <b-spinner variant="success" label="..."></b-spinner><br><br>
+            Loading data, please wait...
+          </div>
+        </div>
+      </b-col>
+      <b-col md="1">
+        <div class="fill-height bg-silver"></div>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
+<style lang="scss">
+  $primary-color: #002957;
+  $secondary-color: #84c661;
+
+  .bg-green {
+    background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
+  }
+
+  .bar-people-controls {
+    a {
+      color: $primary-color;
+    }
+    .icon-add {
+      float: right;
+      background: white;
+      border-radius: 100%;
+      font-size: 2rem;
+      line-height: 100%;
+    }
+  }
+  .info-box {
+    h5 {
+      color: $primary-color;
+    }
+  }
+  .desktop {
+    background: url(/img/wallpaper.jpg) no-repeat bottom right;
+    .desktopHolder {
+      width: 100px;
+      .iconMorphic {
+        background: white;
+        padding: .5rem;
+        border-radius: 100%;
+      }
+      p {
+        line-height: 120%;
+      }
+    }
+    .taskbarMac {
+      height: 28px;
+      background: url(/img/taskbarMac.png) no-repeat top right;
+    }
+    .taskbarWindows {
+      height: 40px;
+      background: url(/img/taskbarWindows.png) no-repeat top right;
+    }
+  }
+</style>
+
 <script>
 
-import HeaderCommunity from '@/components/dashboard/HeaderCommunity'
-import BlockWelcome from '@/components/dashboard/BlockWelcome'
-import BlockPredefinedOrNew from '@/components/dashboard/BlockPredefinedOrNew'
-import BlockFirstMember from '@/components/dashboard/BlockFirstMember'
-import MemberPills from '@/components/dashboard/MemberPills'
-import MorphicBarListItem from '@/components/dashboard/MorphicBarListItem'
 import BarPreview from '@/components/dashboard/BarPreview'
 import DrawerPreview from '@/components/dashboard/DrawerPreview'
 import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
@@ -90,21 +208,11 @@ import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers
 export default {
   name: 'Dashboard',
   components: {
-    HeaderCommunity,
-    BlockWelcome,
-    BlockPredefinedOrNew,
-    BlockFirstMember,
-    MemberPills,
-    MorphicBarListItem,
     BarPreview,
     DrawerPreview
   },
   data () {
     return {
-      // settings
-      leftColumnSize: 4, // members column size
-      rightColumnSize: 8, // bar's column size
-
       // data
       list: [],
       community: {},
@@ -114,7 +222,25 @@ export default {
   },
   computed: {
     userId: function () { return this.$store.getters.userId },
-    communityId: function () { return this.$store.getters.communityId }
+    communityId: function () { return this.$store.getters.communityId },
+    membersNotInvited: function() {
+      let list = []
+      for (let i = 0; i < this.members.length; i++) {
+        if (this.members[i].state === 'uninvited') {
+          list.push(this.members[i])
+        }
+      }
+      return list
+    },
+    membersNotAccepted: function() {
+      let list = []
+      for (let i = 0; i < this.members.length; i++) {
+        if (this.members[i].state === 'invited') {
+          list.push(this.members[i])
+        }
+      }
+      return list
+    }
   },
   mounted () {
     this.loadData()
@@ -208,22 +334,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    isFirstBar: function () {
-      if (this.list.length === 1) {
-        if (this.list[0].members && this.list[0].members.length > 0) {
-          return false
-        } else {
-          return true
-        }
-      }
-      return false
-    },
-    isListEmpty: function () {
-      if (this.list.length > 0) {
-        return false
-      }
-      return true
     },
     autoHideDetails: function (data, showFirstOne) {
       if (data && data.length > 0) {
