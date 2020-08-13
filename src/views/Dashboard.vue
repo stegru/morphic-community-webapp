@@ -16,42 +16,11 @@
       </b-row>
     </b-modal>
     <!-- MODALs: END -->
+
+    <!-- Dashboard v2 -->
     <b-row>
       <b-col md="3">
-        <div class="bar-people-controls fill-height bg-green p-3">
-          <h4><b>{{ community.name }}</b></h4>
-          <p class="text-right small">
-            (<b-link disabled>Community settings</b-link>)
-          </p>
-          
-          <h5>
-            <b>Community Bars</b>
-            <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
-          </h5>
-          <ul class="list-unstyled">
-            <li v-for="bar in list" :key="bar.id">
-              <b-link :to="'/dashboard/morphicbar-editor/' + bar.id">
-                {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
-              </b-link>
-            </li>
-          </ul>
-
-          <h5>
-            <b>People</b>
-            <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
-          </h5>
-          <ul v-if="members.length > 0" class="list-unstyled">
-            <li v-for="person in members" :key="person.id">
-              <b-link :to="'/dashboard/member/' + person.id">
-                {{ person.first_name }} {{ person.last_name }}
-              </b-link>
-            </li>
-          </ul>
-          <p v-else>
-            <i>Nobody in the community</i><br>
-            Click on the plus button just above to add somebody to your community
-          </p>
-        </div>
+        <CommunityManager :community="community" :bars="list" :members="members" />
       </b-col>
       <b-col md="8">
         <div v-if="list.length > 0 && members.length > 0" class="info-box pt-5 pb-5">
@@ -154,47 +123,9 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
-  .bg-green {
-    background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
-  }
-
-  .bar-people-controls {
-    a {
-      color: $primary-color;
-    }
-    .icon-add {
-      float: right;
-      background: white;
-      border-radius: 100%;
-      font-size: 2rem;
-      line-height: 100%;
-    }
-  }
   .info-box {
     h5 {
       color: $primary-color;
-    }
-  }
-  .desktop {
-    background: url(/img/wallpaper.jpg) no-repeat bottom right;
-    .desktopHolder {
-      width: 100px;
-      .iconMorphic {
-        background: white;
-        padding: .5rem;
-        border-radius: 100%;
-      }
-      p {
-        line-height: 120%;
-      }
-    }
-    .taskbarMac {
-      height: 28px;
-      background: url(/img/taskbarMac.png) no-repeat top right;
-    }
-    .taskbarWindows {
-      height: 40px;
-      background: url(/img/taskbarWindows.png) no-repeat top right;
     }
   }
 </style>
@@ -203,13 +134,15 @@
 
 import BarPreview from '@/components/dashboard/BarPreview'
 import DrawerPreview from '@/components/dashboard/DrawerPreview'
+import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
   components: {
     BarPreview,
-    DrawerPreview
+    DrawerPreview,
+    CommunityManager
   },
   data () {
     return {
