@@ -88,75 +88,45 @@
     </b-modal>
     <!-- MODALs: END -->
 
-    <!-- EDITOR -->
-    <h5>Morphic Bar Editor</h5>
-    <div class="bg-silver rounded p-3">
-      <b-row>
-        <b-col md="3">
-          <b-input-group id="search-group" size="sm" class="mb-3">
-            <b-form-input type="text" disabled></b-form-input>
-            <b-input-group-append>
-              <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
-            </b-input-group-append>
-          </b-input-group>
-          <h6><b>Make-a-Button</b></h6>
-          <ul class="linkList list-unstyled mb-0">
-            <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link draggable v-on:dragstart="dragElement($event, index, true)" @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                <b-icon v-else icon="bootstrap"></b-icon>
-                {{ button.configuration.label }}
-                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
-              </b-link>
-            </li>
-          </ul>
-          <br>
-          <h6><b>Predefined Buttons</b></h6>
-          <ul class="linkList list-unstyled mb-0">
-            <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link draggable v-on:dragstart="dragElement($event, index, false)" @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                <b-icon v-else icon="bootstrap"></b-icon>
-                {{ button.configuration.label }}
-                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
-              </b-link>
-            </li>
-          </ul>
-        </b-col>
-        <b-col md="9">
+    <!-- EDITOR v2 -->
+    <b-row>
+      <b-col md="3">
+        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeBarId="barDetails.id" />
+      </b-col>
+      <b-col md="6">
+        <div id="barEditor" class="pt-2">
           <div id="bar-info">
             <b-form-group v-if="newBar" label="Bar Name" label-for="barName">
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
             </b-form-group>
-            <h5 v-else>
-              <b v-if="barDetails.name === 'Default'">Starter Bar for Morphic Community</b>
-              <b v-else>{{ barDetails.name }}</b>
-              <span class="d-none small">(<b-link>Edit Bar name</b-link>)</span>
+            <h5 v-else class="mb-0">
+              <b>{{ barDetails.name === 'Default' ? 'Starter Bar' : barDetails.name }}</b>&nbsp;
+              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
           </div>
-          <div>
-            <b-alert variant="success" :show="successAlert">
-              <span v-if="newBar">{{ successAddMessage }}</span>
-              <span v-else>{{ successUpdateMessage }}</span>
-            </b-alert>
-            <b-nav tabs>
-              <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-                <span v-if="getMembersCount() === 0">
-                  Unused Bar
-                </span>
-                <span v-else-if="getMembersCount() === 1">
-                  Personalized Bar
-                </span>
-                <span v-else>
-                  Users ({{ getMembersCount() }})
-                </span>
-              </b-nav-item>
-              <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
-              <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
-              <b-button v-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
-              <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
-            </b-nav>
-          </div>
+          <b-alert variant="success" :show="successAlert">
+            <span v-if="newBar">{{ successAddMessage }}</span>
+            <span v-else>{{ successUpdateMessage }}</span>
+          </b-alert>
+
+          <b-nav id="editorNav" tabs class="small">
+            <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
+              <span v-if="getMembersCount() === 0">
+                Unused Bar
+              </span>
+              <span v-else-if="getMembersCount() === 1">
+                Personalized Bar
+              </span>
+              <span v-else>
+                Users ({{ getMembersCount() }})
+              </span>
+            </b-nav-item>
+            <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
+            <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
+            <b-button v-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
+            <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
+          </b-nav>
+
           <div v-if="tab === 1" class="bg-light p-3">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
             <div v-if="getMembersCount() === 0">
@@ -203,17 +173,13 @@
             </p>
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
-          <div id="preview-holder">
+          <div id="preview-holder" class="desktop fill-height mt-3">
+            <div class="taskbarMac"></div>
             <b-row>
               <b-col md="8">
-                <br>
-                <h6><b>Moprhic Drawer</b></h6>
-                <div id="preview-drawer">
+                <div id="preview-drawer" v-if="openDrawer">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, false)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
-                    <div v-else class="p-4 text-center">
-                      Click on the buttons on the left<br> to add them to the drawer.
-                    </div>
                     <b-row v-if="drawerItems.length > 0">
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
@@ -240,18 +206,16 @@
                     </b-row>
                   </div>
                 </div>
+                <div v-else>
+                  <BarExplainer :barDetails="barDetails" />
+                </div>
               </b-col>
               <b-col md="4">
-                <br>
-                <h6><b>Morphic Bar <span class="small">(primary)</span></b></h6>
                 <div id="preview-bar">
-                  <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, true)" v-on:dragover="allowDrop">
+                  <div class="barPreview pl-2 pt-2 pr-2" v-on:drop="dropElement($event, true)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <p v-else class="pt-4 pb-4 mb-0 text-center">
-                      Click on the buttons on the left to add them to the bar.
-                    </p>
                     <div v-for="(item, index) in primaryItems" :key="index">
-                      <div class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
+                      <div class="previewHolder mb-2" draggable v-on:dragstart="dragTransfer($event, item)">
                         <PreviewItem :item="item" />
                         <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
                         <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
@@ -259,21 +223,56 @@
                         <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
                       </div>
                     </div>
-                    <div class="logoHolder text-center mt-5 m-3">
+                    <div class="logoHolder">
                       <b-img src="/img/logo-color.svg" />
+                    </div>
+                    <div class="openDrawerIconHolder">
+                      <b-link @click="openDrawer = !openDrawer">
+                        <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
+                      </b-link>
                     </div>
                   </div>
                 </div>
               </b-col>
             </b-row>
+            <div class="taskbarWindows"></div>
           </div>
-          <div class="text-right">
-            <br>
-            <b-button to="/dashboard" variant="primary">Discard Changes &amp; Go back to Dashboard</b-button>
-          </div>
-        </b-col>
-      </b-row>
-    </div>
+        </div>
+      </b-col>
+      <b-col md="3">
+        <div id="buttonsPanel" class="fill-height bg-silver p-3">
+          <b-input-group id="search-group" size="sm" class="mb-3">
+            <b-form-input type="text" disabled></b-form-input>
+            <b-input-group-append>
+              <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
+            </b-input-group-append>
+          </b-input-group>
+          <h6><b>Make-a-Button</b></h6>
+          <ul class="linkList list-unstyled mb-0">
+            <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
+              <b-link draggable v-on:dragstart="dragElement($event, index, true)" @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
+                {{ button.configuration.label }}
+                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
+              </b-link>
+            </li>
+          </ul>
+          <br>
+          <h6><b>Predefined Buttons</b></h6>
+          <ul class="linkList list-unstyled mb-0">
+            <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
+              <b-link draggable v-on:dragstart="dragElement($event, index, false)" @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
+                {{ button.configuration.label }}
+                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
+              </b-link>
+            </li>
+          </ul>
+        </div>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -283,6 +282,15 @@
 
   .max-height {
     height: 100%;
+  }
+
+  #editorNav {
+    position: relative;
+    .addButton, .updateButton {
+      position: absolute;
+      right: 0;
+      top: 6px;
+    }
   }
 
   .compactIconHolder {
@@ -347,7 +355,7 @@
 
   #preview-drawer, #preview-bar {
     .barPreview {
-      min-height: 500px;
+      min-height: 600px;
     }
   }
 
@@ -412,15 +420,19 @@
 
 <script>
 
+import CommunityManager from '@/components/dashboardV2/CommunityManager'
+import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
+import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
 export default {
   name: 'MemberInvite',
   components: {
+    CommunityManager,
+    BarExplainer,
     EditorPreviewDrawer,
     PreviewItem
   },
@@ -600,18 +612,27 @@ export default {
       return this.drawerItems.length
     },
     loadBarMembers: function () {
-      getCommunityMembers(this.communityId)
-        .then((resp) => {
-          if (resp.data.members.length > 0) {
-            for (let i = 0; i < resp.data.members.length; i++) {
-              if (this.$route.params.barId === resp.data.members[i].bar_id) {
-                this.members.push(resp.data.members[i])
+      getCommunityBars(this.communityId)
+        .then(resp => {
+          const barsData = resp.data.bars
+          getCommunityMembers(this.communityId)
+            .then((resp) => {
+              this.barsList = barsData
+              this.membersList = resp.data.members
+              if (resp.data.members.length > 0) {
+                for (let i = 0; i < resp.data.members.length; i++) {
+                  if (this.$route.params.barId === resp.data.members[i].bar_id) {
+                    this.members.push(resp.data.members[i])
+                  }
+                  if (this.members.length === 1) {
+                    this.loadMemberData()
+                  }
+                }
               }
-              if (this.members.length === 1) {
-                this.loadMemberData()
-              }
-            }
-          }
+            })
+            .catch(err => {
+              console.log(err)
+            })
         })
         .catch(err => {
           console.log(err)
@@ -621,6 +642,15 @@ export default {
       getCommunityMember(this.communityId, this.members[0].id)
         .then((resp) => {
           this.memberDetails = resp.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getCommunityData: function() {
+      getCommunity(this.communityId)
+        .then((community) => {
+          this.community = community.data
         })
         .catch(err => {
           console.log(err)
@@ -745,6 +775,24 @@ export default {
         })
     }
     this.loadBarMembers()
+    this.getCommunityData()
+  },
+  watch: {
+    isChanged: function () {
+      this.$store.dispatch('unsavedChanges', this.isChanged)
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.isChanged) {
+      const confirm = window.confirm(this.leavePageMessage)
+      if (confirm) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
   watch: {
     isChanged: function () {
@@ -765,6 +813,7 @@ export default {
   },
   data () {
     return {
+      // messages
       successUpdateMessage: MESSAGES.barUpdated,
       successAddMessage: MESSAGES.barAdded,
       leavePageMessage: MESSAGES.leavePageAlert,
@@ -773,12 +822,18 @@ export default {
       addToBar: false,
       addToDrawer: false,
       newBar: false,
+      openDrawer: false,
       successAlert: false,
       editDialogDetails: false,
       editDialogSubkindIcons: true,
       tab: 0,
       dragFromEditor: false,
       isChanged: false,
+
+      // data for the community manager
+      community: {},
+      barsList: [],
+      membersList: [],
 
       // storage
       buttonStorage: {},
@@ -797,7 +852,7 @@ export default {
       preview: {
         drawer: {
           w: 2,
-          h: 5
+          h: 6
         },
         bar: {
           h: 6

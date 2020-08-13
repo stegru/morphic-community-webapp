@@ -14,22 +14,25 @@
 <style lang="scss">
   .previewItem {
     position: relative;
+    b {
+      font-size: 1rem;
+    }
     .iconHolder {
       position: absolute;
-      width: 3rem;
-      height: 3rem;
-      top: -1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      top: -1rem;
       left: 50%;
       transform: translateX(-50%);
       background: white;
       border-radius: 100%;
       border: 2px solid silver;
-      padding: .5rem;
-      font-size: 1.5rem;
+      padding: .25rem;
+      font-size: 1.25rem;
       text-align: center;
       img {
-        max-width: 1.5rem;
-        height: 1.5rem;
+        max-width: 1.25rem;
+        height: 1.25rem;
       }
     }
   }
