@@ -114,9 +114,6 @@
               <span v-if="getMembersCount() === 0">
                 Unused Bar
               </span>
-              <span v-else-if="getMembersCount() === 1">
-                Personalized Bar
-              </span>
               <span v-else>
                 Users ({{ getMembersCount() }})
               </span>
@@ -133,20 +130,11 @@
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
             </div>
-            <div v-else-if="getMembersCount() === 1">
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by only one user</b></h5>
-              <p class="mb-0">
-                <b-link :key="memberDetails.id" :to="'/dashboard/member/' + memberDetails.id" pill variant="outline-dark" class="mr-1 mb-1">
-                  <b-icon-person-circle></b-icon-person-circle>
-                  {{ memberDetails.first_name }} {{ memberDetails.last_name }}
-                </b-link>
-              </p>
-            </div>
             <div v-else>
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
               <ul class="small mb-0">
                 <li v-for="member in members" v-bind:key="member.id">
-                  <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
+                  <p>{{ member.first_name }} {{ member.last_name }}</p>
                 </li>
               </ul>
             </div>
@@ -624,9 +612,9 @@ export default {
                   if (this.$route.params.barId === resp.data.members[i].bar_id) {
                     this.members.push(resp.data.members[i])
                   }
-                  if (this.members.length === 1) {
-                    this.loadMemberData()
-                  }
+                  // if (this.members.length === 1) {
+                  //   this.loadMemberData()
+                  // }
                 }
               }
             })
@@ -785,6 +773,7 @@ export default {
       getCommunityBar(this.communityId, this.$route.params.barId)
         .then(resp => {
           this.barDetails = resp.data
+          this.members = []
           this.loadBarMembers()
           this.getCommunityData()
         })
