@@ -217,10 +217,28 @@
                     <div v-for="(item, index) in primaryItems" :key="index">
                       <div class="previewHolder mb-2" draggable v-on:dragstart="dragTransfer($event, item)">
                         <PreviewItem :item="item" />
-                        <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
-                        <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
-                        <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                        <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
+                        <b-button-group v-if="item.configuration.showOptions" size="sm">
+                          <b-button @click="buttonToRemove(item.configuration.label)" variant="light">
+                            <b-icon-trash></b-icon-trash> Delete
+                          </b-button>
+                          <b-button @click="item.configuration.showOptions = false; item.configuration.showMoveArrows = true" variant="light">
+                            <b-icon-arrows-move></b-icon-arrows-move> Move
+                          </b-button>
+                          <b-button @click="buttonToEdit(item.configuration.label)" variant="light">
+                            <b-icon-pencil></b-icon-pencil> Edit
+                          </b-button>
+                        </b-button-group>
+                        <b-button-group v-else-if="item.configuration.showMoveArrows" size="sm">
+                          <b-button @click="buttonToMoveUp(item.configuration.label)" variant="light">
+                            <b-icon-arrow-up-circle></b-icon-arrow-up-circle> Up
+                          </b-button>
+                          <b-button @click="item.configuration.showOptions = true; item.configuration.showMoveArrows = false" variant="light">
+                            <b-icon-arrows-move></b-icon-arrows-move> Cancel
+                          </b-button>
+                          <b-button @click="buttonToMoveDown(item.configuration.label)" variant="light">
+                            <b-icon-arrow-down-circle></b-icon-arrow-down-circle> Down
+                          </b-button>
+                        </b-button-group>
                       </div>
                     </div>
                     <div class="logoHolder">
@@ -361,6 +379,21 @@
 
   .previewHolder {
     position: relative;
+    .btn-group {
+      position: absolute;
+      width: 100%;
+      height: 3rem;
+      opacity: .9;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      .btn {
+        cursor: pointer !important;
+        line-height: 100%;
+        font-size: .75rem;
+        height: auto;
+      }
+    }
     .overlay {
       position: absolute;
       top: 10px;
@@ -539,6 +572,15 @@ export default {
       }
       return index
     },
+    findButtonById: function (buttonId) {
+      let index = -1
+      for (let i = 0; i < this.barDetails.items.length; i++) {
+        if (this.barDetails.items[i].id === buttonId) {
+          index = i
+        }
+      }
+      return index
+    },
     buttonToRemove: function (label) {
       const index = this.findButtonByLabel(label)
       if (index !== -1) {
@@ -694,6 +736,8 @@ export default {
           if (this.barDetails.items[i].is_primary === true) {
             let newItem = this.barDetails.items[i]
             newItem.id = this.generateId(newItem)
+            newItem.configuration.showOptions = true
+            newItem.configuration.showMoveArrows = false
             data.push(newItem)
           }
         }
@@ -707,6 +751,8 @@ export default {
           if (this.barDetails.items[i].is_primary === false) {
             let newItem = this.barDetails.items[i]
             newItem.id = this.generateId(newItem)
+            newItem.configuration.showOptions = true
+            newItem.configuration.showMoveArrows = false
             data.push(newItem)
           }
         }
