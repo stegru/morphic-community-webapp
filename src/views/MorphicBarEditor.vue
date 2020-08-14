@@ -780,23 +780,17 @@ export default {
   watch: {
     isChanged: function () {
       this.$store.dispatch('unsavedChanges', this.isChanged)
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  watch: {
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
+    },
+    '$route.params.barId': function () {
+      getCommunityBar(this.communityId, this.$route.params.barId)
+        .then(resp => {
+          this.barDetails = resp.data
+          this.loadBarMembers()
+          this.getCommunityData()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   beforeRouteLeave (to, from, next) {
