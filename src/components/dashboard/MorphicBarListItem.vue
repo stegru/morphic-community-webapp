@@ -39,12 +39,12 @@
       </b-col>
       <b-col md="3">
         <div v-if="barDetails.name == 'Default'">
-          <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Customize Starter Bar</b-button>
+          <b-button :to="{ name: 'MorphicBar Editor', query: { barId: barDetails.id } }" size="sm" variant="primary" class="btn-block mt-1">Customize Starter Bar</b-button>
         </div>
         <div v-else class="text-right">
           <b-button size="sm" variant="secondary" class="btn-block mt-1" @click="emitModalEvent">Make a Copy</b-button>
           <b-button size="sm" variant="light" class="btn-block" @click="emitPreviewEvent">Preview</b-button>
-          <b-button :to="'/dashboard/morphicbar-editor/' + barDetails.id" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
+          <b-button :to="{ name: 'MorphicBar Editor', query: { barId: barDetails.id } }" size="sm" variant="primary" class="btn-block mt-1">Edit</b-button>
         </div>
       </b-col>
     </b-row>

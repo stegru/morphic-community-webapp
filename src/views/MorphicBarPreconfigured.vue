@@ -7,7 +7,7 @@
         <div class="bg-silver rounded p-3">
           <BarPreview :barData="bar" />
           <p> {{ bar.desc }}</p>
-          <b-button :to="'/dashboard/morphicbar-editor/' + bar.id" variant="primary" class="btn-block">Start customizing this Bar</b-button>
+          <b-button :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }" variant="primary" class="btn-block">Start customizing this Bar</b-button>
         </div>
       </b-col>
     </b-row>
@@ -19,7 +19,7 @@
         </b-col>
         <b-col md="4">
           <div class="text-right">
-            <b-button to="/dashboard/morphicbar-editor/new" variant="primary">Customize starting with an empty Bar</b-button>
+            <b-button :to="{ name: 'MorphicBar Editor', query: { barId: 'new' } }" variant="primary">Customize starting with an empty Bar</b-button>
           </div>
         </b-col>
       </b-row>

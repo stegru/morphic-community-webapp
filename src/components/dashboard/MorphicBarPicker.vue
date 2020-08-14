@@ -8,7 +8,7 @@
       </b-col>
       <b-col md="2">
         <b-button size="sm" variant="light" class="btn-block">Preview</b-button>
-        <b-button :to="'/dashboard/morphicbar-editor/' + bar.id" size="sm" variant="primary" class="btn-block mt-1">Start with this Bar</b-button>
+        <b-button :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }" size="sm" variant="primary" class="btn-block mt-1">Start with this Bar</b-button>
       </b-col>
     </b-row>
   </div>

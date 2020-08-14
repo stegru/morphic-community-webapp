@@ -7,7 +7,7 @@
     </div>
     <div v-else>
       <p class="text-center mt-5 mb-5">
-        This bar has no buttons at the moment, click on the <b-link :to="'/dashboard/morphicbar-editor/' + bar.id"><b>Customize</b></b-link> button to add some.
+        This bar has no buttons at the moment, click on the <b-link :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }"><b>Customize</b></b-link> button to add some.
       </p>
     </div>
     <div class="logoHolder text-center mt-5 m-3">

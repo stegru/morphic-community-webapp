@@ -91,7 +91,7 @@
     <!-- EDITOR v2 -->
     <b-row>
       <b-col md="3">
-        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeBarId="barDetails.id" />
+        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="$route.query.memberId" :activeBarId="$route.query.memberId ? null : barDetails.id" />
       </b-col>
       <b-col md="6">
         <div id="barEditor" class="pt-2">
@@ -111,7 +111,10 @@
 
           <b-nav id="editorNav" tabs class="small">
             <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-              <span v-if="getMembersCount() === 0">
+              <span v-if="$route.query.memberId">
+                User Details
+              </span>
+              <span v-else-if="getMembersCount() === 0">
                 Unused Bar
               </span>
               <span v-else>
@@ -126,7 +129,10 @@
 
           <div v-if="tab === 1" class="bg-light p-3">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <div v-if="getMembersCount() === 0">
+            <div v-if="$route.query.memberId">
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
+            </div>
+            <div v-else-if="getMembersCount() === 0">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
             </div>
@@ -441,7 +447,7 @@ export default {
         })
     },
     saveBar: function () {
-      updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
+      updateCommunityBar(this.communityId, this.$route.query.barId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
             this.successAlert = true
@@ -609,12 +615,9 @@ export default {
               this.membersList = resp.data.members
               if (resp.data.members.length > 0) {
                 for (let i = 0; i < resp.data.members.length; i++) {
-                  if (this.$route.params.barId === resp.data.members[i].bar_id) {
+                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
                     this.members.push(resp.data.members[i])
                   }
-                  // if (this.members.length === 1) {
-                  //   this.loadMemberData()
-                  // }
                 }
               }
             })
@@ -627,7 +630,7 @@ export default {
         })
     },
     loadMemberData: function () {
-      getCommunityMember(this.communityId, this.members[0].id)
+      getCommunityMember(this.communityId, this.$route.query.memberId)
         .then((resp) => {
           this.memberDetails = resp.data
         })
@@ -742,25 +745,28 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.barId === 'new') {
+    if (this.$route.query.barId === 'new') {
       this.newBar = true
       this.barDetails = this.newBarDetails
-    } else if (this.$route.params.barId.indexOf('predifined') !== -1) {
+    } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
       for (let i = 0; i < this.predefinedBars.length; i++) {
-        if (this.predefinedBars[i].id === this.$route.params.barId) {
+        if (this.predefinedBars[i].id === this.$route.query.barId) {
           this.newBar = true
           this.barDetails = this.newBarDetails
           this.barDetails.items = this.predefinedBars[i].items
         }
       }
     } else {
-      getCommunityBar(this.communityId, this.$route.params.barId)
+      getCommunityBar(this.communityId, this.$route.query.barId)
         .then(resp => {
           this.barDetails = resp.data
         })
         .catch(err => {
           console.log(err)
         })
+    }
+    if (this.$route.query.memberId) {
+      this.loadMemberData()
     }
     this.loadBarMembers()
     this.getCommunityData()
@@ -769,8 +775,11 @@ export default {
     isChanged: function () {
       this.$store.dispatch('unsavedChanges', this.isChanged)
     },
-    '$route.params.barId': function () {
-      getCommunityBar(this.communityId, this.$route.params.barId)
+    '$route.query': function () {
+      if (this.$route.query.memberId) {
+        this.loadMemberData()
+      }
+      getCommunityBar(this.communityId, this.$route.query.barId)
         .then(resp => {
           this.barDetails = resp.data
           this.members = []
