@@ -105,8 +105,12 @@
             </b-form-group>
             <h5 v-else class="mb-0">
               <b>{{ barDetails.name === 'Default' ? 'Starter Bar' : barDetails.name }}</b>&nbsp;
-              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link>Edit Bar name</b-link>)</span>
+              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
             </h5>
+            <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
+                <br/>
+                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
+              </b-form-group>
           </div>
           <b-alert variant="success" :show="successAlert">
             <span v-if="newBar">{{ successAddMessage }}</span>
@@ -856,6 +860,7 @@ export default {
       tab: 0,
       dragFromEditor: false,
       isChanged: false,
+      editBarName: false,
 
       // data for the community manager
       community: {},
