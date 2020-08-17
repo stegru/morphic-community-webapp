@@ -96,7 +96,11 @@
       <b-col md="6">
         <div id="barEditor" class="pt-2">
           <div id="bar-info">
-            <b-form-group v-if="newBar" label="Bar Name" label-for="barName">
+            <h5 v-if="$route.query.memberId" class="mb-0">
+              <b>Bar for {{ memberDetails.first_name }}</b>&nbsp;
+              <span class="small">(<b-link>Edit Bar name</b-link>)</span>
+            </h5>
+            <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
             </b-form-group>
             <h5 v-else class="mb-0">
@@ -123,7 +127,8 @@
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
             <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
-            <b-button v-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
+            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
+            <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
             <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
           </b-nav>
 
@@ -418,7 +423,7 @@ import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
+import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
@@ -431,6 +436,36 @@ export default {
     PreviewItem
   },
   methods: {
+    addPersonalBar: function () {
+      if (this.barDetails.is_shared) {
+        this.barDetails.name = this.memberDetails.first_name
+        this.barDetails.is_shared = false
+        createCommunityBar(this.communityId, this.barDetails)
+          .then((resp) => {
+            if (resp.status === 200) {
+              this.memberDetails.bar_id = resp.data.bar.id
+              updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                .then((resp) => {
+                  if (resp.status === 200) {
+                    this.successAlert = true
+                    this.isChanged = false
+                    setTimeout(() => {
+                      this.$router.push('/dashboard')
+                    }, 3000)
+                  }
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        this.saveBar()
+      }
+    },
     addBar: function () {
       createCommunityBar(this.communityId, this.barDetails)
         .then((resp) => {
