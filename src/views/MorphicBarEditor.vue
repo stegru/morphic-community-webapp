@@ -86,6 +86,9 @@
         </b-row>
       </div>
     </b-modal>
+    <b-modal id="roleChangeConfirm" @ok="changeUserRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
+      <p class="my-4">Please confirm this role change?</p>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
@@ -113,8 +116,7 @@
               </b-form-group>
           </div>
           <b-alert variant="success" :show="successAlert">
-            <span v-if="newBar">{{ successAddMessage }}</span>
-            <span v-else>{{ successUpdateMessage }}</span>
+            <span>{{ successMessage }}</span>
           </b-alert>
 
           <b-nav id="editorNav" tabs class="small">
@@ -140,6 +142,12 @@
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
             <div v-if="$route.query.memberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
+              <ul class="list-unstyled small">
+                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
+                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
+                <li><b-link class="text-danger">Delete user</b-link></li>
+                <li><b-link>Send Invitation</b-link></li>
+              </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
@@ -440,6 +448,23 @@ export default {
     PreviewItem
   },
   methods: {
+    changeUserRole: function () {
+      if (this.memberDetails.role === 'member') {
+        this.memberDetails.role = 'manager'
+      } else {
+        this.memberDetails.role = 'member'
+      }
+      updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.successMessage = MESSAGES.successfulRoleChange
+            this.successAlert = true
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     addPersonalBar: function () {
       if (this.barDetails.is_shared) {
         this.barDetails.name = this.memberDetails.first_name
@@ -451,6 +476,7 @@ export default {
               updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                 .then((resp) => {
                   if (resp.status === 200) {
+                    this.successMessage = MESSAGES.barAdded
                     this.successAlert = true
                     this.isChanged = false
                     setTimeout(() => {
@@ -474,6 +500,7 @@ export default {
       createCommunityBar(this.communityId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
+            this.successMessage = MESSAGES.barAdded
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
@@ -489,6 +516,7 @@ export default {
       updateCommunityBar(this.communityId, this.$route.query.barId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
+            this.successMessage = MESSAGES.barUpdated
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
@@ -845,9 +873,8 @@ export default {
   data () {
     return {
       // messages
-      successUpdateMessage: MESSAGES.barUpdated,
-      successAddMessage: MESSAGES.barAdded,
       leavePageMessage: MESSAGES.leavePageAlert,
+      successMessage: '',
 
       // flags
       addToBar: false,
