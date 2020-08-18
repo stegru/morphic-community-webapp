@@ -18,7 +18,9 @@ export const MESSAGES = {
   barAdded: 'Bar successfully added, you will be returned to Dashboard soon...',
   sessionTimedOut: 'Your session was expired. Please login again.',
   leavePageAlert: 'Do you really want to leave? You have unsaved changes!',
-  logoutAlert: 'Please save, or discard your chances before logging out!'
+  logoutAlert: 'Please save, or discard your chances before logging out!',
+  successfulRoleChange: 'User role changed successfully',
+  successfulUserDelete: 'User deleted successfully, you will be returned to Dashboard soon...'
 }
 
 export const colors = {

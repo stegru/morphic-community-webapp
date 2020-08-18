@@ -2,7 +2,7 @@
   <div id="BarsList">
     <ul v-if="bars.length > 0" class="list-unstyled">
       <li v-for="bar in bars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
-        <b-link :to="'/dashboard/morphicbar-editor/' + bar.id">
+        <b-link :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }">
          {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
         </b-link>
       </li>

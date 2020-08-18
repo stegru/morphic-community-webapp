@@ -86,36 +86,49 @@
         </b-row>
       </div>
     </b-modal>
+    <b-modal id="roleChangeConfirm" @ok="changeUserRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
+      <p class="my-4">Please confirm this role change?</p>
+    </b-modal>
+        <b-modal id="deleteConfirm" @ok="deleteUser" title="Delete User" footer-bg-variant="light" ok-title="Delete">
+      <p class="my-4">Please confirm the deletion of this user?</p>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
     <b-row>
       <b-col md="3">
-        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeBarId="barDetails.id" />
+        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="$route.query.memberId" :activeBarId="$route.query.memberId ? null : barDetails.id" />
       </b-col>
       <b-col md="6">
         <div id="barEditor" class="pt-2">
           <div id="bar-info">
-            <b-form-group v-if="newBar" label="Bar Name" label-for="barName">
+            <h5 v-if="$route.query.memberId" class="mb-0">
+              <b>Bar for {{ memberDetails.first_name }}</b>&nbsp;
+              <span class="small">(<b-link>Edit Bar name</b-link>)</span>
+            </h5>
+            <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
             </b-form-group>
             <h5 v-else class="mb-0">
               <b>{{ barDetails.name === 'Default' ? 'Starter Bar' : barDetails.name }}</b>&nbsp;
-              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link>Edit Bar name</b-link>)</span>
+              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
             </h5>
+            <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
+                <br/>
+                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
+              </b-form-group>
           </div>
           <b-alert variant="success" :show="successAlert">
-            <span v-if="newBar">{{ successAddMessage }}</span>
-            <span v-else>{{ successUpdateMessage }}</span>
+            <span>{{ successMessage }}</span>
           </b-alert>
 
           <b-nav id="editorNav" tabs class="small">
             <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-              <span v-if="getMembersCount() === 0">
-                Unused Bar
+              <span v-if="$route.query.memberId">
+                User Details
               </span>
-              <span v-else-if="getMembersCount() === 1">
-                Personalized Bar
+              <span v-else-if="getMembersCount() === 0">
+                Unused Bar
               </span>
               <span v-else>
                 Users ({{ getMembersCount() }})
@@ -123,30 +136,31 @@
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
             <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
-            <b-button v-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
+            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
+            <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
             <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
           </b-nav>
 
           <div v-if="tab === 1" class="bg-light p-3">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <div v-if="getMembersCount() === 0">
+            <div v-if="$route.query.memberId">
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
+              <ul class="list-unstyled small">
+                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
+                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
+                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
+                <li><b-link>Send Invitation</b-link></li>
+              </ul>
+            </div>
+            <div v-else-if="getMembersCount() === 0">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
-            </div>
-            <div v-else-if="getMembersCount() === 1">
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by only one user</b></h5>
-              <p class="mb-0">
-                <b-link :key="memberDetails.id" :to="'/dashboard/member/' + memberDetails.id" pill variant="outline-dark" class="mr-1 mb-1">
-                  <b-icon-person-circle></b-icon-person-circle>
-                  {{ memberDetails.first_name }} {{ memberDetails.last_name }}
-                </b-link>
-              </p>
             </div>
             <div v-else>
               <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
               <ul class="small mb-0">
                 <li v-for="member in members" v-bind:key="member.id">
-                  <b-link :to="'/dashboard/member/' + member.id">{{ member.first_name }} {{ member.last_name }}</b-link>
+                  <p>{{ member.first_name }} {{ member.last_name }}</p>
                 </li>
               </ul>
             </div>
@@ -457,7 +471,7 @@ import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember } from '@/services/communityService'
+import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
@@ -470,10 +484,74 @@ export default {
     PreviewItem
   },
   methods: {
+    deleteUser: function () {
+      deleteCommunityMember(this.communityId, this.memberDetails.id)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.successMessage = MESSAGES.successfulUserDelete
+            this.successAlert = true
+            setTimeout(() => {
+              this.$router.push('/dashboard')
+            }, 3000)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    changeUserRole: function () {
+      if (this.memberDetails.role === 'member') {
+        this.memberDetails.role = 'manager'
+      } else {
+        this.memberDetails.role = 'member'
+      }
+      updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.successMessage = MESSAGES.successfulRoleChange
+            this.successAlert = true
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    addPersonalBar: function () {
+      if (this.barDetails.is_shared) {
+        this.barDetails.name = this.memberDetails.first_name
+        this.barDetails.is_shared = false
+        createCommunityBar(this.communityId, this.barDetails)
+          .then((resp) => {
+            if (resp.status === 200) {
+              this.memberDetails.bar_id = resp.data.bar.id
+              updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                .then((resp) => {
+                  if (resp.status === 200) {
+                    this.successMessage = MESSAGES.barAdded
+                    this.successAlert = true
+                    this.isChanged = false
+                    setTimeout(() => {
+                      this.$router.push('/dashboard')
+                    }, 3000)
+                  }
+                })
+                .catch(err => {
+                  console.log(err)
+                })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        this.saveBar()
+      }
+    },
     addBar: function () {
       createCommunityBar(this.communityId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
+            this.successMessage = MESSAGES.barAdded
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
@@ -486,9 +564,10 @@ export default {
         })
     },
     saveBar: function () {
-      updateCommunityBar(this.communityId, this.$route.params.barId, this.barDetails)
+      updateCommunityBar(this.communityId, this.$route.query.barId, this.barDetails)
         .then((resp) => {
           if (resp.status === 200) {
+            this.successMessage = MESSAGES.barUpdated
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
@@ -663,11 +742,8 @@ export default {
               this.membersList = resp.data.members
               if (resp.data.members.length > 0) {
                 for (let i = 0; i < resp.data.members.length; i++) {
-                  if (this.$route.params.barId === resp.data.members[i].bar_id) {
+                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
                     this.members.push(resp.data.members[i])
-                  }
-                  if (this.members.length === 1) {
-                    this.loadMemberData()
                   }
                 }
               }
@@ -681,7 +757,7 @@ export default {
         })
     },
     loadMemberData: function () {
-      getCommunityMember(this.communityId, this.members[0].id)
+      getCommunityMember(this.communityId, this.$route.query.memberId)
         .then((resp) => {
           this.memberDetails = resp.data
         })
@@ -800,19 +876,19 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.barId === 'new') {
+    if (this.$route.query.barId === 'new') {
       this.newBar = true
       this.barDetails = this.newBarDetails
-    } else if (this.$route.params.barId.indexOf('predifined') !== -1) {
+    } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
       for (let i = 0; i < this.predefinedBars.length; i++) {
-        if (this.predefinedBars[i].id === this.$route.params.barId) {
+        if (this.predefinedBars[i].id === this.$route.query.barId) {
           this.newBar = true
           this.barDetails = this.newBarDetails
           this.barDetails.items = this.predefinedBars[i].items
         }
       }
     } else {
-      getCommunityBar(this.communityId, this.$route.params.barId)
+      getCommunityBar(this.communityId, this.$route.query.barId)
         .then(resp => {
           this.barDetails = resp.data
         })
@@ -820,29 +896,30 @@ export default {
           console.log(err)
         })
     }
+    if (this.$route.query.memberId) {
+      this.loadMemberData()
+    }
     this.loadBarMembers()
     this.getCommunityData()
   },
   watch: {
     isChanged: function () {
       this.$store.dispatch('unsavedChanges', this.isChanged)
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
+    },
+    '$route.query': function () {
+      if (this.$route.query.memberId) {
+        this.loadMemberData()
       }
-    } else {
-      next()
-    }
-  },
-  watch: {
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
+      getCommunityBar(this.communityId, this.$route.query.barId)
+        .then(resp => {
+          this.barDetails = resp.data
+          this.members = []
+          this.loadBarMembers()
+          this.getCommunityData()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -860,9 +937,8 @@ export default {
   data () {
     return {
       // messages
-      successUpdateMessage: MESSAGES.barUpdated,
-      successAddMessage: MESSAGES.barAdded,
       leavePageMessage: MESSAGES.leavePageAlert,
+      successMessage: '',
 
       // flags
       addToBar: false,
@@ -875,6 +951,7 @@ export default {
       tab: 0,
       dragFromEditor: false,
       isChanged: false,
+      editBarName: false,
 
       // data for the community manager
       community: {},

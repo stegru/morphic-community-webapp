@@ -93,7 +93,7 @@ const routes = [
     }
   },
   {
-    path: '/dashboard/morphicbar-editor/:barId',
+    path: '/dashboard/morphicbar-editor/',
     name: 'MorphicBar Editor',
     component: MorphicBarEditor,
     meta: {

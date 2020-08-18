@@ -1,8 +1,8 @@
 <template>
   <div id="MembersList">
     <ul v-if="members.length > 0" class="list-unstyled">
-      <li v-for="member in members" :key="member.id" :class="{ active: member.id === activeMemberId}">
-        <b-link :to="'/dashboard/member/' + member.id">
+      <li v-for="member in members" :key="member.id" :class="{ active: member.id === activeMemberId }">
+        <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }">
           {{ member.first_name }} {{ member.last_name }}<br>
         </b-link>
         <div v-if="member.id === activeMemberId">

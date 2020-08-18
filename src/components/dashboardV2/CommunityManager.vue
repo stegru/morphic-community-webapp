@@ -4,7 +4,6 @@
     <p class="text-right small">
       (<b-link disabled>Community settings</b-link>)
     </p>
-    
     <h5>
       <b>Community Bars</b>
       <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
