@@ -51,6 +51,10 @@ export function updateCommunityMember (communityId, memberId, member) {
   return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member)
 }
 
+export function deleteCommunityMember (communityId, memberId) {
+  return HTTP.delete(`/v1/communities/${communityId}/members/${memberId}`)
+}
+
 export function inviteCommunityMember (communityId, member) {
   return HTTP.post(`/v1/communities/${communityId}/invitations`, member)
 }

@@ -89,6 +89,9 @@
     <b-modal id="roleChangeConfirm" @ok="changeUserRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
     </b-modal>
+        <b-modal id="deleteConfirm" @ok="deleteUser" title="Delete User" footer-bg-variant="light" ok-title="Delete">
+      <p class="my-4">Please confirm the deletion of this user?</p>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
@@ -145,7 +148,7 @@
               <ul class="list-unstyled small">
                 <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
                 <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
-                <li><b-link class="text-danger">Delete user</b-link></li>
+                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
                 <li><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
@@ -435,7 +438,7 @@ import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from '@/services/communityService'
+import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 
@@ -448,6 +451,21 @@ export default {
     PreviewItem
   },
   methods: {
+    deleteUser: function () {
+      deleteCommunityMember(this.communityId, this.memberDetails.id)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.successMessage = MESSAGES.successfulUserDelete
+            this.successAlert = true
+            setTimeout(() => {
+              this.$router.push('/dashboard')
+            }, 3000)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     changeUserRole: function () {
       if (this.memberDetails.role === 'member') {
         this.memberDetails.role = 'manager'
