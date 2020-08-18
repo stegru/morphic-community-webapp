@@ -23,25 +23,25 @@
         <CommunityManager :community="community" :bars="list" :members="members" />
       </b-col>
       <b-col md="8">
-        <div v-if="list.length > 0 && members.length > 0" class="info-box pt-5 pb-5">
+        <div v-if="list.length > 0 && members.length > 1" class="info-box pt-5 pb-5">
           <!-- FULL DASHBOARD -->
           <b-row>
             <b-col md="7">
               <p>The green menu on the left lists your community bars and the people in your community.</p>
               <p>Here are some things you can do...</p>
-              
+
               <h5>Invite people to your community</h5>
               <p>Make a community! Add people to your community so they can use Morphic Bar, which you can personalize.</p>
               <p class="text-success">To invite a person, find the word "People" in the green menu to the left and click on the green (+) button.</p>
-              
+
               <br>
-              
+
               <h5>Personalize a bar</h5>
               <p>You can personalize a bar to fit needs of a person.</p>
               <p class="text-success">To personalize a Bar, click their name or email in the green menu on the left.</p>
-              
+
               <br>
-              
+
               <h5>Edit a community bar</h5>
               <p>Do you have a bar that you think several people in your community might want to use?</p>
               <p class="text-success">To customize a community bar, click the name of a bar in the green menu on the left.</p>
@@ -79,7 +79,6 @@
               <h5>Invite people to your community</h5>
               <p>Make a community! Add people to your community so they can use Morphic Bar, which you can personalize.</p>
               <p class="text-success">To invite a person, find the word "People" in the green menu to the left and click on the green (+) button.</p>
-              
               <br>
 
               <h5>(Optional) Customize your Morphic Starter Bar</h5>
