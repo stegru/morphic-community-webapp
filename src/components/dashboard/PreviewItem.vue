@@ -1,5 +1,5 @@
 <template>
-  <b-button :style="'background-color: ' + (item.configuration.color || colors.blue) + ';'" size="lg" class="previewItem btn-block">
+  <b-button @click="onClickItem" :style="'background-color: ' + (item.configuration.color || colors.blue) + ';'" size="lg" class="previewItem btn-block">
     <b>{{ item.configuration.label }}</b>
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url]"
@@ -47,10 +47,15 @@ export default {
   props: {
     item: Object
   },
-  data() {
+  data () {
     return {
       colors: colors,
       icons: icons
+    }
+  },
+  methods: {
+    onClickItem: function () {
+      this.$emit('show-options')
     }
   }
 }

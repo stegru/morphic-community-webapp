@@ -230,23 +230,23 @@
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
                     <div v-for="(item, index) in primaryItems" :key="index">
                       <div class="previewHolder mb-2" draggable v-on:dragstart="dragTransfer($event, item)">
-                        <PreviewItem :item="item" />
-                        <b-button-group v-if="item.configuration.showOptions" size="sm">
+                        <PreviewItem :item="item" v-on:show-options="showOptions = index; showMoveArrows = false" />
+                        <b-button-group v-if="showOptions === index" size="sm">
                           <b-button @click="buttonToRemove(item.configuration.label)" variant="light">
                             <b-icon-trash></b-icon-trash> Delete
                           </b-button>
-                          <b-button @click="item.configuration.showOptions = false; item.configuration.showMoveArrows = true" variant="light">
+                          <b-button @click="showOptions = false; showMoveArrows = index" variant="light">
                             <b-icon-arrows-move></b-icon-arrows-move> Move
                           </b-button>
                           <b-button @click="buttonToEdit(item.configuration.label)" variant="light">
                             <b-icon-pencil></b-icon-pencil> Edit
                           </b-button>
                         </b-button-group>
-                        <b-button-group v-else-if="item.configuration.showMoveArrows" size="sm">
+                        <b-button-group v-else-if="showMoveArrows === index" size="sm">
                           <b-button @click="buttonToMoveUp(item.configuration.label)" variant="light">
                             <b-icon-arrow-up-circle></b-icon-arrow-up-circle> Up
                           </b-button>
-                          <b-button @click="item.configuration.showOptions = true; item.configuration.showMoveArrows = false" variant="light">
+                          <b-button @click="showOptions = index; showMoveArrows = false" variant="light">
                             <b-icon-arrows-move></b-icon-arrows-move> Cancel
                           </b-button>
                           <b-button @click="buttonToMoveDown(item.configuration.label)" variant="light">
@@ -668,33 +668,36 @@ export default {
       }
     },
     buttonToMoveUp: function (label) {
-      let index = this.findButtonByLabel(label)
+      const index = this.findButtonByLabel(label)
       if (index > 0) { // you cannot move button that can't be found (-1), or it's the first one (0)
+        this.showMoveArrows = this.showMoveArrows - 1
         // getting the current and previous item
-        let item = this.barDetails.items[index],
-            isPrimary = this.barDetails.items[index].is_primary,
-            itemOnTop = this.barDetails.items[index-1]
+        const item = this.barDetails.items[index]
+        const isPrimary = this.barDetails.items[index].is_primary
+        const itemOnTop = this.barDetails.items[index - 1]
         // moving the current item up, and the one from the top to the current index
-        this.barDetails.items[index-1] = item
-        this.barDetails.items[index-1].is_primary = !isPrimary
-        this.barDetails.items[index-1].is_primary = isPrimary
+        this.barDetails.items[index - 1] = item
+        this.barDetails.items[index - 1].is_primary = !isPrimary
+        this.barDetails.items[index - 1].is_primary = isPrimary
         this.barDetails.items[index] = itemOnTop
         this.isChanged = true
       }
     },
     buttonToMoveDown: function (label) {
-      let index = this.findButtonByLabel(label),
-          itemsCount = this.barDetails.items.length
+      this.showMoveArrows = this.showMoveArrows + 1
+      const index = this.findButtonByLabel(label)
+      const itemsCount = this.barDetails.items.length
+      console.log(itemsCount)
 
-      if (index !== -1 && index < (itemsCount -1 )) { // you cannot move button that can't be found (-1), or it's the last one
+      if (index !== -1 && index < (itemsCount - 1)) { // you cannot move button that can't be found (-1), or it's the last one
         // getting the current and next item
-        let item = this.barDetails.items[index],
-            isPrimary = this.barDetails.items[index].is_primary,
-            itemOnBottom = this.barDetails.items[index+1]
+        const item = this.barDetails.items[index]
+        const isPrimary = this.barDetails.items[index].is_primary
+        const itemOnBottom = this.barDetails.items[index + 1]
         // moving the current item up, and the one from the top to the current index
-        this.barDetails.items[index+1] = item
-        this.barDetails.items[index+1].is_primary = !isPrimary
-        this.barDetails.items[index+1].is_primary = isPrimary
+        this.barDetails.items[index + 1] = item
+        this.barDetails.items[index + 1].is_primary = !isPrimary
+        this.barDetails.items[index + 1].is_primary = isPrimary
         this.barDetails.items[index] = itemOnBottom
         this.isChanged = true
       }
@@ -812,8 +815,6 @@ export default {
           if (this.barDetails.items[i].is_primary === true) {
             let newItem = this.barDetails.items[i]
             newItem.id = this.generateId(newItem)
-            newItem.configuration.showOptions = true
-            newItem.configuration.showMoveArrows = false
             data.push(newItem)
           }
         }
@@ -827,8 +828,6 @@ export default {
           if (this.barDetails.items[i].is_primary === false) {
             let newItem = this.barDetails.items[i]
             newItem.id = this.generateId(newItem)
-            newItem.configuration.showOptions = true
-            newItem.configuration.showMoveArrows = false
             data.push(newItem)
           }
         }
@@ -952,6 +951,8 @@ export default {
       dragFromEditor: false,
       isChanged: false,
       editBarName: false,
+      showOptions: false,
+      showMoveArrows: false,
 
       // data for the community manager
       community: {},
