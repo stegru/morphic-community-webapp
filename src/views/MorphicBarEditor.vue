@@ -96,10 +96,10 @@
 
     <!-- EDITOR v2 -->
     <b-row>
-      <b-col md="3">
+      <b-col md="2">
         <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="$route.query.memberId" :activeBarId="$route.query.memberId ? null : barDetails.id" />
       </b-col>
-      <b-col md="6">
+      <b-col md="8">
         <div id="barEditor" class="pt-2">
           <div id="bar-info">
             <h5 v-if="$route.query.memberId" class="mb-0">
@@ -190,7 +190,9 @@
           <div id="preview-holder" class="desktop fill-height mt-3">
             <div class="taskbarMac"></div>
             <b-row>
-              <b-col md="8">
+              <b-col md="6">
+              </b-col>
+              <b-col md="4">
                 <div id="preview-drawer" v-if="openDrawer">
                   <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, false)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
@@ -224,7 +226,7 @@
                   <BarExplainer :barDetails="barDetails" />
                 </div>
               </b-col>
-              <b-col md="4">
+              <b-col md="2">
                 <div id="preview-bar">
                   <div class="barPreview pl-2 pt-2 pr-2" v-on:drop="dropElement($event, true)" v-on:dragover="allowDrop">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
@@ -253,7 +255,7 @@
           </div>
         </div>
       </b-col>
-      <b-col md="3">
+      <b-col md="2">
         <div id="buttonsPanel" class="fill-height bg-silver p-3">
           <b-input-group id="search-group" size="sm" class="mb-3">
             <b-form-input type="text" disabled></b-form-input>

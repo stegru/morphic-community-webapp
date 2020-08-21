@@ -1,7 +1,9 @@
 <template>
-  <b-jumbotron class="bg-light">
-    <b-row>
-      <b-col md="7">
+  <b-jumbotron class="mb-0" bg-variant="light">
+    <b-row class="pt-5 pb-5">
+      <b-col md="3">
+      </b-col>
+      <b-col md="6">
         <h3>Reset your password</h3>
         <p class="lead">Please enter the email address you are registered with and we will send you message with your temporary password.</p>
         <br />
@@ -34,6 +36,8 @@
             </b-col>
           </b-row>
         </b-form>
+      </b-col>
+      <b-col md="3">
       </b-col>
     </b-row>
   </b-jumbotron>

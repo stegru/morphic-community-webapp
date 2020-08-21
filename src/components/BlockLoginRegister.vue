@@ -1,15 +1,16 @@
 <template>
-  <b-jumbotron bg-variant="light" id="login-register">
+  <b-jumbotron class="mb-0" bg-variant="light" id="login-register">
     <b-row>
-      <b-col lg="1"></b-col>
-      <b-col md="6" lg="6">
+      <b-col md="2"></b-col>
+      <b-col md="4">
         <h3 class="mb-3">Register Community</h3>
         <UserRegistration />
       </b-col>
-      <b-col lg="1"></b-col>
-      <b-col md="6" lg="4">
+      <b-col md="1"></b-col>
+      <b-col md="3">
         <UserLogin />
       </b-col>
+      <b-col md="2"></b-col>
     </b-row>
   </b-jumbotron>
 </template>

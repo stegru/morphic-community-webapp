@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="light" variant="light" id="top">
+    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top">
       <b-navbar-brand to="/" title="Morphic Community">
         <img src="/img/logo-color.svg" alt="logo">
         Morphic Community

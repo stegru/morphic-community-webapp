@@ -19,7 +19,7 @@
 
     <!-- Dashboard v2 -->
     <b-row>
-      <b-col md="3">
+      <b-col md="2">
         <CommunityManager :community="community" :bars="list" :members="members" />
       </b-col>
       <b-col md="8">

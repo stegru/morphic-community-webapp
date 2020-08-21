@@ -1,145 +1,153 @@
 <template>
-  <div>
-    <b-modal id="inviteConfirm" @ok="addMember(true)" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
-      <p class="my-4">Please confirm this member invitation?</p>
-    </b-modal>
-    <b-modal id="memberConfirm" @ok="addMember(false)" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
-      <p class="my-4">Please confirm adding this member?</p>
-    </b-modal>
-    <b-modal id="previewModal" title="Bar Preview" footer-bg-variant="light" size="lg">
-      <p class="mb-3">This the bar and the drawer should look like when opened.</p>
-      <b-row>
-        <b-col md="8">
-          <DrawerPreview :barId="previewBar" />
-        </b-col>
-        <b-col md="4">
-          <BarPreview :barId="previewBar" />
-        </b-col>
-      </b-row>
-    </b-modal>
+  <b-row class="pt-5 pb-5">
+    <b-col md="3">
+    </b-col>
+    <b-col md="6">
+      <div>
+        <b-modal id="inviteConfirm" @ok="addMember(true)" title="Sending the Invite" footer-bg-variant="light" ok-title="Send Invite">
+          <p class="my-4">Please confirm this member invitation?</p>
+        </b-modal>
+        <b-modal id="memberConfirm" @ok="addMember(false)" title="Adding the Member" footer-bg-variant="light" ok-title="Add Member">
+          <p class="my-4">Please confirm adding this member?</p>
+        </b-modal>
+        <b-modal id="previewModal" title="Bar Preview" footer-bg-variant="light" size="lg">
+          <p class="mb-3">This the bar and the drawer should look like when opened.</p>
+          <b-row>
+            <b-col md="8">
+              <DrawerPreview :barId="previewBar" />
+            </b-col>
+            <b-col md="4">
+              <BarPreview :barId="previewBar" />
+            </b-col>
+          </b-row>
+        </b-modal>
 
-    <div class="bg-silver rounded p-3" v-if="!chooseBar">
-      <h4 class="mb-3">Member Invite</h4>
-      <b-card no-body>
-        <b-tabs v-model="tabIndex" card>
-          <b-tab title="Fill the member information">
-            <b-card-text>
-              <h4 class="mb-3">Who do you want to invite?</h4>
-              <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group
-                  id="first-name"
-                  label="Name or Nickname (only seen by the Community Manager)"
-                  label-for="firstName"
-                >
-                  <b-form-input
-                    v-model="$v.firstName.$model"
-                    :state="validateState('firstName')"
-                    id="firstName"
-                    placeholder="Name"
-                  >
-                  </b-form-input>
-                  <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group
-                  id="member-email"
-                  label="Email"
-                  label-for="memberEmail"
-                >
-                  <b-form-input
-                    v-model="$v.memberEmail.$model"
-                    :state="validateState('memberEmail')"
-                    type="email"
-                    id="memberEmail"
-                    placeholder="Email Address"
-                  >
-                  </b-form-input>
-                  <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
-                </b-form-group>
-                <hr>
-                <b-row>
-                  <b-col md="6">
-                    <b-button type="submit" variant="primary">Next</b-button>
-                  </b-col>
-                  <b-col md="6">
-                    <div class="small text-right">
-                      <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
-                      <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
-              </b-form>
-            </b-card-text>
-          </b-tab>
-          <b-tab :disabled="this.$v.$invalid" title="Preview and Send">
-            <b-card-text>
-              <h4 class="mb-3">Does this looks alright?</h4>
-              <p>
-                First Name:
-                <b>{{ firstName }}</b>
-              </p>
-              <p>
-                Email:
-                <b>{{ memberEmail }}</b>
-              </p>
-              <div class="bg-silver rounded p-3 mb-3">
-                <RenderList v-if="tabIndex === 1" :barId="selectedBar" />
-              </div>
-              <b-row>
-                <b-col md="6">
-                  <b-form-checkbox
-                    id="send-me-copy"
-                    v-model="sendEmailCopy"
-                    name="send-me-copy"
-                    value="1"
-                    unchecked-value="0"
-                  >
-                    Send me a copy of the invitation email
-                  </b-form-checkbox>
-                </b-col>
-                <b-col md="6">
-                  <div class="text-right">
-                    <b-button variant="primary" class="ml-1" @click="chooseBar = !chooseBar">Change</b-button>
+        <div class="bg-silver rounded p-3" v-if="!chooseBar">
+          <h4 class="mb-3">Member Invite</h4>
+          <b-card no-body>
+            <b-tabs v-model="tabIndex" card>
+              <b-tab title="Fill the member information">
+                <b-card-text>
+                  <h4 class="mb-3">Who do you want to invite?</h4>
+                  <b-form @submit.stop.prevent="onSubmit">
+                    <b-form-group
+                      id="first-name"
+                      label="Name or Nickname (only seen by the Community Manager)"
+                      label-for="firstName"
+                    >
+                      <b-form-input
+                        v-model="$v.firstName.$model"
+                        :state="validateState('firstName')"
+                        id="firstName"
+                        placeholder="Name"
+                      >
+                      </b-form-input>
+                      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
+                    </b-form-group>
+                    <b-form-group
+                      id="member-email"
+                      label="Email"
+                      label-for="memberEmail"
+                    >
+                      <b-form-input
+                        v-model="$v.memberEmail.$model"
+                        :state="validateState('memberEmail')"
+                        type="email"
+                        id="memberEmail"
+                        placeholder="Email Address"
+                      >
+                      </b-form-input>
+                      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
+                    </b-form-group>
+                    <hr>
+                    <b-row>
+                      <b-col md="6">
+                        <b-button type="submit" variant="primary">Next</b-button>
+                      </b-col>
+                      <b-col md="6">
+                        <div class="small text-right">
+                          <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
+                          <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-form>
+                </b-card-text>
+              </b-tab>
+              <b-tab :disabled="this.$v.$invalid" title="Preview and Send">
+                <b-card-text>
+                  <h4 class="mb-3">Does this looks alright?</h4>
+                  <p>
+                    First Name:
+                    <b>{{ firstName }}</b>
+                  </p>
+                  <p>
+                    Email:
+                    <b>{{ memberEmail }}</b>
+                  </p>
+                  <div class="bg-silver rounded p-3 mb-3">
+                    <RenderList v-if="tabIndex === 1" :barId="selectedBar" />
                   </div>
-                </b-col>
-              </b-row>
-              <hr>
-              <b-row>
-                <b-col md="6">
-                  <b-button @click="tabIndex = 1" variant="success">Back</b-button>
-                  <b-button v-b-modal.memberConfirm variant="primary" class="ml-1">Add member</b-button>
-                  <b-button v-b-modal.inviteConfirm variant="primary" class="ml-1">Add member & Send email invitation</b-button>
-                </b-col>
-                <b-col md="6">
-                  <div class="small text-right">
-                    <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-                  </div>
-                </b-col>
-              </b-row>
-            </b-card-text>
-          </b-tab>
-        </b-tabs>
-      </b-card>
-    </div>
-    <div v-else>
-      <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
-      <div class="bg-silver rounded">
-        <b-row>
-          <b-col md="3" v-for="bar in bars" :key="bar.id">
-            <div class="barPicker text-center p-3" :class="{ active: selectedBar == bar.id }">
-              <h5><b>{{ bar.name }}</b></h5>
-              <BarPreview :barId="bar.id" />
-              <br/>
-              <b-button  v-b-modal.previewModal @click="previewBar = bar.id" size="sm" variant="light" class="btn-block">Preview</b-button>
-              <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
+                  <b-row>
+                    <b-col md="6">
+                      <b-form-checkbox
+                        id="send-me-copy"
+                        v-model="sendEmailCopy"
+                        name="send-me-copy"
+                        value="1"
+                        unchecked-value="0"
+                      >
+                        Send me a copy of the invitation email
+                      </b-form-checkbox>
+                    </b-col>
+                    <b-col md="6">
+                      <div class="text-right">
+                        <b-button variant="primary" class="ml-1" @click="chooseBar = !chooseBar">Change</b-button>
+                      </div>
+                    </b-col>
+                  </b-row>
+                  <hr>
+                  <b-row>
+                    <b-col md="8">
+                      <b-button @click="tabIndex = 1" variant="success">Back</b-button>
+                      <b-button v-b-modal.memberConfirm variant="primary" class="ml-1">Add member</b-button>
+                      <b-button v-b-modal.inviteConfirm variant="primary" class="ml-1">Add member & Send email invitation</b-button>
+                    </b-col>
+                    <b-col md="4">
+                      <div class="small text-right">
+                        <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </b-card-text>
+              </b-tab>
+            </b-tabs>
+          </b-card>
+        </div>
+        <div v-else>
+          <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
+          <div class="bg-silver rounded">
+            <b-row>
+              <b-col md="3" v-for="bar in bars" :key="bar.id">
+                <div class="barPicker text-center p-3" :class="{ active: selectedBar == bar.id }">
+                  <h5><b>{{ bar.name }}</b></h5>
+                  <BarPreview :barId="bar.id" />
+                  <br/>
+                  <b-button  v-b-modal.previewModal @click="previewBar = bar.id" size="sm" variant="light" class="btn-block">Preview</b-button>
+                  <b-button @click="pickBar(bar.id)" variant="primary" size="sm" class="btn-block mt-1">Pick this Morphic Bar</b-button>
+                </div>
+              </b-col>
+            </b-row>
+            <div class="text-right pr-3 pb-3">
+              <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
             </div>
-          </b-col>
-        </b-row>
-        <div class="text-right pr-3 pb-3">
-          <b-button size="sm" variant="outline-secondary" class="ml-2" @click="chooseBar = !chooseBar">Cancel</b-button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </b-col>
+    <b-col md="3">
+    </b-col>
+  </b-row>
 </template>
 
 <style>

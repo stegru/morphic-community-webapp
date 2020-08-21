@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <Header />
     <router-view />
     <Footer />
