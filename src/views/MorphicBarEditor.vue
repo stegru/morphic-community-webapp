@@ -270,7 +270,6 @@
                 <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
-                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
             </li>
           </ul>
@@ -282,7 +281,6 @@
                 <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                 {{ button.configuration.label }}
-                <b-icon-plus-circle-fill v-if="button.isActive" class="plus"></b-icon-plus-circle-fill>
               </b-link>
             </li>
           </ul>
@@ -425,11 +423,6 @@
       border: 1px solid $primary-color;
       outline: 0 !important;
       border-radius: .5rem;
-      .plus {
-        float: right;
-        font-size: 1.5rem;
-        color: $secondary-color;
-      }
     }
   }
 </style>
