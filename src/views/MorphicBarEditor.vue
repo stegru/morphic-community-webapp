@@ -76,7 +76,8 @@
             </div>
           </b-col>
           <b-col md="6">
-            <div class="max-height bg-silver rounded p-3 pt-5 text-center">
+            <div class="max-height bg-silver rounded p-3 text-center">
+              <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage.configuration.label)" class="text-danger">Remove Button</b-link></p>
               <p class="mt-5 mb-1">This is the button you are making</p>
               <div class="barPreview p-5 rounded">
                 <PreviewItem :item="buttonEditStorage" />
@@ -200,22 +201,14 @@
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index < preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
-                            <PreviewItem :item="item" />
-                            <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
-                            <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
-                            <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
+                            <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
                           </div>
                         </div>
                       </b-col>
                       <b-col md="6">
                         <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
                           <div v-if="index >= preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
-                            <PreviewItem :item="item" />
-                            <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
-                            <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
-                            <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                            <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
+                            <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
                           </div>
                         </div>
                       </b-col>
@@ -232,11 +225,7 @@
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
                     <div v-for="(item, index) in primaryItems" :key="index">
                       <div class="previewHolder mb-2" draggable v-on:dragstart="dragTransfer($event, item)">
-                        <PreviewItem :item="item" />
-                        <b-icon-arrow-up-circle @click="buttonToMoveUp(item.configuration.label)" class="overlay icon-up p-1 bg-light rounded text-primary"></b-icon-arrow-up-circle>
-                        <b-icon-arrow-down-circle @click="buttonToMoveDown(item.configuration.label)" class="overlay icon-down p-1 bg-light rounded text-primary"></b-icon-arrow-down-circle>
-                        <b-icon-trash @click="buttonToRemove(item.configuration.label)" class="overlay icon-delete p-1 bg-light rounded text-primary"></b-icon-trash>
-                        <b-icon-pencil @click="buttonToEdit(item.configuration.label)" class="overlay icon-edit p-1 bg-light rounded text-primary"></b-icon-pencil>
+                        <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
                       </div>
                     </div>
                     <div class="logoHolder">
@@ -616,6 +605,7 @@ export default {
     buttonToRemove: function (label) {
       const index = this.findButtonByLabel(label)
       if (index !== -1) {
+        this.$bvModal.hide('modalEditGeneric')
         this.barDetails.items.splice(index, 1)
         this.isChanged = true
       }
