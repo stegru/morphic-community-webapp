@@ -149,7 +149,7 @@
                 <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
                 <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
                 <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
-                <li><b-link>Send Invitation</b-link></li>
+                <li v-if="memberDetails.state === 'uninvited'"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
