@@ -20,7 +20,8 @@ export const MESSAGES = {
   leavePageAlert: 'Do you really want to leave? You have unsaved changes!',
   logoutAlert: 'Please save, or discard your chances before logging out!',
   successfulRoleChange: 'User role changed successfully',
-  successfulUserDelete: 'User deleted successfully, you will be returned to Dashboard soon...'
+  successfulUserDelete: 'User deleted successfully, you will be returned to Dashboard soon...',
+  successfulBarDelete: 'Bar successfully deleted, you will be returned to Dashboard soon...'
 }
 
 export const colors = {

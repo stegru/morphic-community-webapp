@@ -34,6 +34,9 @@ export function getCommunityBar (communityId, barId) {
 export function updateCommunityBar (communityId, barId, bar) {
   return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, bar)
 }
+export function deleteCommunityBar (communityId, barId) {
+  return HTTP.delete(`/v1/communities/${communityId}/bars/${barId}`)
+}
 
 export function getCommunityMembers (communityId) {
   return HTTP.get(`/v1/communities/${communityId}/members`)
