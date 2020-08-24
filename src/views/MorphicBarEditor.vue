@@ -93,6 +93,9 @@
         <b-modal id="deleteConfirm" @ok="deleteUser" title="Delete User" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this user?</p>
     </b-modal>
+    <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
+      <p class="my-4">Please confirm the deletion of this bar?</p>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
@@ -137,6 +140,9 @@
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
             <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
+            <span v-if="getBarRemoveValidity()">
+              <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
+            </span>
             <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
             <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
             <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save Bar &amp; Update</b-button>
@@ -293,7 +299,9 @@
   .max-height {
     height: 100%;
   }
-
+  #removeBar .nav-link {
+    color: #dc3545 !important;
+  }
   #editorNav {
     position: relative;
     .addButton, .updateButton {
@@ -438,7 +446,7 @@ import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
+import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
 import draggable from 'vuedraggable'
@@ -636,6 +644,21 @@ export default {
           console.log(err)
         })
     },
+    deleteBar: function () {
+      deleteCommunityBar(this.communityId, this.$route.query.barId)
+      .then((resp) => {
+        if (resp.status === 200) {
+          this.successMessage = MESSAGES.successfulBarDelete
+          this.successAlert = true
+          setTimeout(() => {
+            this.$router.push('/dashboard')
+          }, 3000)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     predefinedClicked: function (event, index, makeAButtons) {
       this.clearPredefinedActive()
       let currentLabel
@@ -772,6 +795,13 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    getBarRemoveValidity: function () {
+      if(this.barDetails.name !== 'Default' && this.getMembersCount() === 0)
+      {
+        return true;
+      }
+      return false;
     },
     loadMemberData: function () {
       getCommunityMember(this.communityId, this.$route.query.memberId)
