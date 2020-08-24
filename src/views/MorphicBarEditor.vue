@@ -191,43 +191,46 @@
           <div id="preview-holder" class="desktop fill-height mt-3">
             <div class="taskbarMac"></div>
             <b-row>
-              <b-col md="6">
+              <b-col :md="drawerSecondColumn ? 6 : 8">
               </b-col>
-              <b-col md="4">
+              <b-col :md="drawerSecondColumn ? 4 : 2">
                 <div id="preview-drawer" v-if="openDrawer">
-                  <div class="barPreview pl-3 pt-3 pr-3 pb-0" v-on:drop="dropElement($event, false)" v-on:dragover="allowDrop">
+                  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
-                    <b-row v-if="drawerItems.length > 0">
-                      <b-col md="6">
-                        <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
-                          <div v-if="index < preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
-                            <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                    <b-row>
+                      <b-col v-if="drawerSecondColumn" md="6">
+                        <draggable v-model="drawerItemsSecond" group="items">
+                          <div v-for="(item, index) in drawerItemsSecond" :key="index">
+                            <div class="previewHolder mb-3">
+                              <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                            </div>
                           </div>
-                        </div>
+                        </draggable>
                       </b-col>
-                      <b-col md="6">
-                        <div v-for="(item, index) in drawerItems" :key="item.configuration.label">
-                          <div v-if="index >= preview.drawer.h" class="previewHolder mb-3" draggable v-on:dragstart="dragTransfer($event, item)">
-                            <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                      <b-col :md="drawerSecondColumn ? 6 : 12">
+                        <draggable v-model="drawerItems" group="items">
+                          <div v-for="(item, index) in drawerItems" :key="index">
+                            <div class="previewHolder mb-3">
+                              <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                            </div>
                           </div>
-                        </div>
+                        </draggable>
                       </b-col>
                     </b-row>
                   </div>
                 </div>
-                <div v-else>
-                  <BarExplainer :barDetails="barDetails" />
-                </div>
               </b-col>
               <b-col md="2">
                 <div id="preview-bar">
-                  <div class="barPreview pl-2 pt-2 pr-2" v-on:drop="dropElement($event, true)" v-on:dragover="allowDrop">
+                  <div class="barPreview pl-2 pt-2 pr-2">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <div v-for="(item, index) in primaryItems" :key="index">
-                      <div class="previewHolder mb-2" draggable v-on:dragstart="dragTransfer($event, item)">
-                        <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                    <draggable v-model="primaryItems" group="items">
+                      <div v-for="(item, index) in primaryItems" :key="index">
+                        <div class="previewHolder mb-2">
+                          <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                        </div>
                       </div>
-                    </div>
+                    </draggable>
                     <div class="logoHolder">
                       <b-img src="/img/logo-color.svg" />
                     </div>
@@ -254,24 +257,28 @@
           </b-input-group>
           <h6><b>Make-a-Button</b></h6>
           <ul class="linkList list-unstyled mb-0">
-            <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link draggable v-on:dragstart="dragElement($event, index, true)" @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                <b-icon v-else icon="bootstrap"></b-icon>
-                {{ button.configuration.label }}
-              </b-link>
-            </li>
+            <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)">
+              <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
+                <b-link @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                  <b-icon v-else icon="bootstrap"></b-icon>
+                  {{ button.configuration.label }}
+                </b-link>
+              </li>
+            </draggable>
           </ul>
           <br>
           <h6><b>Predefined Buttons</b></h6>
           <ul class="linkList list-unstyled mb-0">
-            <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-              <b-link draggable v-on:dragstart="dragElement($event, index, false)" @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                <b-icon v-else icon="bootstrap"></b-icon>
-                {{ button.configuration.label }}
-              </b-link>
-            </li>
+            <draggable v-model="predefinedButtons" group="items" @start="dragFromList($event, false)" @end="dropFromList($event)">
+              <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
+                <b-link @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                  <b-icon v-else icon="bootstrap"></b-icon>
+                  {{ button.configuration.label }}
+                </b-link>
+              </li>
+            </draggable>
           </ul>
         </div>
       </b-col>
@@ -414,6 +421,15 @@
       border-radius: .5rem;
     }
   }
+
+  .draggedListItem {
+    list-style-type: none;
+    font-size: 1.5rem;
+    text-align: center;
+    img {
+      display: none;
+    }
+  }
 </style>
 
 <script>
@@ -425,6 +441,7 @@ import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBars, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import predefinedBars from '@/utils/predefined'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'MemberInvite',
@@ -432,9 +449,81 @@ export default {
     CommunityManager,
     BarExplainer,
     EditorPreviewDrawer,
-    PreviewItem
+    PreviewItem,
+    draggable
   },
   methods: {
+    dropFromList: function (event) {
+      event.item.classList.remove('draggedListItem')
+    },
+    dragFromList: function (event, makeAButton) {
+      event.item.className = 'draggedListItem'
+      if (makeAButton) {
+        this.dragMakeAButton = false
+      } else {
+        this.dragPredefinedButton = false
+      }
+    },
+    getMakeAButtons: function () {
+      let buttons = []
+      if (availableItems && availableItems.length > 0) {
+        for (let i = 0; i < availableItems.length; i++) {
+          if (availableItems[i].configuration.subkind) {
+            let item = availableItems[i]
+            item.isActive = false
+            item.configuration.color = item.configuration.color || ''
+            item.configuration.image_url = item.configuration.image_url || ''
+            buttons.push(item)
+          }
+        }
+      }
+      return buttons
+    },
+    getPredefinedButtons: function () {
+      let buttons = []
+      if (availableItems && availableItems.length > 0) {
+        for (let i = 0; i < availableItems.length; i++) {
+          if (!availableItems[i].configuration.subkind) {
+            let item = availableItems[i]
+            item.isActive = false
+            item.configuration.color = item.configuration.color || ''
+            item.configuration.image_url = item.configuration.image_url || ''
+            buttons.push(item)
+          }
+        }
+      }
+      return buttons
+    },
+    getDrawerItems: function (items) {
+      const data = []
+      if (items && items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].is_primary === false) {
+            const newItem = items[i]
+            newItem.id = this.generateId(newItem)
+            if (data.length >= this.preview.drawer.h) {
+              this.drawerItemsSecond.push(newItem)
+            } else {
+              data.push(newItem)
+            }
+          }
+        }
+      }
+      this.drawerItems = data
+    },
+    getPrimaryItems: function (items) {
+      const data = []
+      if (items && items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].is_primary === true) {
+            const newItem = items[i]
+            newItem.id = this.generateId(newItem)
+            data.push(newItem)
+          }
+        }
+      }
+      this.primaryItems = data
+    },
     deleteUser: function () {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
@@ -469,9 +558,16 @@ export default {
     },
     addPersonalBar: function () {
       if (this.barDetails.is_shared) {
+        this.onSave = true
+
         this.barDetails.name = this.memberDetails.first_name
         this.barDetails.is_shared = false
-        createCommunityBar(this.communityId, this.barDetails)
+
+        const data = this.barDetails
+        const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+        data.items = this.primaryItems.concat(drawerItems)
+
+        createCommunityBar(this.communityId, data)
           .then((resp) => {
             if (resp.status === 200) {
               this.memberDetails.bar_id = resp.data.bar.id
@@ -499,7 +595,12 @@ export default {
       }
     },
     addBar: function () {
-      createCommunityBar(this.communityId, this.barDetails)
+      this.onSave = true
+      const data = this.barDetails
+      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+      data.items = this.primaryItems.concat(drawerItems)
+
+      createCommunityBar(this.communityId, data)
         .then((resp) => {
           if (resp.status === 200) {
             this.successMessage = MESSAGES.barAdded
@@ -515,7 +616,12 @@ export default {
         })
     },
     saveBar: function () {
-      updateCommunityBar(this.communityId, this.$route.query.barId, this.barDetails)
+      this.onSave = true
+      const data = this.barDetails
+      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+      data.items = this.primaryItems.concat(drawerItems)
+
+      updateCommunityBar(this.communityId, this.$route.query.barId, data)
         .then((resp) => {
           if (resp.status === 200) {
             this.successMessage = MESSAGES.barUpdated
@@ -610,38 +716,6 @@ export default {
         this.isChanged = true
       }
     },
-    buttonToMoveUp: function (label) {
-      let index = this.findButtonByLabel(label)
-      if (index > 0) { // you cannot move button that can't be found (-1), or it's the first one (0)
-        // getting the current and previous item
-        let item = this.barDetails.items[index],
-            isPrimary = this.barDetails.items[index].is_primary,
-            itemOnTop = this.barDetails.items[index-1]
-        // moving the current item up, and the one from the top to the current index
-        this.barDetails.items[index-1] = item
-        this.barDetails.items[index-1].is_primary = !isPrimary
-        this.barDetails.items[index-1].is_primary = isPrimary
-        this.barDetails.items[index] = itemOnTop
-        this.isChanged = true
-      }
-    },
-    buttonToMoveDown: function (label) {
-      let index = this.findButtonByLabel(label),
-          itemsCount = this.barDetails.items.length
-
-      if (index !== -1 && index < (itemsCount -1 )) { // you cannot move button that can't be found (-1), or it's the last one
-        // getting the current and next item
-        let item = this.barDetails.items[index],
-            isPrimary = this.barDetails.items[index].is_primary,
-            itemOnBottom = this.barDetails.items[index+1]
-        // moving the current item up, and the one from the top to the current index
-        this.barDetails.items[index+1] = item
-        this.barDetails.items[index+1].is_primary = !isPrimary
-        this.barDetails.items[index+1].is_primary = isPrimary
-        this.barDetails.items[index] = itemOnBottom
-        this.isChanged = true
-      }
-    },
     buttonToEdit: function (label) {
       let index = this.findButtonByLabel(label)
       if (index !== -1) {
@@ -726,83 +800,16 @@ export default {
         id+= "-" + Math.floor(Math.random() * Math.floor(99999999))
       }
       return id
-    },
-    dragElement: function (event, index, makeAButtons) {
-      this.predefinedClicked(event, index, makeAButtons)
-      event.dataTransfer.dropEffect = 'move'
-      event.dataTransfer.effectAllowed = 'move'
-    },
-    dropElement: function (event, isPrimary) {
-      this.addToBarOrDrawer(isPrimary)
-      this.dragFromEditor = false
-    },
-    allowDrop: function (event) {
-      event.preventDefault()
-    },
-    dragTransfer: function (event, button) {
-      event.dataTransfer.dropEffect = 'move'
-      event.dataTransfer.effectAllowed = 'move'
-      this.dragFromEditor = true
-      this.buttonStorage = button
     }
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
-    primaryItems: function () {
-      const data = []
-      if (this.barDetails.items && this.barDetails.items.length > 0) {
-        for (let i = 0; i < this.barDetails.items.length; i++) {
-          if (this.barDetails.items[i].is_primary === true) {
-            let newItem = this.barDetails.items[i]
-            newItem.id = this.generateId(newItem)
-            data.push(newItem)
-          }
-        }
+    drawerSecondColumn: function () {
+      if (this.drawerItems.length >= this.preview.drawer.h || this.drawerItemsSecond.length > 0) {
+        return true
+      } else {
+        return false
       }
-      return data
-    },
-    drawerItems: function () {
-      const data = []
-      if (this.barDetails.items && this.barDetails.items.length > 0) {
-        for (let i = 0; i < this.barDetails.items.length; i++) {
-          if (this.barDetails.items[i].is_primary === false) {
-            let newItem = this.barDetails.items[i]
-            newItem.id = this.generateId(newItem)
-            data.push(newItem)
-          }
-        }
-      }
-      return data
-    },
-    makeAButtons: function() {
-      let buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
-    },
-    predefinedButtons: function() {
-      let buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (!availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
     },
     editSubKindIcons: function() {
       let data = {}
@@ -842,6 +849,62 @@ export default {
     this.getCommunityData()
   },
   watch: {
+    'barDetails.items': function (newValue, oldValue) {
+      if (!this.onSave) {
+        this.getDrawerItems(newValue)
+        this.getPrimaryItems(newValue)
+      }
+    },
+    makeAButtons: function (newValue, oldValue) {
+      if (!this.dragMakeAButton) {
+        this.makeAButtons = oldValue
+        this.dragMakeAButton = true
+      }
+    },
+    predefinedButtons: function (newValue, oldValue) {
+      if (!this.dragPredefinedButton) {
+        this.predefinedButtons = oldValue
+        this.dragPredefinedButton = true
+      }
+    },
+    primaryItems: function (newValue, oldValue) {
+      let item = {}
+      if (newValue && newValue.length > 0) {
+        for (let i = 0; i < newValue.length; i++) {
+          if (newValue[i].is_primary === false) {
+            item = newValue[i]
+            item.is_primary = true
+            break
+          }
+        }
+      }
+    },
+    drawerItems: function (newValue, oldValue) {
+      let item = {}
+      if (newValue && newValue.length > 0) {
+        for (let i = 0; i < newValue.length; i++) {
+          if (newValue[i].is_primary === true) {
+            item = newValue[i]
+            item.is_primary = false
+          }
+          if (i >= this.preview.drawer.h) {
+            this.drawerItemsSecond.push(this.drawerItems[i])
+            this.drawerItems.splice(i, 1)
+          }
+        }
+      }
+    },
+    drawerItemsSecond: function (newValue, oldValue) {
+      let item = {}
+      if (newValue && newValue.length > 0) {
+        for (let i = 0; i < newValue.length; i++) {
+          if (newValue[i].is_primary === true) {
+            item = newValue[i]
+            item.is_primary = false
+          }
+        }
+      }
+    },
     isChanged: function () {
       this.$store.dispatch('unsavedChanges', this.isChanged)
     },
@@ -891,7 +954,7 @@ export default {
       dragFromEditor: false,
       isChanged: false,
       editBarName: false,
-
+      onSave: false,
       // data for the community manager
       community: {},
       barsList: [],
@@ -909,6 +972,11 @@ export default {
       barDetails: {},
       members: [],
       memberDetails: {},
+      drawerItems: [],
+      drawerItemsSecond: [],
+      primaryItems: [],
+      makeAButtons: this.getMakeAButtons(),
+      predefinedButtons: this.getPredefinedButtons(),
 
       // configurations
       preview: {
