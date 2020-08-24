@@ -263,7 +263,7 @@
           </b-input-group>
           <h6><b>Make-a-Button</b></h6>
           <ul class="linkList list-unstyled mb-0">
-            <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)">
+            <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)" :move="preventDuplicated">
               <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
                 <b-link @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                   <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
@@ -276,7 +276,7 @@
           <br>
           <h6><b>Predefined Buttons</b></h6>
           <ul class="linkList list-unstyled mb-0">
-            <draggable v-model="predefinedButtons" group="items" @start="dragFromList($event, false)" @end="dropFromList($event)">
+            <draggable v-model="predefinedButtons" group="items" @start="dragFromList($event, false)" @end="dropFromList($event)" :move="preventDuplicated">
               <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
                 <b-link @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
                   <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
@@ -461,6 +461,13 @@ export default {
     draggable
   },
   methods: {
+    preventDuplicated: function (event) {
+      for (let i = 0; i < this.activeButtons.length; i++) {
+        if (this.activeButtons[i].configuration.label === event.draggedContext.element.configuration.label) {
+          return false
+        }
+      }
+    },
     dropFromList: function (event) {
       event.item.classList.remove('draggedListItem')
     },
@@ -646,18 +653,18 @@ export default {
     },
     deleteBar: function () {
       deleteCommunityBar(this.communityId, this.$route.query.barId)
-      .then((resp) => {
-        if (resp.status === 200) {
-          this.successMessage = MESSAGES.successfulBarDelete
-          this.successAlert = true
-          setTimeout(() => {
-            this.$router.push('/dashboard')
-          }, 3000)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.successMessage = MESSAGES.successfulBarDelete
+            this.successAlert = true
+            setTimeout(() => {
+              this.$router.push('/dashboard')
+            }, 3000)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     predefinedClicked: function (event, index, makeAButtons) {
       this.clearPredefinedActive()
@@ -797,11 +804,10 @@ export default {
         })
     },
     getBarRemoveValidity: function () {
-      if(this.barDetails.name !== 'Default' && this.getMembersCount() === 0)
-      {
-        return true;
+      if (this.barDetails.name !== 'Default' && this.getMembersCount() === 0) {
+        return true
       }
-      return false;
+      return false
     },
     loadMemberData: function () {
       getCommunityMember(this.communityId, this.$route.query.memberId)
@@ -834,6 +840,11 @@ export default {
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
+    activeButtons: function () {
+      let activeButtons = []
+      activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond)
+      return activeButtons
+    },
     drawerSecondColumn: function () {
       if (this.drawerItems.length >= this.preview.drawer.h || this.drawerItemsSecond.length > 0) {
         return true
