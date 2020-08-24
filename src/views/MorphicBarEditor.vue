@@ -874,7 +874,11 @@ export default {
           if (newValue[i].is_primary === false) {
             item = newValue[i]
             item.is_primary = true
-            break
+          }
+          if (i >= this.preview.bar.h) {
+            this.drawerItems.push(this.primaryItems[i])
+            this.primaryItems.splice(i, 1)
+            this.openDrawer = true
           }
         }
       }
