@@ -77,7 +77,7 @@
           </b-col>
           <b-col md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
-              <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage.configuration.label)" class="text-danger">Remove Button</b-link></p>
+              <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage)" class="text-danger">Remove Button</b-link></p>
               <p class="mt-5 mb-1">This is the button you are making</p>
               <div class="barPreview p-5 rounded">
                 <PreviewItem :item="buttonEditStorage" />
@@ -208,7 +208,7 @@
                         <draggable v-model="drawerItemsSecond" group="items">
                           <div v-for="(item, index) in drawerItemsSecond" :key="index">
                             <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
                             </div>
                           </div>
                         </draggable>
@@ -217,7 +217,7 @@
                         <draggable v-model="drawerItems" group="items">
                           <div v-for="(item, index) in drawerItems" :key="index">
                             <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
                             </div>
                           </div>
                         </draggable>
@@ -233,7 +233,7 @@
                     <draggable v-model="primaryItems" group="items">
                       <div v-for="(item, index) in primaryItems" :key="index">
                         <div class="previewHolder mb-2">
-                          <PreviewItem @click.native="buttonToEdit(item.configuration.label)" :item="item" />
+                          <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
                         </div>
                       </div>
                     </draggable>
@@ -729,27 +729,63 @@ export default {
       this.addToBar = false
       this.addToDrawer = false
     },
-    findButtonByLabel: function (label) {
-      let index = -1
-      for (let i = 0; i < this.barDetails.items.length; i++) {
-        if (this.barDetails.items[i].configuration.label === label) {
-          index = i
+    findButtonByLabel: function (item) {
+      const data = {
+        index: -1,
+        drawerSecond: false
+      }
+      if (item.is_primary) {
+        for (let i = 0; i < this.primaryItems.length; i++) {
+          if (this.primaryItems[i].configuration.label === item.configuration.label) {
+            data.index = i
+          }
+        }
+      } else {
+        if (this.drawerSecondColumn) {
+          for (let i = 0; i < this.drawerItemsSecond.length; i++) {
+            if (this.drawerItemsSecond[i].configuration.label === item.configuration.label) {
+              data.index = i
+              data.drawerSecond = true
+            }
+          }
+        }
+        for (let i = 0; i < this.drawerItems.length; i++) {
+          if (this.drawerItems[i].configuration.label === item.configuration.label) {
+            data.index = i
+          }
         }
       }
-      return index
+      return data
     },
-    buttonToRemove: function (label) {
-      const index = this.findButtonByLabel(label)
-      if (index !== -1) {
+    buttonToRemove: function (item) {
+      console.log(item)
+      const foundItem = this.findButtonByLabel(item)
+      if (foundItem.index !== -1) {
+        if (item.is_primary) {
+          this.primaryItems.splice(foundItem.index, 1)
+        } else {
+          if (foundItem.drawerSecond) {
+            this.drawerItemsSecond.splice(foundItem.index, 1)
+          } else {
+            this.drawerItems.splice(foundItem.index, 1)
+          }
+        }
         this.$bvModal.hide('modalEditGeneric')
-        this.barDetails.items.splice(index, 1)
         this.isChanged = true
       }
     },
-    buttonToEdit: function (label) {
-      let index = this.findButtonByLabel(label)
-      if (index !== -1) {
-        this.buttonEditStorage = this.barDetails.items[index]
+    buttonToEdit: function (item) {
+      const foundItem = this.findButtonByLabel(item)
+      if (foundItem.index !== -1) {
+        if (item.is_primary) {
+          this.buttonEditStorage = this.primaryItems[foundItem.index]
+        } else {
+          if (foundItem.drawerSecond) {
+            this.buttonEditStorage = this.drawerItemsSecond[foundItem.index]
+          } else {
+            this.buttonEditStorage = this.drawerItems[foundItem.index]
+          }
+        }
         this.$bvModal.show('modalEditGeneric')
       }
     },
