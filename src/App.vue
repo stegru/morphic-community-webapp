@@ -48,16 +48,8 @@
   }
 
   .desktop {
-    background: url(/img/wallpaper.jpg) no-repeat top left;
+    background: url(/img/background-editor.png);
     position: relative;
-    .taskbarMac {
-      height: 28px;
-      background: url(/img/taskbarMac.png) no-repeat top right;
-    }
-    .taskbarWindows {
-      height: 40px;
-      background: url(/img/taskbarWindows.png) no-repeat top right;
-    }
     .barPreview {
       padding-bottom: 5rem;
     }

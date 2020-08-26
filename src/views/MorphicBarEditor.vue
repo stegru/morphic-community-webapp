@@ -195,7 +195,6 @@
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
           <div id="preview-holder" class="desktop fill-height mt-3">
-            <div class="taskbarMac"></div>
             <b-row>
               <b-col :md="drawerSecondColumn ? 6 : 8">
               </b-col>
@@ -249,7 +248,6 @@
                 </div>
               </b-col>
             </b-row>
-            <div class="taskbarWindows"></div>
           </div>
         </div>
       </b-col>
