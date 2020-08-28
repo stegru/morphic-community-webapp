@@ -1,34 +1,34 @@
 import { availableItems } from '@/utils/constants'
 
 // setting the base data
-let predefinedBars = [
+const predefinedBars = [
   {
-    'id': 'predifined-1',
-    'is_shared': true,
-    'name': 'Predefined Preset',
-    'desc': 'This is predefined starter bar with some items inside, use it as a start...',
-    'items': []
+    id: 'predifined-1',
+    is_shared: true,
+    name: 'Predefined Preset',
+    desc: 'This is predefined starter bar with some items inside, use it as a start...',
+    items: []
   },
   {
-    'id': 'predifined-2',
-    'is_shared': true,
-    'name': 'Predefined Preset',
-    'desc': 'This is predefined starter bar with some items inside, use it as a start...',
-    'items': []
+    id: 'predifined-2',
+    is_shared: true,
+    name: 'Predefined Preset',
+    desc: 'This is predefined starter bar with some items inside, use it as a start...',
+    items: []
   },
   {
-    'id': 'predifined-3',
-    'is_shared': true,
-    'name': 'Predefined Preset',
-    'desc': 'This is predefined starter bar with some items inside, use it as a start...',
-    'items': []
+    id: 'predifined-3',
+    is_shared: true,
+    name: 'Predefined Preset',
+    desc: 'This is predefined starter bar with some items inside, use it as a start...',
+    items: []
   },
   {
-    'id': 'predifined-4',
-    'is_shared': true,
-    'name': 'Predefined Preset',
-    'desc': 'This is predefined starter bar with some items inside, use it as a start...',
-    'items': []
+    id: 'predifined-4',
+    is_shared: true,
+    name: 'Predefined Preset',
+    desc: 'This is predefined starter bar with some items inside, use it as a start...',
+    items: []
   }
 ]
 
