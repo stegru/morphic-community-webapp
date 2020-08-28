@@ -204,7 +204,7 @@
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
                     <b-row>
                       <b-col v-if="drawerSecondColumn" md="6">
-                        <draggable v-model="drawerItemsSecond" group="items">
+                        <draggable v-model="drawerItemsSecond" group="items" class="draggable-area">
                           <div v-for="(item, index) in drawerItemsSecond" :key="index">
                             <div class="previewHolder mb-3">
                               <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -213,7 +213,7 @@
                         </draggable>
                       </b-col>
                       <b-col :md="drawerSecondColumn ? 6 : 12">
-                        <draggable v-model="drawerItems" group="items">
+                        <draggable v-model="drawerItems" group="items" class="draggable-area">
                           <div v-for="(item, index) in drawerItems" :key="index">
                             <div class="previewHolder mb-3">
                               <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -229,7 +229,7 @@
                 <div id="preview-bar">
                   <div class="barPreview pl-2 pt-2 pr-2">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <draggable v-model="primaryItems" group="items">
+                    <draggable v-model="primaryItems" group="items" class="draggable-area">
                       <div v-for="(item, index) in primaryItems" :key="index">
                         <div class="previewHolder mb-2">
                           <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -308,7 +308,9 @@
       top: 6px;
     }
   }
-
+  .draggable-area {
+    min-height: 500px;
+  }
   .compactIconHolder {
     height: 22rem;
     overflow-y: auto;
