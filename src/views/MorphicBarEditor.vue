@@ -945,6 +945,11 @@ export default {
       }
     },
     primaryItems: function (newValue, oldValue) {
+      if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
+        this.initialChangesPrimaryItems = true
+      } else if (this.initialChangesPrimaryItems && oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -961,6 +966,11 @@ export default {
       }
     },
     drawerItems: function (newValue, oldValue) {
+      if (oldValue.length === 0 && !this.initialChangesDrawerItems) {
+        this.initialChangesDrawerItems = true
+      } else if (this.initialChangesDrawerItems && oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -976,6 +986,9 @@ export default {
       }
     },
     drawerItemsSecond: function (newValue, oldValue) {
+      if (oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -990,6 +1003,8 @@ export default {
       this.$store.dispatch('unsavedChanges', this.isChanged)
     },
     '$route.query': function () {
+      this.initialChangesPrimaryItems = false
+      this.initialChangesDrawerItems = false
       if (this.$route.query.memberId) {
         this.loadMemberData()
       }
@@ -1036,6 +1051,8 @@ export default {
       isChanged: false,
       editBarName: false,
       onSave: false,
+      initialChangesPrimaryItems: false,
+      initialChangesDrawerItems: false,
       // data for the community manager
       community: {},
       barsList: [],
