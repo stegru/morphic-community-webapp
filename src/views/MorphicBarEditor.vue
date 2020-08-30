@@ -1020,6 +1020,19 @@ export default {
         })
     }
   },
+  beforeRouteUpdate (to, from, next) {
+    if (this.isChanged) {
+      const confirm = window.confirm(this.leavePageMessage)
+      if (confirm) {
+        this.isChanged = false
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
+  },
   beforeRouteLeave (to, from, next) {
     if (this.isChanged) {
       const confirm = window.confirm(this.leavePageMessage)
