@@ -1,7 +1,7 @@
 <template>
-  <div id="BarsList">
-    <ul v-if="bars.length > 0" class="list-unstyled">
-      <li v-for="bar in bars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
+  <Div id="BarsList">
+    <ul v-if="orderedBars.length > 0" class="list-unstyled">
+      <li v-for="bar in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
         <b-link :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }">
          {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
         </b-link>
@@ -39,6 +39,15 @@ export default {
   props: {
     bars: Array,
     activeBarId: String
+  },
+  computed: {
+    orderedBars: function () {
+      const alphabetical = this.bars
+      alphabetical.sort((a, b) => (a.name < b.name) ? 1 : ((a.name > b.name) ? -1 : 0))
+      alphabetical.reverse()
+      alphabetical.sort((a, b) => a.name === 'Default' ? -1 : b.name === 'Default' ? 1 : 0)
+      return alphabetical
+    }
   }
 }
 </script>

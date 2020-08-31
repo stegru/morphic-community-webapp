@@ -204,7 +204,7 @@
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
                     <b-row>
                       <b-col v-if="drawerSecondColumn" md="6">
-                        <draggable v-model="drawerItemsSecond" group="items">
+                        <draggable v-model="drawerItemsSecond" group="items" class="draggable-area">
                           <div v-for="(item, index) in drawerItemsSecond" :key="index">
                             <div class="previewHolder mb-3">
                               <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -213,7 +213,7 @@
                         </draggable>
                       </b-col>
                       <b-col :md="drawerSecondColumn ? 6 : 12">
-                        <draggable v-model="drawerItems" group="items">
+                        <draggable v-model="drawerItems" group="items" class="draggable-area">
                           <div v-for="(item, index) in drawerItems" :key="index">
                             <div class="previewHolder mb-3">
                               <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -229,7 +229,7 @@
                 <div id="preview-bar">
                   <div class="barPreview pl-2 pt-2 pr-2">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <draggable v-model="primaryItems" group="items">
+                    <draggable v-model="primaryItems" group="items" class="draggable-area">
                       <div v-for="(item, index) in primaryItems" :key="index">
                         <div class="previewHolder mb-2">
                           <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
@@ -308,7 +308,9 @@
       top: 6px;
     }
   }
-
+  .draggable-area {
+    min-height: 500px;
+  }
   .compactIconHolder {
     height: 22rem;
     overflow-y: auto;
@@ -938,6 +940,11 @@ export default {
       }
     },
     primaryItems: function (newValue, oldValue) {
+      if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
+        this.initialChangesPrimaryItems = true
+      } else if (this.initialChangesPrimaryItems && oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -954,6 +961,11 @@ export default {
       }
     },
     drawerItems: function (newValue, oldValue) {
+      if (oldValue.length === 0 && !this.initialChangesDrawerItems) {
+        this.initialChangesDrawerItems = true
+      } else if (this.initialChangesDrawerItems && oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -969,6 +981,9 @@ export default {
       }
     },
     drawerItemsSecond: function (newValue, oldValue) {
+      if (oldValue.length !== newValue.length) {
+        this.isChanged = true
+      }
       let item = {}
       if (newValue && newValue.length > 0) {
         for (let i = 0; i < newValue.length; i++) {
@@ -983,6 +998,8 @@ export default {
       this.$store.dispatch('unsavedChanges', this.isChanged)
     },
     '$route.query': function () {
+      this.initialChangesPrimaryItems = false
+      this.initialChangesDrawerItems = false
       if (this.$route.query.memberId) {
         this.loadMemberData()
       }
@@ -996,6 +1013,19 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  beforeRouteUpdate (to, from, next) {
+    if (this.isChanged) {
+      const confirm = window.confirm(this.leavePageMessage)
+      if (confirm) {
+        this.isChanged = false
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -1029,6 +1059,8 @@ export default {
       isChanged: false,
       editBarName: false,
       onSave: false,
+      initialChangesPrimaryItems: false,
+      initialChangesDrawerItems: false,
       // data for the community manager
       community: {},
       barsList: [],

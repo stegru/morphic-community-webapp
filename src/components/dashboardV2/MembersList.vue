@@ -1,9 +1,11 @@
 <template>
   <div id="MembersList">
-    <ul v-if="members.length > 0" class="list-unstyled">
-      <li v-for="member in members" :key="member.id" :class="{ active: member.id === activeMemberId }">
+    <ul v-if="orderedMembers.length > 0" class="list-unstyled">
+      <li v-for="member in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
         <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }">
-          {{ member.first_name }} {{ member.last_name }}<br>
+          {{ member.first_name }} {{ member.last_name }}
+          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark"></b-icon>
+          <br>
         </b-link>
         <div v-if="member.id === activeMemberId">
           <div v-if="member.state === 'uninvited'" class="small pb-2">
@@ -50,6 +52,14 @@ export default {
   props: {
     members: Array,
     activeMemberId: String
+  },
+  computed: {
+    orderedMembers: function () {
+      const alphabetical = this.members
+      alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
+      alphabetical.reverse()
+      return alphabetical
+    }
   }
 }
 </script>
