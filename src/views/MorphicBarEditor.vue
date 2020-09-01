@@ -440,6 +440,11 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: .5rem;
+    a {
+      .b-icon {
+        display: none;
+      }
+    }
     img {
       display: none;
     }
