@@ -86,7 +86,7 @@
               <p class="text-success">To customize your Starter Bar, click "Starter Bar" in the green menu on the left.</p>
             </b-col>
             <b-col md="7">
-              <div v-if="list[0]" class="desktop">
+              <div v-if="list[0]" class="desktop desktopDashboard">
                 <div class="taskbarMac"></div>
                 <b-row>
                   <b-col md="8">
@@ -122,7 +122,7 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
-  .desktop {
+  .desktopDashboard {
     .barPreview {
       min-height: 500px;
     }

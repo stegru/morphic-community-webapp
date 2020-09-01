@@ -195,11 +195,11 @@
           </div>
           <div id="preview-holder" class="desktop fill-height mt-3">
             <b-row>
-              <b-col :md="drawerSecondColumn ? 6 : 8">
+              <b-col :md="drawerSecondColumn ? 6 : 8" class="pCol">
               </b-col>
-              <b-col :md="drawerSecondColumn ? 4 : 2">
+              <b-col :md="drawerSecondColumn ? 4 : 2" class="pCol">
                 <div id="preview-drawer" v-if="openDrawer">
-                  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+                  <div class="barPreview pl-2 pt-2 pr-2 pb-0 no-right-border">
                     <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
                     <b-row>
                       <b-col v-if="drawerSecondColumn" md="6">
@@ -224,7 +224,7 @@
                   </div>
                 </div>
               </b-col>
-              <b-col md="2">
+              <b-col md="2" class="pCol">
                 <div id="preview-bar">
                   <div class="barPreview pl-2 pt-2 pr-2">
                     <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
@@ -292,6 +292,16 @@
 <style lang="scss">
   $primary-color: #002957;
   $secondary-color: #84c661;
+
+  #preview-holder {
+    .pCol {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .no-right-border {
+      border-right: none;
+    }
+  }
 
   .max-height {
     height: 100%;

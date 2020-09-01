@@ -27,7 +27,7 @@
     height: 5rem;
   }
   .logoHolder {
-    margin: 0 -1.5rem;
+    margin: 0 -0.5rem;
     text-align: center;
   }
 </style>
