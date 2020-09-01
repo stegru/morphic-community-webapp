@@ -2,7 +2,7 @@
   <Div id="BarsList">
     <ul v-if="orderedBars.length > 0" class="list-unstyled">
       <li v-for="bar in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
-        <b-link :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }">
+        <b-link v-if="bar.is_shared" :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }">
          {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
         </b-link>
       </li>

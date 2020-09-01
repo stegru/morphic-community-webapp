@@ -24,7 +24,7 @@ export default {
   props: {
     item: Object
   },
-  data() {
+  data () {
     return {
       colors: colors,
       icons: icons

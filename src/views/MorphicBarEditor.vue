@@ -108,7 +108,6 @@
           <div id="bar-info">
             <h5 v-if="$route.query.memberId" class="mb-0">
               <b>Bar for {{ memberDetails.first_name }}</b>&nbsp;
-              <span class="small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
             <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
@@ -443,20 +442,16 @@
 <script>
 
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import BarExplainer from '@/components/dashboardV2/BarExplainer'
-import EditorPreviewDrawer from '@/components/dashboard/EditorPreviewDrawer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import predefinedBars from '@/utils/predefined'
+import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
 
 export default {
   name: 'MemberInvite',
   components: {
     CommunityManager,
-    BarExplainer,
-    EditorPreviewDrawer,
     PreviewItem,
     draggable
   },
@@ -480,11 +475,11 @@ export default {
       }
     },
     getMakeAButtons: function () {
-      let buttons = []
+      const buttons = []
       if (availableItems && availableItems.length > 0) {
         for (let i = 0; i < availableItems.length; i++) {
           if (availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
+            const item = availableItems[i]
             item.isActive = false
             item.configuration.color = item.configuration.color || ''
             item.configuration.image_url = item.configuration.image_url || ''
@@ -495,11 +490,11 @@ export default {
       return buttons
     },
     getPredefinedButtons: function () {
-      let buttons = []
+      const buttons = []
       if (availableItems && availableItems.length > 0) {
         for (let i = 0; i < availableItems.length; i++) {
           if (!availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
+            const item = availableItems[i]
             item.isActive = false
             item.configuration.color = item.configuration.color || ''
             item.configuration.image_url = item.configuration.image_url || ''
@@ -612,6 +607,7 @@ export default {
     addBar: function () {
       this.onSave = true
       const data = this.barDetails
+      data.is_shared = true
       const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
       data.items = this.primaryItems.concat(drawerItems)
 
@@ -702,11 +698,11 @@ export default {
         this.makeAButtons[i].isActive = false
       }
     },
-    addToBarOrDrawer: function (is_primary) {
+    addToBarOrDrawer: function (isPrimary) {
       this.clearPredefinedActive()
       if (this.buttonStorage) {
         // setting the primary attribute based on which bar it's added to
-        this.buttonStorage.is_primary = is_primary
+        this.buttonStorage.is_primary = isPrimary
         // checking if this button already exists
         if (this.barDetails.items.length > 0) {
           let existingIndex = -1
@@ -758,7 +754,6 @@ export default {
       return data
     },
     buttonToRemove: function (item) {
-      console.log(item)
       const foundItem = this.findButtonByLabel(item)
       if (foundItem.index !== -1) {
         if (item.is_primary) {
@@ -797,10 +792,10 @@ export default {
         this.isChanged = true
       }
     },
-    editChangeColor: function(hex) {
+    editChangeColor: function (hex) {
       this.buttonEditStorage.configuration.color = hex
     },
-    editChangeIcon: function(icon) {
+    editChangeIcon: function (icon) {
       this.buttonEditStorage.configuration.image_url = icon
     },
     getMembersCount: function () {
@@ -854,7 +849,7 @@ export default {
           console.log(err)
         })
     },
-    getCommunityData: function() {
+    getCommunityData: function () {
       getCommunity(this.communityId)
         .then((community) => {
           this.community = community.data
@@ -863,13 +858,13 @@ export default {
           console.log(err)
         })
     },
-    generateId: function(item) {
-      let id = ""
+    generateId: function (item) {
+      let id = ''
       if (item) {
-        id+= Math.floor(Math.random() * Math.floor(99999999))
-        id+= "-" + item.configuration.label.toLowerCase()
-        id+= "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind")
-        id+= "-" + Math.floor(Math.random() * Math.floor(99999999))
+        id += Math.floor(Math.random() * Math.floor(99999999))
+        id += '-' + item.configuration.label.toLowerCase()
+        id += '-' + (item.configuration.subkind ? 'sub-' + item.configuration.subkind.toLowerCase() : 'generic-kind')
+        id += '-' + Math.floor(Math.random() * Math.floor(99999999))
       }
       return id
     }
@@ -888,8 +883,8 @@ export default {
         return false
       }
     },
-    editSubKindIcons: function() {
-      let data = {}
+    editSubKindIcons: function () {
+      const data = {}
       if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
         for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
           data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]

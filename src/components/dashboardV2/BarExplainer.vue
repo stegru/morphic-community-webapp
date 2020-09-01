@@ -19,7 +19,7 @@
     font-size: .85rem;
     .b-icon {
       font-size: 2rem;
-    } 
+    }
   }
 </style>
 
