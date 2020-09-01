@@ -89,13 +89,13 @@
               <div v-if="list[0]" class="desktop">
                 <div class="taskbarMac"></div>
                 <b-row>
-                  <b-col md="6">
+                  <b-col md="8">
                     <div class="desktopHolder text-center mt-3">
                       <img src="/img/logo-color.svg" alt="icon" class="iconMorphic"><br>
                       <p>Open Morphic</p>
                     </div>
                   </b-col>
-                  <b-col md="6">
+                  <b-col md="4">
                     <BarPreview :barId="list[0].id" />
                   </b-col>
                 </b-row>
@@ -122,6 +122,14 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  .desktop {
+    .barPreview {
+      min-height: 500px;
+    }
+    .logoHolder {
+      margin: 0 -2rem !important;
+    }
+  }
   .info-box {
     h5 {
       color: $primary-color;

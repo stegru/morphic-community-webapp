@@ -1,7 +1,7 @@
 <template>
   <div class="barPreview pl-3 pt-3 pr-3 pb-0">
-    <div v-if="bar && bar.items && bar.items.length > 0">
-      <div v-for="item in bar.items" :key="item.configuration.label">
+    <div v-if="primaryItems && primaryItems.length > 0">
+      <div v-for="item in primaryItems" :key="item.configuration.label">
         <PreviewItem v-if="item.is_primary" :item="item" class="mb-3" />
       </div>
     </div>
@@ -26,6 +26,10 @@
     line-height: 100%;
     height: 5rem;
   }
+  .logoHolder {
+    margin: 0 -1.5rem;
+    text-align: center;
+  }
 </style>
 
 <script>
@@ -47,7 +51,18 @@ export default {
     PreviewItem
   },
   computed: {
-    communityId: function () { return this.$store.getters.communityId }
+    communityId: function () { return this.$store.getters.communityId },
+    primaryItems: function() {
+      const data = []
+      if (this.bar && this.bar.items && this.bar.items.length > 0) {
+        for (let i = 0; i < this.bar.items.length; i++) {
+          if (this.bar.items[i].is_primary === true) {
+            data.push(this.bar.items[i])
+          }
+        }
+      }
+      return data
+    }
   },
   mounted () {
     if (this.barId) {

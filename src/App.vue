@@ -56,9 +56,8 @@
     .logoHolder {
       position: absolute;
       bottom: 1rem;
-      left: 50%;
-      width: 3rem;
-      margin-left: -1.5rem;
+      width: 100%;
+      padding: 0 !important;
       img {
         width: 3rem;
         height: 3rem;
