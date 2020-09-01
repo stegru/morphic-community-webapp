@@ -55,24 +55,24 @@ const routes = [
       title: 'Terms Of Use :: Morphic Community'
     }
   },
-  {
-    path: '/registration',
-    name: 'Registration',
-    component: Registration,
-    meta: {
-      title: 'Community Registration :: Morphic Community',
-      locked: true
-    }
-  },
-  {
-    path: '/my-community',
-    name: 'My Community',
-    component: MyCommunity,
-    meta: {
-      title: 'My Community :: Morphic Community',
-      authRoute: true
-    }
-  },
+  // {
+  //   path: '/registration',
+  //   name: 'Registration',
+  //   component: Registration,
+  //   meta: {
+  //     title: 'Community Registration :: Morphic Community',
+  //     locked: true
+  //   }
+  // },
+  // {
+  //   path: '/my-community',
+  //   name: 'My Community',
+  //   component: MyCommunity,
+  //   meta: {
+  //     title: 'My Community :: Morphic Community',
+  //     authRoute: true
+  //   }
+  // },
   {
     path: '/reset-password',
     name: 'Reset Password',
@@ -119,15 +119,15 @@ const routes = [
       authRoute: true
     }
   },
-  {
-    path: '/dashboard/member/:memberId',
-    name: 'Member Editor',
-    component: MemberEditor,
-    meta: {
-      title: 'Member Details :: Morphic Community',
-      authRoute: true
-    }
-  },
+  // {
+  //   path: '/dashboard/member/:memberId',
+  //   name: 'Member Editor',
+  //   component: MemberEditor,
+  //   meta: {
+  //     title: 'Member Details :: Morphic Community',
+  //     authRoute: true
+  //   }
+  // },
 
   // Mobile-Focused-Accessible CM Webapp
   {
@@ -187,7 +187,6 @@ const routes = [
       title: 'Focused :: Button edit'
     }
   }
-
 ]
 
 const router = new VueRouter({
