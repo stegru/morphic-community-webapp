@@ -430,9 +430,16 @@
   }
 
   .draggedListItem {
+    background: white;
+    border: 2px dashed $secondary-color; 
+    padding: 1rem 1rem 0 1rem;
+    min-height: 5rem;
+    border-radius: 5px;
     list-style-type: none;
-    font-size: 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
     text-align: center;
+    margin-bottom: .5rem;
     img {
       display: none;
     }
