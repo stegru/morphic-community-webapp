@@ -66,7 +66,7 @@
     .openDrawerIconHolder {
       position: absolute;
       bottom: 1rem;
-      left: -.25rem;
+      left: -1.5rem;
       width: 3rem;
       background: white;
       border-radius: 100%;
