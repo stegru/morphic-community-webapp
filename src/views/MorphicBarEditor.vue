@@ -608,6 +608,7 @@ export default {
     addBar: function () {
       this.onSave = true
       const data = this.barDetails
+      data.is_shared = true
       const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
       data.items = this.primaryItems.concat(drawerItems)
 
