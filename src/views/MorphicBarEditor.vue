@@ -445,7 +445,7 @@ import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import predefinedBars from '@/utils/predefined'
+import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
 
 export default {

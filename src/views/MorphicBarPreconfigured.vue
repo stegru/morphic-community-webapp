@@ -1,8 +1,8 @@
 <template>
   <b-row id="MorphicBarPreconfigured" class="pt-5 pb-5">
-    <b-col md="3">
+    <b-col md="2">
     </b-col>
-    <b-col md="6">
+    <b-col md="8">
       <h4>Starter Bars</h4>
       <p class="mb-3">Pick one of the Morphic Bars below as a starting place, or start with a blank Bar.</p>
       <b-row class="mb-3">
@@ -28,14 +28,14 @@
         </b-row>
       </div>
     </b-col>
-    <b-col md="3">
+    <b-col md="2">
     </b-col>
   </b-row>
 </template>
 
 <script>
 import BarPreview from '@/components/dashboard/BarPreview'
-import predefinedBars from '@/utils/predefined'
+import { predefinedBars } from '@/utils/predefined'
 
 export default {
   name: 'MorphicBarPreconfigured',
