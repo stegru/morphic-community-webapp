@@ -108,7 +108,6 @@
           <div id="bar-info">
             <h5 v-if="$route.query.memberId" class="mb-0">
               <b>Bar for {{ memberDetails.first_name }}</b>&nbsp;
-              <span class="small">(<b-link>Edit Bar name</b-link>)</span>
             </h5>
             <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
