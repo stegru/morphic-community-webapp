@@ -478,6 +478,37 @@ export default {
     draggable
   },
   methods: {
+    loadAllData: function () {
+      this.loadBarData()
+      this.loadBarMembers()
+      this.getCommunityData()
+
+      if (this.$route.query.memberId) {
+        this.loadMemberData()
+      }
+    },
+    loadBarData: function () {
+      if (this.$route.query.barId === 'new') {
+        this.newBar = true
+        this.barDetails = this.newBarDetails
+      } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
+        for (let i = 0; i < this.predefinedBars.length; i++) {
+          if (this.predefinedBars[i].id === this.$route.query.barId) {
+            this.newBar = true
+            this.barDetails = this.newBarDetails
+            this.barDetails.items = this.predefinedBars[i].items
+          }
+        }
+      } else {
+        getCommunityBar(this.communityId, this.$route.query.barId)
+          .then(resp => {
+            this.barDetails = resp.data
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
     preventDuplicated: function (event) {
       for (let i = 0; i < this.activeButtons.length; i++) {
         if (this.activeButtons[i].configuration.label === event.draggedContext.element.configuration.label) {
@@ -606,11 +637,11 @@ export default {
               updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                 .then((resp) => {
                   if (resp.status === 200) {
-                    this.successMessage = MESSAGES.barAdded
+                    this.successMessage = MESSAGES.barUpdated
                     this.successAlert = true
                     this.isChanged = false
                     setTimeout(() => {
-                      this.$router.push('/dashboard')
+                      this.successAlert = false
                     }, 3000)
                   }
                 })
@@ -640,6 +671,7 @@ export default {
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
+              this.successAlert = false
               this.$router.push('/dashboard')
             }, 3000)
           }
@@ -661,7 +693,7 @@ export default {
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
-              this.$router.push('/dashboard')
+              this.successAlert = false
             }, 3000)
           }
         })
@@ -916,38 +948,12 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.barId === 'new') {
-      this.newBar = true
-      this.barDetails = this.newBarDetails
-    } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
-      for (let i = 0; i < this.predefinedBars.length; i++) {
-        if (this.predefinedBars[i].id === this.$route.query.barId) {
-          this.newBar = true
-          this.barDetails = this.newBarDetails
-          this.barDetails.items = this.predefinedBars[i].items
-        }
-      }
-    } else {
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-    if (this.$route.query.memberId) {
-      this.loadMemberData()
-    }
-    this.loadBarMembers()
-    this.getCommunityData()
+    this.loadAllData()
   },
   watch: {
     'barDetails.items': function (newValue, oldValue) {
-      if (!this.onSave) {
-        this.getDrawerItems(newValue)
-        this.getPrimaryItems(newValue)
-      }
+      this.getDrawerItems(newValue)
+      this.getPrimaryItems(newValue)
     },
     makeAButtons: function (newValue, oldValue) {
       if (!this.dragMakeAButton) {
@@ -1022,19 +1028,7 @@ export default {
     '$route.query': function () {
       this.initialChangesPrimaryItems = false
       this.initialChangesDrawerItems = false
-      if (this.$route.query.memberId) {
-        this.loadMemberData()
-      }
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-          this.members = []
-          this.loadBarMembers()
-          this.getCommunityData()
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.loadAllData()
     }
   },
   beforeRouteUpdate (to, from, next) {

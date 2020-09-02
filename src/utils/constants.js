@@ -14,7 +14,7 @@ export const MESSAGES = {
   successfulReset: 'Reset password successful',
   emailValidationError: 'This is a required field and must be a valid email address.',
   successfulSave: 'Successfully saved',
-  barUpdated: 'Bar successfully saved, you will be returned to Dashboard soon...',
+  barUpdated: 'Bar successfully saved.',
   barAdded: 'Bar successfully added, you will be returned to Dashboard soon...',
   sessionTimedOut: 'Your session was expired. Please login again.',
   leavePageAlert: 'Do you really want to leave? You have unsaved changes!',
