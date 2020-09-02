@@ -138,7 +138,7 @@
               </span>
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
-            <b-nav-item disabled :active="tab === 3" @click="tab = 3"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
+            <b-nav-item disabled :active="tab === 3" @click="tab = 3" class="d-none"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
             <span v-if="getBarRemoveValidity()">
               <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
             </span>
