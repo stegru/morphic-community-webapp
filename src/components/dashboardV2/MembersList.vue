@@ -40,6 +40,9 @@
             color: white;
           }
         }
+        a {
+          display: block;
+        }
       }
     }
   }
