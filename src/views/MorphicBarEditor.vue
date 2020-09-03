@@ -1026,6 +1026,7 @@ export default {
       this.$store.dispatch('unsavedChanges', this.isChanged)
     },
     '$route.query': function () {
+      this.members = []
       this.initialChangesPrimaryItems = false
       this.initialChangesDrawerItems = false
       this.loadAllData()
