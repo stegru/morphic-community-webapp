@@ -3,7 +3,8 @@
     <ul v-if="orderedMembers.length > 0" class="list-unstyled">
       <li v-for="member in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
         <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }">
-          {{ member.first_name }} {{ member.last_name }}
+          <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
+          <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)">*&nbsp;</span>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark"></b-icon>
           <br>
@@ -55,7 +56,8 @@ export default {
   props: {
     members: Array,
     activeMemberId: String,
-    bars: Array
+    bars: Array,
+    activeBarId: String
   },
   computed: {
     orderedMembers: function () {
