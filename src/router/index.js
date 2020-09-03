@@ -64,14 +64,14 @@ const routes = [
   //     authRoute: true
   //   }
   // },
-  {
-    path: '/reset-password',
-    name: 'Reset Password',
-    component: ResetPassword,
-    meta: {
-      title: 'Reset Password :: Morphic Community'
-    }
-  },
+  // {
+  //   path: '/reset-password',
+  //   name: 'Reset Password',
+  //   component: ResetPassword,
+  //   meta: {
+  //     title: 'Reset Password :: Morphic Community'
+  //   }
+  // },
 
   // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
   {
