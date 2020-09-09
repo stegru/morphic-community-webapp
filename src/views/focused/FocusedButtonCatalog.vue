@@ -7,7 +7,7 @@
       <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id } }">
         Go back without adding a button
       </b-link>
-        <h6><b>Make-a-Button</b></h6>
+        <!-- <h6><b>Make-a-Button</b></h6>
           <ul class="linkList list-unstyled mb-0">
             <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)" :move="preventDuplicated">
               <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
@@ -18,7 +18,7 @@
                 </b-link>
               </li>
             </draggable>
-          </ul>
+          </ul> -->
           <br>
           <h6><b>Predefined Buttons</b></h6>
           <ul class="linkList list-unstyled mb-0">
