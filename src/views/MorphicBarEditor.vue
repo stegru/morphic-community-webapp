@@ -331,33 +331,11 @@
                 color: #d60000 !important;
               }
             }
-            // .icon-delete, .icon-edit {
-            //   right: 10px;
-            // }
-            // .icon-edit {
-            //   top: 40px;
-            // }
-            // .icon-up, .icon-down {
-            //   left: 10px;
-            // }
-            // .icon-down {
-            //   top: 40px;
-            // }
           }
         }
       }
     }
   }
-
-  // #preview-holder {
-  //   .pCol {
-  //     padding-left: 0;
-  //     padding-right: 0;
-  //   }
-  //   .no-right-border {
-  //     border-right: none;
-  //   }
-  // }
 
   .max-height {
     height: 100%;
@@ -436,14 +414,6 @@
     border-bottom: none;
   }
 
-  // #preview-drawer, #preview-bar {
-  //   .barPreview {
-  //     min-height: 600px;
-  //   }
-  // }
-
-
-
   .text-disabled {
     color: gray;
     &:active, &:focus, &:hover {
@@ -519,7 +489,7 @@ export default {
       if (this.$route.query.barId === 'new') {
         this.newBar = true
         this.barDetails = this.newBarDetails
-      } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
+      } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
         for (let i = 0; i < this.predefinedBars.length; i++) {
           if (this.predefinedBars[i].id === this.$route.query.barId) {
             this.newBar = true
@@ -1154,37 +1124,7 @@ export default {
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
-      subkindIcons: subkindIcons,
-      makeButtonList: [
-        {
-          label: 'Button to start a call...',
-          icon: 'chat'
-        },
-        {
-          label: 'Button to join a meeting...',
-          icon: 'people-fill'
-        },
-        {
-          label: 'Button to open online photo album...',
-          icon: 'images'
-        },
-        {
-          label: 'Button to open calendar...',
-          icon: 'calendar3'
-        },
-        {
-          label: 'Button to open web page...',
-          icon: 'link'
-        },
-        {
-          label: 'Button to open an app...',
-          icon: 'app'
-        },
-        {
-          label: 'Button to make all distractions go away...',
-          icon: 'headphones'
-        }
-      ]
+      subkindIcons: subkindIcons
     }
   }
 }
