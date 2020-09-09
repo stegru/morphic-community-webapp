@@ -14,7 +14,7 @@
       <b>People</b>
       <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
     </h5>
-    <MembersList :members="members" :activeMemberId="activeMemberId" />
+    <MembersList :members="members" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" />
   </div>
 </template>
 

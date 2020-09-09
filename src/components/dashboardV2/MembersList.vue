@@ -3,7 +3,9 @@
     <ul v-if="orderedMembers.length > 0" class="list-unstyled">
       <li v-for="member in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
         <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }">
-          {{ member.first_name }} {{ member.last_name }}
+          <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
+          <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
+          <span v-if="isCommunityBar(member.bar_id)">*&nbsp;</span>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark"></b-icon>
           <br>
         </b-link>
@@ -40,18 +42,22 @@
             color: white;
           }
         }
+        a {
+          display: block;
+        }
       }
     }
   }
 </style>
 
 <script>
-
 export default {
   name: 'MembersList',
   props: {
     members: Array,
-    activeMemberId: String
+    activeMemberId: String,
+    bars: Array,
+    activeBarId: String
   },
   computed: {
     orderedMembers: function () {
@@ -59,6 +65,16 @@ export default {
       alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
       alphabetical.reverse()
       return alphabetical
+    }
+  },
+  methods: {
+    isCommunityBar: function (barId) {
+      for (let i = 0; i < this.bars.length; i++) {
+        if (this.bars[i].id === barId) {
+          return this.bars[i].is_shared
+        }
+      }
+      return false
     }
   }
 }
