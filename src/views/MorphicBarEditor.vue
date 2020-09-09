@@ -194,59 +194,47 @@
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
           <div id="preview-holder" class="desktop fill-height mt-3">
-            <b-row>
-              <b-col :md="drawerSecondColumn ? 6 : 8" class="pCol">
-              </b-col>
-              <b-col :md="drawerSecondColumn ? 4 : 2" class="pCol">
-                <div id="preview-drawer" v-if="openDrawer">
-                  <div class="barPreview pl-2 pt-2 pr-2 pb-0 no-right-border">
-                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
-                    <b-row>
-                      <b-col v-if="drawerSecondColumn" md="6">
-                        <draggable v-model="drawerItemsSecond" group="items" class="draggable-area">
-                          <div v-for="(item, index) in drawerItemsSecond" :key="index">
-                            <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                            </div>
-                          </div>
-                        </draggable>
-                      </b-col>
-                      <b-col :md="drawerSecondColumn ? 6 : 12">
-                        <draggable v-model="drawerItems" group="items" class="draggable-area">
-                          <div v-for="(item, index) in drawerItems" :key="index">
-                            <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                            </div>
-                          </div>
-                        </draggable>
-                      </b-col>
-                    </b-row>
-                  </div>
-                </div>
-              </b-col>
-              <b-col md="2" class="pCol">
-                <div id="preview-bar">
-                  <div class="barPreview pl-2 pt-2 pr-2">
-                    <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <draggable v-model="primaryItems" group="items" class="draggable-area">
-                      <div v-for="(item, index) in primaryItems" :key="index">
-                        <div class="previewHolder mb-2">
-                          <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                        </div>
-                      </div>
-                    </draggable>
-                    <div class="logoHolder">
-                      <b-img src="/img/logo-color.svg" />
-                    </div>
-                    <div class="openDrawerIconHolder">
-                      <b-link @click="openDrawer = !openDrawer">
-                        <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                      </b-link>
+            <div class="desktop-portion">
+            </div>
+            <div id="preview-drawer" v-if="openDrawer">
+              <div class="barPreviewEditor no-right-border">
+                <button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</button>
+                <!-- <draggable v-model="drawerItemsSecond" group="items" class="draggable-area">
+                  <div v-for="(item, index) in drawerItemsSecond" :key="index">
+                    <div class="previewHolder">
+                      <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
                     </div>
                   </div>
-                </div>
-              </b-col>
-            </b-row>
+                </draggable> -->
+                <draggable v-model="drawerItems" group="items" class="draggable-area">
+                  <div v-for="(item, index) in drawerItems" :key="index">
+                    <div class="previewHolder">
+                      <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
+                    </div>
+                  </div>
+                </draggable>
+              </div>
+            </div>
+            <div id="preview-bar">
+              <div class="barPreviewEditor">
+                <button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</button>
+                <draggable v-model="primaryItems" group="items" class="draggable-area">
+                  <div v-for="(item, index) in primaryItems" :key="index">
+                    <div class="previewHolder">
+                      <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
+                    </div>
+                  </div>
+                </draggable>
+              </div>
+              <div class="logoHolder">
+                <b-img src="/img/logo-color.svg" />
+              </div>
+              <div class="openDrawerIconHolder">
+                <b-link @click="openDrawer = !openDrawer">
+                  <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
+                </b-link>
+              </div>
+            </div>
           </div>
         </div>
       </b-col>
@@ -294,14 +282,82 @@
   $secondary-color: #84c661;
 
   #preview-holder {
-    .pCol {
-      padding-left: 0;
-      padding-right: 0;
+    border: 1px solid #002957;
+
+    .desktop-portion {
+      flex-grow: 1;
     }
-    .no-right-border {
-      border-right: none;
+
+    #preview-bar, #preview-drawer {
+      padding-top: 10px;
+      padding-bottom: 5px;
+      display: flex;
+      min-height: 600px;
+      flex-direction: column;
+      background: white;
+      border-left: 1px solid #002957;
+
+      .barPreviewEditor {
+        width: 120px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        button {
+          padding: 0px;
+        }
+
+        .draggable-area {
+          flex-grow: 1;
+
+          .previewHolder {
+            width: 120px;
+            padding: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            position: relative;
+
+            .overlay {
+              position: absolute;
+              top: 10px;
+              color: $primary-color !important;
+              background: rgba(255,255,255,0.7) !important;
+              font-size: 1.5rem;
+              cursor: pointer;
+              &:hover {
+                background: white !important;
+              }
+              &:active, &:focus {
+                color: #d60000 !important;
+              }
+            }
+            // .icon-delete, .icon-edit {
+            //   right: 10px;
+            // }
+            // .icon-edit {
+            //   top: 40px;
+            // }
+            // .icon-up, .icon-down {
+            //   left: 10px;
+            // }
+            // .icon-down {
+            //   top: 40px;
+            // }
+          }
+        }
+      }
     }
   }
+
+  // #preview-holder {
+  //   .pCol {
+  //     padding-left: 0;
+  //     padding-right: 0;
+  //   }
+  //   .no-right-border {
+  //     border-right: none;
+  //   }
+  // }
 
   .max-height {
     height: 100%;
@@ -380,41 +436,13 @@
     border-bottom: none;
   }
 
-  #preview-drawer, #preview-bar {
-    .barPreview {
-      min-height: 600px;
-    }
-  }
+  // #preview-drawer, #preview-bar {
+  //   .barPreview {
+  //     min-height: 600px;
+  //   }
+  // }
 
-  .previewHolder {
-    position: relative;
-    .overlay {
-      position: absolute;
-      top: 10px;
-      color: $primary-color !important;
-      background: rgba(255,255,255,0.7) !important;
-      font-size: 1.5rem;
-      cursor: pointer;
-      &:hover {
-        background: white !important;
-      }
-      &:active, &:focus {
-        color: #d60000 !important;
-      }
-    }
-    .icon-delete, .icon-edit {
-      right: 10px;
-    }
-    .icon-edit {
-      top: 40px;
-    }
-    .icon-up, .icon-down {
-      left: 10px;
-    }
-    .icon-down {
-      top: 40px;
-    }
-  }
+
 
   .text-disabled {
     color: gray;
@@ -441,7 +469,7 @@
 
   .draggedListItem {
     background: white;
-    border: 2px dashed $secondary-color; 
+    border: 2px dashed $secondary-color;
     padding: 1rem 1rem 0 1rem;
     min-height: 5rem;
     border-radius: 5px;

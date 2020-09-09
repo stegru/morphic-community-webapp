@@ -1,38 +1,54 @@
 <template>
-  <b-button :style="'background-color: ' + (item.configuration.color || colors.blue) + ';'" size="lg" class="previewItem btn-block">
-    <b>{{ item.configuration.label }}</b>
+  <button class="previewItem btn-block">
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url]"
-      :style="'border-color: ' + (item.configuration.color || colors.blue) + '; color: ' + (item.configuration.color || colors.blue) + ';'"
+      :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
       class="iconHolder"
       >
       <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
     </div>
-  </b-button>
+    <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
+  </button>
 </template>
 
 <style lang="scss">
   .previewItem {
     position: relative;
+    width: 100px;
+    background: none;
+    border: none;
+    color: white;
+
     b {
-      font-size: 1rem;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 10px;
+      width: 100px;
+      display: block;
+
+      &.withImage {
+        padding-top: calc(66px/3);
+      }
     }
+
     .iconHolder {
-      position: absolute;
-      width: 2.5rem;
-      height: 2.5rem;
-      top: -1rem;
-      left: 50%;
-      transform: translateX(-50%);
+      width: 66px;
+      height: 66px;
+      margin-bottom: calc(-66px/3);
+      margin-left: auto;
+      margin-right: auto;
       background: white;
       border-radius: 100%;
       border: 2px solid silver;
-      padding: .25rem;
-      font-size: 1.25rem;
-      text-align: center;
+      z-index: 10;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       img {
-        max-width: 1.25rem;
-        height: 1.25rem;
+        height: calc(64px*0.6);
+        width: calc(64px*0.6);
       }
     }
   }

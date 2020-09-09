@@ -30,7 +30,8 @@ export const colors = {
   purple: '#662261',
   red: '#8c191b',
   green: '#46622d',
-  orange: '#a33e1f'
+  orange: '#a33e1f',
+  default_button: 'rgb(0, 47, 87)'
 }
 
 export const icons = {
