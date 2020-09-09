@@ -78,9 +78,11 @@
           <b-col md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
               <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage)" class="text-danger">Remove Button</b-link></p>
-              <p class="mt-5 mb-1">This is the button you are making</p>
-              <div class="barPreview p-5 rounded">
-                <PreviewItem :item="buttonEditStorage" />
+              <p class="">This is the button you are making</p>
+              <div class="barPreview rounded">
+                <div class="previewHolder">
+                  <PreviewItem :item="buttonEditStorage" />
+                </div>
               </div>
             </div>
           </b-col>
@@ -297,7 +299,7 @@
       background: white;
       border-left: 1px solid #002957;
 
-      .barPreviewEditor {
+      .barPreviewEditor, .barPreview {
         width: 120px;
         display: flex;
         flex-direction: column;

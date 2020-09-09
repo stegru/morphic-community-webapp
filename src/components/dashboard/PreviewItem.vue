@@ -18,6 +18,7 @@
     background: none;
     border: none;
     color: white;
+    padding: 0px;
 
     b {
       font-size: 14px;
