@@ -178,7 +178,71 @@ export const availableItems = [
     is_primary: true,
     configuration: {
       label: 'Magnifier',
-      identifier: 'magnifier'
+      identifier: 'magnifier',
+      visual: {
+        type: "multiButton",
+        buttons: [ "+", "-" ],
+        extraBig: true
+      }
+    }
+  },
+  {
+    kind: 'action',
+    is_primary: true,
+    configuration: {
+      label: 'Volume',
+      identifier: 'volume',
+      visual: {
+        type: "multiButton",
+        buttons: [ "+", "-" ],
+        extraBig: true
+      }
+    }
+  },
+  {
+    kind: 'action',
+    is_primary: true,
+    configuration: {
+      label: 'Clipboard',
+      identifier: 'copy-paste',
+      visual: {
+        type: "multiButton",
+        buttons: [ "Copy", "Paste" ]
+      }
+    }
+  },
+  {
+    kind: 'action',
+    is_primary: true,
+    configuration: {
+      label: 'Text Size',
+      identifier: 'screen-zoom',
+      visual: {
+        type: "multiButton",
+        buttons: [ "+", "-" ],
+        extraBig: true
+      }
+    }
+  },
+  {
+    kind: 'action',
+    is_primary: true,
+    configuration: {
+      label: 'Night Mode',
+      identifier: 'night-mode',
+      visual: {
+        type: "multiButton",
+        buttons: [ "On", "Off" ],
+      }
+    }
+  },
+  {
+    kind: 'application',
+    is_primary: true,
+    configuration: {
+      label: 'Quick Assist',
+      identifier: 'quick-assist'  ,
+      image_url: 'question_solid'
     }
   }
 ]
