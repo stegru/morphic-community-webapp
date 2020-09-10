@@ -557,35 +557,22 @@ export default {
       }
       return buttons
     },
-    getDrawerItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === false) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            if (data.length >= this.preview.drawer.h) {
-              this.drawerItemsSecond.push(newItem)
-            } else {
-              data.push(newItem)
-            }
-          }
+    distributeItems: function (items) {
+      // add id's
+      items.map(item => item.id = this.generateId(item));
+      // Clear lists
+      this.primaryItems = [];
+      this.drawerItems = [];
+      // split items between bar and drawers:
+      for (let i = 0; i < items.length; i++) {
+        if (i < this.preview.bar.h) {
+          items[i].is_primary = true;
+          this.primaryItems.push(items[i]);
+        } else {
+          items[i].is_primary = false;
+          this.drawerItems.push(items[i]);
         }
       }
-      this.drawerItems = data
-    },
-    getPrimaryItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === true) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            data.push(newItem)
-          }
-        }
-      }
-      this.primaryItems = data
     },
     deleteUser: function () {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
@@ -808,20 +795,11 @@ export default {
       return data
     },
     buttonToRemove: function (item) {
-      const foundItem = this.findButtonByLabel(item)
-      if (foundItem.index !== -1) {
-        if (item.is_primary) {
-          this.primaryItems.splice(foundItem.index, 1)
-        } else {
-          if (foundItem.drawerSecond) {
-            this.drawerItemsSecond.splice(foundItem.index, 1)
-          } else {
-            this.drawerItems.splice(foundItem.index, 1)
-          }
-        }
-        this.$bvModal.hide('modalEditGeneric')
-        this.isChanged = true
-      }
+      // remove from items list
+      // bar and drawer lists are automatically updated from watcher
+      this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
+      this.$bvModal.hide('modalEditGeneric')
+      this.isChanged = true
     },
     buttonToEdit: function (item) {
       const foundItem = this.findButtonByLabel(item)
@@ -951,10 +929,7 @@ export default {
     this.loadAllData()
   },
   watch: {
-    'barDetails.items': function (newValue, oldValue) {
-      this.getDrawerItems(newValue)
-      this.getPrimaryItems(newValue)
-    },
+    'barDetails.items': (newValue, oldValue) => this.distributeItems(newValue),
     makeAButtons: function (newValue, oldValue) {
       if (!this.dragMakeAButton) {
         this.makeAButtons = oldValue
