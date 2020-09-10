@@ -929,7 +929,9 @@ export default {
     this.loadAllData()
   },
   watch: {
-    'barDetails.items': (newValue, oldValue) => this.distributeItems(newValue),
+    'barDetails.items': function (newValue, oldValue) {
+      this.distributeItems(newValue)
+    },
     makeAButtons: function (newValue, oldValue) {
       if (!this.dragMakeAButton) {
         this.makeAButtons = oldValue
