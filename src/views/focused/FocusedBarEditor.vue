@@ -2,7 +2,7 @@
 
   <div>
     <h1>Morphic Bar Editor</h1>
-    <a href="/#/focused/home">Go back to community home</a>
+    <b-link to="/focused/home">Go back to community home</b-link>
 
     <h2>{{ barDetails.name }}</h2>
     <!-- <b-nav  class="small"> -->
