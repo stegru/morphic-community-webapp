@@ -250,9 +250,40 @@
           </b-input-group>
           <h6><b>Make-a-Button</b></h6>
           <ul class="linkList list-unstyled mb-0">
-            <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)" :move="preventDuplicated">
-              <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-                <b-link @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+            <draggable v-model="makeAButtons"
+                      :group="{ name: 'items', pull: 'clone', put: false }"
+                      @start="dragFromList($event, true)"
+                      @end="dropFromList($event)"
+                      :clone="cloneCatalogueButton"
+                      ghost-class="ghostListItem"
+                      >
+              <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1 buttonsCatalogueEntry">
+                <div v-if="button.isActive" class="active">
+                  <div class="buttons">
+                    <!-- draggable button with no image -->
+                    <draggable v-model="makeAButtons"
+                      :group="{ name: 'items', pull: 'clone', put: false }"
+                      @start="dragFromList($event, true)"
+                      @end="dropFromList($event)"
+                      :clone="cloneCatalogueButton"
+                      >
+                      <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
+                    </draggable>
+                    <!-- draggable button with image -->
+                    <draggable v-model="makeAButtons"
+                      :group="{ name: 'items', pull: 'clone', put: false }"
+                      @start="dragFromList($event, true)"
+                      @end="dropFromList($event)"
+                      :clone="cloneCatalogueButton"
+                      >
+                      <PreviewItem :item="button" :simplified="true" class="withImage" />
+                    </draggable>
+                  </div>
+                  <h3>{{button.configuration.label}}</h3>
+                  <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
+                  <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
+                </div>
+                <b-link v-else @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry">
                   <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                   <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
@@ -265,7 +296,7 @@
           <ul class="linkList list-unstyled mb-0">
             <draggable v-model="predefinedButtons" group="items" @start="dragFromList($event, false)" @end="dropFromList($event)" :move="preventDuplicated">
               <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-                <b-link @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
+                <b-link @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry">
                   <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
                   <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
@@ -310,7 +341,9 @@
         }
 
         .draggable-area {
+          min-width: 500px;
           flex-grow: 1;
+          list-style: none;
 
           .previewHolder {
             width: 120px;
@@ -339,6 +372,40 @@
     }
   }
 
+  #buttonsPanel {
+    .buttonsCatalogueEntry {
+      .active {
+        background-color: #e0f1d7;
+        border: solid 1px #008145;
+        border-radius: 5px;
+        padding: 10px;
+
+        .buttons {
+          display: flex;
+          justify-content: space-around;
+          align-items: flex-end;
+        }
+
+        h3 {
+          margin-top: 15px;
+          font-size: 20px;
+          margin-bottom: 0px;
+        }
+
+        div.description {
+          font-size: 14px;
+        }
+
+        div.help {
+          font-size: 14px;
+          font-weight: bold;
+          margin-top: 15px;
+          line-height: 18px;
+        }
+      }
+    }
+  }
+
   .max-height {
     height: 100%;
   }
@@ -352,9 +419,6 @@
       right: 0;
       top: 6px;
     }
-  }
-  .draggable-area {
-    min-height: 500px;
   }
   .compactIconHolder {
     height: 22rem;
@@ -437,28 +501,60 @@
       outline: 0 !important;
       border-radius: .5rem;
     }
+
+    .buttonsCatalogEntry {
+      width: 100%;
+      display: block;
+    }
   }
 
-  .draggedListItem {
-    background: white;
-    border: 2px dashed $secondary-color;
-    padding: 1rem 1rem 0 1rem;
-    min-height: 5rem;
-    border-radius: 5px;
-    list-style-type: none;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: .5rem;
-    a {
-      .b-icon {
-        display: none;
+  #preview-bar, #preview-drawer {
+    .buttonsCatalogueEntry {
+      .active {
+        background-color: none;
+        border: 0px;
+        width: default;
+
+        .buttons {
+          display: inherit !important;
+
+          button.withImage {
+            display: none;
+          }
+
+          display: flex;
+          justify-content: space-around;
+          align-items: flex-end;
+        }
+
+        h3, div.description, div.help {
+          display: none;
+        }
       }
     }
-    img {
-      display: none;
-    }
   }
+
+  // .draggedListItem {
+  //   background: white;
+  //   border: 2px dashed $secondary-color;
+  //   padding: 1rem 1rem 0 1rem;
+  //   min-height: 5rem;
+  //   border-radius: 5px;
+  //   list-style-type: none;
+  //   font-size: 1rem;
+  //   font-weight: bold;
+  //   text-align: center;
+  //   margin-bottom: .5rem;
+  //   a {
+  //     .b-icon {
+  //       display: none;
+  //     }
+  //   }
+  //   img {
+  //     display: none;
+  //   }
+  // }
+
 </style>
 
 <script>
@@ -478,6 +574,14 @@ export default {
     draggable
   },
   methods: {
+    cloneCatalogueButton: function (button, withImage) {
+      console.log("Kasper", button);
+      let clonedButton = JSON.parse(JSON.stringify(button));
+      if (!withImage) {
+        clonedButton.configuration.image_url = "";
+      }
+      return clonedButton;
+    },
     loadAllData: function () {
       this.loadBarData()
       this.loadBarMembers()
@@ -518,9 +622,12 @@ export default {
     },
     dropFromList: function (event) {
       event.item.classList.remove('draggedListItem')
+      this.clearPredefinedActive();
+      // this.makeAButtons[event.oldIndex].isActive = false;
     },
     dragFromList: function (event, makeAButton) {
-      event.item.className = 'draggedListItem'
+      // this.makeAButtons[event.oldIndex].isActive = false;
+      event.item.classList.add('draggedListItem');
       if (makeAButton) {
         this.dragMakeAButton = false
       } else {
@@ -704,24 +811,24 @@ export default {
         })
     },
     predefinedClicked: function (event, index, makeAButtons) {
-      this.clearPredefinedActive()
+      this.clearPredefinedActive();
       let currentLabel
       if (makeAButtons) {
         this.buttonStorage = this.makeAButtons[index]
-        currentLabel = this.makeAButtons[index].configuration.label
+        // currentLabel = this.makeAButtons[index].configuration.label
       } else {
         this.buttonStorage = this.predefinedButtons[index]
-        currentLabel = this.predefinedButtons[index].configuration.label
+        // currentLabel = this.predefinedButtons[index].configuration.label
       }
       if (event.type === 'click') {
         if (makeAButtons) {
-          this.makeAButtons[index].configuration.label = '[ACTIVE]'
+          // this.makeAButtons[index].configuration.label = '[ACTIVE]'
           this.makeAButtons[index].isActive = true
-          this.makeAButtons[index].configuration.label = currentLabel
+          // this.makeAButtons[index].configuration.label = currentLabel
         } else {
-          this.predefinedButtons[index].configuration.label = '[ACTIVE]'
+          // this.predefinedButtons[index].configuration.label = '[ACTIVE]'
           this.predefinedButtons[index].isActive = true
-          this.predefinedButtons[index].configuration.label = currentLabel
+          // this.predefinedButtons[index].configuration.label = currentLabel
         }
       }
       if (this.getPrimaryButtonsCount() < this.preview.bar.h) {

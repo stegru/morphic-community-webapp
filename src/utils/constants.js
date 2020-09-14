@@ -71,7 +71,8 @@ export const availableItems = [
       label: 'Gmail',
       color: colors.red,
       image_url: 'gmail',
-      url: 'https://mail.google.com/mail/u/0/#inbox'
+      url: 'https://mail.google.com/mail/u/0/#inbox',
+      description: "Gmail description"
     }
   },
   {

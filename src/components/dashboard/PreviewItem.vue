@@ -1,5 +1,18 @@
 <template>
-  <button v-if="item.configuration && item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="previewItem multiButton">
+  <button v-if="simplified" class="previewItem simplified">
+    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" :style="'background: '+colors.default_button">
+      multiButton
+    </div>
+    <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
+    </div>
+    <div v-else class="regular" :style="'background: '+colors.default_button">
+      <div class="imageContainer">
+        <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
+      </div>
+    </div>
+  </button>
+
+  <button v-else-if="item.configuration && item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="previewItem multiButton">
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
       <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
@@ -9,12 +22,12 @@
       </button>
     </div>
   </button>
+
   <button v-else class="previewItem standardButton btn-block">
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url]"
       :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
-      class="iconHolder"
-      >
+      class="iconHolder" >
       <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
     </div>
     <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
@@ -22,6 +35,45 @@
 </template>
 
 <style lang="scss">
+  .previewItem.simplified {
+    display: flex;
+    justify-content: center;
+
+    .noImage {
+      height: 37px;
+      border-radius: 9px;
+      width: 75px;
+
+    }
+
+    .regular {
+      height: 37px;
+      border-radius: 9px;
+      width: 75px;
+      margin-top: calc(50px/3);
+      position: relative;
+
+      .imageContainer {
+        width: 38px;
+        height: 38px;
+        margin-top: -17px;
+        margin-left: auto;
+        margin-right: auto;
+        background: white;
+        border-radius: 100%;
+        border: 2px solid silver;
+        z-index: 10;
+        position: absolute;
+        left: 17px;
+
+        img {
+          height: 34px;
+          width: 34px;
+        }
+      }
+    }
+  }
+
   .previewItem {
     position: relative;
     width: 100px;
@@ -102,7 +154,9 @@ import { colors, icons } from '@/utils/constants'
 export default {
   name: 'PreviewItem',
   props: {
-    item: Object
+    item: Object,
+    simplified: Boolean,
+    noImage: Boolean
   },
   data () {
     return {

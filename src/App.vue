@@ -71,14 +71,16 @@
   }
 
   .logoHolder {
-      padding-top: 15px;
-      padding-bottom: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
-      img {
-        width: 3rem;
-        height: 3rem;
-      }
+    img {
+      width: 3rem;
+      height: 3rem;
     }
+  }
+
+
 </style>
 
 <script>
