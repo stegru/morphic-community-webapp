@@ -62,188 +62,209 @@ export const subkindIcons = {
   aolmail: ['envelope', 'envelope-open', 'envelope-open-text', 'envelope-outline', 'envelope-outline-open']
 }
 
-export const availableItems = [
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      subkind: 'gmail',
-      label: 'Gmail',
-      color: colors.red,
-      image_url: 'gmail',
-      url: 'https://mail.google.com/mail/u/0/#inbox',
-      description: "Gmail description"
-    }
-  },
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      subkind: 'outlook',
-      label: 'Outlook',
-      color: colors.blue,
-      image_url: 'outlook',
-      url: 'https://outlook.live.com/mail/0/inbox'
-    }
-  },
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      subkind: 'yahoo-mail',
-      label: 'Yahoo Mail',
-      color: colors.purple,
-      image_url: 'yahoo-mail',
-      url: 'https://mail.yahoo.com/'
-    }
-  },
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      subkind: 'aolmail',
-      label: 'AOL Mail',
-      color: colors.blue,
-      image_url: 'envelope',
-      url: 'https://mail.aol.com/webmail-std/en-us/suite'
-    }
-  },
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      label: 'Open Reddit',
-      color: colors.orange,
-      image_url: 'reddit',
-      url: 'https://www.reddit.com/'
-    }
-  },
-  {
-    kind: 'link',
-    is_primary: true,
-    configuration: {
-      label: 'Open Facebook',
-      color: colors.blue,
-      image_url: 'facebook',
-      url: 'https://www.facebook.com/'
-    }
-  },
-  {
-    kind: 'application',
-    is_primary: true,
-    configuration: {
-      label: 'Call Skype',
-      color: colors.blue,
-      image_url: 'skype',
-      default: 'skype'
-    }
-  },
-  {
-    kind: 'application',
-    is_primary: true,
-    configuration: {
-      label: 'Call Telegram',
-      color: colors.teal,
-      image_url: 'telegram',
-      default: 'telegram'
-    }
-  },
-  {
-    kind: 'application',
-    is_primary: true,
-    configuration: {
-      label: 'Call Viber',
-      color: colors.purple,
-      image_url: 'viber',
-      default: 'viber'
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Open Task Manager',
-      identifier: 'taskManager'
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Take Screenshot',
-      identifier: 'screenshot'
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Magnifier',
-      identifier: 'magnifier',
-      visual: {
-        type: "multiButton",
-        buttons: [ "+", "-" ],
-        extraBig: true
+export const buttonCatalog = {
+  "E-mail": {
+    gmail: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'gmail',
+        label: 'Gmail',
+        color: colors.red,
+        image_url: 'gmail',
+        url: 'https://mail.google.com/mail/u/0/#inbox',
+        description: "Gmail description"
       }
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Volume',
-      identifier: 'volume',
-      visual: {
-        type: "multiButton",
-        buttons: [ "+", "-" ],
-        extraBig: true
+    },
+    outlook: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'outlook',
+        label: 'Outlook',
+        color: colors.blue,
+        image_url: 'outlook',
+        url: 'https://outlook.live.com/mail/0/inbox'
       }
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Clipboard',
-      identifier: 'copy-paste',
-      visual: {
-        type: "multiButton",
-        buttons: [ "Copy", "Paste" ]
+    },
+    "yahoo-mail": {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'yahoo-mail',
+        label: 'Yahoo Mail',
+        color: colors.purple,
+        image_url: 'yahoo-mail',
+        url: 'https://mail.yahoo.com/'
       }
-    }
-  },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Text Size',
-      identifier: 'screen-zoom',
-      visual: {
-        type: "multiButton",
-        buttons: [ "+", "-" ],
-        extraBig: true
+    },
+    aolmail: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'aolmail',
+        label: 'AOL Mail',
+        color: colors.blue,
+        image_url: 'envelope',
+        url: 'https://mail.aol.com/webmail-std/en-us/suite'
       }
-    }
+    },
   },
-  {
-    kind: 'action',
-    is_primary: true,
-    configuration: {
-      label: 'Night Mode',
-      identifier: 'night-mode',
-      visual: {
-        type: "multiButton",
-        buttons: [ "On", "Off" ],
+  "Other": {
+    "reddit": {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        label: 'Open Reddit',
+        color: colors.orange,
+        image_url: 'reddit',
+        url: 'https://www.reddit.com/'
       }
-    }
-  },
-  {
-    kind: 'application',
-    is_primary: true,
-    configuration: {
-      label: 'Quick Assist',
-      identifier: 'quick-assist'  ,
-      image_url: 'question_solid'
+    },
+    facebook: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        label: 'Open Facebook',
+        color: colors.blue,
+        image_url: 'facebook',
+        url: 'https://www.facebook.com/'
+      }
+    },
+    skype: {
+      kind: 'application',
+      is_primary: true,
+      configuration: {
+        label: 'Call Skype',
+        color: colors.blue,
+        image_url: 'skype',
+        default: 'skype'
+      }
     }
   }
-]
+}
+
+// export const catalogCategories = {
+//   email: [
+//     "gmail",
+//     "outlook",
+//     "yahoo-mail",
+//     "aolmail"
+//   ],
+//   other: [
+//     "reddit",
+//     "facebook",
+//     "skype"
+//   ]
+
+// }
+// ,
+//   {
+//     kind: 'application',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Call Telegram',
+//       color: colors.teal,
+//       image_url: 'telegram',
+//       default: 'telegram'
+//     }
+//   },
+//   {
+//     kind: 'application',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Call Viber',
+//       color: colors.purple,
+//       image_url: 'viber',
+//       default: 'viber'
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Open Task Manager',
+//       identifier: 'taskManager'
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Take Screenshot',
+//       identifier: 'screenshot'
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Magnifier',
+//       identifier: 'magnifier',
+//       visual: {
+//         type: "multiButton",
+//         buttons: [ "+", "-" ],
+//         extraBig: true
+//       }
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Volume',
+//       identifier: 'volume',
+//       visual: {
+//         type: "multiButton",
+//         buttons: [ "+", "-" ],
+//         extraBig: true
+//       }
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Clipboard',
+//       identifier: 'copy-paste',
+//       visual: {
+//         type: "multiButton",
+//         buttons: [ "Copy", "Paste" ]
+//       }
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Text Size',
+//       identifier: 'screen-zoom',
+//       visual: {
+//         type: "multiButton",
+//         buttons: [ "+", "-" ],
+//         extraBig: true
+//       }
+//     }
+//   },
+//   {
+//     kind: 'action',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Night Mode',
+//       identifier: 'night-mode',
+//       visual: {
+//         type: "multiButton",
+//         buttons: [ "On", "Off" ],
+//       }
+//     }
+//   },
+//   {
+//     kind: 'application',
+//     is_primary: true,
+//     configuration: {
+//       label: 'Quick Assist',
+//       identifier: 'quick-assist'  ,
+//       image_url: 'question_solid'
+//     }
+//   }
+// ]

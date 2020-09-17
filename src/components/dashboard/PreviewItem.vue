@@ -1,4 +1,5 @@
 <template>
+  <!-- Simplified button (no text and small size) -->
   <button v-if="simplified" class="previewItem simplified">
     <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" :style="'background: '+colors.default_button">
       multiButton
@@ -6,12 +7,13 @@
     <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
     </div>
     <div v-else class="regular" :style="'background: '+colors.default_button">
-      <div class="imageContainer">
-        <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
+      <div class="imageContainer" :style="'border-color: '+colors.default_button">
+        <b-img :src="'/icons/' + icons[item.configuration.image_url]"/>
       </div>
     </div>
   </button>
 
+  <!-- Multibutton rendering -->
   <button v-else-if="item.configuration && item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="previewItem multiButton">
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
@@ -23,14 +25,15 @@
     </div>
   </button>
 
-  <button v-else class="previewItem standardButton btn-block">
+  <!-- Normal button without/without image -->
+  <button v-else class="previewItem standardButton">
     <div
-      v-if="item.configuration.image_url && icons[item.configuration.image_url]"
+      v-if="item.configuration.image_url && icons[item.configuration.image_url] && !noImage"
       :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
       class="iconHolder" >
       <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
     </div>
-    <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
+    <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: !noImage && item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
   </button>
 </template>
 
@@ -61,14 +64,18 @@
         margin-right: auto;
         background: white;
         border-radius: 100%;
-        border: 2px solid silver;
+        border-width: 2px;
+        border-style: solid;
         z-index: 10;
         position: absolute;
         left: 17px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
-          height: 34px;
-          width: 34px;
+          height: 23px;
+          width: 23px;
         }
       }
     }

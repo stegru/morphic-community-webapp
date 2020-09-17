@@ -1,4 +1,4 @@
-import { availableItems } from '@/utils/constants'
+import { buttonCatalog } from '@/utils/constants'
 
 // setting the base data
 export const predefinedBars = [
@@ -7,27 +7,27 @@ export const predefinedBars = [
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [availableItems[0], availableItems[1], availableItems[2], availableItems[3], availableItems[7], availableItems[8]]
+    items: [buttonCatalog.outlook, buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.facebook, buttonCatalog.skype]
   },
   {
     id: 'predefined-2',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [availableItems[1], availableItems[2], availableItems[4], availableItems[5], availableItems[6], availableItems[7]]
+    items: [buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.skype]
   },
   {
     id: 'predefined-3',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [availableItems[0], availableItems[1], availableItems[2], availableItems[3], availableItems[4], availableItems[5]]
+    items: [buttonCatalog.outlook, buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.facebook]
   },
   {
     id: 'predefined-4',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [availableItems[8], availableItems[7], availableItems[6], availableItems[5], availableItems[4], availableItems[3]]
+    items: [buttonCatalog.gmail, buttonCatalog.skype, buttonCatalog.facebook]
   }
 ]

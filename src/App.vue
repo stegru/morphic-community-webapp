@@ -58,7 +58,8 @@
 
     .openDrawerIconHolder {
       .b-icon {
-        margin-left: -19px;
+        // margin-left: -19px;
+        right: 104px;
         font-size: 2em;
         position: absolute;
         bottom: 25px;
