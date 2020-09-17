@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h3 class="mb-3">Login</h3>
+    <h3 class="mb-3" id="user-login-heading">Login</h3>
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-alert variant="success" :show="successAlert">
       {{ successMessage }}
     </b-alert>
-    <b-form @submit.stop.prevent="onSubmit">
+    <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <b-form-group>
         <b-form-input
           v-model="$v.userInfo.email.$model"

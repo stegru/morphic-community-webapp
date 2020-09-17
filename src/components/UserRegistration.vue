@@ -1,5 +1,5 @@
 <template>
-  <b-form @submit.stop.prevent="onSubmit">
+  <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="community-heading">
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
