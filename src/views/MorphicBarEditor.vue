@@ -205,7 +205,10 @@
             </drop>
             <!-- Buttons Bar -->
             <div id="preview-bar">
-              <button @click="addButtonToBarByClick()" v-if="expandedCatalogButtonId" variant="success" size="sm" class="clickDropSpot feedback button-feedback">Click to add</button>
+              <drop class="buttonsList draggable-area" @drop="dropOnClickToAdd">
+                <button @click="addButtonToBarByClick()" v-if="expandedCatalogButtonId" variant="success" size="sm" class="clickDropSpot feedback button-feedback">Click to add</button>
+              </drop>
+
               <div class="barPreviewEditor" ref="myref">
                 <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
                   <template v-slot:item="{item}" v-slot:key="{myKey}">
@@ -316,6 +319,7 @@
       flex-direction: column;
       background: white;
       border-left: 1px solid #002957;
+      min-width: 120px;
 
       // vertical line separating bar from drawer
       background-image: linear-gradient(#000, #000);
@@ -367,8 +371,9 @@
           // display: block;
           overflow: hidden;
           height: 500px;
+          min-width: 120px;
           display: inline-flex;
-            writing-mode: vertical-rl;
+          writing-mode: vertical-rl;
 
 
           &.showDrawer {
@@ -610,14 +615,18 @@ export default {
       if (event.type == "catalogButtonNoImage") {
         event.data.configuration.image_url = "";
       }
-      // insert in new position
-      this.barDetails.items.splice(event.index, 0, event.data);
+      // insert in new position (default to 0)
+      this.barDetails.items.splice(event.index || 0, 0, event.data);
       // close any expanded button
       this.expandedCatalogButtonId = undefined;
 
       this.isChanged = true;
 
       return true;
+    },
+
+    dropOnClickToAdd: function (event) {
+      this.dropToBar(event);
     },
 
     // used to avoid bug where a "click" event is triggered at end of drag
@@ -839,6 +848,7 @@ export default {
       this.expandedCatalogButton = button;
     },
     addButtonToBarByClick: function () {
+      console.log("Kasper");
       this.dropToBar({ data: this.expandedCatalogButton, type: "catalogButtonNoImage", index: 0});
     },
     buttonToRemove: function (item) {
