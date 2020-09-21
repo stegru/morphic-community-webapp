@@ -27,7 +27,6 @@
         <b-form-input
           v-model="$v.userInfo.password.$model"
           :state="validateState('password')"
-          placeholder="Must be at least 6 characters"
           type="password"
           id="login-user-password"
         />

@@ -59,14 +59,14 @@
       <b-form-input
         v-model="$v.form.password.$model"
         :state="validateState('password')"
-        placeholder="Must be at least 6 characters"
+        placeholder="Enter password"
         type="password"
         id="community-user-password"
       />
       <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
     </b-form-group>
     <b-form-group
-      label="Password Confirmation:"
+      label="Password confirmation:"
       label-for="community-user-password-confirm"
     >
       <b-form-input
