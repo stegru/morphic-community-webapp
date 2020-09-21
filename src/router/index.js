@@ -5,16 +5,12 @@ import store from '@/store'
 // General Marketing, Login and Register Components
 import Home from '@/views/Home.vue'
 import Terms from '@/views/Terms.vue'
-import Registration from '@/views/Registration.vue'
-import MyCommunity from '@/views/MyCommunity.vue'
-import ResetPassword from '@/views/ResetPassword.vue'
 
 // Dashboard Components
 import Dashboard from '@/views/Dashboard.vue'
 import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
 import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
 import MemberInvite from '@/views/MemberInvite.vue'
-import MemberEditor from '@/views/MemberEditor.vue'
 
 Vue.use(VueRouter)
 
