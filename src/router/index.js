@@ -12,6 +12,15 @@ import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
 import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
 import MemberInvite from '@/views/MemberInvite.vue'
 
+// Focused Components
+import FocusedHome from '@/views/focused/FocusedHome.vue'
+import FocusedBarEditor from '@/views/focused/FocusedBarEditor.vue'
+import FocusedButtonCatalog from '@/views/focused/FocusedButtonCatalog.vue'
+import FocusedPeopleUsingBar from '@/views/focused/FocusedPeopleUsingBar.vue'
+import FocusedPersonPage from '@/views/focused/FocusedPersonPage.vue'
+import FocusedBarSettings from '@/views/focused/FocusedBarSettings.vue'
+import FocusedButtonEdit from '@/views/focused/FocusedButtonEdit.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -105,7 +114,7 @@ const routes = [
       title: 'Member Invite :: Morphic Community',
       authRoute: true
     }
-  }
+  },
   // {
   //   path: '/dashboard/member/:memberId',
   //   name: 'Member Editor',
@@ -114,7 +123,66 @@ const routes = [
   //     title: 'Member Details :: Morphic Community',
   //     authRoute: true
   //   }
-  // }
+  // },
+
+  // Mobile-Focused-Accessible CM Webapp
+  {
+    path: '/focused/home',
+    name: 'Home: Bar and Member Page',
+    component: FocusedHome,
+    meta: {
+      title: 'Focused :: Home',
+      authRoute: true
+    }
+  },
+  {
+    path: '/focused/bar-editor',
+    name: 'Focused: Bar Editor',
+    component: FocusedBarEditor,
+    meta: {
+      title: 'Focused :: Bar Editor'
+    }
+  },
+  {
+    path: '/focused/button-catalog',
+    name: 'Focused: Button Catalog',
+    component: FocusedButtonCatalog,
+    meta: {
+      title: 'Focused :: Button Catalog'
+    }
+  },
+  {
+    path: '/focused/people-using-bar',
+    name: 'Focused: People using bar',
+    component: FocusedPeopleUsingBar,
+    meta: {
+      title: 'Focused :: People using bar'
+    }
+  },
+  {
+    path: '/focused/person',
+    name: 'Focused: Person',
+    component: FocusedPersonPage,
+    meta: {
+      title: 'Focused :: Person'
+    }
+  },
+  {
+    path: '/focused/bar-settings',
+    name: 'Focused: Bar settings',
+    component: FocusedBarSettings,
+    meta: {
+      title: 'Focused :: Bar settings'
+    }
+  },
+  {
+    path: '/focused/button-edit',
+    name: 'Focused: Button edit',
+    component: FocusedButtonEdit,
+    meta: {
+      title: 'Focused :: Button edit'
+    }
+  }
 ]
 
 const router = new VueRouter({
