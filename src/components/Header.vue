@@ -18,7 +18,7 @@
         </b-nav-item>
         -->
         <b-nav-item v-if="isLoggedIn" @click="logout">
-          <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
+          <b-icon-box-arrow-right aria-hidden="true"></b-icon-box-arrow-right>
           Logout
         </b-nav-item>
       </b-navbar-nav>
