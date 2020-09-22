@@ -327,7 +327,7 @@
       background-repeat: no-repeat;
       background-position: right 120px bottom 0px;
 
-      .tmpClass {
+      .minWidth1px {
         min-width: 1px;
       }
 
@@ -374,14 +374,15 @@
           min-width: 120px;
           display: inline-flex;
           writing-mode: vertical-rl;
+          flex-wrap: wrap;
 
-
-          &.showDrawer {
-            flex-wrap: wrap;
-          }
+          // &.showDrawer {
+          //   flex-wrap: wrap;
+          // }
 
           &:not(.showDrawer) {
-            flex-wrap: nowrap;
+            // flex-wrap: wrap;
+            width: 120px !important;
           }
 
           button {
@@ -672,7 +673,7 @@ export default {
           if (this.predefinedBars[i].id === this.$route.query.barId) {
             this.newBar = true
             this.barDetails = this.newBarDetails
-            this.barDetails.items = this.predefinedBars[i].items
+            this.barDetails.items = this.predefinedBars[i].items;
           }
         }
       } else {
@@ -685,33 +686,20 @@ export default {
           })
       }
     },
-
+    addIds: function (items) {
+      return items.map(item => item.id = this.generateId(item));
+    },
     // hack to refresh css rendering due to bars being fucked up in their CSS
     refreshBar() {
-      this.$refs.myref.classList.contains("tmpClass") ?
-        this.$refs.myref.classList.remove("tmpClass") :
-        this.$refs.myref.classList.add("tmpClass");
+      this.$refs.myref.classList.contains("minWidth1px") ?
+        this.$refs.myref.classList.remove("minWidth1px") :
+        this.$refs.myref.classList.add("minWidth1px");
     }
     ,
     distributeItems: function (items) {
       // add id's
-      items.map(item => item.id = this.generateId(item));
-      // this.refreshBar();
-
-      // // Clear lists
-      // this.primaryItems = [];
-      // this.drawerItems = [];
-      // // split items between bar and drawers:
-      // for (let i = 0; i < items.length; i++) {
-      //   if (i < this.preview.bar.h) {
-      //     items[i].is_primary = true;
-      //     this.primaryItems.push(items[i]);
-      //   } else {
-      //     items[i].is_primary = false;
-      //     this.drawerItems.push(items[i]);
-      //   }
-      // }
-      // this.refreshBar();
+      this.addIds(items);
+      // items.map(item => item.id = this.generateId(item));
     },
     deleteUser: function () {
       deleteCommunityMember(this.communityId, this.memberDetails.id)

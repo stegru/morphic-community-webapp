@@ -7,27 +7,27 @@ export const predefinedBars = [
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [buttonCatalog.outlook, buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.facebook, buttonCatalog.skype]
+    items: [buttonCatalog["E-mail"].outlook, buttonCatalog["E-mail"].gmail, buttonCatalog["Other"].reddit, buttonCatalog["Other"].facebook, buttonCatalog["Other"].skype]
   },
   {
     id: 'predefined-2',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.skype]
+    items: [buttonCatalog["E-mail"].gmail, buttonCatalog["Other"].reddit, buttonCatalog["Other"].skype]
   },
   {
     id: 'predefined-3',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [buttonCatalog.outlook, buttonCatalog.gmail, buttonCatalog.reddit, buttonCatalog.facebook]
+    items: [buttonCatalog["E-mail"].outlook, buttonCatalog["E-mail"].gmail, buttonCatalog["Other"].reddit, buttonCatalog["Other"].facebook]
   },
   {
     id: 'predefined-4',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined starter bar with some items inside, use it as a start...',
-    items: [buttonCatalog.gmail, buttonCatalog.skype, buttonCatalog.facebook]
+    items: [buttonCatalog["E-mail"].gmail, buttonCatalog["Other"].skype, buttonCatalog["Other"].facebook]
   }
 ]

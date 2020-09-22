@@ -23,7 +23,7 @@
     width: 120px;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    // flex-grow: 1;
 
     .previewHolder {
       width: 120px;
