@@ -12,7 +12,7 @@
     <ul v-if="list.length > 0" class="list-unstyled">
       <li v-for="bar in list" :key="bar.id" >
         <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: bar.id } }">
-         {{ bar.name === "Default" ? "Starter Bar" : bar.name }}
+         {{ bar.name === "Default" ? "Default Bar" : bar.name }}
         </b-link>
       </li>
     </ul>
