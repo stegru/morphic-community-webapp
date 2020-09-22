@@ -81,9 +81,9 @@
               <p class="text-success">To invite a person, find the word "People" in the green menu to the left and click on the green (+) button.</p>
               <br>
 
-              <h5>(Optional) Customize your Morphic Starter Bar</h5>
-              <p>People who join will see your community's Starter Bar (shown on this page). You can customize the Starter Bar to meet your community's needs.</p>
-              <p class="text-success">To customize your Starter Bar, click "Starter Bar" in the green menu on the left.</p>
+              <h5>(Optional) Customize your Morphic Default Bar</h5>
+              <p>People who join will see your community's Default Bar (shown on this page). You can customize the Default Bar to meet your community's needs.</p>
+              <p class="text-success">To customize your Default Bar, click "Default Bar" in the green menu on the left.</p>
             </b-col>
             <b-col md="7">
               <div v-if="list[0]" class="desktop desktopDashboard">

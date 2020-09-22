@@ -113,7 +113,7 @@
               <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
             </b-form-group>
             <h5 v-else class="mb-0">
-              <b>{{ barDetails.name === 'Default' ? 'Starter Bar' : barDetails.name }}</b>&nbsp;
+              <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
               <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
             </h5>
             <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
