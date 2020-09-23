@@ -9,7 +9,8 @@
       </h1>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item to="/dashboard/" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard</b></b-nav-item>
+        <b-nav-item to="/dashboard/" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard Mode</b></b-nav-item>
+        <b-nav-item to="/focused/home" v-if="isLoggedIn" exact-active-class="active"><b>Focus/Mobile Mode</b></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -19,8 +20,8 @@
           My Community
         </b-nav-item>
         -->
-        <b-nav-item v-if="isLoggedIn" @click="logout">
-          <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
+        <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
+          <b-icon-box-arrow-right aria-hidden="true"></b-icon-box-arrow-right>
           Logout
         </b-nav-item>
       </b-navbar-nav>
@@ -43,9 +44,15 @@
     border-bottom: 3px solid #84c661;
   }
 
+  nav#top .logout-nav-item a.nav-link {
+    color: black
+  }
+
   .navbar-brand img {
     height: 2rem;
   }
+
+
 </style>
 
 <script>
