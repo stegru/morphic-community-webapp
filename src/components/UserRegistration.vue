@@ -1,62 +1,80 @@
 <template>
-  <b-form @submit.stop.prevent="onSubmit">
+  <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="community-heading">
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-alert variant="success" :show="successAlert">
       {{ successMessage }}
     </b-alert>
-    <b-form-group>
-      <b-input-group>
+    <b-form-group
+      label="Community:"
+      label-for="community-name"
+    >
+     <b-input-group>
         <b-form-input
           v-model="$v.form.communityName.$model"
           :state="validateState('communityName')"
-          label="my-community"
           placeholder="my-community"
+          id="community-name"
         />
         <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
       </b-input-group>
     </b-form-group>
-    <b-form-group>
+    <b-form-group
+      label="Enter your email:"
+      label-for="community-user-email"
+    >
       <b-form-input
         v-model="$v.form.email.$model"
         :state="validateState('email')"
-        label="Email"
-        placeholder="Enter your email"
+        placeholder="user@somewhere.com"
+        id="community-user-email"
       />
       <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
     </b-form-group>
-    <b-form-group>
+    <b-form-group
+      label="First name:"
+      label-for="community-first-name"
+    >
       <b-form-input
         v-model="form.firstName"
-        label="First name"
-        placeholder="First name"
+        placeholder="Pat"
+        id="community-first-name"
       />
     </b-form-group>
-    <b-form-group>
+    <b-form-group
+      label="Last name:"
+      label-for="community-last-name"
+    >
       <b-form-input
         v-model="form.lastName"
-        label="Last name"
-        placeholder="Last name"
+        placeholder="Smith"
+        id="community-last-name"
       />
     </b-form-group>
-    <b-form-group>
+    <b-form-group
+      label="Password:"
+      label-for="community-user-password"
+    >
       <b-form-input
         v-model="$v.form.password.$model"
         :state="validateState('password')"
-        label="Password"
-        placeholder="Enter your password"
+        placeholder="Enter password"
         type="password"
+        id="community-user-password"
       />
       <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
     </b-form-group>
-    <b-form-group>
+    <b-form-group
+      label="Password confirmation:"
+      label-for="community-user-password-confirm"
+    >
       <b-form-input
         v-model="$v.form.confirmPassword.$model"
         :state="validateState('confirmPassword')"
-        label="Password Confirmation"
-        placeholder="Password Confirmation"
+        placeholder="Re-enter password"
         type="password"
+        id="community-user-password-confirm"
       />
       <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
     </b-form-group>
