@@ -9,7 +9,7 @@
             <p>What text do you want on the button?</p>
             <div role="group" class="mb-3">
               <label for="modalEditGenericLabel">Text on the button</label>
-              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" />
+              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" maxLength="35" />
             </div>
             <div class="bg-silver rounded p-3">
               <p v-if="editDialogDetails" class="text-right small mb-0">
