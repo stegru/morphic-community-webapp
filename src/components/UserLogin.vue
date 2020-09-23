@@ -1,29 +1,34 @@
 <template>
   <div>
-    <h3 class="mb-3">Login</h3>
+    <h2 class="mb-3" id="user-login-heading">Login</h2>
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-alert variant="success" :show="successAlert">
       {{ successMessage }}
     </b-alert>
-    <b-form @submit.stop.prevent="onSubmit">
-      <b-form-group>
+    <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
+      <b-form-group
+        label="Enter your email:"
+        label-for="login-user-email"
+      >
         <b-form-input
           v-model="$v.userInfo.email.$model"
           :state="validateState('email')"
-          label="Email"
-          placeholder="Enter your email"
+          placeholder="user@server.com"
+          id="login-user-email"
         />
         <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
       </b-form-group>
-      <b-form-group>
+      <b-form-group
+        label="Enter your password:"
+        label-for="login-user-password"
+      >
         <b-form-input
           v-model="$v.userInfo.password.$model"
           :state="validateState('password')"
-          label="Password"
-          placeholder="Enter your password"
           type="password"
+          id="login-user-password"
         />
         <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
       </b-form-group>
