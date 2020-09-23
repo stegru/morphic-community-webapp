@@ -17,7 +17,7 @@
           My Community
         </b-nav-item>
         -->
-        <b-nav-item v-if="isLoggedIn" @click="logout" id="logout-nav-item">
+        <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
           <b-icon-box-arrow-right aria-hidden="true"></b-icon-box-arrow-right>
           Logout
         </b-nav-item>
@@ -41,7 +41,7 @@
     border-bottom: 3px solid #84c661;
   }
 
-  nav #logout-nav-item a.nav-link {
+  nav#top .logout-nav-item a.nav-link {
     color: black
   }
 
