@@ -1,9 +1,9 @@
 <template>
-  <b-jumbotron class="mb-0" bg-variant="light" id="login-register">
+  <b-jumbotron class="mb-0" bg-variant="light" id="login-register" role="main">
     <b-row>
       <b-col md="2"></b-col>
       <b-col md="4">
-        <h3 class="mb-3">Register Community</h3>
+        <h2 class="mb-3" id="community-heading">Register Community</h2>
         <UserRegistration />
       </b-col>
       <b-col md="1"></b-col>
