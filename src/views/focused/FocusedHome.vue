@@ -5,7 +5,6 @@
     <!-- <li><a >Community Settings</a></li>
     <li><a >Add a community</a></li>
     <li><a >Switch to a different community</a></li> -->
-    <li><a href="#" @click="logout">Sign out </a></li>
   </ul>
 
   <h2>Community Bars</h2>
@@ -20,12 +19,10 @@
       <i>No bars in the community</i><br>
       Click on the plus button just above to add your first one
     </p>
-  <a href="#">Add a community bar</a>
+  <button @click="invokeEditor('/focused/bar-editor')" class="btn-primary btn">Add a community bar</button>
 
   <h2>People in your community</h2>
-  <em>Follow a link to see or change the person's Morphic Bar</em>
-
-  <a >Add a Person</a>
+  <button @click="invokeEditor('/focused/person')" class="btn-primary btn">Add a Person</button>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
@@ -189,6 +186,10 @@ export default {
       alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
       alphabetical.reverse()
       return alphabetical
+    },
+    invokeEditor: function (pathToEditor) {
+      // JS:  TODO - better technique; pass Id; use something already defined
+      window.open(pathToEditor, "_top");
     }
   }
 
