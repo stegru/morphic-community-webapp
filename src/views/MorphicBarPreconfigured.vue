@@ -3,7 +3,7 @@
     <b-col md="2">
     </b-col>
     <b-col md="8">
-      <h4>Starter Bars</h4>
+      <h4>Default Bars</h4>
       <p class="mb-3">Pick one of the Morphic Bars below as a starting place, or start with a blank Bar.</p>
       <b-row class="mb-3">
         <b-col md="3" v-for="bar in list" v-bind:key="bar.id">

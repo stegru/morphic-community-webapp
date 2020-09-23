@@ -8,13 +8,15 @@
       <b>Community Bars</b>
       <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
     </h5>
-    <BarsList :bars="bars" :activeBarId="activeBarId" />
+    <BarsList :bars="bars" :activeBarId="activeBarId" ref="BarsList"/>
 
     <h5>
-      <b>People</b>
-      <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
+      <div>
+        <b>People</b>
+        <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon"></b-icon-plus-circle-fill></b-link>
+      </div>
     </h5>
-    <MembersList :members="members" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" />
+    <MembersList :members="members" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" ref="MembersList"/>
   </div>
 </template>
 

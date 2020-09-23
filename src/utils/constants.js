@@ -63,7 +63,7 @@ export const subkindIcons = {
 }
 
 export const buttonCatalog = {
-  "E-mail": {
+  'E-mail': {
     gmail: {
       kind: 'link',
       is_primary: true,
@@ -73,7 +73,7 @@ export const buttonCatalog = {
         color: colors.red,
         image_url: 'gmail',
         url: 'https://mail.google.com/mail/u/0/#inbox',
-        description: "Gmail description"
+        description: 'Gmail description'
       }
     },
     outlook: {
@@ -87,7 +87,7 @@ export const buttonCatalog = {
         url: 'https://outlook.live.com/mail/0/inbox'
       }
     },
-    "yahoo-mail": {
+    'yahoo-mail': {
       kind: 'link',
       is_primary: true,
       configuration: {
@@ -108,10 +108,10 @@ export const buttonCatalog = {
         image_url: 'envelope',
         url: 'https://mail.aol.com/webmail-std/en-us/suite'
       }
-    },
+    }
   },
-  "Other": {
-    "reddit": {
+  Other: {
+    reddit: {
       kind: 'link',
       is_primary: true,
       configuration: {
@@ -143,128 +143,3 @@ export const buttonCatalog = {
     }
   }
 }
-
-// export const catalogCategories = {
-//   email: [
-//     "gmail",
-//     "outlook",
-//     "yahoo-mail",
-//     "aolmail"
-//   ],
-//   other: [
-//     "reddit",
-//     "facebook",
-//     "skype"
-//   ]
-
-// }
-// ,
-//   {
-//     kind: 'application',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Call Telegram',
-//       color: colors.teal,
-//       image_url: 'telegram',
-//       default: 'telegram'
-//     }
-//   },
-//   {
-//     kind: 'application',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Call Viber',
-//       color: colors.purple,
-//       image_url: 'viber',
-//       default: 'viber'
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Open Task Manager',
-//       identifier: 'taskManager'
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Take Screenshot',
-//       identifier: 'screenshot'
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Magnifier',
-//       identifier: 'magnifier',
-//       visual: {
-//         type: "multiButton",
-//         buttons: [ "+", "-" ],
-//         extraBig: true
-//       }
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Volume',
-//       identifier: 'volume',
-//       visual: {
-//         type: "multiButton",
-//         buttons: [ "+", "-" ],
-//         extraBig: true
-//       }
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Clipboard',
-//       identifier: 'copy-paste',
-//       visual: {
-//         type: "multiButton",
-//         buttons: [ "Copy", "Paste" ]
-//       }
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Text Size',
-//       identifier: 'screen-zoom',
-//       visual: {
-//         type: "multiButton",
-//         buttons: [ "+", "-" ],
-//         extraBig: true
-//       }
-//     }
-//   },
-//   {
-//     kind: 'action',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Night Mode',
-//       identifier: 'night-mode',
-//       visual: {
-//         type: "multiButton",
-//         buttons: [ "On", "Off" ],
-//       }
-//     }
-//   },
-//   {
-//     kind: 'application',
-//     is_primary: true,
-//     configuration: {
-//       label: 'Quick Assist',
-//       identifier: 'quick-assist'  ,
-//       image_url: 'question_solid'
-//     }
-//   }
-// ]

@@ -1,13 +1,16 @@
 <template>
   <div>
     <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top">
-      <b-navbar-brand to="/" title="Morphic Community">
-        <img src="/img/logo-color.svg" alt="logo">
-        Morphic Community
-      </b-navbar-brand>
+      <h1>
+        <b-navbar-brand to="/" title="Morphic Community">
+          <img src="/img/logo-color.svg" alt="logo">
+          Morphic Community
+        </b-navbar-brand>
+      </h1>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item to="/dashboard/" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard</b></b-nav-item>
+        <b-nav-item to="/dashboard/" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard Mode</b></b-nav-item>
+        <b-nav-item to="/focused/home" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Focus/Mobile Mode</b></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -17,8 +20,8 @@
           My Community
         </b-nav-item>
         -->
-        <b-nav-item v-if="isLoggedIn" @click="logout">
-          <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right>
+        <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
+          <b-icon-box-arrow-right aria-hidden="true"></b-icon-box-arrow-right>
           Logout
         </b-nav-item>
       </b-navbar-nav>
@@ -41,9 +44,15 @@
     border-bottom: 3px solid #84c661;
   }
 
+  nav#top .logout-nav-item a.nav-link {
+    color: black
+  }
+
   .navbar-brand img {
     height: 2rem;
   }
+
+
 </style>
 
 <script>
@@ -52,8 +61,10 @@ import { MESSAGES } from '@/utils/constants'
 export default {
   computed: {
     isLoggedIn: function () { return this.$store.getters.isLoggedIn },
-    disableLogout: function () { return this.$store.getters.unsavedChanges }
+    disableLogout: function () { return this.$store.getters.unsavedChanges },
+    focusMode: function () { return this.$route.path.includes("/focused/") }
   },
+
   methods: {
     logout: function () {
       if (this.disableLogout) {
