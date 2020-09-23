@@ -81,7 +81,7 @@ stages:
               BRANCH: $(deployRepoRef)
             inputs:
               targetType: 'inline'
-              workingDirectory: resources/
+              workingDirectory: resources/community
               script: |
                 set -e
                 set -x
