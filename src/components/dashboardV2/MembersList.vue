@@ -1,8 +1,9 @@
 <template>
   <div id="MembersList">
-    <ul v-if="orderedMembers.length > 0" class="list-unstyled">
-      <li v-for="member in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
-        <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }">
+    <!-- Actually, the CM counts as a member of the Community, so by default there's always one member -->
+    <ul v-if="orderedMembers.length > 1" class="list-unstyled">
+      <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
+        <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }" :ref="'member' + index">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
@@ -23,7 +24,7 @@
     </ul>
     <p v-else>
       <i>Nobody in the community</i><br>
-      Click on the plus button just above to add somebody to your community
+      Click the plus button to <b>add</b> somebody
     </p>
   </div>
 </template>
@@ -43,7 +44,8 @@
           }
         }
         a {
-          display: block;
+          display: inline;
+          padding: 0 0.75rem 0 0;
         }
       }
     }

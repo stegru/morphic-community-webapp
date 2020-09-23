@@ -1,9 +1,9 @@
 <template>
   <Div id="BarsList">
     <ul v-if="orderedBars.length > 0" class="list-unstyled">
-      <li v-for="bar in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
-        <b-link v-if="bar.is_shared" :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }">
-         {{ bar.name === "Default" ? "Default Bar" : bar.name }}
+      <li v-for="(bar, index) in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
+        <b-link v-if="bar.is_shared" :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }" :ref="'bar' + index">
+          {{ bar.name === "Default" ? "Default Bar" : bar.name }}
         </b-link>
       </li>
     </ul>
@@ -28,7 +28,8 @@
           }
         }
         a {
-          display: block;
+          display: inline;
+          padding: 0 0.75rem 0 0;
         }
       }
     }
