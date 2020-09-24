@@ -52,6 +52,10 @@
     height: 2rem;
   }
 
+  nav#top .mr-auto .nav-link {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
 
 </style>
 
