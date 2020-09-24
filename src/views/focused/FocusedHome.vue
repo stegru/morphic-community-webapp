@@ -8,6 +8,7 @@
   </ul>
 
   <h2>Community Bars</h2>
+    <p><b-link disabled>Community settings</b-link></p>
     <ul v-if="list.length > 0" class="list-unstyled">
       <li v-for="bar in list" :key="bar.id" >
         <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: bar.id } }">
