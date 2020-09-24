@@ -9,7 +9,7 @@
       <b-link :to="{ name: 'Focused: People using bar', query: { barId: barDetails.id } }">
         <b-icon-person-circle></b-icon-person-circle>
         <span v-if="$route.query.memberId">
-          User Details
+          Member Details
         </span>
         <span v-else-if="getMembersCount() === 0">
           Unused Bar
@@ -150,7 +150,7 @@ export default {
     //   deleteCommunityMember(this.communityId, this.memberDetails.id)
     //     .then((resp) => {
     //       if (resp.status === 200) {
-    //         this.successMessage = MESSAGES.successfulUserDelete
+    //         this.successMessage = MESSAGES.successfulMemberDelete
     //         this.successAlert = true
     //         setTimeout(() => {
     //           this.$router.push('/dashboard')

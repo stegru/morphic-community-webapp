@@ -7,8 +7,8 @@
       <li>Last used Morphic 3 days ago</li>
     </ul>
 
-    <button>Make user a Community Manager</button>
-    <button>Delete user</button>
+    <button>Make member a Community Manager</button>
+    <button>Delete member</button>
     <button>Send a new invitation</button>
     <p>Notes: (Only seen by Community Managers)</p>
     <textarea></textarea>
@@ -124,7 +124,7 @@ export default {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
           if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulUserDelete
+            this.successMessage = MESSAGES.successfulMemberDelete
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
