@@ -184,7 +184,7 @@ export default {
       return alphabetical
     },
     invokeEditor: function (pathToEditor) {
-      // JS:  TODO - better technique; pass Id; use something already defined
+      // JS:  TODO - better technique?; use something already defined?
       window.open(pathToEditor, "_top");
     }
   }

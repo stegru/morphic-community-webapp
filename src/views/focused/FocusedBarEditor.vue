@@ -42,10 +42,10 @@
       Add a Button
     </b-link>
     <!-- <button>Save Bar and Update</button> -->
-
-  <b-link :to="{ name: 'Focused: Button Catalog' }">
-    View the catalog of buttons available for the Morphic Bar
-  </b-link>
+    <br>
+    <b-link :to="{ name: 'Focused: Button Catalog' }">
+      View the catalog of buttons available for the Morphic Bar
+    </b-link>
 
   </div>
 </template>
