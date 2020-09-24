@@ -66,7 +66,7 @@
                       </b-col>
                       <b-col md="6">
                         <div class="small text-right">
-                          <b-link to="/learn/member-dont-have-email">Person does not have email</b-link>
+                          <b-link to="/learn/member-dont-have-email">Member does not have email</b-link>
                           <b-button to="/dashboard" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
                         </div>
                       </b-col>
@@ -125,7 +125,7 @@
           </b-card>
         </div>
         <div v-else>
-          <h4 class="mb-3">Which Morphic Bar should this person use?</h4>
+          <h4 class="mb-3">Which Morphic Bar should this member use?</h4>
           <div class="bg-silver rounded">
             <b-row>
               <b-col md="3" v-for="bar in bars" :key="bar.id">

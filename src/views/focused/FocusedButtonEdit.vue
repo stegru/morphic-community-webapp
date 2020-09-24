@@ -112,7 +112,7 @@ export default {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
           if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulUserDelete
+            this.successMessage = MESSAGES.successfulMemberDelete
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')

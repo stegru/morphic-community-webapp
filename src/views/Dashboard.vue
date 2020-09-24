@@ -35,16 +35,16 @@
                 <br><br><br>
                 <div id="MembersHint" ref="MembersHint">
                   <div v-if="members.length > 1">
-                    Add a new person
+                    Add a new member
                   </div>
                   <div v-else>
-                    Add a new person to your community by clicking the Plus button<
+                    Add a new member to your community by clicking the Plus button<
                   </div>
                 </div>
                 <br>
                 <div v-if="members.length > 1">
-                  <p ref="EditMemberHint">See a person's bar and other detail by clicking them</p>
-                  <p>If you see an exclamation <b-icon icon="exclamation-circle-fill" variant="dark"></b-icon> the person has not yet accepted your invitation</p>
+                  <p ref="EditMemberHint">See a member's bar and other detail by clicking them</p>
+                  <p>If you see an exclamation <b-icon icon="exclamation-circle-fill" variant="dark"></b-icon> the member has not yet accepted your invitation</p>
                 </div>
               </div>
               <div v-else>
