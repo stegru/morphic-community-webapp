@@ -50,33 +50,38 @@
   .desktop {
     background: url(/img/background-editor.png);
     position: relative;
-    .barPreview {
+    display: flex;
+
+    .preview-bar {
       padding-bottom: 5rem;
     }
-    .logoHolder {
-      position: absolute;
-      bottom: 1rem;
-      width: 100%;
-      padding: 0 !important;
-      img {
-        width: 3rem;
-        height: 3rem;
-      }
-    }
+
     .openDrawerIconHolder {
-      position: absolute;
-      bottom: 1rem;
-      left: -1.5rem;
-      width: 3rem;
-      background: white;
-      border-radius: 100%;
-      padding: 2px;
       .b-icon {
-        font-size: 3rem;
-        color: $primary-color;
+        // margin-left: -19px;
+        right: 104px;
+        font-size: 2em;
+        position: absolute;
+        bottom: 25px;
+        background: black;
+        color: white;
+        border-radius: 100%;
+        border: 1px solid black;
       }
     }
   }
+
+  .logoHolder {
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
+
 </style>
 
 <script>

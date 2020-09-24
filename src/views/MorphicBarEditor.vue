@@ -9,7 +9,7 @@
             <p>What text do you want on the button?</p>
             <div role="group" class="mb-3">
               <label for="modalEditGenericLabel">Text on the button</label>
-              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" />
+              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" maxLength="35" />
             </div>
             <div class="bg-silver rounded p-3">
               <p v-if="editDialogDetails" class="text-right small mb-0">
@@ -78,20 +78,22 @@
           <b-col md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
               <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage)" class="text-danger">Remove Button</b-link></p>
-              <p class="mt-5 mb-1">This is the button you are making</p>
-              <div class="barPreview p-5 rounded">
-                <PreviewItem :item="buttonEditStorage" />
+              <p class="">This is the button you are making</p>
+              <div class="barPreview rounded">
+                <div class="previewHolder">
+                  <PreviewItem :item="buttonEditStorage" />
+                </div>
               </div>
             </div>
           </b-col>
         </b-row>
       </div>
     </b-modal>
-    <b-modal id="roleChangeConfirm" @ok="changeUserRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
+    <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
     </b-modal>
-        <b-modal id="deleteConfirm" @ok="deleteUser" title="Delete User" footer-bg-variant="light" ok-title="Delete">
-      <p class="my-4">Please confirm the deletion of this user?</p>
+        <b-modal id="deleteConfirm" @ok="deleteMember" title="Delete Member" footer-bg-variant="light" ok-title="Delete">
+      <p class="my-4">Please confirm the deletion of this member?</p>
     </b-modal>
     <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this bar?</p>
@@ -128,13 +130,13 @@
           <b-nav id="editorNav" tabs class="small">
             <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
               <span v-if="$route.query.memberId">
-                User Details
+                Member Details
               </span>
               <span v-else-if="getMembersCount() === 0">
                 Unused Bar
               </span>
               <span v-else>
-                Users ({{ getMembersCount() }})
+                Members ({{ getMembersCount() }})
               </span>
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
@@ -142,7 +144,7 @@
             <span v-if="getBarRemoveValidity()">
               <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
             </span>
-            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to User MorphicBar</b-button>
+            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
             <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
             <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
           </b-nav>
@@ -152,9 +154,9 @@
             <div v-if="$route.query.memberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
               <ul class="list-unstyled small">
-                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
-                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
-                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
+                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
+                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
+                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
                 <li v-if="memberDetails.state === 'uninvited'"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
@@ -163,7 +165,7 @@
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
             </div>
             <div v-else>
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} members</b></h5>
               <ul class="small mb-0">
                 <li v-for="member in members" v-bind:key="member.id">
                   <p>{{ member.first_name }} {{ member.last_name }}</p>
@@ -178,7 +180,7 @@
               Bar on the right of the screen
             </b-form-checkbox>
             <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-              Person cannot close bar
+              Member cannot close bar
             </b-form-checkbox>
             <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
               Morphic Bar always starts open
@@ -194,96 +196,105 @@
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
           <div id="preview-holder" class="desktop fill-height mt-3">
-            <b-row>
-              <b-col :md="drawerSecondColumn ? 6 : 8" class="pCol">
-              </b-col>
-              <b-col :md="drawerSecondColumn ? 4 : 2" class="pCol">
-                <div id="preview-drawer" v-if="openDrawer">
-                  <div class="barPreview pl-2 pt-2 pr-2 pb-0 no-right-border">
-                    <b-button @click="addToBarOrDrawer(false)" v-if="addToDrawer" variant="success" size="sm" class="btn-block mb-3">Add to Drawer</b-button>
-                    <b-row>
-                      <b-col v-if="drawerSecondColumn" md="6">
-                        <draggable v-model="drawerItemsSecond" group="items" class="draggable-area">
-                          <div v-for="(item, index) in drawerItemsSecond" :key="index">
-                            <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                            </div>
-                          </div>
-                        </draggable>
-                      </b-col>
-                      <b-col :md="drawerSecondColumn ? 6 : 12">
-                        <draggable v-model="drawerItems" group="items" class="draggable-area">
-                          <div v-for="(item, index) in drawerItems" :key="index">
-                            <div class="previewHolder mb-3">
-                              <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                            </div>
-                          </div>
-                        </draggable>
-                      </b-col>
-                    </b-row>
-                  </div>
-                </div>
-              </b-col>
-              <b-col md="2" class="pCol">
-                <div id="preview-bar">
-                  <div class="barPreview pl-2 pt-2 pr-2">
-                    <b-button @click="addToBarOrDrawer(true)" v-if="addToBar" variant="success" size="sm" class="btn-block mb-3">Add to Bar</b-button>
-                    <draggable v-model="primaryItems" group="items" class="draggable-area">
-                      <div v-for="(item, index) in primaryItems" :key="index">
-                        <div class="previewHolder mb-2">
-                          <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-                        </div>
+            <drop mode="cut" class="dragToDelete desktop-portion">
+              <template v-slot:drag-image="{data}">
+                <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
+              </template>
+              <div class="desktop-portion">
+              </div>
+            </drop>
+            <!-- Buttons Bar -->
+            <div id="preview-bar">
+              <drop class="buttonsList draggable-area" @drop="dropOnClickToAdd">
+                <button @click="addButtonToBarByClick()" v-if="expandedCatalogButtonId" variant="success" size="sm" class="clickDropSpot feedback button-feedback">Click to add</button>
+              </drop>
+
+              <div class="barPreviewEditor" ref="myref">
+                <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
+                  <template v-slot:item="{item}">
+                    <drag :key="item.id"
+                      @dragstart="setDragInProgress(true)"
+                      @dragend="setDragInProgress(false)"
+                      @click="buttonToEdit(item, $event)"
+                      @cut="removeButton(item, barDetails.items)"
+                      class="buttonDragger">
+                      <div :key="item.id" class="previewHolder">
+                        <PreviewItem :item="item" />
                       </div>
-                    </draggable>
-                    <div class="logoHolder">
-                      <b-img src="/img/logo-color.svg" />
-                    </div>
-                    <div class="openDrawerIconHolder">
-                      <b-link @click="openDrawer = !openDrawer">
-                        <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                      </b-link>
-                    </div>
-                  </div>
-                </div>
-              </b-col>
-            </b-row>
+                    </drag>
+                  </template>
+                  <template v-slot:feedback="{data}">
+                    <div class="item feedback button-feedback" :key="data.id"></div>
+                  </template>
+                </drop-list>
+              </div>
+              <div class="logoHolder">
+                <b-img src="/img/logo-color.svg" />
+              </div>
+              <div class="openDrawerIconHolder">
+                <b-link @click="openDrawer = !openDrawer">
+                  <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
+                </b-link>
+              </div>
+            </div>
           </div>
         </div>
       </b-col>
+      <!-- Button Catalogue -->
       <b-col md="2">
-        <div id="buttonsPanel" class="fill-height bg-silver p-3">
-          <b-input-group id="search-group" size="sm" class="mb-3">
-            <b-form-input type="text" disabled></b-form-input>
-            <b-input-group-append>
-              <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
-            </b-input-group-append>
-          </b-input-group>
-          <h6><b>Make-a-Button</b></h6>
-          <ul class="linkList list-unstyled mb-0">
-            <draggable v-model="makeAButtons" group="items" @start="dragFromList($event, true)" @end="dropFromList($event)" :move="preventDuplicated">
-              <li v-for="(button, index) in makeAButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-                <b-link @click="predefinedClicked($event, index, true)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                  <b-icon v-else icon="bootstrap"></b-icon>
-                  {{ button.configuration.label }}
-                </b-link>
+        <drop class="cut" mode="cut">
+          <template v-slot:drag-image="{data}">
+            <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
+          </template>
+          <div id="buttonsPanel" class="fill-height bg-silver p-3">
+            <b-input-group id="search-group" size="sm" class="mb-3">
+              <b-form-input type="text" disabled></b-form-input>
+              <b-input-group-append>
+                <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
+              </b-input-group-append>
+            </b-input-group>
+            <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
+              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
+                <h3>{{categoryName}}</h3>
+                <ul class="ButtonsCatalogEntries">
+                  <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
+                    <!-- Render each button as draggable -->
+                    <drag :data="button" type="catalogButtonNoImage">
+                      <!-- Define looks when dragged -->
+                      <template v-slot:drag-image>
+                        <PreviewItem :item="button" :noImage="true" class="noImage" />
+                      </template>
+                      <!-- Define looks when selected (expanded) -->
+                      <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                        <div class="buttons">
+                          <drag :data="button" type="catalogButtonNoImage">
+                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
+                          </drag>
+
+                          <drag :data="button" type="catalogButtonWithImage">
+                            <template v-slot:drag-image>
+                              <PreviewItem :item="button" :noImage="false" class="noImage" />
+                            </template>
+                            <PreviewItem :item="button" :simplified="true" class="withImage" />
+                          </drag>
+                        </div>
+                        <h3>{{button.configuration.label}}</h3>
+                        <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
+                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
+                      </div>
+                      <!-- Define looks when not selected -->
+                      <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                        <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                        <b-icon v-else icon="bootstrap"></b-icon>
+                        {{ button.configuration.label }}
+                      </b-link>
+                    </drag>
+                  </li>
+                </ul>
               </li>
-            </draggable>
-          </ul>
-          <br>
-          <h6><b>Predefined Buttons</b></h6>
-          <ul class="linkList list-unstyled mb-0">
-            <draggable v-model="predefinedButtons" group="items" @start="dragFromList($event, false)" @end="dropFromList($event)" :move="preventDuplicated">
-              <li v-for="(button, index) in predefinedButtons" :key="index" class="mb-1" :class="{ 'active': button.isActive }">
-                <b-link @click="predefinedClicked($event, index, false)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'">
-                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                  <b-icon v-else icon="bootstrap"></b-icon>
-                  {{ button.configuration.label }}
-                </b-link>
-              </li>
-            </draggable>
-          </ul>
-        </div>
+            </ul>
+          </div>
+        </drop>
       </b-col>
     </b-row>
   </div>
@@ -294,12 +305,161 @@
   $secondary-color: #84c661;
 
   #preview-holder {
-    .pCol {
-      padding-left: 0;
-      padding-right: 0;
+    border: 1px solid #002957;
+
+    .desktop-portion {
+      flex-grow: 1;
     }
-    .no-right-border {
-      border-right: none;
+
+    #preview-bar, #preview-drawer {
+      padding-top: 10px;
+      padding-bottom: 5px;
+      display: flex;
+      min-height: 600px;
+      flex-direction: column;
+      background: white;
+      border-left: 1px solid #002957;
+      min-width: 120px;
+
+      // vertical line separating bar from drawer
+      background-image: linear-gradient(#000, #000);
+      background-size: 1px 100%;
+      background-repeat: no-repeat;
+      background-position: right 120px bottom 0px;
+
+      .minWidth1px {
+        min-width: 1px;
+      }
+
+      .button-feedback, .feedback {
+        background-color: #e5f4ed;
+        border: 2px dashed rgb(16 141 74);
+        height: 50px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 10px;
+        margin-top: 10px;
+
+        &.clickDropSpot {
+          margin-top: 0px;
+        }
+      }
+
+      .logoHolder {
+        width: 100%;
+        text-align: right;
+        padding-right: 32px;
+      }
+
+      .barPreviewEditor { // WAS ALSO: , .barPreview
+        // width: 120px;
+        // display: flex;
+        // flex-direction: column;
+        // flex-grow: 1;
+        // height: 500px;
+
+        .buttonDragger {
+          writing-mode: horizontal-tb;
+          margin-top: 10px;
+          margin-bottom: 0px;
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+
+        .buttonsList {
+
+          // display: block;
+          overflow: hidden;
+          height: 500px;
+          min-width: 120px;
+          display: inline-flex;
+          writing-mode: vertical-rl;
+          flex-wrap: wrap;
+
+          // &.showDrawer {
+          //   flex-wrap: wrap;
+          // }
+
+          &:not(.showDrawer) {
+            // flex-wrap: wrap;
+            width: 120px !important;
+          }
+
+          button {
+            padding: 0px;
+          }
+
+
+
+          .draggable-area {
+            // min-width: 500px;
+            flex-grow: 1;
+            list-style: none;
+
+
+            .previewHolder {
+              width: 120px;
+              padding: 10px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+              position: relative;
+
+              .overlay {
+                position: absolute;
+                top: 10px;
+                color: $primary-color !important;
+                background: rgba(255,255,255,0.7) !important;
+                font-size: 1.5rem;
+                cursor: pointer;
+                &:hover {
+                  background: white !important;
+                }
+                &:active, &:focus {
+                  color: #d60000 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #buttonsPanel {
+    .ButtonsCatalogEntries {
+      padding-inline-start: 17px;
+      list-style: none;
+      .buttonsCatalogEntry {
+        .active {
+          background-color: #e0f1d7;
+          border: solid 1px #008145;
+          border-radius: 5px;
+          padding: 10px;
+
+          .buttons {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+          }
+
+          h3 {
+            margin-top: 15px;
+            font-size: 20px;
+            margin-bottom: 0px;
+          }
+
+          div.description {
+            font-size: 14px;
+          }
+
+          div.help {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            line-height: 18px;
+          }
+        }
+      }
     }
   }
 
@@ -316,9 +476,6 @@
       right: 0;
       top: 6px;
     }
-  }
-  .draggable-area {
-    min-height: 500px;
   }
   .compactIconHolder {
     height: 22rem;
@@ -380,42 +537,6 @@
     border-bottom: none;
   }
 
-  #preview-drawer, #preview-bar {
-    .barPreview {
-      min-height: 600px;
-    }
-  }
-
-  .previewHolder {
-    position: relative;
-    .overlay {
-      position: absolute;
-      top: 10px;
-      color: $primary-color !important;
-      background: rgba(255,255,255,0.7) !important;
-      font-size: 1.5rem;
-      cursor: pointer;
-      &:hover {
-        background: white !important;
-      }
-      &:active, &:focus {
-        color: #d60000 !important;
-      }
-    }
-    .icon-delete, .icon-edit {
-      right: 10px;
-    }
-    .icon-edit {
-      top: 40px;
-    }
-    .icon-up, .icon-down {
-      left: 10px;
-    }
-    .icon-down {
-      top: 40px;
-    }
-  }
-
   .text-disabled {
     color: gray;
     &:active, &:focus, &:hover {
@@ -425,40 +546,47 @@
     }
   }
 
-  .linkList {
+  .nonExpandedCatalogEntry {
+    width: 100%;
+    display: block;
+
     img {
       max-width: 1rem;
       height: 1rem;
     }
-    li.active {
-      background: white;
-      padding: 10px;
-      border: 1px solid $primary-color;
-      outline: 0 !important;
-      border-radius: .5rem;
+
+    .buttonsCatalogEntry {
+      width: 100%;
+      display: block;
     }
   }
 
-  .draggedListItem {
-    background: white;
-    border: 2px dashed $secondary-color;
-    padding: 1rem 1rem 0 1rem;
-    min-height: 5rem;
-    border-radius: 5px;
-    list-style-type: none;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: .5rem;
-    a {
-      .b-icon {
-        display: none;
+  #preview-bar, #preview-drawer {
+    .buttonsCatalogEntry {
+      .active {
+        background-color: none;
+        border: 0px;
+        width: default;
+
+        .buttons {
+          display: inherit !important;
+
+          button.withImage {
+            display: none;
+          }
+
+          display: flex;
+          justify-content: space-around;
+          align-items: flex-end;
+        }
+
+        h3, div.description, div.help {
+          display: none;
+        }
       }
     }
-    img {
-      display: none;
-    }
   }
+
 </style>
 
 <script>
@@ -466,18 +594,68 @@
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import PreviewItem from '@/components/dashboard/PreviewItem'
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
+import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
+import { Drag, Drop, DropList, DropMask } from "vue-easy-dnd";
 
 export default {
-  name: 'MemberInvite',
+  name: 'MorphicBarEditor',
   components: {
     CommunityManager,
     PreviewItem,
-    draggable
+    draggable,
+    Drag,
+    Drop,
+    DropList,
+    DropMask
   },
   methods: {
+    dropToBar: function (event) {
+      event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
+      event.data.id = this.generateId(event.data)
+
+      if (event.type == "catalogButtonNoImage") {
+        event.data.configuration.image_url = "";
+      }
+      // insert in new position (default to 0)
+      this.barDetails.items.splice(event.index || 0, 0, event.data);
+      // close any expanded button
+      this.expandedCatalogButtonId = undefined;
+
+      this.isChanged = true;
+
+      return true;
+    },
+
+    dropOnClickToAdd: function (event) {
+      this.dropToBar(event);
+    },
+
+    // used to avoid bug where a "click" event is triggered at end of drag
+    setDragInProgress: function (newValue) {
+      this.dragInProgress = newValue;
+    },
+
+    removeButton: function (item, itemList) {
+      let compareObjects = function (x, y) {
+        for (let key in x) {
+          if (x[key] != y[key]) {
+            return false;
+          } else {
+            if (x[key] instanceof Object && y[key] instanceof Object) {
+              if (compareObjects(x[key], y[key]) == false) {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      };
+      let index = itemList.findIndex(x => compareObjects(x, item));
+      itemList.splice(index, 1);
+    },
+
     loadAllData: function () {
       this.loadBarData()
       this.loadBarMembers()
@@ -491,12 +669,12 @@ export default {
       if (this.$route.query.barId === 'new') {
         this.newBar = true
         this.barDetails = this.newBarDetails
-      } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
+      } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
         for (let i = 0; i < this.predefinedBars.length; i++) {
           if (this.predefinedBars[i].id === this.$route.query.barId) {
             this.newBar = true
             this.barDetails = this.newBarDetails
-            this.barDetails.items = this.predefinedBars[i].items
+            this.barDetails.items = this.predefinedBars[i].items;
           }
         }
       } else {
@@ -505,93 +683,30 @@ export default {
             this.barDetails = resp.data
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       }
     },
-    preventDuplicated: function (event) {
-      for (let i = 0; i < this.activeButtons.length; i++) {
-        if (this.activeButtons[i].configuration.label === event.draggedContext.element.configuration.label) {
-          return false
-        }
-      }
+    addIds: function (items) {
+      return items.map(item => item.id = this.generateId(item));
     },
-    dropFromList: function (event) {
-      event.item.classList.remove('draggedListItem')
+    // hack to refresh css rendering due to bars being fucked up in their CSS
+    refreshBar() {
+      this.$refs.myref.classList.contains("minWidth1px") ?
+        this.$refs.myref.classList.remove("minWidth1px") :
+        this.$refs.myref.classList.add("minWidth1px");
+    }
+    ,
+    distributeItems: function (items) {
+      // add id's
+      this.addIds(items);
+      // items.map(item => item.id = this.generateId(item));
     },
-    dragFromList: function (event, makeAButton) {
-      event.item.className = 'draggedListItem'
-      if (makeAButton) {
-        this.dragMakeAButton = false
-      } else {
-        this.dragPredefinedButton = false
-      }
-    },
-    getMakeAButtons: function () {
-      const buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (availableItems[i].configuration.subkind) {
-            const item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
-    },
-    getPredefinedButtons: function () {
-      const buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (!availableItems[i].configuration.subkind) {
-            const item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
-    },
-    getDrawerItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === false) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            if (data.length >= this.preview.drawer.h) {
-              this.drawerItemsSecond.push(newItem)
-            } else {
-              data.push(newItem)
-            }
-          }
-        }
-      }
-      this.drawerItems = data
-    },
-    getPrimaryItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === true) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            data.push(newItem)
-          }
-        }
-      }
-      this.primaryItems = data
-    },
-    deleteUser: function () {
+    deleteMember: function () {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
           if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulUserDelete
+            this.successMessage = MESSAGES.successfulMemberDelete
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
@@ -599,10 +714,10 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
-    changeUserRole: function () {
+    changeMemberRole: function () {
       if (this.memberDetails.role === 'member') {
         this.memberDetails.role = 'manager'
       } else {
@@ -616,7 +731,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     addPersonalBar: function () {
@@ -627,8 +742,8 @@ export default {
         this.barDetails.is_shared = false
 
         const data = this.barDetails
-        const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-        data.items = this.primaryItems.concat(drawerItems)
+        // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+        // data.items = this.primaryItems.concat(drawerItems)
 
         createCommunityBar(this.communityId, data)
           .then((resp) => {
@@ -646,12 +761,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.log(err)
+                  console.err(err)
                 })
             }
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       } else {
         this.saveBar()
@@ -661,8 +776,8 @@ export default {
       this.onSave = true
       const data = this.barDetails
       data.is_shared = true
-      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      data.items = this.primaryItems.concat(drawerItems)
+      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+      // data.items = this.primaryItems.concat(drawerItems)
 
       createCommunityBar(this.communityId, data)
         .then((resp) => {
@@ -677,14 +792,14 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     saveBar: function () {
       this.onSave = true
       const data = this.barDetails
-      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      data.items = this.primaryItems.concat(drawerItems)
+      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+      // data.items = this.primaryItems.concat(drawerItems)
 
       updateCommunityBar(this.communityId, this.$route.query.barId, data)
         .then((resp) => {
@@ -698,7 +813,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     deleteBar: function () {
@@ -713,130 +828,29 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
-    predefinedClicked: function (event, index, makeAButtons) {
-      this.clearPredefinedActive()
-      let currentLabel
-      if (makeAButtons) {
-        this.buttonStorage = this.makeAButtons[index]
-        currentLabel = this.makeAButtons[index].configuration.label
-      } else {
-        this.buttonStorage = this.predefinedButtons[index]
-        currentLabel = this.predefinedButtons[index].configuration.label
-      }
-      if (event.type === 'click') {
-        if (makeAButtons) {
-          this.makeAButtons[index].configuration.label = '[ACTIVE]'
-          this.makeAButtons[index].isActive = true
-          this.makeAButtons[index].configuration.label = currentLabel
-        } else {
-          this.predefinedButtons[index].configuration.label = '[ACTIVE]'
-          this.predefinedButtons[index].isActive = true
-          this.predefinedButtons[index].configuration.label = currentLabel
-        }
-      }
-      if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
-        this.addToBar = true
-      }
-      if (this.getDrawerButtonsCount() < (this.preview.drawer.w * this.preview.drawer.h)) {
-        this.addToDrawer = true
-      }
+    expandCatalogButton: function (button, buttonId) {
+      this.expandedCatalogButtonId = buttonId;
+      this.expandedCatalogButton = button;
     },
-    clearPredefinedActive: function () {
-      for (let i = 0; i < this.predefinedButtons.length; i++) {
-        this.predefinedButtons[i].isActive = false
-      }
-      for (let i = 0; i < this.makeAButtons.length; i++) {
-        this.makeAButtons[i].isActive = false
-      }
-    },
-    addToBarOrDrawer: function (isPrimary) {
-      this.clearPredefinedActive()
-      if (this.buttonStorage) {
-        // setting the primary attribute based on which bar it's added to
-        this.buttonStorage.is_primary = isPrimary
-        // checking if this button already exists
-        if (this.barDetails.items.length > 0) {
-          let existingIndex = -1
-          for (let i = 0; i < this.barDetails.items.length; i++) {
-            if (this.barDetails.items[i].configuration.label === this.buttonStorage.configuration.label) {
-              existingIndex = i
-            }
-          }
-          if (existingIndex !== -1) {
-            // removing the old version
-            this.barDetails.items.splice(existingIndex, 1)
-          }
-        }
-        // adding the item
-        this.barDetails.items.push(this.buttonStorage)
-        // cleaning up the storage
-        this.buttonStorage = {}
-      }
-      this.isChanged = true
-      this.addToBar = false
-      this.addToDrawer = false
-    },
-    findButtonByLabel: function (item) {
-      const data = {
-        index: -1,
-        drawerSecond: false
-      }
-      if (item.is_primary) {
-        for (let i = 0; i < this.primaryItems.length; i++) {
-          if (this.primaryItems[i].configuration.label === item.configuration.label) {
-            data.index = i
-          }
-        }
-      } else {
-        if (this.drawerSecondColumn) {
-          for (let i = 0; i < this.drawerItemsSecond.length; i++) {
-            if (this.drawerItemsSecond[i].configuration.label === item.configuration.label) {
-              data.index = i
-              data.drawerSecond = true
-            }
-          }
-        }
-        for (let i = 0; i < this.drawerItems.length; i++) {
-          if (this.drawerItems[i].configuration.label === item.configuration.label) {
-            data.index = i
-          }
-        }
-      }
-      return data
+    addButtonToBarByClick: function () {
+      this.dropToBar({ data: this.expandedCatalogButton, type: "catalogButtonNoImage", index: 0});
     },
     buttonToRemove: function (item) {
-      const foundItem = this.findButtonByLabel(item)
-      if (foundItem.index !== -1) {
-        if (item.is_primary) {
-          this.primaryItems.splice(foundItem.index, 1)
-        } else {
-          if (foundItem.drawerSecond) {
-            this.drawerItemsSecond.splice(foundItem.index, 1)
-          } else {
-            this.drawerItems.splice(foundItem.index, 1)
-          }
-        }
-        this.$bvModal.hide('modalEditGeneric')
-        this.isChanged = true
-      }
+      // remove from items list
+      // bar and drawer lists are automatically updated from watcher
+      this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
+      this.$bvModal.hide('modalEditGeneric')
+      this.isChanged = true
     },
-    buttonToEdit: function (item) {
-      const foundItem = this.findButtonByLabel(item)
-      if (foundItem.index !== -1) {
-        if (item.is_primary) {
-          this.buttonEditStorage = this.primaryItems[foundItem.index]
-        } else {
-          if (foundItem.drawerSecond) {
-            this.buttonEditStorage = this.drawerItemsSecond[foundItem.index]
-          } else {
-            this.buttonEditStorage = this.drawerItems[foundItem.index]
-          }
-        }
-        this.$bvModal.show('modalEditGeneric')
+    buttonToEdit: function (item, evt) {
+      if (this.dragInProgress) {
+        return;
       }
+      this.buttonEditStorage = item;
+      this.$bvModal.show('modalEditGeneric')
     },
     refreshButton: function (updated) {
       // updating the data in a button (on edit)
@@ -858,12 +872,6 @@ export default {
       }
       return 0
     },
-    getPrimaryButtonsCount: function () {
-      return this.primaryItems.length
-    },
-    getDrawerButtonsCount: function () {
-      return this.drawerItems.length
-    },
     loadBarMembers: function () {
       getCommunityBars(this.communityId)
         .then(resp => {
@@ -881,11 +889,11 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err)
+              console.err(err)
             })
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -900,7 +908,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getCommunityData: function () {
@@ -909,7 +917,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     generateId: function (item) {
@@ -921,22 +929,18 @@ export default {
         id += '-' + Math.floor(Math.random() * Math.floor(99999999))
       }
       return id
+    },
+    addIdsToCatalogButtons(buttonCatalog) {
+      for (let category in buttonCatalog) {
+        for (let button in buttonCatalog[category]) {
+          buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
+        }
+      }
+      return buttonCatalog;
     }
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
-    activeButtons: function () {
-      let activeButtons = []
-      activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond)
-      return activeButtons
-    },
-    drawerSecondColumn: function () {
-      if (this.drawerItems.length >= this.preview.drawer.h || this.drawerItemsSecond.length > 0) {
-        return true
-      } else {
-        return false
-      }
-    },
     editSubKindIcons: function () {
       const data = {}
       if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
@@ -952,8 +956,7 @@ export default {
   },
   watch: {
     'barDetails.items': function (newValue, oldValue) {
-      this.getDrawerItems(newValue)
-      this.getPrimaryItems(newValue)
+      this.distributeItems(newValue)
     },
     makeAButtons: function (newValue, oldValue) {
       if (!this.dragMakeAButton) {
@@ -965,47 +968,6 @@ export default {
       if (!this.dragPredefinedButton) {
         this.predefinedButtons = oldValue
         this.dragPredefinedButton = true
-      }
-    },
-    primaryItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
-        this.initialChangesPrimaryItems = true
-      } else if (this.initialChangesPrimaryItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === false) {
-            item = newValue[i]
-            item.is_primary = true
-          }
-          if (i >= this.preview.bar.h) {
-            this.drawerItems.push(this.primaryItems[i])
-            this.primaryItems.splice(i, 1)
-            this.openDrawer = true
-          }
-        }
-      }
-    },
-    drawerItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesDrawerItems) {
-        this.initialChangesDrawerItems = true
-      } else if (this.initialChangesDrawerItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-          if (i >= this.preview.drawer.h) {
-            this.drawerItemsSecond.push(this.drawerItems[i])
-            this.drawerItems.splice(i, 1)
-          }
-        }
       }
     },
     drawerItemsSecond: function (newValue, oldValue) {
@@ -1057,6 +1019,10 @@ export default {
       next()
     }
   },
+
+  beforeUpdate() {
+    this.refreshBar();
+  },
   data () {
     return {
       // messages
@@ -1083,6 +1049,10 @@ export default {
       barsList: [],
       membersList: [],
 
+      buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
+      dragInProgress: false,
+      expandedCatalogButtonId: null,
+
       // storage
       buttonStorage: {},
       buttonEditStorage: {
@@ -1095,11 +1065,11 @@ export default {
       barDetails: {},
       members: [],
       memberDetails: {},
-      drawerItems: [],
-      drawerItemsSecond: [],
-      primaryItems: [],
-      makeAButtons: this.getMakeAButtons(),
-      predefinedButtons: this.getPredefinedButtons(),
+      // drawerItems: [],
+      // drawerItemsSecond: [],
+      // primaryItems: [],
+      // makeAButtons: this.getMakeAButtons(),
+      // predefinedButtons: this.getPredefinedButtons(),
 
       // configurations
       preview: {
@@ -1108,7 +1078,7 @@ export default {
           h: 6
         },
         bar: {
-          h: 6
+          h: 100
         }
       },
       newBarDetails: {
@@ -1126,37 +1096,7 @@ export default {
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
-      subkindIcons: subkindIcons,
-      makeButtonList: [
-        {
-          label: 'Button to start a call...',
-          icon: 'chat'
-        },
-        {
-          label: 'Button to join a meeting...',
-          icon: 'people-fill'
-        },
-        {
-          label: 'Button to open online photo album...',
-          icon: 'images'
-        },
-        {
-          label: 'Button to open calendar...',
-          icon: 'calendar3'
-        },
-        {
-          label: 'Button to open web page...',
-          icon: 'link'
-        },
-        {
-          label: 'Button to open an app...',
-          icon: 'app'
-        },
-        {
-          label: 'Button to make all distractions go away...',
-          icon: 'headphones'
-        }
-      ]
+      subkindIcons: subkindIcons
     }
   }
 }

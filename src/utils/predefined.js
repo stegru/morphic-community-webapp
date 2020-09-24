@@ -1,33 +1,33 @@
-import { availableItems } from '@/utils/constants'
+import { buttonCatalog } from '@/utils/constants'
 
 // setting the base data
 export const predefinedBars = [
   {
-    id: 'predifined-1',
+    id: 'predefined-1',
     is_shared: true,
     name: 'Predefined Preset',
-    desc: 'This is predefined Default Bar with some items inside, use it as a start...',
-    items: [availableItems[0], availableItems[1], availableItems[2], availableItems[3], availableItems[7], availableItems[8]]
+    desc: 'This is predefined default bar with some items inside, use it as a start...',
+    items: [buttonCatalog['E-mail'].outlook, buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.facebook, buttonCatalog.Other.skype]
   },
   {
-    id: 'predifined-2',
+    id: 'predefined-2',
     is_shared: true,
     name: 'Predefined Preset',
-    desc: 'This is predefined Default Bar with some items inside, use it as a start...',
-    items: [availableItems[1], availableItems[2], availableItems[4], availableItems[5], availableItems[6], availableItems[7]]
+    desc: 'This is predefined default bar with some items inside, use it as a start...',
+    items: [buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.skype]
   },
   {
-    id: 'predifined-3',
+    id: 'predefined-3',
     is_shared: true,
     name: 'Predefined Preset',
-    desc: 'This is predefined Default Bar with some items inside, use it as a start...',
-    items: [availableItems[0], availableItems[1], availableItems[2], availableItems[3], availableItems[4], availableItems[5]]
+    desc: 'This is predefined default bar with some items inside, use it as a start...',
+    items: [buttonCatalog['E-mail'].outlook, buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.facebook]
   },
   {
-    id: 'predifined-4',
+    id: 'predefined-4',
     is_shared: true,
     name: 'Predefined Preset',
-    desc: 'This is predefined Default Bar with some items inside, use it as a start...',
-    items: [availableItems[8], availableItems[7], availableItems[6], availableItems[5], availableItems[4], availableItems[3]]
+    desc: 'This is predefined default bar with some items inside, use it as a start...',
+    items: [buttonCatalog['E-mail'].gmail, buttonCatalog.Other.skype, buttonCatalog.Other.facebook]
   }
 ]

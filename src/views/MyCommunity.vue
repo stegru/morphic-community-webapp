@@ -76,7 +76,7 @@ export default {
         this.communities = resp.data.communities
       })
       .catch(err => {
-        console.log(err)
+        console.err(err)
       })
   },
   methods: {
@@ -92,7 +92,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   }

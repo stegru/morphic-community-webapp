@@ -5,7 +5,7 @@
 
     <ul>
         <li v-for="member in members" :key="member.id">
-            <b-link :to="{ name: 'Focused: Person', query: { barId: barDetails.id, memberId: member.id } }">
+            <b-link :to="{ name: 'Focused: Member', query: { barId: barDetails.id, memberId: member.id } }">
                 {{ member.first_name }} {{ member.last_name }}
             </b-link>
         </li>
@@ -120,7 +120,7 @@ export default {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
           if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulUserDelete
+            this.successMessage = MESSAGES.successfulMemberDelete
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
@@ -128,7 +128,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     changeUserRole: function () {
@@ -145,7 +145,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     addPersonalBar: function () {
@@ -175,12 +175,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.log(err)
+                  console.err(err)
                 })
             }
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       } else {
         this.saveBar()
@@ -204,7 +204,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     saveBar: function () {
@@ -225,7 +225,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     deleteBar: function () {
@@ -240,7 +240,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     predefinedClicked: function (event, index, makeAButtons) {
@@ -335,7 +335,6 @@ export default {
       return data
     },
     buttonToRemove: function (item) {
-      console.log(item)
       const foundItem = this.findButtonByLabel(item)
       if (foundItem.index !== -1) {
         if (item.is_primary) {
@@ -409,11 +408,11 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err)
+              console.err(err)
             })
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -428,7 +427,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getCommunityData: function() {
@@ -437,7 +436,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     generateId: function(item) {
@@ -479,7 +478,7 @@ export default {
     if (this.$route.query.barId === 'new') {
       this.newBar = true
       this.barDetails = this.newBarDetails
-    } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
+    } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
       for (let i = 0; i < this.predefinedBars.length; i++) {
         if (this.predefinedBars[i].id === this.$route.query.barId) {
           this.newBar = true
@@ -493,7 +492,7 @@ export default {
           this.barDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
     if (this.$route.query.memberId) {
@@ -593,7 +592,7 @@ export default {
           this.getCommunityData()
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },

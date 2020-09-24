@@ -17,12 +17,12 @@
     </ul>
     <p v-else>
       <i>No bars in the community</i><br>
-      Click on the plus button just above to add your first one
+      Click on the button to add your first one<br><br>
+      <button @click="invokeEditor('#/focused/bar-editor')" class="btn-primary btn">Add a community bar</button>
     </p>
-  <button @click="invokeEditor('/focused/bar-editor')" class="btn-primary btn">Add a community bar</button>
 
   <h2>People in your community</h2>
-  <button @click="invokeEditor('/focused/person')" class="btn-primary btn">Add a Person</button>
+  <em>Follow a link to see or change the member's Morphic Bar</em>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
@@ -34,7 +34,8 @@
     </ul>
     <p v-else>
       <i>Nobody in the community</i><br>
-      Click on the plus button just above to add somebody to your community
+      Click on the button to add somebody to your community<br><br>
+      <button @click="invokeEditor('#/focused/person')" class="btn-primary btn">Add a Person</button>
     </p>
 </html>
 </template>
@@ -157,11 +158,11 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err)
+              console.err(err)
             })
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     autoHideDetails: function (data, showFirstOne) {
