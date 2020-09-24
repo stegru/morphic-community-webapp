@@ -6,7 +6,7 @@
 
     <h2>{{ barDetails.name }}</h2>
     <!-- <b-nav  class="small"> -->
-      <b-link :to="{ name: 'Focused: People using bar', query: { barId: barDetails.id } }">
+      <b-link :to="{ name: 'Focused: Members using bar', query: { barId: barDetails.id } }">
         <b-icon-person-circle></b-icon-person-circle>
         <span v-if="$route.query.memberId">
           Member Details
@@ -15,7 +15,7 @@
           Unused Bar
         </span>
         <span v-else>
-          People using this bar ({{ getMembersCount() }})
+          Members using this bar ({{ getMembersCount() }})
         </span>
       </b-link>
       <br/>

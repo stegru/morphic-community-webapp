@@ -4,7 +4,7 @@
     <div>Screen resolution: 1400 x 1050</div>
     <ul>
         <li>Bar on right side of screen</li>
-        <li>Person cannot close bar</li>
+        <li>Member cannot close bar</li>
         <li>Morphic Bar always starts open</li>
     </ul>
     <a href="#">View history of changes</a>

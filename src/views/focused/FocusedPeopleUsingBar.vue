@@ -5,7 +5,7 @@
 
     <ul>
         <li v-for="member in members" :key="member.id">
-            <b-link :to="{ name: 'Focused: Person', query: { barId: barDetails.id, memberId: member.id } }">
+            <b-link :to="{ name: 'Focused: Member', query: { barId: barDetails.id, memberId: member.id } }">
                 {{ member.first_name }} {{ member.last_name }}
             </b-link>
         </li>

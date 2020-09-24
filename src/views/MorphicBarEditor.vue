@@ -152,9 +152,9 @@
             <div v-if="$route.query.memberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
               <ul class="list-unstyled small">
-                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
-                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
-                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
+                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
+                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
+                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
                 <li v-if="memberDetails.state === 'uninvited'"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
@@ -163,7 +163,7 @@
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
             </div>
             <div v-else>
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} members</b></h5>
               <ul class="small mb-0">
                 <li v-for="member in members" v-bind:key="member.id">
                   <p>{{ member.first_name }} {{ member.last_name }}</p>
@@ -178,7 +178,7 @@
               Bar on the right of the screen
             </b-form-checkbox>
             <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-              Person cannot close bar
+              Member cannot close bar
             </b-form-checkbox>
             <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
               Morphic Bar always starts open
