@@ -7,9 +7,10 @@
       <p class="mb-3">Pick one of the Morphic Bars below as a starting place, or start with a blank Bar.</p>
       <b-row class="mb-3">
         <b-col md="3" v-for="bar in list" v-bind:key="bar.id">
-          <div class="bg-silver rounded p-3">
+          <div class="startBarOption bg-silver rounded p-3">
+            <p class="spacer"></p>
             <BarPreview :barData="bar" />
-            <p> {{ bar.desc }}</p>
+            <p class="barDescription"> {{ bar.desc }}</p>
             <b-button :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }" variant="primary" class="btn-block">Start customizing this Bar</b-button>
           </div>
         </b-col>
@@ -32,6 +33,23 @@
     </b-col>
   </b-row>
 </template>
+
+<style lang="scss">
+#MorphicBarPreconfigured {
+  .startBarOption {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .barDescription {
+      padding-top: 15px;
+    }
+    .spacer {
+      flex-grow: 1;
+    }
+  }
+}
+</style>
 
 <script>
 import BarPreview from '@/components/dashboard/BarPreview'

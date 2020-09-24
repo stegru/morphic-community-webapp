@@ -169,7 +169,7 @@ import DrawerPreview from '@/components/dashboard/DrawerPreview'
 import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
-import { availableItems } from '@/utils/constants'
+// import { availableItems } from '@/utils/constants'
 
 export default {
   name: 'MemberInvite',
@@ -188,7 +188,7 @@ export default {
       memberEmail: '',
       selectedBar: null,
       sendEmailCopy: 0,
-      availableItems: availableItems,
+      // availableItems: availableItems,
       chooseBar: false,
       previewBar: ''
     }
@@ -239,7 +239,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     attachBar (resp) {
@@ -254,7 +254,7 @@ export default {
           this.$router.push('/dashboard')
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },
@@ -269,7 +269,7 @@ export default {
         this.selectedBar = this.bars[0].id
       })
       .catch(err => {
-        console.log(err)
+        console.err(err)
       })
   }
 }

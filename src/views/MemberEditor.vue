@@ -97,7 +97,7 @@ import RenderList from '@/components/dashboard/RenderList'
 import { getCommunityMember, updateCommunityMember, getCommunityBar } from '@/services/communityService'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import { availableItems, MESSAGES } from '@/utils/constants'
+import { MESSAGES } from '@/utils/constants'
 
 export default {
   name: 'MemberEditor',
@@ -107,7 +107,7 @@ export default {
   },
   data () {
     return {
-      availableItems: availableItems,
+      // availableItems: availableItems,
       currentMorphicBar: '',
       memberId: '',
       successAlert: false,
@@ -144,7 +144,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getMemberBar () {
@@ -153,7 +153,7 @@ export default {
           this.currentMorphicBar = resp.data.id
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },
@@ -170,7 +170,7 @@ export default {
           this.getMemberBar()
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   }
