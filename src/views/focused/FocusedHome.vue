@@ -36,11 +36,6 @@
       <i>Nobody in the community</i><br>
       Click on the plus button just above to add somebody to your community
     </p>
-
-  <b-link :to="{ name: 'Focused: Button Catalog' }">
-    View the catalog of buttons available for the Morphic Bar
-  </b-link>
-
 </html>
 </template>
 
