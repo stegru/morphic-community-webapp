@@ -18,7 +18,9 @@
     <p v-else>
       <i>No bars in the community</i><br>
       Click on the button to add your first one<br><br>
-      <button @click="invokeEditor('#/focused/bar-editor')" class="btn-primary btn">Add a community bar</button>
+      <b-form action="#/focused/bar-editor">
+        <b-button type="submit" variant="primary">Add a community bar</b-button>
+      </b-form>
     </p>
 
   <h2>People in your community</h2>
@@ -35,7 +37,9 @@
     <p v-else>
       <i>Nobody in the community</i><br>
       Click on the button to add somebody to your community<br><br>
-      <button @click="invokeEditor('#/focused/person')" class="btn-primary btn">Add a Person</button>
+      <b-form action="#/focused/person">
+        <b-button type="submit" variant="primary">Add a Person</b-button>
+      </b-form>
     </p>
 </html>
 </template>
@@ -182,10 +186,6 @@ export default {
       alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
       alphabetical.reverse()
       return alphabetical
-    },
-    invokeEditor: function (pathToEditor) {
-      // JS:  TODO - better technique?; use something already defined?
-      window.open(pathToEditor, "_top");
     }
   }
 
