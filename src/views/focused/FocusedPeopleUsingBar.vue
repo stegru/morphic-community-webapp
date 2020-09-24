@@ -479,7 +479,7 @@ export default {
     if (this.$route.query.barId === 'new') {
       this.newBar = true
       this.barDetails = this.newBarDetails
-    } else if (this.$route.query.barId.indexOf('predifined') !== -1) {
+    } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
       for (let i = 0; i < this.predefinedBars.length; i++) {
         if (this.predefinedBars[i].id === this.$route.query.barId) {
           this.newBar = true

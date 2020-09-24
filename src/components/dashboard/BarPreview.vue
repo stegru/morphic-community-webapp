@@ -1,8 +1,8 @@
 <template>
-  <div class="barPreview pl-3 pt-3 pr-3 pb-0">
+  <div class="barPreview">
     <div v-if="primaryItems && primaryItems.length > 0">
-      <div v-for="item in primaryItems" :key="item.configuration.label">
-        <PreviewItem v-if="item.is_primary" :item="item" class="mb-3" />
+      <div v-for="item in primaryItems" :key="item.configuration.label" class="previewHolder">
+        <PreviewItem v-if="item.is_primary" :item="item" />
       </div>
     </div>
     <div v-else>
@@ -10,22 +10,30 @@
         This bar has no buttons at the moment, click on the <b-link :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }"><b>Customize</b></b-link> button to add some.
       </p>
     </div>
-    <div class="logoHolder text-center mt-5 m-3">
+    <div class="logoHolder text-center">
       <b-img src="/img/logo-color.svg" />
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
   .barPreview {
-    background: white;
-    border: 1px solid #002957;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    // flex-grow: 1;
+
+    .previewHolder {
+      width: 120px;
+      padding: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      position: relative;
+    }
   }
-  .barPreview button {
-    cursor: default !important;
-    line-height: 100%;
-    height: 5rem;
-  }
+
   .logoHolder {
     margin: 0 -0.5rem;
     text-align: center;

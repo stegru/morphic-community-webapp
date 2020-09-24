@@ -27,12 +27,6 @@
 <style>
   .barPreview {
     background: white;
-    border: 1px solid #002957;
-  }
-  .barPreview button {
-    cursor: default !important;
-    line-height: 100%;
-    height: 5rem;
   }
 </style>
 
