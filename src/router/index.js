@@ -153,18 +153,18 @@ const routes = [
   },
   {
     path: '/focused/people-using-bar',
-    name: 'Focused: People using bar',
+    name: 'Focused: Members using bar',
     component: FocusedPeopleUsingBar,
     meta: {
-      title: 'Focused :: People using bar'
+      title: 'Focused :: Members using bar'
     }
   },
   {
     path: '/focused/person',
-    name: 'Focused: Person',
+    name: 'Focused: Member',
     component: FocusedPersonPage,
     meta: {
-      title: 'Focused :: Person'
+      title: 'Focused :: Member'
     }
   },
   {

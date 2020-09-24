@@ -89,11 +89,11 @@
         </b-row>
       </div>
     </b-modal>
-    <b-modal id="roleChangeConfirm" @ok="changeUserRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
+    <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
     </b-modal>
-        <b-modal id="deleteConfirm" @ok="deleteUser" title="Delete User" footer-bg-variant="light" ok-title="Delete">
-      <p class="my-4">Please confirm the deletion of this user?</p>
+        <b-modal id="deleteConfirm" @ok="deleteMember" title="Delete Member" footer-bg-variant="light" ok-title="Delete">
+      <p class="my-4">Please confirm the deletion of this member?</p>
     </b-modal>
     <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this bar?</p>
@@ -130,13 +130,13 @@
           <b-nav id="editorNav" tabs class="small">
             <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
               <span v-if="$route.query.memberId">
-                User Details
+                Member Details
               </span>
               <span v-else-if="getMembersCount() === 0">
                 Unused Bar
               </span>
               <span v-else>
-                Users ({{ getMembersCount() }})
+                Members ({{ getMembersCount() }})
               </span>
             </b-nav-item>
             <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
@@ -144,7 +144,7 @@
             <span v-if="getBarRemoveValidity()">
               <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
             </span>
-            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to User MorphicBar</b-button>
+            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
             <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
             <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
           </b-nav>
@@ -154,9 +154,9 @@
             <div v-if="$route.query.memberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
               <ul class="list-unstyled small">
-                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make user a Community Manager</b-link></li>
-                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from user</b-link></li>
-                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete user</b-link></li>
+                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
+                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
+                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
                 <li v-if="memberDetails.state === 'uninvited'"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
@@ -165,7 +165,7 @@
               <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
             </div>
             <div v-else>
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} people</b></h5>
+              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} members</b></h5>
               <ul class="small mb-0">
                 <li v-for="member in members" v-bind:key="member.id">
                   <p>{{ member.first_name }} {{ member.last_name }}</p>
@@ -180,7 +180,7 @@
               Bar on the right of the screen
             </b-form-checkbox>
             <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-              Person cannot close bar
+              Member cannot close bar
             </b-form-checkbox>
             <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
               Morphic Bar always starts open
@@ -211,20 +211,20 @@
 
               <div class="barPreviewEditor" ref="myref">
                 <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
-                  <template v-slot:item="{item}" v-slot:key="{myKey}">
-                    <drag :key="item"
+                  <template v-slot:item="{item}">
+                    <drag :key="item.id"
                       @dragstart="setDragInProgress(true)"
                       @dragend="setDragInProgress(false)"
                       @click="buttonToEdit(item, $event)"
-                      @cut="removeButton(item, barDetails.items, myKey)"
+                      @cut="removeButton(item, barDetails.items)"
                       class="buttonDragger">
-                      <div :key="item" class="previewHolder">
+                      <div :key="item.id" class="previewHolder">
                         <PreviewItem :item="item" />
                       </div>
                     </drag>
                   </template>
                   <template v-slot:feedback="{data}">
-                    <div class="item feedback button-feedback" :key="data"></div>
+                    <div class="item feedback button-feedback" :key="data.id"></div>
                   </template>
                 </drop-list>
               </div>
@@ -613,6 +613,8 @@ export default {
   methods: {
     dropToBar: function (event) {
       event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
+      event.data.id = this.generateId(event.data)
+
       if (event.type == "catalogButtonNoImage") {
         event.data.configuration.image_url = "";
       }
@@ -652,7 +654,6 @@ export default {
       };
       let index = itemList.findIndex(x => compareObjects(x, item));
       itemList.splice(index, 1);
-
     },
 
     loadAllData: function () {
@@ -682,7 +683,7 @@ export default {
             this.barDetails = resp.data
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       }
     },
@@ -701,11 +702,11 @@ export default {
       this.addIds(items);
       // items.map(item => item.id = this.generateId(item));
     },
-    deleteUser: function () {
+    deleteMember: function () {
       deleteCommunityMember(this.communityId, this.memberDetails.id)
         .then((resp) => {
           if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulUserDelete
+            this.successMessage = MESSAGES.successfulMemberDelete
             this.successAlert = true
             setTimeout(() => {
               this.$router.push('/dashboard')
@@ -713,10 +714,10 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
-    changeUserRole: function () {
+    changeMemberRole: function () {
       if (this.memberDetails.role === 'member') {
         this.memberDetails.role = 'manager'
       } else {
@@ -730,7 +731,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     addPersonalBar: function () {
@@ -760,12 +761,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.log(err)
+                  console.err(err)
                 })
             }
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       } else {
         this.saveBar()
@@ -791,7 +792,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     saveBar: function () {
@@ -812,7 +813,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     deleteBar: function () {
@@ -827,16 +828,14 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     expandCatalogButton: function (button, buttonId) {
-      console.log(button, buttonId);
       this.expandedCatalogButtonId = buttonId;
       this.expandedCatalogButton = button;
     },
     addButtonToBarByClick: function () {
-      console.log("Kasper");
       this.dropToBar({ data: this.expandedCatalogButton, type: "catalogButtonNoImage", index: 0});
     },
     buttonToRemove: function (item) {
@@ -890,11 +889,11 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err)
+              console.err(err)
             })
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -909,7 +908,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getCommunityData: function () {
@@ -918,7 +917,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     generateId: function (item) {
@@ -930,6 +929,14 @@ export default {
         id += '-' + Math.floor(Math.random() * Math.floor(99999999))
       }
       return id
+    },
+    addIdsToCatalogButtons(buttonCatalog) {
+      for (let category in buttonCatalog) {
+        for (let button in buttonCatalog[category]) {
+          buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
+        }
+      }
+      return buttonCatalog;
     }
   },
   computed: {
@@ -1042,7 +1049,7 @@ export default {
       barsList: [],
       membersList: [],
 
-      buttonCatalog: buttonCatalog,
+      buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
       dragInProgress: false,
       expandedCatalogButtonId: null,
 

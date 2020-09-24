@@ -12,7 +12,7 @@
 
     <h5>
       <div>
-        <b>People</b>
+        <b>Members</b>
         <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon"></b-icon-plus-circle-fill></b-link>
       </div>
     </h5>
