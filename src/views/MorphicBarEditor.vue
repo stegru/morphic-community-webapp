@@ -683,7 +683,7 @@ export default {
             this.barDetails = resp.data
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       }
     },
@@ -714,7 +714,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     changeMemberRole: function () {
@@ -731,7 +731,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     addPersonalBar: function () {
@@ -761,12 +761,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.log(err)
+                  console.err(err)
                 })
             }
           })
           .catch(err => {
-            console.log(err)
+            console.err(err)
           })
       } else {
         this.saveBar()
@@ -792,7 +792,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     saveBar: function () {
@@ -813,7 +813,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     deleteBar: function () {
@@ -828,11 +828,10 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     expandCatalogButton: function (button, buttonId) {
-      console.log(button, buttonId);
       this.expandedCatalogButtonId = buttonId;
       this.expandedCatalogButton = button;
     },
@@ -890,11 +889,11 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err)
+              console.err(err)
             })
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -909,7 +908,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     getCommunityData: function () {
@@ -918,7 +917,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     generateId: function (item) {

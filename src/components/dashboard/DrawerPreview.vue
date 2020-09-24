@@ -74,7 +74,7 @@ export default {
         this.bar = resp.data
       })
       .catch(err => {
-        console.log(err)
+        console.err(err)
       })
   }
 }

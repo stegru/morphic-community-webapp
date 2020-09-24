@@ -239,7 +239,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     },
     attachBar (resp) {
@@ -254,7 +254,7 @@ export default {
           this.$router.push('/dashboard')
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },
@@ -269,7 +269,7 @@ export default {
         this.selectedBar = this.bars[0].id
       })
       .catch(err => {
-        console.log(err)
+        console.err(err)
       })
   }
 }

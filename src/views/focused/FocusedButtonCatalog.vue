@@ -88,19 +88,15 @@ export default {
   methods: {
     focusedAddButtonToBar: function (button, idx) {
         // this.$router.push('/focused/home'); // sgithens TODO add barId
-        console.log("Sgithens focusedAddButtonToBar: ", button.configuration, " : ", idx);
-        console.log(button);
         delete button.isActive;
         // this.primaryItems.push(button);
 
-        console.log(this.barDetails.items);
 
       this.onSave = true
       const data = this.barDetails
       data.items.push(button);
       // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
       // data.items = this.primaryItems.concat(drawerItems)
-      console.log("Saving: ", data);
       updateCommunityBar(this.communityId, this.$route.query.barId, data)
         .then((resp) => {
           if (resp.status === 200) {
@@ -113,7 +109,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },
@@ -147,7 +143,7 @@ export default {
           this.barDetails = resp.data
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
     if (this.$route.query.memberId) {
@@ -239,7 +235,7 @@ export default {
           this.getCommunityData()
         })
         .catch(err => {
-          console.log(err)
+          console.err(err)
         })
     }
   },
