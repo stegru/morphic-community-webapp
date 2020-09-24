@@ -63,6 +63,28 @@ export const subkindIcons = {
 }
 
 export const buttonCatalog = {
+  'Make a button': {
+    'open-app': {
+      kind: 'application',
+      is_primary: true,
+      configuration: {
+        label: 'To open an Application',
+        description: 'Allows to create a button that opens an Application.',
+        default: '',
+        image_url: 'question_solid'
+      }
+    },
+    'open-link': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        label: 'To open Web Page',
+        description: 'Allows to create a button that opens a Web Page.',
+        url: '',
+        image_url: 'question_solid'
+      }
+    }
+  },
   'Call a Person': {
     skype: {
       kind: 'application',
@@ -85,7 +107,7 @@ export const buttonCatalog = {
         color: colors.blue,
         image_url: 'jitsi',
         url: 'https://meet.jit.si/',
-        description: 'Join a meeting room in Jitsi'
+        description: 'Join a meeting room in Jitsi.'
       }
     },
     zoom: {
@@ -97,7 +119,7 @@ export const buttonCatalog = {
         color: colors.blue,
         image_url: 'zoom',
         url: 'https://zoom.us/',
-        description: 'Join a meeting room in Zoom'
+        description: 'Join a meeting room in Zoom.'
       }
     }
   },
@@ -107,7 +129,8 @@ export const buttonCatalog = {
       is_primary: true,
       configuration: {
         label: 'Quick Assist',
-        identifier: 'quick-assist',
+        description: 'Opens Quick Assist to get remote help (MS Windows only).',
+        default: 'quick-assist',
         image_url: 'question_solid'
       }
     },
@@ -116,7 +139,148 @@ export const buttonCatalog = {
       is_primary: true,
       configuration: {
         label: 'Help via iMessage',
-        identifier: 'imessage',
+        description: 'Opens iMessage to get remote help (Mac only).',
+        default: 'imessage',
+        image_url: 'question_solid'
+      }
+    },
+    'color-vision': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Color Vision',
+        description: 'Turns Color Vision On/Off.',
+        identifier: 'color-vision',
+        visual: {
+          type: 'multiButton',
+          buttons: ['On', 'Off']
+        }
+      }
+    },
+    'dark-mode': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Dark Mode',
+        description: 'Turns Dark Mode On/Off.',
+        identifier: 'dark-mode',
+        visual: {
+          type: 'multiButton',
+          buttons: ['On', 'Off']
+        }
+      }
+    },
+    'high-contrast': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Contrast',
+        description: 'Turns Contrast On/Off.',
+        identifier: 'high-contrast',
+        visual: {
+          type: 'multiButton',
+          buttons: ['On', 'Off']
+        }
+      }
+    },
+    magnifier: {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Magnifier',
+        description: 'Turns the Screen Magnifier On/Off.',
+        identifier: 'magnify',
+        visual: {
+          type: 'multiButton',
+          buttons: ['Show', 'Hide'],
+          extraBig: true
+        }
+      }
+    },
+    volume: {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Volume',
+        description: 'Changes the System Volume Up/Down.',
+        identifier: 'volume',
+        visual: {
+          type: 'multiButton',
+          buttons: ['+', '-'],
+          extraBig: true
+        }
+      }
+    },
+    clipboard: {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Clipboard',
+        description: 'Copy/Paste utility.',
+        identifier: 'copy-paste',
+        visual: {
+          type: 'multiButton',
+          buttons: ['Copy', 'Paste']
+        }
+      }
+    },
+    'text-size': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Text Size',
+        description: 'Changes the Text Size.',
+        identifier: 'screen-zoom',
+        visual: {
+          type: 'multiButton',
+          buttons: ['+', '-']
+        }
+      }
+    },
+    'night-mode': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Night Mode',
+        description: 'Turns the Night Mode On/Off.',
+        identifier: 'nightmode',
+        visual: {
+          type: 'multiButton',
+          buttons: ['On', 'Off']
+        }
+      }
+    },
+    'turn-off': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Log-off Computer',
+        description: 'Logs the user off the Computer.',
+        identifier: 'log-off'
+      }
+    },
+    'read-aloud': {
+      kind: 'action',
+      is_primary: true,
+      configuration: {
+        label: 'Read Aloud',
+        description: 'A button that reads out the selected text.',
+        identifier: 'read-aloud',
+        visual: {
+          type: 'multiButton',
+          buttons: ['|>', '||', '[]']
+        }
+      }
+    }
+  },
+  'Calendar - App on Computer': {
+    'local-calendar': {
+      kind: 'application',
+      is_primary: true,
+      configuration: {
+        label: 'Calendar App',
+        description: 'Opens the local Calendar Application.',
+        default: 'calendar',
         image_url: 'question_solid'
       }
     }
@@ -187,7 +351,7 @@ export const buttonCatalog = {
       is_primary: false,
       configuration: {
         subkind: 'zoho-calendar',
-        label: 'Zoho Calendat',
+        label: 'Zoho Calendar',
         color: colors.blue,
         image_url: 'zoho-calendar',
         url: 'https://www.zoho.com/calendar/',
@@ -331,7 +495,19 @@ export const buttonCatalog = {
       }
     }
   },
-  'E-mail': {
+  'Email - App on Computer': {
+    'local-email': {
+      kind: 'application',
+      is_primary: true,
+      configuration: {
+        label: 'Email App',
+        description: 'Opens the default email application.',
+        default: 'email',
+        image_url: 'envelope'
+      }
+    }
+  },
+  'Email - Websites': {
     gmail: {
       kind: 'link',
       is_primary: true,
@@ -403,11 +579,11 @@ export const buttonCatalog = {
         color: colors.blue,
         image_url: 'google-photos',
         url: 'https://photos.google.com',
-        description: "Opens your Google Photos in a browser."
+        description: 'Opens your Google Photos in a browser.'
       }
     }
   },
-  'News': {
+  News: {
     cnn: {
       kind: 'link',
       is_primary: true,
@@ -481,7 +657,7 @@ export const buttonCatalog = {
       }
     }
   },
-  'Shopping': {
+  Shopping: {
     amazon: {
       kind: 'link',
       is_primary: true,
@@ -531,7 +707,7 @@ export const buttonCatalog = {
       }
     }
   },
-  'Media': {
+  Media: {
     netflix: {
       kind: 'link',
       is_primary: true,
@@ -642,8 +818,5 @@ export const buttonCatalog = {
         description: 'Opens the OneDrive home page.'
       }
     }
-  },
-  Other: {
-
   }
 }
