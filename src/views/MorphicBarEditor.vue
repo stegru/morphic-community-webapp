@@ -107,47 +107,68 @@
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
-          <div id="bar-info">
-            <h5 v-if="$route.query.memberId" class="mb-0">
-              <b>Bar for {{ memberDetails.first_name }}</b>&nbsp;
-            </h5>
-            <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
-              <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
-            </b-form-group>
-            <h5 v-else class="mb-0">
-              <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
-              <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
-            </h5>
-            <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
-                <br/>
-                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
-              </b-form-group>
-          </div>
           <b-alert variant="success" :show="successAlert">
             <span>{{ successMessage }}</span>
           </b-alert>
+          <!-- Topmost area above desktop image -->
+          <div id="bar-info">
+            <div class="bar-name">
+              <h3 v-if="$route.query.memberId" class="mb-0">
+                <b>Bar for {{ memberDetails.first_name }} {{memberDetails.last_name}}</b>&nbsp;
+              </h3>
+              <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
+                <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
+              </b-form-group>
+              <h3 v-else class="mb-0">
+                <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
+                <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
+              </h3>
+              <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
+                <br/>
+                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
+              </b-form-group>
+            </div>
+            <div class="save-button-area">
+              <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
+              <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
+              <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
+            </div>
+          </div>
 
-          <b-nav id="editorNav" tabs class="small">
-            <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-              <span v-if="$route.query.memberId">
-                Member Details
+          <!-- Secondary area above desktop image -->
+          <div id="secondary-bar-info">
+            <b-nav id="editorNav" tabs class="small">
+              <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
+                <span v-if="$route.query.memberId">
+                  Member Details
+                </span>
+                <span v-else-if="getMembersCount() === 0">
+                  Unused Bar
+                </span>
+                <span v-else>
+                  Members ({{ getMembersCount() }})
+                </span>
+              </b-nav-item>
+              <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
+              <span v-if="getBarRemoveValidity()">
+                <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
               </span>
-              <span v-else-if="getMembersCount() === 0">
-                Unused Bar
+            </b-nav>
+            <div class="userInvitationStatusArea">
+              <span v-if="memberDetails.state === 'active'">
+                <span class="green dot"></span>
+                <span class="text">active</span>
               </span>
-              <span v-else>
-                Members ({{ getMembersCount() }})
+              <span v-else-if="memberDetails.state === 'uninvited'" @click="sendInvite()">
+                <span class="red dot"></span>
+                <button class="linkStyling">Invite member</button>
               </span>
-            </b-nav-item>
-            <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
-            <b-nav-item disabled :active="tab === 3" @click="tab = 3" class="d-none"><b-icon-fullscreen></b-icon-fullscreen> Try it</b-nav-item>
-            <span v-if="getBarRemoveValidity()">
-              <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
-            </span>
-            <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
-            <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
-            <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
-          </b-nav>
+              <span v-else-if="memberDetails.state === 'invited'" @click="sendInvite()">
+                <span class="yellow dot"></span>
+                <button class="linkStyling">Re-invite member</button>
+              </span>
+            </div>
+          </div>
 
           <div v-if="tab === 1" class="bg-light p-3">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
@@ -157,7 +178,7 @@
                 <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
                 <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
                 <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
-                <li v-if="memberDetails.state === 'uninvited'"><b-link>Send Invitation</b-link></li>
+                <li v-if="memberDetails.state === 'uninvited'" @click="sendInvite()"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
@@ -197,7 +218,7 @@
           </div>
           <div id="preview-holder" class="desktop fill-height mt-3">
             <drop mode="cut" class="dragToDelete desktop-portion">
-              <template v-slot:drag-image="{data}">
+              <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
               </template>
               <div class="desktop-portion">
@@ -243,7 +264,7 @@
       <!-- Button Catalogue -->
       <b-col md="2">
         <drop class="cut" mode="cut">
-          <template v-slot:drag-image="{data}">
+          <template v-slot:drag-image="">
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
           <div id="buttonsPanel" class="fill-height bg-silver p-3">
@@ -304,6 +325,53 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  #barEditor {
+    #bar-info {
+      display: flex;
+
+      .bar-name {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  #secondary-bar-info {
+    display: grid;
+    grid-template-columns: 33% auto 33%;
+    margin-top: 13px;
+
+    #editorNav {
+      position: relative;
+      .addButton, .updateButton {
+        position: absolute;
+        right: 0;
+        top: 6px;
+      }
+    }
+
+    .userInvitationStatusArea {
+      text-align: right;
+
+      .dot {
+        height: 13px;
+        width: 13px;
+        display: inline-block;
+        border-radius: 50%;
+        vertical-align: middle;
+
+        &.green { background-color: #3bc03b; }
+        &.yellow { background-color: #f3c702; }
+        &.red { background-color: #f20202; }
+      }
+
+      .linkStyling {
+        border: none;
+        background: inherit;
+        color: #069;
+        cursor: pointer;
+      }
+    }
+  }
   #preview-holder {
     border: 1px solid #002957;
 
@@ -469,14 +537,7 @@
   #removeBar .nav-link {
     color: #dc3545 !important;
   }
-  #editorNav {
-    position: relative;
-    .addButton, .updateButton {
-      position: absolute;
-      right: 0;
-      top: 6px;
-    }
-  }
+
   .compactIconHolder {
     height: 22rem;
     overflow-y: auto;
@@ -593,7 +654,7 @@
 
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
+import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
@@ -656,6 +717,16 @@ export default {
       itemList.splice(index, 1);
     },
 
+    sendInvite() {
+      var email = window.prompt(`Please enter email address for ${this.memberDetails.first_name} ${this.memberDetails.last_name}`, "email@email.com");
+      if (email != null) {
+        let communityId = this.$store.getters.communityId;
+
+        inviteCommunityMember(communityId, this.memberDetails.id, email);
+        this.memberDetails.state = 'invited';
+      }
+    },
+
     loadAllData: function () {
       this.loadBarData()
       this.loadBarMembers()
@@ -665,6 +736,7 @@ export default {
         this.loadMemberData()
       }
     },
+
     loadBarData: function () {
       if (this.$route.query.barId === 'new') {
         this.newBar = true

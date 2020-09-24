@@ -13,11 +13,11 @@
         <div v-if="member.id === activeMemberId">
           <div v-if="member.state === 'uninvited'" class="small pb-2">
             Uninvited, you can send him invitation<br>
-            <b-button size="sm" variant="light" class="btn-block">Send Invitation</b-button>
+            <b-button size="sm" variant="light" class="btn-block" @click="sendInvite(member)">Send Invitation</b-button>
           </div>
           <div v-else-if="member.state === 'invited'" class="small pb-2">
             Invited, but has not accepted the invitation yet<br>
-            <b-button size="sm" variant="light" class="btn-block">Resend Invitation</b-button>
+            <b-button size="sm" variant="light" class="btn-block" @click="sendInvite(member)">Resend Invitation</b-button>
           </div>
         </div>
       </li>
@@ -53,6 +53,9 @@
 </style>
 
 <script>
+import { inviteCommunityMember } from '@/services/communityService'
+
+
 export default {
   name: 'MembersList',
   props: {
@@ -70,6 +73,15 @@ export default {
     }
   },
   methods: {
+    sendInvite(member) {
+      var email = window.prompt(`Please enter email address for ${member.first_name} ${member.last_name}`, "email@email.com");
+      if (email != null) {
+        let communityId = this.$store.getters.communityId;
+
+        inviteCommunityMember(communityId, member.id, email);
+        member.state = 'invited';
+      }
+    },
     isCommunityBar: function (barId) {
       for (let i = 0; i < this.bars.length; i++) {
         if (this.bars[i].id === barId) {
