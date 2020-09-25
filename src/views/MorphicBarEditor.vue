@@ -266,7 +266,11 @@
                       </template>
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
-                        <h3 style="margin-block-start: inherit;">{{button.configuration.label}}</h3>
+                        <div style="width: 100%; display: inline-flex;">
+                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="max-width: 1rem; max-height: 100%;"/>
+                          <b-icon v-else icon="bootstrap" style="max-width: 1rem; max-height: 100%;"></b-icon>
+                          <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.25rem;">{{button.configuration.label}}</h3>
+                        </div>
                         <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
                         <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
                         <div class="buttons">
