@@ -103,7 +103,7 @@
     <!-- EDITOR v2 -->
     <b-row>
       <b-col md="2">
-        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="$route.query.memberId" :activeBarId="$route.query.memberId ? null : barDetails.id" />
+        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
@@ -113,7 +113,7 @@
           <!-- Topmost area above desktop image -->
           <div id="bar-info">
             <div class="bar-name">
-              <h3 v-if="$route.query.memberId" class="mb-0">
+              <h3 v-if="activeMemberId" class="mb-0">
                 <b>Bar for {{ memberDetails.first_name }} {{memberDetails.last_name}}</b>&nbsp;
               </h3>
               <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
@@ -123,13 +123,14 @@
                 <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
                 <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
               </h3>
-              <b-form-group v-if="!$route.query.memberId && editBarName" label-for="barName">
+              <b-form-group v-if="!activeMemberId && editBarName" label-for="barName">
                 <br/>
                 <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
               </b-form-group>
             </div>
             <div class="save-button-area">
-              <b-button v-if="$route.query.memberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
+              <b-button v-if="isChanged && !newBar" @click="revertBar" variant='warning' class="revertButton" size="sm">Revert to last saved</b-button>
+              <b-button v-if="activeMemberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
               <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
               <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
             </div>
@@ -139,7 +140,7 @@
           <div id="secondary-bar-info">
             <b-nav id="editorNav" tabs class="small">
               <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-                <span v-if="$route.query.memberId">
+                <span v-if="activeMemberId">
                   Member Details
                 </span>
                 <span v-else-if="getMembersCount() === 0">
@@ -154,16 +155,26 @@
                 <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
               </span>
             </b-nav>
+            <div class="barSelectorArea">
+              <div v-if="activeMemberId">
+                <b-form-select v-model="barSelectedInDropdown">
+                  <b-form-select-option value="customized" v-if="isChanged || barDetails.is_shared == false">Customized</b-form-select-option>
+                  <b-form-select-option v-for="bar in availableBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
+                </b-form-select>
+                <b-button class="changeButton" variant="success" :disabled="memberDetails.bar_id == barSelectedInDropdown || barSelectedInDropdown == 'customized'" @click="changeUserBarToCommunityBar">Change</b-button>
+
+              </div>
+            </div>
             <div class="userInvitationStatusArea">
-              <span v-if="memberDetails.state === 'active'">
+              <span v-if="activeMemberId && memberDetails.state === 'active'">
                 <span class="green dot"></span>
                 <span class="text">active</span>
               </span>
-              <span v-else-if="memberDetails.state === 'uninvited'" @click="sendInvite()">
+              <span v-else-if="activeMemberId && memberDetails.state === 'uninvited'" @click="sendInvite()">
                 <span class="red dot"></span>
                 <button class="linkStyling">Invite member</button>
               </span>
-              <span v-else-if="memberDetails.state === 'invited'" @click="sendInvite()">
+              <span v-else-if="activeMemberId && memberDetails.state === 'invited'" @click="sendInvite()">
                 <span class="yellow dot"></span>
                 <button class="linkStyling">Re-invite member</button>
               </span>
@@ -172,7 +183,7 @@
 
           <div v-if="tab === 1" class="bg-light p-3">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <div v-if="$route.query.memberId">
+            <div v-if="activeMemberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
               <ul class="list-unstyled small">
                 <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
@@ -349,6 +360,14 @@
       }
     }
 
+    .barSelectorArea {
+      select.custom-select {
+        width: inherit;
+      }
+      button {
+        margin-left: 11px;
+      }
+    }
     .userInvitationStatusArea {
       text-align: right;
 
@@ -683,16 +702,48 @@ export default {
       this.barDetails.items.splice(event.index || 0, 0, event.data);
       // close any expanded button
       this.expandedCatalogButtonId = undefined;
-
-      this.isChanged = true;
-
+      this.setBarChanged();
       return true;
     },
 
+    setBarChanged: function () {
+      this.isChanged = true;
+      this.barSelectedInDropdown = 'customized';
+    },
+
+    revertBar: function () {
+      if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
+        this.isChanged = false;
+        this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
+        this.barSelectedInDropdown = this.barDetails.id;
+      }
+    },
     dropOnClickToAdd: function (event) {
       this.dropToBar(event);
     },
+    changeUserBarToCommunityBar: function () {
+      if (this.isChanged || this.barDetails.is_shared == false) {
+        if (false == confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
+          return;
+        }
+      }
 
+      // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
+      updateCommunityMember(this.community.id, this.memberDetails.id, {
+        first_name: this.memberDetails.first_name,
+        last_name: this.memberDetails.last_name,
+        bar_id: this.barSelectedInDropdown,
+        role: this.memberDetails.role
+      }).then(r => {
+        getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
+          this.barDetails = newBarDetails.data;
+          this.isChanged = false;
+          this.newBar = false;
+          this.memberDetails.bar_id = this.barSelectedInDropdown;
+          this.updateOriginalBarDetails();
+        });
+      });
+    },
     // used to avoid bug where a "click" event is triggered at end of drag
     setDragInProgress: function (newValue) {
       this.dragInProgress = newValue;
@@ -732,7 +783,7 @@ export default {
       this.loadBarMembers()
       this.getCommunityData()
 
-      if (this.$route.query.memberId) {
+      if (this.activeMemberId) {
         this.loadMemberData()
       }
     },
@@ -753,6 +804,7 @@ export default {
         getCommunityBar(this.communityId, this.$route.query.barId)
           .then(resp => {
             this.barDetails = resp.data
+            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
           })
           .catch(err => {
             console.err(err)
@@ -806,6 +858,9 @@ export default {
           console.err(err)
         })
     },
+    updateOriginalBarDetails: function () {
+      this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+    },
     addPersonalBar: function () {
       if (this.barDetails.is_shared) {
         this.onSave = true
@@ -827,6 +882,7 @@ export default {
                     this.successMessage = MESSAGES.barUpdated
                     this.successAlert = true
                     this.isChanged = false
+                    this.updateOriginalBarDetails();
                     setTimeout(() => {
                       this.successAlert = false
                     }, 3000)
@@ -857,6 +913,8 @@ export default {
             this.successMessage = MESSAGES.barAdded
             this.successAlert = true
             this.isChanged = false
+            this.updateOriginalBarDetails();
+
             setTimeout(() => {
               this.successAlert = false
               this.$router.push('/dashboard')
@@ -879,6 +937,8 @@ export default {
             this.successMessage = MESSAGES.barUpdated
             this.successAlert = true
             this.isChanged = false
+            this.updateOriginalBarDetails();
+
             setTimeout(() => {
               this.successAlert = false
             }, 3000)
@@ -915,7 +975,7 @@ export default {
       // bar and drawer lists are automatically updated from watcher
       this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
       this.$bvModal.hide('modalEditGeneric')
-      this.isChanged = true
+      this.setBarChanged();
     },
     buttonToEdit: function (item, evt) {
       if (this.dragInProgress) {
@@ -929,7 +989,7 @@ export default {
       this.editDialogDetails = false
       this.editDialogSubkindIcons = true
       if (updated) {
-        this.isChanged = true
+        this.setBarChanged();
       }
     },
     editChangeColor: function (hex) {
@@ -975,7 +1035,7 @@ export default {
       return false
     },
     loadMemberData: function () {
-      getCommunityMember(this.communityId, this.$route.query.memberId)
+      getCommunityMember(this.communityId, this.activeMemberId)
         .then((resp) => {
           this.memberDetails = resp.data
         })
@@ -1009,6 +1069,11 @@ export default {
         }
       }
       return buttonCatalog;
+    },
+    updateAvailableBars() {
+      this.availableBars = this.barsList.filter((bar) => {
+        return bar.is_shared;
+      });
     }
   },
   computed: {
@@ -1021,7 +1086,8 @@ export default {
         }
       }
       return data
-    }
+    },
+    activeMemberId: function () { return this.$route.query.memberId },
   },
   mounted () {
     this.loadAllData()
@@ -1029,6 +1095,14 @@ export default {
   watch: {
     'barDetails.items': function (newValue, oldValue) {
       this.distributeItems(newValue)
+    },
+    'memberDetails.id': function (newValue, oldValue) {
+      this.updateAvailableBars();
+      this.barSelectedInDropdown = this.memberDetails.bar_id;
+
+    },
+    barsList: function (newValue) {
+      this.updateAvailableBars();
     },
     makeAButtons: function (newValue, oldValue) {
       if (!this.dragMakeAButton) {
@@ -1100,7 +1174,8 @@ export default {
       // messages
       leavePageMessage: MESSAGES.leavePageAlert,
       successMessage: '',
-
+      availableBars: [],
+      barSelectedInDropdown: '',
       // flags
       addToBar: false,
       addToDrawer: false,
@@ -1135,6 +1210,7 @@ export default {
         }
       },
       barDetails: {},
+      originalBarDetails: {},
       members: [],
       memberDetails: {},
       // drawerItems: [],
