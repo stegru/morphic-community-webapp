@@ -205,10 +205,6 @@
             </drop>
             <!-- Buttons Bar -->
             <div id="preview-bar">
-              <drop class="buttonsList draggable-area" @drop="dropOnClickToAdd">
-                <button @click="addButtonToBarByClick()" v-if="expandedCatalogButtonId" variant="success" size="sm" class="clickDropSpot feedback button-feedback">Click to add</button>
-              </drop>
-
               <div class="barPreviewEditor" ref="myref">
                 <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
                   <template v-slot:item="{item}">
@@ -834,9 +830,6 @@ export default {
     expandCatalogButton: function (button, buttonId) {
       this.expandedCatalogButtonId = buttonId;
       this.expandedCatalogButton = button;
-    },
-    addButtonToBarByClick: function () {
-      this.dropToBar({ data: this.expandedCatalogButton, type: "catalogButtonNoImage", index: 0});
     },
     buttonToRemove: function (item) {
       // remove from items list
