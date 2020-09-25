@@ -276,7 +276,7 @@
                         </div>
                         <h3>{{button.configuration.label}}</h3>
                         <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
-                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
+                        <div class="help">To add, drag or click a button below, or press enter</div>
                       </div>
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
