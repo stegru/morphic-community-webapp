@@ -266,6 +266,9 @@
                       </template>
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                        <h3 style="margin-block-start: inherit;">{{button.configuration.label}}</h3>
+                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
+                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
                             <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
@@ -278,9 +281,6 @@
                             <PreviewItem :item="button" :simplified="true" class="withImage" />
                           </drag>
                         </div>
-                        <h3>{{button.configuration.label}}</h3>
-                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
                       </div>
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">

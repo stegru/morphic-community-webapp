@@ -2,10 +2,9 @@
   <!-- Simplified button (no text and small size) -->
   <button v-if="simplified" class="previewItem simplified">
     <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" style="background: none;">
-      <label style="color: black;">{{item.configuration.label}}</label>
-      <div class="buttons">
+      <div class="buttons" style="margin-top: 5px;">
         <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-                :style="'background: '+colors.default_button" style="color: white; margin-right: 5px; border: none; font-weight: bold;"
+                :style="'background: '+colors.default_button + ';color: transparent'" style="margin: 0.5px; border: none; "
                 v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
           {{button}}
         </button>
