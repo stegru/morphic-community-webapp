@@ -1,8 +1,15 @@
 <template>
   <!-- Simplified button (no text and small size) -->
   <button v-if="simplified" class="previewItem simplified">
-    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" :style="'background: '+colors.default_button">
-      multiButton
+    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" style="background: none;">
+      <label style="color: black;">{{item.configuration.label}}</label>
+      <div class="buttons">
+        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+                :style="'background: '+colors.default_button" style="color: white; margin-right: 5px; border: none; font-weight: bold;"
+                v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+          {{button}}
+        </button>
+      </div>
     </div>
     <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
     </div>
@@ -25,7 +32,7 @@
     </div>
   </button>
 
-  <!-- Normal button without/without image -->
+  <!-- Normal button with/without image -->
   <button v-else class="previewItem standardButton">
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url] && !noImage"

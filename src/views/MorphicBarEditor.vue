@@ -271,7 +271,7 @@
                             <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
                           </drag>
 
-                          <drag :data="button" type="catalogButtonWithImage">
+                          <drag v-if="button.kind != 'action'" :data="button" type="catalogButtonWithImage">
                             <template v-slot:drag-image>
                               <PreviewItem :item="button" :noImage="false" class="noImage" />
                             </template>
@@ -279,7 +279,7 @@
                           </drag>
                         </div>
                         <h3>{{button.configuration.label}}</h3>
-                        <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
+                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
                         <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
                       </div>
                       <!-- Define looks when not selected -->
