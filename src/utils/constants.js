@@ -269,7 +269,7 @@ export const buttonCatalog = {
         identifier: 'read-aloud',
         visual: {
           type: 'multiButton',
-          buttons: ['|>', '||', '[]']
+          buttons: ['|>', '||', '[ ]']
         }
       }
     }

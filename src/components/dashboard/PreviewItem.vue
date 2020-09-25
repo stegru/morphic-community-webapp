@@ -1,12 +1,12 @@
 <template>
   <!-- Simplified button (no text and small size) -->
   <button v-if="simplified" class="previewItem simplified">
-    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" style="background: none;">
+    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton">
       <div class="buttons" style="margin-top: 5px;">
-        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-                :style="'background: '+colors.default_button + ';color: transparent'" style="margin: 0.5px; border: none; "
+        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index" class="rounded multiButton"
+                :style="'background: '+colors.default_button"
                 v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
-          {{button}}
+
         </button>
       </div>
     </div>
@@ -52,7 +52,6 @@
       height: 37px;
       border-radius: 9px;
       width: 75px;
-
     }
 
     .regular {
@@ -84,6 +83,13 @@
           width: 23px;
         }
       }
+    }
+
+    .multiButton {
+      border: none;
+      min-height: 37px;
+      min-width: 37px;
+      margin: 0.05rem 0.05rem 0.05rem 0.05rem;
     }
   }
 
