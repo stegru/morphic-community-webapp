@@ -35,6 +35,7 @@ export const colors = {
 }
 
 export const icons = {
+  bootstrap: 'bootstrap.svg',
   gmail: 'gmail.svg',
   outlook: 'outlook.svg',
   'yahoo-mail': 'yahoo-mail.svg',
