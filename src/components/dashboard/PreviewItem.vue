@@ -1,6 +1,6 @@
 <template>
   <!-- Simplified button (no text and small size) -->
-  <button v-if="simplified" class="previewItem simplified">
+  <button v-if="simplified" class="previewItem simplified" @click="addToBar(item, $event)">
     <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" :style="'background: '+colors.default_button">
       multiButton
     </div>
@@ -18,19 +18,19 @@
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
       <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-              :style="'background: '+colors.default_button"
+              :style="'background: '+colors.default_button" @click="addToBar(item, $event)"
               v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
         {{button}}
       </button>
     </div>
   </button>
 
-  <!-- Normal button without/without image -->
-  <button v-else class="previewItem standardButton">
+  <!-- Normal button with/without image -->
+  <button v-else class="previewItem standardButton" @click="addToBar(item, $event)">
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url] && !noImage"
       :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
-      class="iconHolder" >
+      class="iconHolder">
       <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
     </div>
     <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: !noImage && item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
@@ -169,6 +169,16 @@ export default {
     return {
       colors: colors,
       icons: icons
+    }
+  },
+  inject: ["dropToBar"],
+  methods: {
+    addToBar: function (item, event) {
+      this.dropToBar({
+        data: item,
+        type: event.srcElement._prevClass === "noImage"? "catalogButtonNoImage": "catalogButtonWithImage"
+      })
+
     }
   }
 }

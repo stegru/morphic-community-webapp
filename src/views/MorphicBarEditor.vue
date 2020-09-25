@@ -1023,6 +1023,11 @@ export default {
   beforeUpdate() {
     this.refreshBar();
   },
+  provide: function () {
+    return {
+      dropToBar: this.dropToBar
+    }
+  },
   data () {
     return {
       // messages
