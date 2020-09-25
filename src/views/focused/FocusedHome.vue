@@ -5,10 +5,10 @@
     <!-- <li><a >Community Settings</a></li>
     <li><a >Add a community</a></li>
     <li><a >Switch to a different community</a></li> -->
-    <li><a href="#" @click="logout">Sign out </a></li>
   </ul>
 
   <h2>Community Bars</h2>
+    <p><b-link disabled>Community settings</b-link></p>
     <ul v-if="list.length > 0" class="list-unstyled">
       <li v-for="bar in list" :key="bar.id" >
         <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: bar.id } }">
@@ -18,14 +18,14 @@
     </ul>
     <p v-else>
       <i>No bars in the community</i><br>
-      Click on the plus button just above to add your first one
+      Click on the button to add your first one<br><br>
+      <b-form action="#/focused/bar-editor">
+        <b-button type="submit" variant="primary">Add a community bar</b-button>
+      </b-form>
     </p>
-  <a href="#">Add a community bar</a>
 
   <h2>People in your community</h2>
   <em>Follow a link to see or change the member's Morphic Bar</em>
-
-  <a >Add a Member</a>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
@@ -37,13 +37,11 @@
     </ul>
     <p v-else>
       <i>Nobody in the community</i><br>
-      Click on the plus button just above to add somebody to your community
+      Click on the button to add somebody to your community<br><br>
+      <b-form action="#/focused/person">
+        <b-button type="submit" variant="primary">Add a Person</b-button>
+      </b-form>
     </p>
-
-  <b-link :to="{ name: 'Focused: Button Catalog' }">
-    View the catalog of buttons available for the Morphic Bar
-  </b-link>
-
 </html>
 </template>
 
