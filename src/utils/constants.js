@@ -192,8 +192,7 @@ export const buttonCatalog = {
         identifier: 'magnify',
         visual: {
           type: 'multiButton',
-          buttons: ['Show', 'Hide'],
-          extraBig: true
+          buttons: ['Show', 'Hide']
         }
       }
     },
@@ -233,7 +232,8 @@ export const buttonCatalog = {
         identifier: 'screen-zoom',
         visual: {
           type: 'multiButton',
-          buttons: ['+', '-']
+          buttons: ['+', '-'],
+          extraBig: true
         }
       }
     },
