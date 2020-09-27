@@ -6,7 +6,6 @@
         <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index" class="rounded multiButton"
                 :style="'background: '+colors.default_button"
                 v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
-
         </button>
       </div>
     </div>
@@ -24,7 +23,7 @@
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
       <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-              :style="'background: '+colors.default_button"
+              :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
               v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
         {{button}}
       </button>

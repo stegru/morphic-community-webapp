@@ -72,6 +72,7 @@ export const buttonCatalog = {
         label: 'To open an Application',
         description: 'Allows to create a button that opens an Application.',
         default: '',
+        color: colors.blue,
         image_url: 'question_solid'
       }
     },
@@ -81,6 +82,7 @@ export const buttonCatalog = {
       configuration: {
         label: 'To open Web Page',
         description: 'Allows to create a button that opens a Web Page.',
+        color: colors.blue,
         url: '',
         image_url: 'question_solid'
       }
@@ -132,6 +134,7 @@ export const buttonCatalog = {
         label: 'Quick Assist',
         description: 'Opens Quick Assist to get remote help (MS Windows only).',
         default: 'quick-assist',
+        color: colors.blue,
         image_url: 'question_solid'
       }
     },
@@ -142,6 +145,7 @@ export const buttonCatalog = {
         label: 'Help via iMessage',
         description: 'Opens iMessage to get remote help (Mac only).',
         default: 'imessage',
+        color: colors.blue,
         image_url: 'question_solid'
       }
     },
@@ -152,6 +156,7 @@ export const buttonCatalog = {
         label: 'Color Vision',
         description: 'Turns Color Vision On/Off.',
         identifier: 'color-vision',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['On', 'Off']
@@ -165,6 +170,7 @@ export const buttonCatalog = {
         label: 'Dark Mode',
         description: 'Turns Dark Mode On/Off.',
         identifier: 'dark-mode',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['On', 'Off']
@@ -178,6 +184,7 @@ export const buttonCatalog = {
         label: 'Contrast',
         description: 'Turns Contrast On/Off.',
         identifier: 'high-contrast',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['On', 'Off']
@@ -191,6 +198,7 @@ export const buttonCatalog = {
         label: 'Magnifier',
         description: 'Turns the Screen Magnifier On/Off.',
         identifier: 'magnify',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['Show', 'Hide']
@@ -204,6 +212,7 @@ export const buttonCatalog = {
         label: 'Volume',
         description: 'Changes the System Volume Up/Down.',
         identifier: 'volume',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['+', '-'],
@@ -218,6 +227,7 @@ export const buttonCatalog = {
         label: 'Clipboard',
         description: 'Copy/Paste utility.',
         identifier: 'copy-paste',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['Copy', 'Paste']
@@ -231,6 +241,7 @@ export const buttonCatalog = {
         label: 'Text Size',
         description: 'Changes the Text Size.',
         identifier: 'screen-zoom',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['+', '-'],
@@ -245,6 +256,7 @@ export const buttonCatalog = {
         label: 'Night Mode',
         description: 'Turns the Night Mode On/Off.',
         identifier: 'nightmode',
+        color: colors.blue,
         visual: {
           type: 'multiButton',
           buttons: ['On', 'Off']
@@ -257,7 +269,8 @@ export const buttonCatalog = {
       configuration: {
         label: 'Log-off Computer',
         description: 'Logs the user off the Computer.',
-        identifier: 'log-off'
+        identifier: 'log-off',
+        color: colors.blue,
       }
     },
     'read-aloud': {
