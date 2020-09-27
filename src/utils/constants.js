@@ -576,7 +576,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'icloud-mail',
         label: 'iCloud',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'icloud-mail',
         url: 'https://www.icloud.com/mail',
         description: 'Opens the iCloud inbox in a browser.'
@@ -604,7 +604,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'cnn',
         label: 'CNN',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'cnn',
         url: 'https://www.cnn.com/',
         description: 'Opens the CNN home page.'
@@ -616,7 +616,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'fox-news',
         label: 'Fox News',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'fox-news',
         url: 'https://www.foxnews.com/',
         description: 'Opens the Fox News home page.'
@@ -628,7 +628,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'google-news',
         label: 'Google News',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'google-news',
         url: 'https://news.google.com/',
         description: 'Opens the Google News home page.'
@@ -640,7 +640,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'the-ny-times',
         label: 'The New York Times',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'the-ny-times',
         url: 'https://www.nytimes.com/',
         description: 'Opens The New York Times home page.'
@@ -652,7 +652,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'the-washington-post',
         label: 'The Washington Post',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'the-washington-post',
         url: 'https://www.washingtonpost.com/',
         description: 'Opens The Washington Post home page.'
@@ -664,7 +664,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'yahoo-news',
         label: 'Yahoo! News',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'yahoo-news',
         url: 'https://news.yahoo.com/',
         description: 'Opens the Yahoo! News home page.'
@@ -678,22 +678,22 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'amazon',
         label: 'Amazon',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'amazon',
         url: 'https://www.amazon.com/',
         description: 'Opens the Amazon (US) home page.'
       }
     },
-    craiglist: {
+    craigslist: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'craiglist',
-        label: 'Craiglist',
-        color: colors.grey,
-        image_url: 'craiglist',
+        subkind: 'craigslist',
+        label: 'Craigslist',
+        color: colors.blue,
+        image_url: 'craigslist',
         url: 'https://www.craigslist.org/',
-        description: 'Opens the Craigslist hoome page.'
+        description: 'Opens the Craigslist home page.'
       }
     },
     ebay: {
@@ -702,7 +702,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'ebay',
         label: 'ebay',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'ebay',
         url: 'https://www.ebay.com/',
         description: 'Opens the ebay home page.'
@@ -714,7 +714,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'etsy',
         label: 'Etsy',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'etsy',
         url: 'https://www.etsy.com/',
         description: 'Opens the Esty home page.'
@@ -728,7 +728,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'netflix',
         label: 'Netflix',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'netflix',
         url: 'https://www.netflix.com/',
         description: 'Opens Netflix in a browser.'
@@ -740,7 +740,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'pandora',
         label: 'Pandora',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'pandora',
         url: 'https://www.pandora.com/station',
         description: 'Opens Pandora in a browser.'
@@ -752,7 +752,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'spotify',
         label: 'Spotify',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'spotify',
         url: 'https://open.spotify.com/',
         description: 'Opens Spotify in a browser.'
@@ -764,7 +764,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'youtube',
         label: 'Youtube',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'youtube',
         url: 'https://www.youtube.com/',
         description: 'Opens Youtube in a browser.'
@@ -778,7 +778,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'box',
         label: 'Box',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'box',
         url: 'https://app.box.com/folder/0',
         description: 'Opens the Box home page.'
@@ -814,7 +814,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'icloud-drive',
         label: 'iCloud Drive',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'icloud-drive',
         url: 'https://www.icloud.com/iclouddrive/',
         description: 'Opens the iCloud Drive home page.'
@@ -826,7 +826,7 @@ export const buttonCatalog = {
       configuration: {
         subkind: 'one-drive',
         label: 'OneDrive',
-        color: colors.grey,
+        color: colors.blue,
         image_url: 'one-drive',
         url: 'https://onedrive.live.com/',
         description: 'Opens the OneDrive home page.'
