@@ -1,5 +1,12 @@
 <template>
   <div id="MembersList">
+    <b-modal id="sendEmailInvitationFromMembersListModal" :ok-disabled="!invitationEmail.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')" @ok="sendInvite" title="Enter email address for invitation" footer-bg-variant="light" ok-title="Send Invitation">
+      <p class="my-4"></p>
+      <b-form-group :label="'Please enter email address for '+activeMember.first_name+' '+activeMember.last_name" label-for="email">
+        <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
+      </b-form-group>
+    </b-modal>
+
     <!-- Actually, the CM counts as a member of the Community, so by default there's always one member -->
     <ul v-if="orderedMembers.length > 1" class="list-unstyled">
       <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
@@ -13,11 +20,11 @@
         <div v-if="member.id === activeMemberId">
           <div v-if="member.state === 'uninvited'" class="small pb-2">
             Uninvited, you can send him invitation<br>
-            <b-button size="sm" variant="light" class="btn-block">Send Invitation</b-button>
+            <b-button size="sm" variant="light" class="btn-block" @click="getEmailAndSendInvite(member)">Send Invitation</b-button>
           </div>
           <div v-else-if="member.state === 'invited'" class="small pb-2">
             Invited, but has not accepted the invitation yet<br>
-            <b-button size="sm" variant="light" class="btn-block">Resend Invitation</b-button>
+            <b-button size="sm" variant="light" class="btn-block" @click="getEmailAndSendInvite(member)">Resend Invitation</b-button>
           </div>
         </div>
       </li>
@@ -53,13 +60,16 @@
 </style>
 
 <script>
+import { inviteCommunityMember } from '@/services/communityService'
+
+
 export default {
   name: 'MembersList',
   props: {
     members: Array,
     activeMemberId: String,
     bars: Array,
-    activeBarId: String
+    activeBarId: String,
   },
   computed: {
     orderedMembers: function () {
@@ -69,7 +79,25 @@ export default {
       return alphabetical
     }
   },
+  data () {
+    return {
+      invitationEmail: "",
+      activeMember: {}
+    }
+  },
   methods: {
+    getEmailAndSendInvite() {
+      this.activeMember = this.members.find(x => x.id == this.activeMemberId);
+      this.invitationEmail = "";
+      this.$bvModal.show('sendEmailInvitationFromMembersListModal');
+    },
+    sendInvite() {
+      if (this.invitationEmail) {
+        let communityId = this.$store.getters.communityId;
+        inviteCommunityMember(communityId, this.activeMemberId, this.invitationEmail);
+        this.activeMember.state = 'invited';
+      }
+    },
     isCommunityBar: function (barId) {
       for (let i = 0; i < this.bars.length; i++) {
         if (this.bars[i].id === barId) {
