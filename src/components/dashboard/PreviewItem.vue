@@ -26,7 +26,7 @@
   </button>
 
   <!-- Normal button with/without image -->
-  <button v-else class="previewItem standardButton" @click="addToBar(item, $event)">
+  <button v-else class="previewItem standardButton">
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url] && !noImage"
       :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
