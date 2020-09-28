@@ -31,6 +31,10 @@ export function getCommunityBar (communityId, barId) {
   return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`)
 }
 
+export function saveCommunityBar (communityId, barId, barDetails) {
+  return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, barDetails)
+}
+
 export function updateCommunityBar (communityId, barId, bar) {
   return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, bar)
 }
