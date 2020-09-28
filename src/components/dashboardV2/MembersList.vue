@@ -7,6 +7,7 @@
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
           <br>
         </b-link>
@@ -63,10 +64,11 @@ export default {
   },
   computed: {
     orderedMembers: function () {
-      const alphabetical = this.members
+      // first member is community manager
+      const alphabetical = this.members.slice(1);
       alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
       alphabetical.reverse()
-      return alphabetical
+      return [this.members[0]].concat(alphabetical);
     }
   },
   methods: {
