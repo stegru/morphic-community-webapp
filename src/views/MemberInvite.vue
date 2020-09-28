@@ -231,7 +231,7 @@ export default {
           }
           if (resp.status === 200) {
             if (invite) {
-              inviteCommunityMember(this.communityId, member)
+              inviteCommunityMember(this.communityId, member_id, email)
             }
             setTimeout(() => {
               this.attachBar(resp.data.member)
