@@ -163,11 +163,11 @@ export default {
               }
             })
             .catch(err => {
-              console.err(err)
+              console.error(err)
             })
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     autoHideDetails: function (data, showFirstOne) {

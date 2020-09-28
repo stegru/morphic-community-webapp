@@ -162,7 +162,7 @@ export default {
     //       }
     //     })
     //     .catch(err => {
-    //       console.err(err)
+    //       console.error(err)
     //     })
     // },
     // changeUserRole: function () {
@@ -179,7 +179,7 @@ export default {
     //       }
     //     })
     //     .catch(err => {
-    //       console.err(err)
+    //       console.error(err)
     //     })
     // },
     addPersonalBar: function () {
@@ -209,12 +209,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.err(err)
+                  console.error(err)
                 })
             }
           })
           .catch(err => {
-            console.err(err)
+            console.error(err)
           })
       } else {
         this.saveBar()
@@ -238,7 +238,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     saveBar: function () {
@@ -259,7 +259,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     deleteBar: function () {
@@ -274,7 +274,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     // predefinedClicked: function (event, index, makeAButtons) {
@@ -442,11 +442,11 @@ export default {
               }
             })
             .catch(err => {
-              console.err(err)
+              console.error(err)
             })
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -461,7 +461,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     getCommunityData: function() {
@@ -470,7 +470,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     generateId: function(item) {
@@ -526,7 +526,7 @@ export default {
           this.barDetails = resp.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
     if (this.$route.query.memberId) {
@@ -626,7 +626,7 @@ export default {
           this.getCommunityData()
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   },
