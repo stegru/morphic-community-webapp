@@ -1,11 +1,9 @@
 <template>
 
   <div>
-    <h1>Morphic Bar Editor</h1>
+    <h1>{{memberDetails.id ? "Bar for " + memberName : "Community bar: " + barDetails.name}}</h1>
     <b-link to="/focused/home">Go back to community home</b-link>
-
-    <h2>{{ barDetails.name }}</h2>
-    <!-- <b-nav  class="small"> -->
+    <br />
       <b-link :to="{ name: 'Focused: Members using bar', query: { barId: barDetails.id } }">
         <b-icon-person-circle></b-icon-person-circle>
         <span v-if="$route.query.memberId">
@@ -19,35 +17,25 @@
         </span>
       </b-link>
       <br/>
-      <b-link :to="{ name: 'Focused: Bar settings', query: { barId: barDetails.id } }">
-        Morphic Bar Settings
-      </b-link>
-    <!-- </b-nav> -->
+      <br/>
 
     <h2>Buttons on the Bar</h2>
-    <!-- <div v-for="(item, index) in primaryItems" :key="index">
-      <div class="previewHolder mb-2" style="width: 200px">
-        <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
-      </div>
-    </div> -->
-    <div v-if="primaryItems.length === 0">
+    <div v-if="barDetails.items.length === 0">
       <p>No buttons on the bar</p>
     </div>
-    <div vi-if="primaryItems.length > 0">
+    <div vi-if="barDetails.items.length > 0">
       <ol>
-        <li v-for="(item, index) in primaryItems" :key="index">
-          <b-link :to="{ name: 'Focused: Button edit', query: { barId: barDetails.id } }">
-            {{item.configuration.label}} {{item.id}}
+        <li v-for="(item, index) in barDetails.items" :key="index">
+          <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId } }">
+            {{item.configuration.label}}
           </b-link>
         </li>
       </ol>
     </div>
 
-
-    <b-link :to="{ name: 'Focused: Button Catalog', query: { barId: barDetails.id } }">
+    <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, communityId: communityId } }">
       Add a Button
     </b-link>
-    <!-- <button>Save Bar and Update</button> -->
     <br>
     <b-link :to="{ name: 'Focused: Button Catalog' }">
       View the catalog of buttons available for the Morphic Bar
@@ -78,24 +66,6 @@ export default {
     draggable
   },
   methods: {
-    // preventDuplicated: function (event) {
-    //   for (let i = 0; i < this.activeButtons.length; i++) {
-    //     if (this.activeButtons[i].configuration.label === event.draggedContext.element.configuration.label) {
-    //       return false
-    //     }
-    //   }
-    // },
-    // dropFromList: function (event) {
-    //   event.item.classList.remove('draggedListItem')
-    // },
-    // dragFromList: function (event, makeAButton) {
-    //   event.item.className = 'draggedListItem'
-    //   if (makeAButton) {
-    //     this.dragMakeAButton = false
-    //   } else {
-    //     this.dragPredefinedButton = false
-    //   }
-    // },
     getMakeAButtons: function () {
       let buttons = []
       if (availableItems && availableItems.length > 0) {
@@ -491,6 +461,12 @@ export default {
     }
   },
   computed: {
+    memberName: function () {
+      // concat first/lastname and trim
+      let name = this.memberDetails ? `${this.memberDetails.first_name} ${this.memberDetails.last_name}`.trim() : "";
+      // uppercase first letter and return
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    },
     communityId: function () { return this.$store.getters.communityId },
     activeButtons: function () {
       let activeButtons = []
@@ -730,37 +706,7 @@ export default {
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,
-      subkindIcons: subkindIcons,
-      makeButtonList: [
-        {
-          label: 'Button to start a call...',
-          icon: 'chat'
-        },
-        {
-          label: 'Button to join a meeting...',
-          icon: 'people-fill'
-        },
-        {
-          label: 'Button to open online photo album...',
-          icon: 'images'
-        },
-        {
-          label: 'Button to open calendar...',
-          icon: 'calendar3'
-        },
-        {
-          label: 'Button to open web page...',
-          icon: 'link'
-        },
-        {
-          label: 'Button to open an app...',
-          icon: 'app'
-        },
-        {
-          label: 'Button to make all distractions go away...',
-          icon: 'headphones'
-        }
-      ]
+      subkindIcons: subkindIcons
     }
   }
 }
