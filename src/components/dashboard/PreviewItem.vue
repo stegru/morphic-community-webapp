@@ -18,7 +18,7 @@
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
       <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-              :style="'background: '+colors.default_button" @click="addToBar(item, $event)"
+              :style="'background: '+colors.default_button"
               v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
         {{button}}
       </button>
@@ -171,10 +171,9 @@ export default {
       icons: icons
     }
   },
-  inject: ["dropToBar"],
   methods: {
     addToBar: function (item, event) {
-      this.dropToBar({
+      this.$emit('addToBarFromPreview', {
         data: item,
         type: event.srcElement._prevClass === "noImage"? "catalogButtonNoImage": "catalogButtonWithImage"
       })

@@ -302,14 +302,14 @@
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
-                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
+                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
 
                           <drag :data="button" type="catalogButtonWithImage">
                             <template v-slot:drag-image>
                               <PreviewItem :item="button" :noImage="false" class="noImage" />
                             </template>
-                            <PreviewItem :item="button" :simplified="true" class="withImage" />
+                            <PreviewItem :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
                         </div>
                         <h3>{{button.configuration.label}}</h3>
@@ -1166,14 +1166,8 @@ export default {
       next()
     }
   },
-
   beforeUpdate() {
     this.refreshBar();
-  },
-  provide: function () {
-    return {
-      dropToBar: this.dropToBar
-    }
   },
   data () {
     return {
