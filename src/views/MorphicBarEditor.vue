@@ -98,6 +98,12 @@
     <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this bar?</p>
     </b-modal>
+    <b-modal id="sendEmailInvitationModal" :ok-disabled="!invitationEmail.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')" @ok="sendInvite" title="Enter email address for invitation" footer-bg-variant="light" ok-title="Send Invitation">
+      <p class="my-4"></p>
+      <b-form-group :label="'Please enter email address for '+this.memberDetails.first_name+' '+this.memberDetails.last_name" label-for="email">
+        <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
+      </b-form-group>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
@@ -170,11 +176,11 @@
                 <span class="green dot"></span>
                 <span class="text">active</span>
               </span>
-              <span v-else-if="activeMemberId && memberDetails.state === 'uninvited'" @click="sendInvite()">
+              <span v-else-if="activeMemberId && memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()">
                 <span class="red dot"></span>
                 <button class="linkStyling">Invite member</button>
               </span>
-              <span v-else-if="activeMemberId && memberDetails.state === 'invited'" @click="sendInvite()">
+              <span v-else-if="activeMemberId && memberDetails.state === 'invited'" @click="getEmailAndSendInvite()">
                 <span class="yellow dot"></span>
                 <button class="linkStyling">Re-invite member</button>
               </span>
@@ -189,7 +195,7 @@
                 <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
                 <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
                 <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
-                <li v-if="memberDetails.state === 'uninvited'" @click="sendInvite()"><b-link>Send Invitation</b-link></li>
+                <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
@@ -768,12 +774,14 @@ export default {
       itemList.splice(index, 1);
     },
 
+    getEmailAndSendInvite() {
+      this.invitationEmail = "";
+      this.$bvModal.show('sendEmailInvitationModal');
+    },
     sendInvite() {
-      var email = window.prompt(`Please enter email address for ${this.memberDetails.first_name} ${this.memberDetails.last_name}`, "email@email.com");
-      if (email != null) {
+      if (this.invitationEmail) {
         let communityId = this.$store.getters.communityId;
-
-        inviteCommunityMember(communityId, this.memberDetails.id, email);
+        inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
         this.memberDetails.state = 'invited';
       }
     },
@@ -1209,6 +1217,7 @@ export default {
           image_url: ''
         }
       },
+      invitationEmail: '',
       barDetails: {},
       originalBarDetails: {},
       members: [],
