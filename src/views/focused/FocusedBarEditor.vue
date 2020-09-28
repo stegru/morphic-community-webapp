@@ -30,13 +30,19 @@
         <PreviewItem @click.native="buttonToEdit(item)" :item="item" />
       </div>
     </div> -->
-    <ol>
-      <li v-for="(item, index) in primaryItems" :key="index">
-        <b-link :to="{ name: 'Focused: Button edit', query: { barId: barDetails.id } }">
-          {{item.configuration.label}} {{item.id}}
-        </b-link>
-      </li>
-    </ol>
+    <div v-if="primaryItems.length === 0">
+      <p>No buttons on the bar</p>
+    </div>
+    <div vi-if="primaryItems.length > 0">
+      <ol>
+        <li v-for="(item, index) in primaryItems" :key="index">
+          <b-link :to="{ name: 'Focused: Button edit', query: { barId: barDetails.id } }">
+            {{item.configuration.label}} {{item.id}}
+          </b-link>
+        </li>
+      </ol>
+    </div>
+
 
     <b-link :to="{ name: 'Focused: Button Catalog', query: { barId: barDetails.id } }">
       Add a Button
