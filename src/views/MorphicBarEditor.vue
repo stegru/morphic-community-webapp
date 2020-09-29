@@ -287,8 +287,8 @@
                 <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
               </b-input-group-append>
             </b-input-group>
-            <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
-              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
+            <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
+              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
                   <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
@@ -300,21 +300,25 @@
                       </template>
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                        <div style="width: 100%; display: inline-flex;">
+                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="max-width: 1.25rem; max-height: 100%;"/>
+                          <b-img v-else :src="'/icons/bootstrap.svg'" style="max-width: 1.25rem; max-height: 100%;"></b-img>
+                          <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
+                        </div>
+                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
+                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
                             <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
 
-                          <drag :data="button" type="catalogButtonWithImage">
+                          <drag v-if="button.kind != 'action'" :data="button" type="catalogButtonWithImage">
                             <template v-slot:drag-image>
                               <PreviewItem :item="button" :noImage="false" class="noImage" />
                             </template>
                             <PreviewItem :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
                         </div>
-                        <h3>{{button.configuration.label}}</h3>
-                        <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
-                        <div class="help">To add, drag or click a button below, or press enter</div>
                       </div>
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
@@ -515,10 +519,21 @@
   }
 
   #buttonsPanel {
+
+    .ButtonsCatalogHeader {
+      h3 {
+        font-size: 1.30rem;
+        margin-bottom: 6px;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+    }
+
     .ButtonsCatalogEntries {
       padding-inline-start: 17px;
       list-style: none;
       .buttonsCatalogEntry {
+
         .active {
           background-color: #e0f1d7;
           border: solid 1px #008145;
