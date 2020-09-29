@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
+     <button @click="deleteButton" class="text-danger">Remove Button</button>
      <b-form>
         <b-form-group id="name" label="Text on the button" label-for="button-label-input">
           <b-form-input id="button-label-input" v-model="button.configuration.label"></b-form-input>
@@ -67,7 +68,15 @@ export default {
         // insert new
         this.barDetails.items.splice(this.newButtonIndex, 0, this.button);
       }
-
+      this.checkBarTypeAndSave();
+    },
+    deleteButton: function () {
+      var theButton = this.barDetails.items[this.buttonIndex];
+      console.log("Deleting button from bar with " + this.barDetails.items.length + " items, button [" + this.buttonIndex + "]: " + JSON.stringify(theButton, null, 2));
+      this.barDetails.items.splice(this.buttonIndex, 1);
+      this.checkBarTypeAndSave();
+    },
+    checkBarTypeAndSave() {
       // if we're editing a member's bar and it was previously a community bar:
       if (this.memberId && this.barDetails.is_shared) {
         this.saveAsNewPersonalBar();
