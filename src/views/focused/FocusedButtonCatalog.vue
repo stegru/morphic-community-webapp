@@ -109,7 +109,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   },
@@ -143,7 +143,7 @@ export default {
           this.barDetails = resp.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
     if (this.$route.query.memberId) {
@@ -235,7 +235,7 @@ export default {
           this.getCommunityData()
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   },

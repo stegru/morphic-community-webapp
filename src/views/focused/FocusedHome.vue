@@ -8,9 +8,9 @@
   </ul>
 
   <h2>Community Bars</h2>
-    <p><b-link disabled>Community settings</b-link></p>
-    <ul v-if="list.length > 0" class="list-unstyled">
-      <li v-for="bar in list" :key="bar.id" >
+    <!-- <p><b-link disabled>Community settings</b-link></p> -->
+    <ul v-if="communityBars.length > 0" class="list-unstyled">
+      <li v-for="bar in communityBars" :key="bar.id" >
         <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: bar.id } }">
          {{ bar.name === "Default" ? "Default Bar" : bar.name }}
         </b-link>
@@ -69,7 +69,8 @@ export default {
       bars: [],
       community: {},
       members: [],
-      barPreviewData: {}
+      barPreviewData: {},
+      communityBars: []
     };
   },
   computed: {
@@ -146,7 +147,8 @@ export default {
     loadBars: function () {
       getCommunityBars(this.community.id)
         .then(resp => {
-          const bars = resp.data.bars
+          const bars = resp.data.bars;
+          this.communityBars = bars.filter(bar => bar.is_shared == true);
           getCommunityMembers(this.communityId)
             .then((resp) => {
               this.list = this.autoHideDetails(bars, true)
@@ -163,11 +165,11 @@ export default {
               }
             })
             .catch(err => {
-              console.err(err)
+              console.error(err)
             })
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     autoHideDetails: function (data, showFirstOne) {
