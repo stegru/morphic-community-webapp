@@ -243,10 +243,6 @@
             </drop>
             <!-- Buttons Bar -->
             <div id="preview-bar">
-              <drop class="buttonsList draggable-area" @drop="dropOnClickToAdd">
-                <button @click="addButtonToBarByClick()" v-if="expandedCatalogButtonId" variant="success" size="sm" class="clickDropSpot feedback button-feedback">Click to add</button>
-              </drop>
-
               <div class="barPreviewEditor" ref="myref">
                 <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
                   <template v-slot:item="{item}">
@@ -306,19 +302,19 @@
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
-                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" />
+                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
 
                           <drag :data="button" type="catalogButtonWithImage">
                             <template v-slot:drag-image>
                               <PreviewItem :item="button" :noImage="false" class="noImage" />
                             </template>
-                            <PreviewItem :item="button" :simplified="true" class="withImage" />
+                            <PreviewItem :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
                         </div>
                         <h3>{{button.configuration.label}}</h3>
                         <div class="description">{{button.configuration.description || "A button that enables the funcitonality described above"}}</div>
-                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
+                        <div class="help">To add, drag or click a button below, or press enter</div>
                       </div>
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
@@ -975,9 +971,6 @@ export default {
       this.expandedCatalogButtonId = buttonId;
       this.expandedCatalogButton = button;
     },
-    addButtonToBarByClick: function () {
-      this.dropToBar({ data: this.expandedCatalogButton, type: "catalogButtonNoImage", index: 0});
-    },
     buttonToRemove: function (item) {
       // remove from items list
       // bar and drawer lists are automatically updated from watcher
@@ -1173,7 +1166,6 @@ export default {
       next()
     }
   },
-
   beforeUpdate() {
     this.refreshBar();
   },
