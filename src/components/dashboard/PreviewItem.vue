@@ -1,8 +1,13 @@
 <template>
   <!-- Simplified button (no text and small size) -->
   <button v-if="simplified" class="previewItem simplified" @click="addToBar(item, $event)">
-    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton" :style="'background: '+colors.default_button">
-      multiButton
+    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton">
+      <div class="buttons" style="margin-top: 5px;">
+        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index" class="rounded multiButton"
+                :style="'background: '+colors.default_button"
+                v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+        </button>
+      </div>
     </div>
     <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
     </div>
@@ -18,7 +23,7 @@
     <label>{{item.configuration.label}}</label>
     <div class="buttons" >
       <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-              :style="'background: '+colors.default_button"
+              :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
               v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
         {{button}}
       </button>
@@ -46,7 +51,6 @@
       height: 37px;
       border-radius: 9px;
       width: 75px;
-
     }
 
     .regular {
@@ -78,6 +82,13 @@
           width: 23px;
         }
       }
+    }
+
+    .multiButton {
+      border: none;
+      min-height: 37px;
+      min-width: 37px;
+      margin: 0.05rem 0.05rem 0.05rem 0.05rem;
     }
   }
 
