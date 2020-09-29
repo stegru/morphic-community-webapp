@@ -288,7 +288,7 @@
               </b-input-group-append>
             </b-input-group>
             <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
-              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
+              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
                   <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
@@ -519,10 +519,21 @@
   }
 
   #buttonsPanel {
+
+    .ButtonsCatalogHeader {
+      h3 {
+        font-size: 1.30rem;
+        margin-bottom: 6px;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+    }
+
     .ButtonsCatalogEntries {
       padding-inline-start: 17px;
       list-style: none;
       .buttonsCatalogEntry {
+
         .active {
           background-color: #e0f1d7;
           border: solid 1px #008145;
