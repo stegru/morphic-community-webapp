@@ -144,7 +144,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     getMemberBar () {
@@ -153,7 +153,7 @@ export default {
           this.currentMorphicBar = resp.data.id
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   },
@@ -170,7 +170,7 @@ export default {
           this.getMemberBar()
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   }

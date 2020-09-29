@@ -133,7 +133,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     attachBar (resp) {
@@ -149,7 +149,7 @@ export default {
           this.$router.push('/dashboard/morphicbar-editor?barId=' + member.bar_id + '&memberId=' + member.id)
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     }
   },
@@ -164,7 +164,7 @@ export default {
         this.selectedBar = this.bars[0].id
       })
       .catch(err => {
-        console.err(err)
+        console.error(err)
       })
   }
 }
