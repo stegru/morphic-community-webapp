@@ -291,7 +291,7 @@
                 <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
               </b-input-group-append>
             </b-input-group>
-            <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
+            <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
               <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
