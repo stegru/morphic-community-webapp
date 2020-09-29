@@ -79,7 +79,7 @@ export default {
           this.bar = resp.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     } else {
       // the data comes in the bar prop
