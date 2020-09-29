@@ -31,6 +31,10 @@ export function getCommunityBar (communityId, barId) {
   return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`)
 }
 
+export function saveCommunityBar (communityId, barId, barDetails) {
+  return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, barDetails)
+}
+
 export function updateCommunityBar (communityId, barId, bar) {
   return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, bar)
 }
@@ -58,6 +62,6 @@ export function deleteCommunityMember (communityId, memberId) {
   return HTTP.delete(`/v1/communities/${communityId}/members/${memberId}`)
 }
 
-export function inviteCommunityMember (communityId, member) {
-  return HTTP.post(`/v1/communities/${communityId}/invitations`, member)
+export function inviteCommunityMember (communityId, memberId, email) {
+  return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email });
 }
