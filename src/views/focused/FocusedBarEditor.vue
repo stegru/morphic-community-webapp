@@ -22,13 +22,13 @@
     <h2>Buttons on the Bar</h2>
     <ol>
       <li v-for="(item, index) in barDetails.items" :key="index">
-        <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId } }">
+        <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
         </b-link>
       </li>
     </ol>
 
-    <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, communityId: communityId } }">
+    <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, communityId: communityId, memberId: memberId } }">
       Add a Button
     </b-link>
     <br>
@@ -248,42 +248,6 @@ export default {
           console.error(err)
         })
     },
-    // predefinedClicked: function (event, index, makeAButtons) {
-    //   this.clearPredefinedActive()
-    //   let currentLabel
-    //   if (makeAButtons) {
-    //     this.buttonStorage = this.makeAButtons[index]
-    //     currentLabel = this.makeAButtons[index].configuration.label
-    //   } else {
-    //     this.buttonStorage = this.predefinedButtons[index]
-    //     currentLabel = this.predefinedButtons[index].configuration.label
-    //   }
-    //   if (event.type === 'click') {
-    //     if (makeAButtons) {
-    //       this.makeAButtons[index].configuration.label = '[ACTIVE]'
-    //       this.makeAButtons[index].isActive = true
-    //       this.makeAButtons[index].configuration.label = currentLabel
-    //     } else {
-    //       this.predefinedButtons[index].configuration.label = '[ACTIVE]'
-    //       this.predefinedButtons[index].isActive = true
-    //       this.predefinedButtons[index].configuration.label = currentLabel
-    //     }
-    //   }
-    //   if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
-    //     this.addToBar = true
-    //   }
-    //   if (this.getDrawerButtonsCount() < (this.preview.drawer.w * this.preview.drawer.h)) {
-    //     this.addToDrawer = true
-    //   }
-    // },
-    // clearPredefinedActive: function () {
-    //   for (let i = 0; i < this.predefinedButtons.length; i++) {
-    //     this.predefinedButtons[i].isActive = false
-    //   }
-    //   for (let i = 0; i < this.makeAButtons.length; i++) {
-    //     this.makeAButtons[i].isActive = false
-    //   }
-    // },
     addToBarOrDrawer: function (is_primary) {
       this.clearPredefinedActive()
       if (this.buttonStorage) {
@@ -427,7 +391,7 @@ export default {
       return false
     },
     loadMemberData: function () {
-      getCommunityMember(this.communityId, this.$route.query.memberId)
+      getCommunityMember(this.communityId, this.memberId)
         .then((resp) => {
           this.memberDetails = resp.data
         })
@@ -507,6 +471,7 @@ export default {
         })
     }
     if (this.$route.query.memberId) {
+      this.memberId = this.$route.query.memberId;
       this.loadMemberData()
     }
     this.loadBarMembers()
@@ -593,6 +558,7 @@ export default {
       this.initialChangesPrimaryItems = false
       this.initialChangesDrawerItems = false
       if (this.$route.query.memberId) {
+        this.memberId = this.$route.query.memberId;
         this.loadMemberData()
       }
       getCommunityBar(this.communityId, this.$route.query.barId)
@@ -638,6 +604,7 @@ export default {
       leavePageMessage: MESSAGES.leavePageAlert,
       successMessage: '',
 
+      memberId: undefined,
       // flags
       addToBar: false,
       addToDrawer: false,

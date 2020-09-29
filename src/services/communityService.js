@@ -63,5 +63,5 @@ export function deleteCommunityMember (communityId, memberId) {
 }
 
 export function inviteCommunityMember (communityId, memberId, email) {
-  return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email });
+  return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email })
 }
