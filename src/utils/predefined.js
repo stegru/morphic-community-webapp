@@ -7,27 +7,27 @@ export const predefinedBars = [
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined default bar with some items inside, use it as a start...',
-    items: [buttonCatalog['E-mail'].outlook, buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.facebook, buttonCatalog.Other.skype]
+    items: [buttonCatalog['Email - Websites'].outlook, buttonCatalog['Email - Websites'].gmail, buttonCatalog.['Social Media Sites'].reddit, buttonCatalog.['Social Media Sites'].facebook, buttonCatalog.['Call a Person'].skype]
   },
   {
     id: 'predefined-2',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined default bar with some items inside, use it as a start...',
-    items: [buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.skype]
+    items: [buttonCatalog['Email - Websites'].gmail, buttonCatalog.['Social Media Sites'].reddit, buttonCatalog.['Call a Person'].skype]
   },
   {
     id: 'predefined-3',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined default bar with some items inside, use it as a start...',
-    items: [buttonCatalog['E-mail'].outlook, buttonCatalog['E-mail'].gmail, buttonCatalog.Other.reddit, buttonCatalog.Other.facebook]
+    items: [buttonCatalog['Email - Websites'].outlook, buttonCatalog['Email - Websites'].gmail, buttonCatalog.['Social Media Sites'].reddit, buttonCatalog.['Social Media Sites'].facebook]
   },
   {
     id: 'predefined-4',
     is_shared: true,
     name: 'Predefined Preset',
     desc: 'This is predefined default bar with some items inside, use it as a start...',
-    items: [buttonCatalog['E-mail'].gmail, buttonCatalog.Other.skype, buttonCatalog.Other.facebook]
+    items: [buttonCatalog['Email - Websites'].gmail, buttonCatalog.['Call a Person'].skype, buttonCatalog.['Social Media Sites'].facebook]
   }
 ]
