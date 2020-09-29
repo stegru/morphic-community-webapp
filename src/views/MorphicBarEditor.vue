@@ -819,7 +819,7 @@ export default {
             this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
           })
           .catch(err => {
-            console.err(err)
+            console.error(err)
           })
       }
     },
@@ -850,7 +850,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     changeMemberRole: function () {
@@ -867,7 +867,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     updateOriginalBarDetails: function () {
@@ -901,12 +901,12 @@ export default {
                   }
                 })
                 .catch(err => {
-                  console.err(err)
+                  console.error(err)
                 })
             }
           })
           .catch(err => {
-            console.err(err)
+            console.error(err)
           })
       } else {
         this.saveBar()
@@ -934,7 +934,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     saveBar: function () {
@@ -957,7 +957,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     deleteBar: function () {
@@ -972,7 +972,7 @@ export default {
           }
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     expandCatalogButton: function (button, buttonId) {
@@ -1033,11 +1033,11 @@ export default {
               }
             })
             .catch(err => {
-              console.err(err)
+              console.error(err)
             })
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     getBarRemoveValidity: function () {
@@ -1052,7 +1052,7 @@ export default {
           this.memberDetails = resp.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     getCommunityData: function () {
@@ -1061,7 +1061,7 @@ export default {
           this.community = community.data
         })
         .catch(err => {
-          console.err(err)
+          console.error(err)
         })
     },
     generateId: function (item) {
