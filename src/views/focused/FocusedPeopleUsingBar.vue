@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <h1>People using this bar</h1>
+    <h1>Members using this bar</h1>
 
     <ul>
         <li v-for="member in members" :key="member.id">

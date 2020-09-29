@@ -24,13 +24,15 @@
       </b-form>
     </p>
 
-  <h2>People in your community</h2>
+  <h2>Members in your community</h2>
   <em>Follow a link to see or change the member's Morphic Bar</em>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
           {{ member.first_name }} {{ member.last_name }}
-          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark"></b-icon>
+          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" title="Has not accepted invitation"></b-icon>
+          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" title="Using a community bar"></b-icon>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" title="Member is a community manager"></b-icon>
           <br>
         </b-link>
       </li>
@@ -46,7 +48,10 @@
 </template>
 
 <style>
-
+.communityBarSymbol {
+  margin-left: 5px;
+  margin-right: 5px;
+  }
 </style>
 
 <script>
@@ -152,7 +157,7 @@ export default {
           getCommunityMembers(this.communityId)
             .then((resp) => {
               this.list = this.autoHideDetails(bars, true)
-              this.members = resp.data.members
+              this.members = resp.data.members.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
               if (this.members.length > 0 && this.list.length > 0) {
                 for (let i = 0; i < this.list.length; i++) {
                   this.list[i].members = []
@@ -189,6 +194,14 @@ export default {
       alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
       alphabetical.reverse()
       return alphabetical
+    },
+    isCommunityBar: function (barId) {
+      for (let i = 0; i < this.communityBars.length; i++) {
+        if (this.communityBars[i].id === barId) {
+          return this.communityBars[i].is_shared
+        }
+      }
+      return false
     }
   }
 
