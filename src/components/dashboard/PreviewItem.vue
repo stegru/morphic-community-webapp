@@ -1,6 +1,6 @@
 <template>
   <!-- Simplified button (no text and small size) -->
-  <button v-if="simplified" class="previewItem simplified">
+  <button v-if="simplified" class="previewItem simplified" @click="addToBar(item, $event)">
     <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton">
       <div class="buttons" style="margin-top: 5px;">
         <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index" class="rounded multiButton"
@@ -35,7 +35,7 @@
     <div
       v-if="item.configuration.image_url && icons[item.configuration.image_url] && !noImage"
       :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
-      class="iconHolder" >
+      class="iconHolder">
       <b-img :src="'/icons/' + icons[item.configuration.image_url]" />
     </div>
     <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: !noImage && item.configuration.image_url && icons[item.configuration.image_url]}">{{ item.configuration.label}}</b>
@@ -180,6 +180,15 @@ export default {
     return {
       colors: colors,
       icons: icons
+    }
+  },
+  methods: {
+    addToBar: function (item, event) {
+      this.$emit('addToBarFromPreview', {
+        data: item,
+        type: event.srcElement._prevClass === "noImage"? "catalogButtonNoImage": "catalogButtonWithImage"
+      })
+
     }
   }
 }
