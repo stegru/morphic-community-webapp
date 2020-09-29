@@ -1012,7 +1012,9 @@ export default {
           getCommunityMembers(this.communityId)
             .then((resp) => {
               this.barsList = barsData
-              this.membersList = resp.data.members
+              this.membersList = resp.data.members;
+              this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
+
               if (resp.data.members.length > 0) {
                 for (let i = 0; i < resp.data.members.length; i++) {
                   if (this.$route.query.barId === resp.data.members[i].bar_id) {

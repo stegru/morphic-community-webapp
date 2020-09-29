@@ -10,7 +10,7 @@
     <!-- The CM counts as a member of the Community, so by default there's always one member -->
     <ul class="list-unstyled">
       <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
-        <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }" :ref="'member' + index">
+        <b-link :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }" :ref="'member' + index">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
@@ -76,10 +76,7 @@ export default {
         const alphabetical = this.members.slice(1);
         alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
         alphabetical.reverse();
-        let finalList = [this.members[0]].concat(alphabetical);
-        // set bar id to default if it's undefined:
-        finalList = finalList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
-        return finalList
+        return [this.members[0]].concat(alphabetical);
       } else {
         return [];
       }
