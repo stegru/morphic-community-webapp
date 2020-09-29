@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
+     <button @click="deleteButton" class="text-danger">Remove Button</button>
      <b-form>
         <b-form-group id="name" label="Text on the button" label-for="button-label-input">
           <b-form-input id="button-label-input" v-model="button.configuration.label"></b-form-input>
@@ -39,7 +40,7 @@
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar, saveCommunityBar } from '@/services/communityService'
+import { getCommunityBar, saveCommunityBar, getCommunityMember, createCommunityBar, updateCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
@@ -55,7 +56,6 @@ export default {
   methods: {
     setAvailablePositions: function () {
       this.availablePositions = {};
-      console.log('aksepr')
       for (let i=0; i<this.barDetails.items.length; i++) {
         this.availablePositions[i] = `Button position ${i+1} of ${this.barDetails.items.length}`;
       }
@@ -68,12 +68,56 @@ export default {
         // insert new
         this.barDetails.items.splice(this.newButtonIndex, 0, this.button);
       }
-      // saveCommunityBar
-      console.log(this.barDetails);
-      saveCommunityBar(this.communityId, this.barId, this.barDetails).then(() => {
-        this.$router.push({ path: '/focused/bar-editor', query: { barId: this.barId } });
-      });
-    }
+      this.checkBarTypeAndSave();
+    },
+    deleteButton: function () {
+      var theButton = this.barDetails.items[this.buttonIndex];
+      console.log("Deleting button from bar with " + this.barDetails.items.length + " items, button [" + this.buttonIndex + "]: " + JSON.stringify(theButton, null, 2));
+      this.barDetails.items.splice(this.buttonIndex, 1);
+      this.checkBarTypeAndSave();
+    },
+    checkBarTypeAndSave() {
+      // if we're editing a member's bar and it was previously a community bar:
+      if (this.memberId && this.barDetails.is_shared) {
+        this.saveAsNewPersonalBar();
+      } else {
+        this.saveBar();
+      }
+    },
+    saveAsNewPersonalBar: function () {
+      this.barDetails.name = `${this.memberDetails.first_name} ${this.memberDetails.last_name}`.trim();
+      this.barDetails.is_shared = false;
+      delete this.barDetails.id;
+      createCommunityBar(this.communityId, this.barDetails).then((resp) => {
+        if (resp.status === 200) {
+          this.memberDetails.bar_id = resp.data.bar.id
+          updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+            .then((resp) => {
+              if (resp.status === 200) {
+                this.navigateBack();
+              }
+            })
+            .catch(err => { // failed to update member
+              console.error(err)
+            })
+
+        }
+      }).catch(err => { // failed to create a community
+        console.error(err)
+      })
+    },
+    saveBar: function () {
+      saveCommunityBar(this.communityId, this.barId, this.barDetails)
+        .then(() => {
+          this.navigateBack();
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    navigateBack: function () {
+      this.$router.push({ path: '/focused/bar-editor', query: { barId: this.barId, memberId: this.memberId } });
+    },
   },
   computed: {
     userFriendlyColors: function () {
@@ -94,6 +138,7 @@ export default {
     this.buttonIndex = this.$route.query.buttonIndex;
     this.newButtonIndex = this.buttonIndex;
     this.communityId = this.$route.query.communityId;
+    this.memberId = this.$route.query.memberId;
 
 
     // load bar and content (incl. button)
@@ -102,35 +147,19 @@ export default {
       // find button:
       this.button = this.barDetails.items[this.buttonIndex];
       this.setAvailablePositions();
-      console.log(this.button);
-    })
+    });
+    // load member if set:
+    if (this.memberId) {
+      getCommunityMember(this.communityId, this.memberId)
+        .then((resp) => {
+          this.memberDetails = resp.data
+        })
+        .catch(err => {
+          console.error(err)
+        })
+      }
   },
   watch: {
-  },
-  beforeRouteUpdate (to, from, next) {
-    // if (this.isChanged) {
-    //   const confirm = window.confirm(this.leavePageMessage)
-    //   if (confirm) {
-    //     this.isChanged = false
-    //     next()
-    //   } else {
-    //     next(false)
-    //   }
-    // } else {
-      next()
-    // }
-  },
-  beforeRouteLeave (to, from, next) {
-    // if (this.isChanged) {
-    //   const confirm = window.confirm(this.leavePageMessage)
-    //   if (confirm) {
-    //     next()
-    //   } else {
-    //     next(false)
-    //   }
-    // } else {
-      next()
-    // }
   },
   data () {
     return {
@@ -138,6 +167,8 @@ export default {
       barId: undefined,
       buttonIndex: undefined,
       communityId: undefined,
+      memberId: undefined,
+      memberDetails: undefined,
       originalButton: undefined,
       newButtonIndex: undefined,
       button: {
