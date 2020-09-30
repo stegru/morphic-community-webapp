@@ -49,6 +49,8 @@ export const icons = {
   paypal: 'paypal.svg',
   reddit: 'reddit.svg',
   skype: 'skype.svg',
+  'google-calendar': 'logo_googleCalendar.svg',
+  icloud: 'logo_icloud.svg',
   telegram: 'telegram.svg',
   twitter: 'twitter.svg',
   viber: 'viber.svg',
@@ -139,7 +141,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'jitsi',
+        subkind: 'meeting-room',
         label: 'Jitsi',
         color: colors.blue,
         image_url: 'jitsi',
@@ -151,7 +153,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'zoom',
+        subkind: 'meeting-room',
         label: 'Zoom',
         color: colors.blue,
         image_url: 'zoom',
@@ -338,7 +340,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'google-calendar',
+        subkind: 'calendar',
         label: 'Google Calendar',
         color: colors.blue,
         image_url: 'google-calendar',
@@ -350,10 +352,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-calendar',
+        subkind: 'calendar',
         label: 'iCloud Calendar',
         color: colors.blue,
-        image_url: 'icloud-calendar',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/calendar/',
         description: 'Opens the iCloud Calendar for the user if they are signed in.'
       }
@@ -362,7 +364,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'outlook-com-calendar',
+        subkind: 'calendar',
         label: 'Outlook.com Calendar',
         color: colors.blue,
         image_url: 'outlook',
@@ -374,7 +376,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'yahoo-calendar',
+        subkind: 'calendar',
         label: 'Yahoo! Calendar',
         color: colors.blue,
         image_url: 'yahoo',
@@ -386,10 +388,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'calendly',
+        subkind: 'calendar',
         label: 'Calendly',
         color: colors.blue,
-        image_url: 'calendly',
+        image_url: '',
         url: 'https://calendly.com/',
         description: 'Opens Calendly'
       }
@@ -398,10 +400,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'zoho-calendar',
+        subkind: 'calendar',
         label: 'Zoho Calendar',
         color: colors.blue,
-        image_url: 'zoho-calendar',
+        image_url: '',
         url: 'https://www.zoho.com/calendar/',
         description: 'Opens Zoho Calendar'
       }
@@ -410,10 +412,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'cozy-family-organizer',
+        subkind: 'calendar',
         label: 'Cozy Family Organizer',
         color: colors.blue,
-        image_url: 'cozy-family-organizer',
+        image_url: '',
         url: 'https://www.cozi.com/calendar/',
         description: 'Opens Cozy Family Organizer'
       }
@@ -422,10 +424,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: '30-boxes',
+        subkind: 'calendar',
         label: '30 Boxes Online Calendar',
         color: colors.blue,
-        image_url: '30-boxes',
+        image_url: '',
         url: 'http://30boxes.com/',
         description: '30 Boxes Online Calendar'
       }
