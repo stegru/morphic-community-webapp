@@ -330,7 +330,7 @@ export const buttonCatalog = {
         label: 'Log-off Computer',
         description: 'Logs the user off the Computer.',
         identifier: 'log-off',
-        color: colors.blue,
+        color: colors.blue
       }
     },
     'read-aloud': {
