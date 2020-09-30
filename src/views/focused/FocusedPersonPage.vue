@@ -1,23 +1,56 @@
 <template>
-  <div>
-    <h1>Community Member details for: {{ member.first_name }} {{ member.last_name }}</h1>
+  <div v-if="isGetEmailView">
+    <h1>Invite {{ memberDetails.first_name }} {{ memberDetails.last_name }}</h1>
+    <b-form>
+      <b-form-group label="Email to send invitation to" label-for="email_input">
+        <b-form-input v-model="emailInput" id="email" class="mb-2"></b-form-input>
+      </b-form-group>
+      <p />
+
+      <b-button type="reset" @click="isGetEmailView = false" variant="warning">Cancel</b-button>
+      <b-button type="submit" @click="sendInvite" :disabled="!checkEmail" variant="primary">Send Invite</b-button>
+    </b-form>
+  </div>
+
+  <div v-else-if="isAddMemberView">
+    <h1>Add a new member to the community</h1>
+    <b-form>
+      <b-form-group label="First name" label-for="firstName_input">
+        <b-form-input v-model="firstNameInput" id="firstName_input" class="mb-2"></b-form-input>
+      </b-form-group>
+      <b-form-group label="Last name" label-for="lastName_input">
+        <b-form-input v-model="lastNameInput" id="lastName_input" class="mb-2"></b-form-input>
+      </b-form-group>
+      <p />
+
+      <b-button type="reset" @click="navigateBack" variant="warning">Cancel</b-button>
+      <b-button type="submit" @click="addMember" :disabled="!lastNameInput && !firstNameInput" variant="primary">Add member</b-button>
+    </b-form>
+  </div>
+
+  <div v-else>
+    <h1>Member: {{ memberDetails.first_name }} {{ memberDetails.last_name }}</h1>
     <ul>
+      <li>{{memberDetails.role == "member" ? "Is a regular member" : "Is a community manager"}}</li>
       <li>Joined: 2020-10-10</li>
       <li>Invited by: Community Manager Handle</li>
       <li>Last used Morphic 3 days ago</li>
     </ul>
 
-    <button>Make member a Community Manager</button>
-    <button>Delete member</button>
-    <button>Send a new invitation</button>
-    <p>Notes: (Only seen by Community Managers)</p>
-    <textarea></textarea>
+    <b-button variant="warning" @click="changeUserRole">{{memberDetails.role == "member" ? "Make member a Community Manager" : "Remove community manager role"}}</b-button>
+    <b-button variant="danger" @click="deleteMemberClicked">Delete member</b-button>
+    <b-button @click="sendInviteClicked">
+      <span v-if="memberDetails.state == 'uninvited'">Invite member</span>
+      <span v-else>Resend invitation</span>
+    </b-button>
 
-    <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id } }">
+    <hr />
+
+    <b-link @click="navigateBack">
         Go back
     </b-link>
-    <button>Save</button>
   </div>
+
 </template>
 
 <style lang="scss">
@@ -28,7 +61,7 @@
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
+import { addCommunityMember, inviteCommunityMember, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
@@ -42,98 +75,17 @@ export default {
     draggable
   },
   methods: {
-    preventDuplicated: function (event) {
-      for (let i = 0; i < this.activeButtons.length; i++) {
-        if (this.activeButtons[i].configuration.label === event.draggedContext.element.configuration.label) {
-          return false
-        }
+    deleteMemberClicked: function () {
+      if (confirm("Are you sure you want to delete member? This cannot be undone")) {
+        deleteCommunityMember(this.communityId, this.memberDetails.id)
+          .then((resp) => {
+            delete this.memberDetails.id;
+            this.navigateBack();
+          })
+          .catch(err => {
+            console.error(err)
+          })
       }
-    },
-    dropFromList: function (event) {
-      event.item.classList.remove('draggedListItem')
-    },
-    dragFromList: function (event, makeAButton) {
-      event.item.className = 'draggedListItem'
-      if (makeAButton) {
-        this.dragMakeAButton = false
-      } else {
-        this.dragPredefinedButton = false
-      }
-    },
-    getMakeAButtons: function () {
-      let buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
-    },
-    getPredefinedButtons: function () {
-      let buttons = []
-      if (availableItems && availableItems.length > 0) {
-        for (let i = 0; i < availableItems.length; i++) {
-          if (!availableItems[i].configuration.subkind) {
-            let item = availableItems[i]
-            item.isActive = false
-            item.configuration.color = item.configuration.color || ''
-            item.configuration.image_url = item.configuration.image_url || ''
-            buttons.push(item)
-          }
-        }
-      }
-      return buttons
-    },
-    getDrawerItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === false) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            if (data.length >= this.preview.drawer.h) {
-              this.drawerItemsSecond.push(newItem)
-            } else {
-              data.push(newItem)
-            }
-          }
-        }
-      }
-      this.drawerItems = data
-    },
-    getPrimaryItems: function (items) {
-      const data = []
-      if (items && items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].is_primary === true) {
-            const newItem = items[i]
-            newItem.id = this.generateId(newItem)
-            data.push(newItem)
-          }
-        }
-      }
-      this.primaryItems = data
-    },
-    deleteUser: function () {
-      deleteCommunityMember(this.communityId, this.memberDetails.id)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulMemberDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
     },
     changeUserRole: function () {
       if (this.memberDetails.role === 'member') {
@@ -151,285 +103,6 @@ export default {
         .catch(err => {
           console.error(err)
         })
-    },
-    addPersonalBar: function () {
-      if (this.barDetails.is_shared) {
-        this.onSave = true
-
-        this.barDetails.name = this.memberDetails.first_name
-        this.barDetails.is_shared = false
-
-        const data = this.barDetails
-        const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-        data.items = this.primaryItems.concat(drawerItems)
-
-        createCommunityBar(this.communityId, data)
-          .then((resp) => {
-            if (resp.status === 200) {
-              this.memberDetails.bar_id = resp.data.bar.id
-              updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                .then((resp) => {
-                  if (resp.status === 200) {
-                    this.successMessage = MESSAGES.barAdded
-                    this.successAlert = true
-                    this.isChanged = false
-                    setTimeout(() => {
-                      this.$router.push('/dashboard')
-                    }, 3000)
-                  }
-                })
-                .catch(err => {
-                  console.error(err)
-                })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      } else {
-        this.saveBar()
-      }
-    },
-    addBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      data.items = this.primaryItems.concat(drawerItems)
-
-      createCommunityBar(this.communityId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barAdded
-            this.successAlert = true
-            this.isChanged = false
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    saveBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      data.items = this.primaryItems.concat(drawerItems)
-
-      updateCommunityBar(this.communityId, this.$route.query.barId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barUpdated
-            this.successAlert = true
-            this.isChanged = false
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    deleteBar: function () {
-      deleteCommunityBar(this.communityId, this.$route.query.barId)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulBarDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    predefinedClicked: function (event, index, makeAButtons) {
-      this.clearPredefinedActive()
-      let currentLabel
-      if (makeAButtons) {
-        this.buttonStorage = this.makeAButtons[index]
-        currentLabel = this.makeAButtons[index].configuration.label
-      } else {
-        this.buttonStorage = this.predefinedButtons[index]
-        currentLabel = this.predefinedButtons[index].configuration.label
-      }
-      if (event.type === 'click') {
-        if (makeAButtons) {
-          this.makeAButtons[index].configuration.label = '[ACTIVE]'
-          this.makeAButtons[index].isActive = true
-          this.makeAButtons[index].configuration.label = currentLabel
-        } else {
-          this.predefinedButtons[index].configuration.label = '[ACTIVE]'
-          this.predefinedButtons[index].isActive = true
-          this.predefinedButtons[index].configuration.label = currentLabel
-        }
-      }
-      if (this.getPrimaryButtonsCount() < this.preview.bar.h) {
-        this.addToBar = true
-      }
-      if (this.getDrawerButtonsCount() < (this.preview.drawer.w * this.preview.drawer.h)) {
-        this.addToDrawer = true
-      }
-    },
-    clearPredefinedActive: function () {
-      for (let i = 0; i < this.predefinedButtons.length; i++) {
-        this.predefinedButtons[i].isActive = false
-      }
-      for (let i = 0; i < this.makeAButtons.length; i++) {
-        this.makeAButtons[i].isActive = false
-      }
-    },
-    addToBarOrDrawer: function (is_primary) {
-      this.clearPredefinedActive()
-      if (this.buttonStorage) {
-        // setting the primary attribute based on which bar it's added to
-        this.buttonStorage.is_primary = is_primary
-        // checking if this button already exists
-        if (this.barDetails.items.length > 0) {
-          let existingIndex = -1
-          for (let i = 0; i < this.barDetails.items.length; i++) {
-            if (this.barDetails.items[i].configuration.label === this.buttonStorage.configuration.label) {
-              existingIndex = i
-            }
-          }
-          if (existingIndex !== -1) {
-            // removing the old version
-            this.barDetails.items.splice(existingIndex, 1)
-          }
-        }
-        // adding the item
-        this.barDetails.items.push(this.buttonStorage)
-        // cleaning up the storage
-        this.buttonStorage = {}
-      }
-      this.isChanged = true
-      this.addToBar = false
-      this.addToDrawer = false
-    },
-    findButtonByLabel: function (item) {
-      const data = {
-        index: -1,
-        drawerSecond: false
-      }
-      if (item.is_primary) {
-        for (let i = 0; i < this.primaryItems.length; i++) {
-          if (this.primaryItems[i].configuration.label === item.configuration.label) {
-            data.index = i
-          }
-        }
-      } else {
-        if (this.drawerSecondColumn) {
-          for (let i = 0; i < this.drawerItemsSecond.length; i++) {
-            if (this.drawerItemsSecond[i].configuration.label === item.configuration.label) {
-              data.index = i
-              data.drawerSecond = true
-            }
-          }
-        }
-        for (let i = 0; i < this.drawerItems.length; i++) {
-          if (this.drawerItems[i].configuration.label === item.configuration.label) {
-            data.index = i
-          }
-        }
-      }
-      return data
-    },
-    buttonToRemove: function (item) {
-      const foundItem = this.findButtonByLabel(item)
-      if (foundItem.index !== -1) {
-        if (item.is_primary) {
-          this.primaryItems.splice(foundItem.index, 1)
-        } else {
-          if (foundItem.drawerSecond) {
-            this.drawerItemsSecond.splice(foundItem.index, 1)
-          } else {
-            this.drawerItems.splice(foundItem.index, 1)
-          }
-        }
-        this.$bvModal.hide('modalEditGeneric')
-        this.isChanged = true
-      }
-    },
-    buttonToEdit: function (item) {
-      const foundItem = this.findButtonByLabel(item)
-      if (foundItem.index !== -1) {
-        if (item.is_primary) {
-          this.buttonEditStorage = this.primaryItems[foundItem.index]
-        } else {
-          if (foundItem.drawerSecond) {
-            this.buttonEditStorage = this.drawerItemsSecond[foundItem.index]
-          } else {
-            this.buttonEditStorage = this.drawerItems[foundItem.index]
-          }
-        }
-        this.$bvModal.show('modalEditGeneric')
-      }
-    },
-    refreshButton: function (updated) {
-      // updating the data in a button (on edit)
-      this.editDialogDetails = false
-      this.editDialogSubkindIcons = true
-      if (updated) {
-        this.isChanged = true
-      }
-    },
-    editChangeColor: function(hex) {
-      this.buttonEditStorage.configuration.color = hex
-    },
-    editChangeIcon: function(icon) {
-      this.buttonEditStorage.configuration.image_url = icon
-    },
-    getMembersCount: function () {
-      if (this.members && this.members.length > 0) {
-        return this.members.length
-      }
-      return 0
-    },
-    getPrimaryButtonsCount: function () {
-      return this.primaryItems.length
-    },
-    getDrawerButtonsCount: function () {
-      return this.drawerItems.length
-    },
-    loadBarMembers: function () {
-      getCommunityBars(this.communityId)
-        .then(resp => {
-          const barsData = resp.data.bars
-          getCommunityMembers(this.communityId)
-            .then((resp) => {
-              this.barsList = barsData
-              this.membersList = resp.data.members
-              if (resp.data.members.length > 0) {
-                for (let i = 0; i < resp.data.members.length; i++) {
-                  // sgithens
-                  if (this.$route.query.memberId === resp.data.members[i].id) {
-                    this.member = resp.data.members[i];
-                  }
-                  else {
-                  }
-                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
-                    this.members.push(resp.data.members[i])
-                  }
-                }
-              }
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getBarRemoveValidity: function () {
-      if (this.barDetails.name !== 'Default' && this.getMembersCount() === 0) {
-        return true
-      }
-      return false
     },
     loadMemberData: function () {
       getCommunityMember(this.communityId, this.$route.query.memberId)
@@ -449,291 +122,88 @@ export default {
           console.error(err)
         })
     },
-    generateId: function(item) {
-      let id = ""
-      if (item) {
-        id+= Math.floor(Math.random() * Math.floor(99999999))
-        id+= "-" + item.configuration.label.toLowerCase()
-        id+= "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind")
-        id+= "-" + Math.floor(Math.random() * Math.floor(99999999))
+
+    addMember: function () {
+      let member = {
+        first_name: this.firstNameInput,
+        last_name: this.lastNameInput,
       }
-      return id
+      addCommunityMember(this.communityId, member)
+        .then(resp => {
+          // save bar_id as default community bar:
+          member = resp.data.member;
+          member.bar_id = this.community.default_bar_id
+          updateCommunityMember(this.communityId, member.id, member).then(resp2 => {
+            this.memberDetails = member;
+            this.navigateBack();
+          });
+        }).catch(e => { console.error(e) });
+
+    },
+    navigateBack: function () {
+      if (this.isAddMemberView && !this.memberDetails.id) {
+        this.$router.push('/focused/home')
+      } else if (this.memberDetails.id) {
+        this.$router.push({path: '/focused/bar-editor', query: { barId: this.memberDetails.bar_id, memberId: this.memberDetails.id}});
+      } else {
+        this.$router.push('/focused/home');
+      }
+    },
+    sendInviteClicked() {
+      this.isGetEmailView = true;
+
+    },
+    sendInvite() {
+      if (this.emailInput) {
+        let communityId = this.$store.getters.communityId;
+        inviteCommunityMember(communityId, this.memberDetails.id, this.emailInput);
+        this.memberDetails.state = 'invited';
+        this.isGetEmailView = false;
+      }
+    },
+    checkEmail() {
+      return this.emailInput.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
     }
   },
   computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    activeButtons: function () {
-      let activeButtons = []
-      activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond)
-      return activeButtons
-    },
-    drawerSecondColumn: function () {
-      if (this.drawerItems.length >= this.preview.drawer.h || this.drawerItemsSecond.length > 0) {
-        return true
-      } else {
-        return false
-      }
-    },
-    editSubKindIcons: function() {
-      let data = {}
-      if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-        for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-          data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]
-        }
-      }
-      return data
-    }
+    communityId: function () { return this.$store.getters.communityId }
   },
   mounted () {
-    if (this.$route.query.barId === 'new') {
-      this.newBar = true
-      this.barDetails = this.newBarDetails
-    } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
-      for (let i = 0; i < this.predefinedBars.length; i++) {
-        if (this.predefinedBars[i].id === this.$route.query.barId) {
-          this.newBar = true
-          this.barDetails = this.newBarDetails
-          this.barDetails.items = this.predefinedBars[i].items
-        }
-      }
-    } else {
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-    if (this.$route.query.memberId) {
-      this.loadMemberData()
-    }
-    this.loadBarMembers()
-    this.getCommunityData()
-  },
-  watch: {
-    'barDetails.items': function (newValue, oldValue) {
-      if (!this.onSave) {
-        this.getDrawerItems(newValue)
-        this.getPrimaryItems(newValue)
-      }
-    },
-    makeAButtons: function (newValue, oldValue) {
-      if (!this.dragMakeAButton) {
-        this.makeAButtons = oldValue
-        this.dragMakeAButton = true
-      }
-    },
-    predefinedButtons: function (newValue, oldValue) {
-      if (!this.dragPredefinedButton) {
-        this.predefinedButtons = oldValue
-        this.dragPredefinedButton = true
-      }
-    },
-    primaryItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
-        this.initialChangesPrimaryItems = true
-      } else if (this.initialChangesPrimaryItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === false) {
-            item = newValue[i]
-            item.is_primary = true
-          }
-          if (i >= this.preview.bar.h) {
-            this.drawerItems.push(this.primaryItems[i])
-            this.primaryItems.splice(i, 1)
-            this.openDrawer = true
-          }
-        }
-      }
-    },
-    drawerItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesDrawerItems) {
-        this.initialChangesDrawerItems = true
-      } else if (this.initialChangesDrawerItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-          if (i >= this.preview.drawer.h) {
-            this.drawerItemsSecond.push(this.drawerItems[i])
-            this.drawerItems.splice(i, 1)
-          }
-        }
-      }
-    },
-    drawerItemsSecond: function (newValue, oldValue) {
-      if (oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-        }
-      }
-    },
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
-    },
-    '$route.query': function () {
-      this.initialChangesPrimaryItems = false
-      this.initialChangesDrawerItems = false
+    this.getCommunityData();
       if (this.$route.query.memberId) {
+        this.isAddMemberView = false;
         this.loadMemberData()
       }
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-          this.members = []
-          this.loadBarMembers()
-          this.getCommunityData()
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
+    // if (this.$route.query.memberId) {
+    //   this.loadMemberData()
+    // }
+    // this.getCommunityData()
   },
-  beforeRouteUpdate (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        this.isChanged = false
-        next()
-      } else {
-        next(false)
+  watch: {
+    '$route.query': function () {
+      if (this.$route.query.memberId) {
+        this.isAddMemberView = false;
+        this.loadMemberData()
       }
-    } else {
-      next()
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
     }
   },
   data () {
     return {
       // sgithens focused
       member: {},
-
-      // messages
-      leavePageMessage: MESSAGES.leavePageAlert,
-      successMessage: '',
-
-      // flags
-      addToBar: false,
-      addToDrawer: false,
-      newBar: false,
-      openDrawer: false,
-      successAlert: false,
-      editDialogDetails: false,
-      editDialogSubkindIcons: true,
-      tab: 0,
-      dragFromEditor: false,
-      isChanged: false,
-      editBarName: false,
-      onSave: false,
-      initialChangesPrimaryItems: false,
-      initialChangesDrawerItems: false,
-      // data for the community manager
+      isAddMemberView: true,
+      isGetEmailView: false,
       community: {},
       barsList: [],
-      membersList: [],
-
-      // storage
-      buttonStorage: {},
-      buttonEditStorage: {
-        configuration: {
-          label: '',
-          color: '',
-          image_url: ''
-        }
-      },
       barDetails: {},
-      members: [],
       memberDetails: {},
-      drawerItems: [],
-      drawerItemsSecond: [],
-      primaryItems: [],
-      makeAButtons: this.getMakeAButtons(),
-      predefinedButtons: this.getPredefinedButtons(),
 
-      // configurations
-      preview: {
-        drawer: {
-          w: 2,
-          h: 6
-        },
-        bar: {
-          h: 6
-        }
-      },
-      newBarDetails: {
-        name: 'New Bar',
-        is_shared: false,
-        items: []
-      },
-      bar: {
-        settings: {
-          barOnRight: true,
-          cannotClose: false,
-          startsOpen: false
-        }
-      },
-      predefinedBars: predefinedBars,
-      colors: colors,
-      icons: icons,
-      subkindIcons: subkindIcons,
-      makeButtonList: [
-        {
-          label: 'Button to start a call...',
-          icon: 'chat'
-        },
-        {
-          label: 'Button to join a meeting...',
-          icon: 'people-fill'
-        },
-        {
-          label: 'Button to open online photo album...',
-          icon: 'images'
-        },
-        {
-          label: 'Button to open calendar...',
-          icon: 'calendar3'
-        },
-        {
-          label: 'Button to open web page...',
-          icon: 'link'
-        },
-        {
-          label: 'Button to open an app...',
-          icon: 'app'
-        },
-        {
-          label: 'Button to make all distractions go away...',
-          icon: 'headphones'
-        }
-      ]
+      // new member stuff:
+      firstNameInput: "",
+      lastNameInput: "",
+
+      // send invite stuff
+      emailInput: ""
     }
   }
 }

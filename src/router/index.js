@@ -20,6 +20,7 @@ import FocusedPeopleUsingBar from '@/views/focused/FocusedPeopleUsingBar.vue'
 import FocusedPersonPage from '@/views/focused/FocusedPersonPage.vue'
 import FocusedBarSettings from '@/views/focused/FocusedBarSettings.vue'
 import FocusedButtonEdit from '@/views/focused/FocusedButtonEdit.vue'
+import FocusedAddCommunityBar from '@/views/focused/FocusedAddCommunityBar.vue'
 
 Vue.use(VueRouter)
 
@@ -141,6 +142,14 @@ const routes = [
     component: FocusedBarEditor,
     meta: {
       title: 'Focused :: Bar Editor'
+    }
+  },
+  {
+    path: '/focused/add-community-bar',
+    name: 'Focused: Add Community Bar',
+    component: FocusedAddCommunityBar,
+    meta: {
+      title: 'Focused :: Add community Bar'
     }
   },
   {
