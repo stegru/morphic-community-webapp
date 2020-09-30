@@ -108,7 +108,12 @@ export const icons = {
   soundcloud: 'logo_soundcloud.svg',
   tidal: 'logo_tidal.png',
   vimeo: 'logo_vimeo.svg',
-  'youtube-music': 'logo_youtubeMusic.svg'
+  'youtube-music': 'logo_youtubeMusic.svg',
+  box: 'logo_box.svg',
+  dropbox: 'logo_dropbox.svg',
+  'google-drive': 'logo_googleDrive.svg',
+  'one-drive': 'logo_onedrive.svg'
+
 }
 
 export const subkindIcons = {
@@ -1299,7 +1304,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'box',
+        subkind: 'online-drive',
         label: 'Box',
         color: colors.blue,
         image_url: 'box',
@@ -1311,7 +1316,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'dropbox',
+        subkind: 'online-drive',
         label: 'Dropbox',
         color: colors.blue,
         image_url: 'dropbox',
@@ -1323,7 +1328,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'google-drive',
+        subkind: 'online-drive',
         label: 'Google Drive',
         color: colors.red,
         image_url: 'google-drive',
@@ -1335,10 +1340,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-drive',
+        subkind: 'online-drive',
         label: 'iCloud Drive',
         color: colors.blue,
-        image_url: 'icloud-drive',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/iclouddrive/',
         description: 'Opens the iCloud Drive home page.'
       }
@@ -1347,7 +1352,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'one-drive',
+        subkind: 'online-drive',
         label: 'OneDrive',
         color: colors.blue,
         image_url: 'one-drive',
