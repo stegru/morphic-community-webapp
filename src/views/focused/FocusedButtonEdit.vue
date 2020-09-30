@@ -34,9 +34,7 @@
 
 <style lang="scss">
   #buttonEditorForm {
-    padding: 20px;
     width: 20em;
-    box-sizing: border-box;
   }
 </style>
 
