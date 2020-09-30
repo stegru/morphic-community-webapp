@@ -7,13 +7,14 @@
       </b-form-group>
     </b-modal>
 
-    <!-- Actually, the CM counts as a member of the Community, so by default there's always one member -->
-    <ul v-if="orderedMembers.length > 1" class="list-unstyled">
+    <!-- The CM counts as a member of the Community, so by default there's always one member -->
+    <ul class="list-unstyled">
       <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
-        <b-link v-if="member.bar_id" :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id, memberId: member.id } }" :ref="'member' + index">
+        <b-link :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id || community.default_bar_id, memberId: member.id } }" :ref="'member' + index">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
           <br>
         </b-link>
@@ -29,10 +30,6 @@
         </div>
       </li>
     </ul>
-    <p v-else>
-      <i>Nobody in the community</i><br>
-      Click the plus button to <b>add</b> somebody
-    </p>
   </div>
 </template>
 
@@ -70,13 +67,21 @@ export default {
     activeMemberId: String,
     bars: Array,
     activeBarId: String,
+    community: Object
   },
   computed: {
     orderedMembers: function () {
-      const alphabetical = this.members
-      alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
-      alphabetical.reverse()
-      return alphabetical
+      console.log("Kasper");
+      if (this.members.length) {
+        // first member is community manager
+        const alphabetical = this.members.slice(1);
+        alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
+        alphabetical.reverse();
+        return [this.members[0]].concat(alphabetical);
+      } else {
+        return [];
+      }
+
     }
   },
   data () {
