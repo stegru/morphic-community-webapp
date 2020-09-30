@@ -8,7 +8,7 @@
         <div v-if="members.length > 0" class="info-box pt-3 pb-3">
           <b-row>
             <b-col md="5" class="flex-column">
-              <h4><b>Welcome to Morpic</b></h4>
+              <h4><b>Welcome to Morphic</b></h4>
               <!-- TODO: Update if to members.lenght > 1 -->
               <div v-if="members.length > 1">
                 <p class="text-left small">

@@ -19,6 +19,8 @@
     <p v-else>
       <i>No bars in the community</i><br>
       Click on the button to add your first one<br><br>
+    </p>
+    <p>
       <b-form action="#/focused/bar-editor">
         <b-button type="submit" variant="primary">Add a community bar</b-button>
       </b-form>
@@ -40,6 +42,8 @@
     <p v-else>
       <i>Nobody in the community</i><br>
       Click on the button to add somebody to your community<br><br>
+    </p>
+    <p>
       <b-form action="#/focused/person">
         <b-button type="submit" variant="primary">Add a Person</b-button>
       </b-form>
