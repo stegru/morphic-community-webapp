@@ -53,7 +53,31 @@ export const icons = {
   twitter: 'twitter.svg',
   viber: 'viber.svg',
   whatsapp: 'whatsapp.svg',
-  youtube: 'youtube.svg'
+  youtube: 'youtube.svg',
+  cnn: 'logo_cnn.svg',
+  foxnews: 'logo_foxNews.svg',
+  'google-news': 'logo_googleNews.svg',
+  nytimes: 'logo_newYorkTimes.svg',
+  'the-washington-post': 'logo_washingtonPost.svg',
+  yahoo: 'logo_yahoo.svg',
+  abcnews: 'logo_abcNews.svg',
+  aljazeera: 'logo_alJazeera.jpg',
+  bbc: 'logo_bbc.svg',
+  bloomberg: 'logo_bloomberg.svg',
+  cbsnews: 'logo_cbsNews.svg',
+  cnbc: 'logo_cnbc.svg',
+  drudgereport: 'logo_drudgeReport.svg',
+  forbes: 'logo_forbes.svg',
+  theguardian: 'logo_theGuardian.svg',
+  thehill: 'logo_theHill.jpeg',
+  huffpost: 'logo_huffpost.svg',
+  latimes: 'logo_laTimes.svg',
+  nbcnews: 'logo_nbcNews.svg',
+  npr: 'logo_npr.svg',
+  reuters: 'logo_reuters.svg',
+  usatoday: 'logo_usaToday.svg',
+  wsj: 'logo_wsj.svg',
+  yahoo: 'logo_yahoo.svg'
 }
 
 export const subkindIcons = {
@@ -668,6 +692,270 @@ export const buttonCatalog = {
         image_url: 'yahoo-news',
         url: 'https://news.yahoo.com/',
         description: 'Opens the Yahoo! News home page.'
+      }
+    },
+    'Top 15 news sites': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'News...',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://sites.google.com/raisingthefloor.org/quickfolders/news',
+        description: 'Opens a page with links to the 15 most popular news websites.'
+      }
+    },
+    'ABC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'ABC News',
+        color: colors.blue,
+        image_url: 'abcnews',
+        url: 'https://abcnews.go.com/',
+        description: 'Opens the ABC News home page.'
+      }
+    },
+    'Al Jazeera': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Al Jazeera',
+        color: colors.blue,
+        image_url: 'aljazeera',
+        url: 'https://www.aljazeera.com/',
+        description: 'Opens the Al Jazeera home page.'
+      }
+    },
+    'BBC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'BBC News',
+        color: colors.blue,
+        image_url: 'bbc',
+        url: 'https://www.bbc.com/news',
+        description: 'Opens the BBC News home page.'
+      }
+    },
+    bloomberg: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Bloomberg',
+        color: colors.blue,
+        image_url: 'bloomberg',
+        url: 'https://www.bloomberg.com/',
+        description: 'Opens the Bloomberg home page.'
+      }
+    },
+    'CBS News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'CBS News',
+        color: colors.blue,
+        image_url: 'cbsnews',
+        url: 'https://www.cbsnews.com/',
+        description: 'Opens the CBS News home page.'
+      }
+    },
+    cnbc: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'CNBC',
+        color: colors.blue,
+        image_url: 'cnbc',
+        url: 'https://www.cnbc.com/',
+        description: 'Opens the CNBC home page.'
+      }
+    },
+    'Drudge Report': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Drudge Report',
+        color: colors.blue,
+        image_url: 'drudgereport',
+        url: 'https://www.drudgereport.com/',
+        description: 'Opens the Drudge Report home page.'
+      }
+    },
+    forbes: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Forbes',
+        color: colors.blue,
+        image_url: 'forbes',
+        url: 'https://www.forbes.com/',
+        description: 'Opens the Forbes home page.'
+      }
+    },
+    'The Guardian': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Guardian',
+        color: colors.blue,
+        image_url: 'theguardian',
+        url: 'https://www.theguardian.com/us',
+        description: 'Opens The Guardian home page.'
+      }
+    },
+    'The Hill': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Hill',
+        color: colors.blue,
+        image_url: 'thehill',
+        url: 'https://thehill.com/',
+        description: 'Opens The Hill home page.'
+      }
+    },
+    huffpost: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'HuffPost',
+        color: colors.blue,
+        image_url: 'huffpost',
+        url: 'https://www.huffpost.com/',
+        description: 'Opens the HuffPost home page.'
+      }
+    },
+    "Los Angeles Times": {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Los Angeles Times',
+        color: colors.blue,
+        image_url: 'latimes',
+        url: 'https://www.latimes.com/',
+        description: 'Opens Los Angeles Times home page.'
+      }
+    },
+    'Mail Online (Daily Mail)': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Mail Online',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.dailymail.co.uk/',
+        description: 'Opens the Mail Online (Daily Mail) home page.'
+      }
+    },
+    'NBC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'NBC News',
+        color: colors.blue,
+        image_url: 'nbcnews',
+        url: 'https://www.nbcnews.com/',
+        description: 'Opens the NBC News home page.'
+      }
+    },
+    'New York Post': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'New York Post',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://nypost.com/',
+        description: 'Opens the New York Post home page.'
+      }
+    },
+    npr: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'NPR',
+        color: colors.blue,
+        image_url: 'npr',
+        url: 'https://www.npr.org/',
+        description: 'Opens the NPR home page.'
+      }
+    },
+    reuters: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Reuters',
+        color: colors.blue,
+        image_url: 'reuters',
+        url: 'https://www.reuters.com/',
+        description: 'Opens the Reuters home page.'
+      }
+    },
+    sfGate: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'SFGate',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.sfgate.com/',
+        description: 'Opens the SFGate home page.'
+      }
+    },
+    'USA Today': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'USA Today',
+        color: colors.blue,
+        image_url: 'usatoday',
+        url: 'https://www.usatoday.com/',
+        description: 'Opens the USA Today home page.'
+      }
+    },
+    'US News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'US News',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.usnews.com/',
+        description: 'Opens the US News home page.'
+      }
+    },
+    'The Wall Street Journal': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Wall Street Journal',
+        color: colors.blue,
+        image_url: 'wsj',
+        url: 'https://www.wsj.com/',
+        description: 'Opens The Wall Street Journal home page.'
       }
     }
   },
