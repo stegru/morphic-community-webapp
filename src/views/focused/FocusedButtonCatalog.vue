@@ -1,9 +1,9 @@
 <template>
   <div>
       <h1>Button Catalog: Buttons you can add</h1>
-      <a href="#">About the Morphic Button Catalog</a>
+      <a href="#">How to use the morphic button catalog</a>
       <br/>
-      <em>To add a button to the Morphic Bar, press on its name.</em>
+      <em>Click on button name to configure and add to MorphicBar</em>
       <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id } }">
         Go back without adding a button
       </b-link>
