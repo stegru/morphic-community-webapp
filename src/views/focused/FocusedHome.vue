@@ -27,7 +27,6 @@
     </p>
 
   <h2>Members in your community</h2>
-  <em>Follow a link to see or change the member's Morphic Bar</em>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
