@@ -87,7 +87,7 @@ export const icons = {
   macys: 'logo_macys.svg',
   target: 'logo_target.svg',
   walmart: 'logo_walmart.svg',
-  wayfair: 'logo_wayfair.svg'
+  wayfair: 'logo_wayfair.png'
 }
 
 export const subkindIcons = {
