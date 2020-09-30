@@ -2,7 +2,7 @@
   <div>
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
      <button @click="deleteButton" class="text-danger">Remove Button</button>
-     <b-form>
+     <b-form id="buttonEditorForm">
         <b-form-group id="name" label="Text on the button" label-for="button-label-input">
           <b-form-input id="button-label-input" v-model="button.configuration.label"></b-form-input>
         </b-form-group>
@@ -33,6 +33,11 @@
 </template>
 
 <style lang="scss">
+  #buttonEditorForm {
+    padding: 20px;
+    width: 20em;
+    box-sizing: border-box;
+  }
 </style>
 
 <script>
