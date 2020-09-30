@@ -77,7 +77,17 @@ export const icons = {
   reuters: 'logo_reuters.svg',
   usatoday: 'logo_usaToday.svg',
   wsj: 'logo_wsj.svg',
-  yahoo: 'logo_yahoo.svg'
+  yahoo: 'logo_yahoo.svg',
+  amazon: 'logo_amazon.svg',
+  craigslist: 'logo_craigslist.svg',
+  ebay: 'logo_ebay.png',
+  etsy: 'logo_etsy.svg',
+  bestbuy: 'logo_bestBuy.svg',
+  kohls: 'logo_kohls.svg',
+  macys: 'logo_macys.svg',
+  target: 'logo_target.svg',
+  walmart: 'logo_walmart.svg',
+  wayfair: 'logo_wayfair.svg'
 }
 
 export const subkindIcons = {
@@ -964,7 +974,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'amazon',
+        subkind: 'shopping',
         label: 'Amazon',
         color: colors.blue,
         image_url: 'amazon',
@@ -976,7 +986,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'craigslist',
+        subkind: 'shopping',
         label: 'Craigslist',
         color: colors.blue,
         image_url: 'craigslist',
@@ -988,7 +998,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'ebay',
+        subkind: 'shopping',
         label: 'ebay',
         color: colors.blue,
         image_url: 'ebay',
@@ -1000,12 +1010,84 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'etsy',
+        subkind: 'shopping',
         label: 'Etsy',
         color: colors.blue,
         image_url: 'etsy',
         url: 'https://www.etsy.com/',
         description: 'Opens the Esty home page.'
+      }
+    },
+    bestbuy: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Best Buy',
+        color: colors.blue,
+        image_url: 'bestbuy',
+        url: 'https://www.bestbuy.com/',
+        description: 'Opens the Best Buy home page.'
+      }
+    },
+    kohls: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Kohls',
+        color: colors.blue,
+        image_url: 'kohls',
+        url: 'https://www.kohls.com/',
+        description: 'Opens the Kohls home page.'
+      }
+    },
+    Macys: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Macys',
+        color: colors.blue,
+        image_url: 'macys',
+        url: 'https://www.macys.com/',
+        description: 'Opens the Macys home page.'
+      }
+    },
+    target: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Target',
+        color: colors.blue,
+        image_url: 'target',
+        url: 'https://www.target.com/',
+        description: 'Opens the Target home page.'
+      }
+    },
+    walmart: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Walmart',
+        color: colors.blue,
+        image_url: 'walmart',
+        url: 'https://www.walmart.com/',
+        description: 'Opens the Walmart home page.'
+      }
+    },
+    wayfair: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Wayfair',
+        color: colors.blue,
+        image_url: 'wayfair',
+        url: 'https://www.wayfair.com/',
+        description: 'Opens the Wayfair home page.'
       }
     }
   },
