@@ -203,7 +203,9 @@ export default {
             .then((resp) => {
               this.list = this.autoHideDetails(bars, true)
               // ensure all members have a bar_id associated, else set default
-              this.members = resp.data.members.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
+              // on a brand new community the community doesn't have a default bar, so we use the first (and only) bar id
+              let default_bar_id = this.community.default_bar_id ? this.community.default_bar_id : bars[0].id;
+              this.members = resp.data.members.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: default_bar_id })});
               if (this.members.length > 0 && this.list.length > 0) {
                 for (let i = 0; i < this.list.length; i++) {
                   this.list[i].members = []
