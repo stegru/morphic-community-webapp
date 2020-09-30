@@ -87,9 +87,7 @@ export default {
   },
   methods: {
     focusedAddButtonToBar: function (button, idx) {
-        // this.$router.push('/focused/home'); // sgithens TODO add barId
-        delete button.isActive;
-        // this.primaryItems.push(button);
+      delete button.isActive;
 
 
       this.onSave = true
@@ -104,8 +102,8 @@ export default {
             this.successAlert = true
             this.isChanged = false
             setTimeout(() => {
-              this.$router.push('/focused/home')
-            }, 3000)
+              this.$router.push({ path: '/focused/bar-editor', query: {barId: this.$route.query.barId } });
+            }, 250)
           }
         })
         .catch(err => {

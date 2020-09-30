@@ -34,7 +34,7 @@
       </li>
     </ol>
 
-    <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, communityId: communityId, memberId: memberId } }">
+    <b-link :to="{ name: 'Focused: Button Catalog', query: { barId: barDetails.id, communityId: communityId, memberId: memberId } }">
       Add a Button
     </b-link>
     <br>
