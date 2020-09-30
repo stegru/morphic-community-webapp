@@ -2,33 +2,63 @@
   <div>
       <h1>Button Catalog: Buttons you can add</h1>
       <a href="#">How to use the morphic button catalog</a>
-      <br/>
+      <p />
       <em>Click on button name to configure and add to MorphicBar</em>
-      <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id } }">
-        Go back without adding a button
-      </b-link>
-          <br>
-          <h6><b>Predefined Buttons</b></h6>
-          <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
-            <!-- Button catalog headings -->
-            <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
-              <h4>{{categoryName}}</h4>
-              <ul class="ButtonsCatalogEntries">
-                <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
-                  <b-link @click="focusedAddButtonToBar(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                    <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                    <b-icon v-else icon="bootstrap"></b-icon>
-                      {{ button.configuration.label }}
-                  </b-link>
-                </li>
-              </ul>
+      <p />
+      <b-button variant="warning" :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id, memberId: memberId } }">
+        Cancel
+      </b-button>
+      <p />
+      <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
+        <!-- Button catalog headings -->
+        <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
+          <h3>{{categoryName}}</h3>
+          <ul class="ButtonsCatalogEntries">
+            <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
+              <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-icon v-else icon="bootstrap"></b-icon>
+                  {{ button.configuration.label }}
+              </b-link>
+              <div v-else class="active" style="max-width: 400px">
+                <div style="width: 100%; display: inline-flex; align-items: center;">
+                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                  <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
+                  <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
+                </div>
+                <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
+                <div class="help" v-if="button.kind == 'action'">To add this button, click the option below</div>
+                <div class="help" v-else>To add this button, click on one of the options below</div>
+                <div class="buttons">
+                  <div class="buttonPreview" @click="addButtonToBar(button, false)">
+                    <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage"  />
+                    <span class="explainer" v-if="button.kind != 'action'">Configure and add button {{button.configuration.label}} without icon</span>
+                    <span class="explainer" v-else>Add {{button.configuration.label}} button. No icon</span>
+                  </div>
+                  <div v-if="button.kind != 'action'" class="buttonPreview" @click="addButtonToBar(button, true)">
+                    <PreviewItem :item="button" :simplified="true" class="withImage"  />
+                    <span class="explainer">Configure and add button {{button.configuration.label}} with icon</span>
+                  </div>
+                </div>
+              </div>
             </li>
           </ul>
+        </li>
+      </ul>
+    <b-button variant="warning" :to="{ name: 'Focused: Bar Editor', query: { barId: barDetails.id, memberId: memberId } }">
+      Cancel
+    </b-button>
   </div>
 </template>
 
 <style lang="scss">
-
+  .buttonsCatalogHeader {
+      h3 {
+        font-size: 1.30rem;
+        margin-bottom: 6px;
+        margin-top: 15px;
+        font-weight: bold;
+      }
     .ButtonsCatalogEntries {
       padding-inline-start: 17px;
       list-style: none;
@@ -63,7 +93,20 @@
           }
         }
       }
+      .buttonPreview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+
+        .explainer {
+          text-align: center;
+          font-size: 13px;
+        }
+      }
     }
+
+  }
 
 </style>
 
@@ -72,7 +115,7 @@
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
 import BarExplainer from '@/components/dashboardV2/BarExplainer'
 import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
+import { getCommunityBars, deleteCommunityBar, getCommunity, saveCommunityBar, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
 import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
 import { predefinedBars } from '@/utils/predefined'
 import draggable from 'vuedraggable'
@@ -86,231 +129,112 @@ export default {
     draggable
   },
   methods: {
-    focusedAddButtonToBar: function (button, idx) {
-      delete button.isActive;
+    getPath(categoryName, buttonId) {
+      return `${categoryName}.${buttonId}`
+    },
+    addButtonToBar: function (button, withImage) {
+      // copy button:
+      let toSave = {...button, configuration: {...button.configuration}};
+      // delete image if required
+      if (!withImage && toSave.configuration.image_url) {
+        delete toSave.configuration.image_url
+      }
 
+      // add to items:
+      this.barDetails.items.push(toSave);
+      this.checkBarTypeAndSave();
+    },
+    checkBarTypeAndSave() { // TODO duplicate of FocusedButtonEdit function
+      // if we're editing a member's bar and it was previously a community bar:
+      if (this.memberId && this.barDetails.is_shared) {
+        this.saveAsNewPersonalBar();
+      } else {
+        this.saveBar();
+      }
+    },
+    saveAsNewPersonalBar: function () { // TODO duplicate of FocusedButtonEdit function
+      this.barDetails.name = `${this.memberDetails.first_name} ${this.memberDetails.last_name}`.trim();
+      this.barDetails.is_shared = false;
+      delete this.barDetails.id;
+      createCommunityBar(this.communityId, this.barDetails).then((resp) => {
+        if (resp.status === 200) {
+          this.memberDetails.bar_id = resp.data.bar.id;
+          this.barDetails = resp.data.bar;
+          updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+            .then((resp) => {
+              if (resp.status === 200) {
+                this.editButton();
+              }
+            })
+            .catch(err => { // failed to update member
+              console.error(err)
+            })
 
-      this.onSave = true
-      const data = this.barDetails
-      data.items.push(button);
-      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      // data.items = this.primaryItems.concat(drawerItems)
-      updateCommunityBar(this.communityId, this.$route.query.barId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barUpdated
-            this.successAlert = true
-            this.isChanged = false
-            setTimeout(() => {
-              this.$router.push({ path: '/focused/bar-editor', query: {barId: this.$route.query.barId } });
-            }, 250)
-          }
+        }
+      }).catch(err => { // failed to create a community
+        console.error(err)
+      })
+    },
+    saveBar: function () { // TODO duplicate of FocusedButtonEdit function
+      saveCommunityBar(this.communityId, this.barId, this.barDetails)
+        .then(() => {
+          this.editButton();
         })
         .catch(err => {
           console.error(err)
         })
+    },
+    editButton() {
+      this.$router.push({
+        path: "/focused/button-edit",
+        query: {
+          barId: this.barDetails.id,
+          buttonIndex: this.barDetails.items.length - 1,
+          communityId: this.communityId,
+          memberId: this.memberId
+        }
+      });
     }
   },
   computed: {
     communityId: function () { return this.$store.getters.communityId },
-    editSubKindIcons: function() {
-      let data = {}
-      if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-        for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-          data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]
-        }
-      }
-      return data
-    }
+    memberId: function () { return this.$route.query.memberId },
+    barId: function () { return this.$route.query.barId; }
   },
   mounted () {
-    if (this.$route.query.barId === 'new') {
-      this.newBar = true
-      this.barDetails = this.newBarDetails
-    } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
-      for (let i = 0; i < this.predefinedBars.length; i++) {
-        if (this.predefinedBars[i].id === this.$route.query.barId) {
-          this.newBar = true
-          this.barDetails = this.newBarDetails
-          this.barDetails.items = this.predefinedBars[i].items
-        }
-      }
-    } else {
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
+
+    // load bar and content (incl. button)
+    getCommunityBar(this.communityId, this.barId).then(b => {
+      this.barDetails = b.data;
+    });
+    // load member if set:
+    if (this.memberId) {
+      getCommunityMember(this.communityId, this.memberId)
+        .then((resp) => {
+          this.memberDetails = resp.data
         })
         .catch(err => {
           console.error(err)
         })
-    }
-    if (this.$route.query.memberId) {
-      this.loadMemberData()
-    }
+      }
   },
   watch: {
-    makeAButtons: function (newValue, oldValue) {
-      if (!this.dragMakeAButton) {
-        this.makeAButtons = oldValue
-        this.dragMakeAButton = true
-      }
-    },
     predefinedButtons: function (newValue, oldValue) {
       if (!this.dragPredefinedButton) {
         this.predefinedButtons = oldValue
         this.dragPredefinedButton = true
       }
-    },
-    primaryItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
-        this.initialChangesPrimaryItems = true
-      } else if (this.initialChangesPrimaryItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === false) {
-            item = newValue[i]
-            item.is_primary = true
-          }
-          if (i >= this.preview.bar.h) {
-            this.drawerItems.push(this.primaryItems[i])
-            this.primaryItems.splice(i, 1)
-            this.openDrawer = true
-          }
-        }
-      }
-    },
-    drawerItems: function (newValue, oldValue) {
-      if (oldValue.length === 0 && !this.initialChangesDrawerItems) {
-        this.initialChangesDrawerItems = true
-      } else if (this.initialChangesDrawerItems && oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-          if (i >= this.preview.drawer.h) {
-            this.drawerItemsSecond.push(this.drawerItems[i])
-            this.drawerItems.splice(i, 1)
-          }
-        }
-      }
-    },
-    drawerItemsSecond: function (newValue, oldValue) {
-      if (oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-        }
-      }
-    },
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
-    },
-    '$route.query': function () {
-      this.initialChangesPrimaryItems = false
-      this.initialChangesDrawerItems = false
-      if (this.$route.query.memberId) {
-        this.loadMemberData()
-      }
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-          this.members = []
-          this.loadBarMembers()
-          this.getCommunityData()
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-  },
-  beforeRouteUpdate (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        this.isChanged = false
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
     }
   },
   data () {
     return {
-      // messages
-      leavePageMessage: MESSAGES.leavePageAlert,
-      successMessage: '',
-
-      // flags
-      addToBar: false,
-      addToDrawer: false,
-      newBar: false,
-      openDrawer: false,
-      successAlert: false,
-      editDialogDetails: false,
-      editDialogSubkindIcons: true,
-      tab: 0,
-      dragFromEditor: false,
-      isChanged: false,
-      editBarName: false,
-      onSave: false,
-      initialChangesPrimaryItems: false,
-      initialChangesDrawerItems: false,
       // data for the community manager
       community: {},
       barsList: [],
       membersList: [],
-
-      // storage
-      buttonStorage: {},
-      buttonEditStorage: {
-        configuration: {
-          label: '',
-          color: '',
-          image_url: ''
-        }
-      },
-      barDetails: {},
+      currentlyActiveButtonPath: undefined,
       buttonCatalog: buttonCatalog,
-      newBarDetails: {
-        name: 'New Bar',
-        is_shared: false,
-        items: []
-      },
-      bar: {
-        settings: {
-          barOnRight: true,
-          cannotClose: false,
-          startsOpen: false
-        }
-      },
+      barDetails: {},
       predefinedBars: predefinedBars,
       colors: colors,
       icons: icons,

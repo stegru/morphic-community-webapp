@@ -309,7 +309,7 @@
                           <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                         </div>
                         <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                        <div class="help">To add this button,, press ENTER, or drag button below onto the bar</div>
+                        <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
                             <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
