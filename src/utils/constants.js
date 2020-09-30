@@ -34,6 +34,8 @@ export const colors = {
   default_button: 'rgb(0, 47, 87)'
 }
 
+// You can check the provenance of the icons in the following spreadsheet:
+// https://docs.google.com/spreadsheets/d/1pIb2_cjtCi1nybtRAEL-wFUv6Yv0gxqYipmTGTxCsyE/
 export const icons = {
   bootstrap: 'bootstrap.svg',
   gmail: 'gmail.svg',
@@ -113,7 +115,6 @@ export const icons = {
   dropbox: 'logo_dropbox.svg',
   'google-drive': 'logo_googleDrive.svg',
   'one-drive': 'logo_onedrive.svg'
-
 }
 
 export const subkindIcons = {
