@@ -21,7 +21,7 @@
       Click on the button to add your first one<br><br>
     </p>
     <p>
-      <b-form action="#/focused/bar-editor">
+      <b-form action="#/focused/add-community-bar">
         <b-button type="submit" variant="primary">Add a community bar</b-button>
       </b-form>
     </p>
@@ -44,8 +44,8 @@
       Click on the button to add somebody to your community<br><br>
     </p>
     <p>
-      <b-form action="#/focused/person">
-        <b-button type="submit" variant="primary">Add a Person</b-button>
+      <b-form>
+        <b-button type="submit" @click="addPersonClicked" variant="primary">Add a Person</b-button>
       </b-form>
     </p>
 </html>
@@ -206,6 +206,9 @@ export default {
         }
       }
       return false
+    },
+    addPersonClicked: function () {
+      this.$router.push({ path: '/focused/person', query: { } })
     }
   }
 

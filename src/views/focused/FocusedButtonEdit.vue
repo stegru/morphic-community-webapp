@@ -72,7 +72,7 @@ export default {
     },
     deleteButton: function () {
       var theButton = this.barDetails.items[this.buttonIndex];
-      console.log("Deleting button from bar with " + this.barDetails.items.length + " items, button [" + this.buttonIndex + "]: " + JSON.stringify(theButton, null, 2));
+      // console.log("Deleting button from bar with " + this.barDetails.items.length + " items, button [" + this.buttonIndex + "]: " + JSON.stringify(theButton, null, 2));
       this.barDetails.items.splice(this.buttonIndex, 1);
       this.checkBarTypeAndSave();
     },
