@@ -31,9 +31,9 @@
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
           {{ member.first_name }} {{ member.last_name }}
-          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" title="Has not accepted invitation"></b-icon>
-          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" title="Using a community bar"></b-icon>
-          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" title="Member is a community manager"></b-icon>
+          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
+          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a community bar"></b-icon>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <br>
         </b-link>
       </li>
