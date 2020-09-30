@@ -34,6 +34,8 @@ export const colors = {
   default_button: 'rgb(0, 47, 87)'
 }
 
+// You can check the provenance of the icons in the following spreadsheet:
+// https://docs.google.com/spreadsheets/d/1pIb2_cjtCi1nybtRAEL-wFUv6Yv0gxqYipmTGTxCsyE/
 export const icons = {
   bootstrap: 'bootstrap.svg',
   gmail: 'gmail.svg',
@@ -45,15 +47,74 @@ export const icons = {
   'envelope-outline': 'envelope-outline.svg',
   'envelope-outline-open': 'envelope-outline-open.svg',
   facebook: 'facebook.svg',
-  instagram: 'instagram.svg',
-  paypal: 'paypal.svg',
-  reddit: 'reddit.svg',
-  skype: 'skype.svg',
-  telegram: 'telegram.svg',
+  nextdoor: 'logo_nextdoor.svg',
+  pinterest: 'logo_pinterest.svg',
   twitter: 'twitter.svg',
+  imgur: 'logo_imgur.svg',
+  instagram: 'logo_instagram.svg',
+  linkedin: 'logo_linkedIn.svg',
+  reddit: 'reddit.svg',
+  tumblr: 'logo_tumblr.svg',
+  paypal: 'paypal.svg',
+  skype: 'skype.svg',
+  'google-calendar': 'logo_googleCalendar.svg',
+  icloud: 'logo_icloud.svg',
+  aolmail: 'logo_aolOld.svg',
+  telegram: 'telegram.svg',
   viber: 'viber.svg',
   whatsapp: 'whatsapp.svg',
-  youtube: 'youtube.svg'
+  youtube: 'youtube.svg',
+  cnn: 'logo_cnn.svg',
+  foxnews: 'logo_foxNews.svg',
+  'google-news': 'logo_googleNews.svg',
+  nytimes: 'logo_newYorkTimes.svg',
+  'the-washington-post': 'logo_washingtonPost.svg',
+  yahoo: 'logo_yahoo.svg',
+  abcnews: 'logo_abcNews.svg',
+  aljazeera: 'logo_alJazeera.jpg',
+  bbc: 'logo_bbc.svg',
+  bloomberg: 'logo_bloomberg.svg',
+  cbsnews: 'logo_cbsNews.svg',
+  cnbc: 'logo_cnbc.svg',
+  drudgereport: 'logo_drudgeReport.svg',
+  forbes: 'logo_forbes.svg',
+  theguardian: 'logo_theGuardian.svg',
+  thehill: 'logo_theHill.jpeg',
+  huffpost: 'logo_huffpost.svg',
+  latimes: 'logo_laTimes.svg',
+  nbcnews: 'logo_nbcNews.svg',
+  npr: 'logo_npr.svg',
+  reuters: 'logo_reuters.svg',
+  usatoday: 'logo_usaToday.svg',
+  wsj: 'logo_wsj.svg',
+  yahoo: 'logo_yahoo.svg',
+  amazon: 'logo_amazon.svg',
+  craigslist: 'logo_craigslist.svg',
+  ebay: 'logo_ebay.png',
+  etsy: 'logo_etsy.svg',
+  bestbuy: 'logo_bestBuy.svg',
+  kohls: 'logo_kohls.svg',
+  macys: 'logo_macys.svg',
+  target: 'logo_target.svg',
+  walmart: 'logo_walmart.svg',
+  wayfair: 'logo_wayfair.png',
+  netflix: 'logo_netflix.svg',
+  pandora: 'logo_pandora.jpg',
+  spotify: 'logo_spotify.svg',
+  'amazon-music': 'logo_amazonMusic.png',
+  itunes: 'logo_itunes.svg',
+  deezer: 'logo_deezer.svg',
+  'disney-plus': 'logo_disneyPlus.svg',
+  hulu: 'logo_hulu.svg',
+  iheart: 'logo_iheartRadio.svg',
+  soundcloud: 'logo_soundcloud.svg',
+  tidal: 'logo_tidal.png',
+  vimeo: 'logo_vimeo.svg',
+  'youtube-music': 'logo_youtubeMusic.svg',
+  box: 'logo_box.svg',
+  dropbox: 'logo_dropbox.svg',
+  'google-drive': 'logo_googleDrive.svg',
+  'one-drive': 'logo_onedrive.svg'
 }
 
 export const subkindIcons = {
@@ -105,7 +166,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'jitsi',
+        subkind: 'meeting-room',
         label: 'Jitsi',
         color: colors.blue,
         image_url: 'jitsi',
@@ -117,7 +178,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'zoom',
+        subkind: 'meeting-room',
         label: 'Zoom',
         color: colors.blue,
         image_url: 'zoom',
@@ -304,7 +365,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'google-calendar',
+        subkind: 'calendar',
         label: 'Google Calendar',
         color: colors.blue,
         image_url: 'google-calendar',
@@ -316,10 +377,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-calendar',
+        subkind: 'calendar',
         label: 'iCloud Calendar',
         color: colors.blue,
-        image_url: 'icloud-calendar',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/calendar/',
         description: 'Opens the iCloud Calendar for the user if they are signed in.'
       }
@@ -328,7 +389,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'outlook-com-calendar',
+        subkind: 'calendar',
         label: 'Outlook.com Calendar',
         color: colors.blue,
         image_url: 'outlook',
@@ -340,7 +401,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'yahoo-calendar',
+        subkind: 'calendar',
         label: 'Yahoo! Calendar',
         color: colors.blue,
         image_url: 'yahoo',
@@ -352,10 +413,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'calendly',
+        subkind: 'calendar',
         label: 'Calendly',
         color: colors.blue,
-        image_url: 'calendly',
+        image_url: '',
         url: 'https://calendly.com/',
         description: 'Opens Calendly'
       }
@@ -364,10 +425,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'zoho-calendar',
+        subkind: 'calendar',
         label: 'Zoho Calendar',
         color: colors.blue,
-        image_url: 'zoho-calendar',
+        image_url: '',
         url: 'https://www.zoho.com/calendar/',
         description: 'Opens Zoho Calendar'
       }
@@ -376,10 +437,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: 'cozy-family-organizer',
+        subkind: 'calendar',
         label: 'Cozy Family Organizer',
         color: colors.blue,
-        image_url: 'cozy-family-organizer',
+        image_url: '',
         url: 'https://www.cozi.com/calendar/',
         description: 'Opens Cozy Family Organizer'
       }
@@ -388,10 +449,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: false,
       configuration: {
-        subkind: '30-boxes',
+        subkind: 'calendar',
         label: '30 Boxes Online Calendar',
         color: colors.blue,
-        image_url: '30-boxes',
+        image_url: '',
         url: 'http://30boxes.com/',
         description: '30 Boxes Online Calendar'
       }
@@ -526,7 +587,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'gmail',
+        subkind: 'email',
         label: 'Gmail',
         color: colors.red,
         image_url: 'gmail',
@@ -538,7 +599,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'outlook',
+        subkind: 'email',
         label: 'Outlook',
         color: colors.blue,
         image_url: 'outlook',
@@ -550,7 +611,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'yahoo-mail',
+        subkind: 'email',
         label: 'Yahoo Mail',
         color: colors.purple,
         image_url: 'yahoo-mail',
@@ -562,7 +623,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'aolmail',
+        subkind: 'email',
         label: 'AOL Mail',
         color: colors.blue,
         image_url: 'aolmail',
@@ -574,10 +635,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-mail',
+        subkind: 'email',
         label: 'iCloud',
         color: colors.blue,
-        image_url: 'icloud-mail',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/mail',
         description: 'Opens the iCloud inbox in a browser.'
       }
@@ -669,6 +730,270 @@ export const buttonCatalog = {
         url: 'https://news.yahoo.com/',
         description: 'Opens the Yahoo! News home page.'
       }
+    },
+    'Top 15 news sites': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'News...',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://sites.google.com/raisingthefloor.org/quickfolders/news',
+        description: 'Opens a page with links to the 15 most popular news websites.'
+      }
+    },
+    'ABC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'ABC News',
+        color: colors.blue,
+        image_url: 'abcnews',
+        url: 'https://abcnews.go.com/',
+        description: 'Opens the ABC News home page.'
+      }
+    },
+    'Al Jazeera': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Al Jazeera',
+        color: colors.blue,
+        image_url: 'aljazeera',
+        url: 'https://www.aljazeera.com/',
+        description: 'Opens the Al Jazeera home page.'
+      }
+    },
+    'BBC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'BBC News',
+        color: colors.blue,
+        image_url: 'bbc',
+        url: 'https://www.bbc.com/news',
+        description: 'Opens the BBC News home page.'
+      }
+    },
+    bloomberg: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Bloomberg',
+        color: colors.blue,
+        image_url: 'bloomberg',
+        url: 'https://www.bloomberg.com/',
+        description: 'Opens the Bloomberg home page.'
+      }
+    },
+    'CBS News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'CBS News',
+        color: colors.blue,
+        image_url: 'cbsnews',
+        url: 'https://www.cbsnews.com/',
+        description: 'Opens the CBS News home page.'
+      }
+    },
+    cnbc: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'CNBC',
+        color: colors.blue,
+        image_url: 'cnbc',
+        url: 'https://www.cnbc.com/',
+        description: 'Opens the CNBC home page.'
+      }
+    },
+    'Drudge Report': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Drudge Report',
+        color: colors.blue,
+        image_url: 'drudgereport',
+        url: 'https://www.drudgereport.com/',
+        description: 'Opens the Drudge Report home page.'
+      }
+    },
+    forbes: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Forbes',
+        color: colors.blue,
+        image_url: 'forbes',
+        url: 'https://www.forbes.com/',
+        description: 'Opens the Forbes home page.'
+      }
+    },
+    'The Guardian': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Guardian',
+        color: colors.blue,
+        image_url: 'theguardian',
+        url: 'https://www.theguardian.com/us',
+        description: 'Opens The Guardian home page.'
+      }
+    },
+    'The Hill': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Hill',
+        color: colors.blue,
+        image_url: 'thehill',
+        url: 'https://thehill.com/',
+        description: 'Opens The Hill home page.'
+      }
+    },
+    huffpost: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'HuffPost',
+        color: colors.blue,
+        image_url: 'huffpost',
+        url: 'https://www.huffpost.com/',
+        description: 'Opens the HuffPost home page.'
+      }
+    },
+    "Los Angeles Times": {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Los Angeles Times',
+        color: colors.blue,
+        image_url: 'latimes',
+        url: 'https://www.latimes.com/',
+        description: 'Opens Los Angeles Times home page.'
+      }
+    },
+    'Mail Online (Daily Mail)': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Mail Online',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.dailymail.co.uk/',
+        description: 'Opens the Mail Online (Daily Mail) home page.'
+      }
+    },
+    'NBC News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'NBC News',
+        color: colors.blue,
+        image_url: 'nbcnews',
+        url: 'https://www.nbcnews.com/',
+        description: 'Opens the NBC News home page.'
+      }
+    },
+    'New York Post': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'New York Post',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://nypost.com/',
+        description: 'Opens the New York Post home page.'
+      }
+    },
+    npr: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'NPR',
+        color: colors.blue,
+        image_url: 'npr',
+        url: 'https://www.npr.org/',
+        description: 'Opens the NPR home page.'
+      }
+    },
+    reuters: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'Reuters',
+        color: colors.blue,
+        image_url: 'reuters',
+        url: 'https://www.reuters.com/',
+        description: 'Opens the Reuters home page.'
+      }
+    },
+    sfGate: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'SFGate',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.sfgate.com/',
+        description: 'Opens the SFGate home page.'
+      }
+    },
+    'USA Today': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'USA Today',
+        color: colors.blue,
+        image_url: 'usatoday',
+        url: 'https://www.usatoday.com/',
+        description: 'Opens the USA Today home page.'
+      }
+    },
+    'US News': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'US News',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.usnews.com/',
+        description: 'Opens the US News home page.'
+      }
+    },
+    'The Wall Street Journal': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'news',
+        label: 'The Wall Street Journal',
+        color: colors.blue,
+        image_url: 'wsj',
+        url: 'https://www.wsj.com/',
+        description: 'Opens The Wall Street Journal home page.'
+      }
     }
   },
   Shopping: {
@@ -676,7 +1001,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'amazon',
+        subkind: 'shopping',
         label: 'Amazon',
         color: colors.blue,
         image_url: 'amazon',
@@ -688,7 +1013,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'craigslist',
+        subkind: 'shopping',
         label: 'Craigslist',
         color: colors.blue,
         image_url: 'craigslist',
@@ -700,7 +1025,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'ebay',
+        subkind: 'shopping',
         label: 'ebay',
         color: colors.blue,
         image_url: 'ebay',
@@ -712,12 +1037,84 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'etsy',
+        subkind: 'shopping',
         label: 'Etsy',
         color: colors.blue,
         image_url: 'etsy',
         url: 'https://www.etsy.com/',
         description: 'Opens the Esty home page.'
+      }
+    },
+    bestbuy: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Best Buy',
+        color: colors.blue,
+        image_url: 'bestbuy',
+        url: 'https://www.bestbuy.com/',
+        description: 'Opens the Best Buy home page.'
+      }
+    },
+    kohls: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Kohls',
+        color: colors.blue,
+        image_url: 'kohls',
+        url: 'https://www.kohls.com/',
+        description: 'Opens the Kohls home page.'
+      }
+    },
+    Macys: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Macys',
+        color: colors.blue,
+        image_url: 'macys',
+        url: 'https://www.macys.com/',
+        description: 'Opens the Macys home page.'
+      }
+    },
+    target: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Target',
+        color: colors.blue,
+        image_url: 'target',
+        url: 'https://www.target.com/',
+        description: 'Opens the Target home page.'
+      }
+    },
+    walmart: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Walmart',
+        color: colors.blue,
+        image_url: 'walmart',
+        url: 'https://www.walmart.com/',
+        description: 'Opens the Walmart home page.'
+      }
+    },
+    wayfair: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'shopping',
+        label: 'Wayfair',
+        color: colors.blue,
+        image_url: 'wayfair',
+        url: 'https://www.wayfair.com/',
+        description: 'Opens the Wayfair home page.'
       }
     }
   },
@@ -726,48 +1123,180 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'netflix',
+        subkind: 'multimedia',
         label: 'Netflix',
         color: colors.blue,
         image_url: 'netflix',
         url: 'https://www.netflix.com/',
-        description: 'Opens Netflix in a browser.'
+        description: 'Opens the Netflix home page for users if they are signed in.'
       }
     },
     pandora: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'pandora',
+        subkind: 'multimedia',
         label: 'Pandora',
         color: colors.blue,
         image_url: 'pandora',
         url: 'https://www.pandora.com/station',
-        description: 'Opens Pandora in a browser.'
+        description: 'Opens the Pandora home page for users if they are signed in.'
       }
     },
     spotify: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'spotify',
+        subkind: 'multimedia',
         label: 'Spotify',
         color: colors.blue,
         image_url: 'spotify',
         url: 'https://open.spotify.com/',
-        description: 'Opens Spotify in a browser.'
+        description: 'Opens the Spotify home page for users if they are signed in.'
       }
     },
     youtube: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'youtube',
+        subkind: 'multimedia',
         label: 'Youtube',
         color: colors.blue,
         image_url: 'youtube',
         url: 'https://www.youtube.com/',
-        description: 'Opens Youtube in a browser.'
+        description: 'Opens the Youtube home page for users if they are signed in.'
+      }
+    },
+    'amazon-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Amazon Music',
+        color: colors.blue,
+        image_url: 'amazon-music',
+        url: 'https://music.amazon.com/home',
+        description: 'Opens the Amazon Music home page for users if they are signed in.'
+      }
+    },
+    'apple-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Apple Music',
+        color: colors.blue,
+        image_url: 'itunes',
+        url: 'https://music.apple.com/',
+        description: 'Opens the Apple Music home page for users if they are signed in.'
+      }
+    },
+    deezer: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Deezer',
+        color: colors.blue,
+        image_url: 'deezer',
+        url: 'https://www.deezer.com/',
+        description: 'Opens the Deezer home page for users if they are signed in.'
+      }
+    },
+    'disney-plus': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Disney Plus',
+        color: colors.blue,
+        image_url: 'disney-plus',
+        url: 'https://www.disneyplus.com/',
+        description: 'Opens the Disney Plus home page for users if they are signed in.'
+      }
+    },
+    hulu: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Hulu',
+        color: colors.blue,
+        image_url: 'hulu',
+        url: 'https://www.hulu.com/',
+        description: 'Opens the Hulu home page for users if they are signed in.'
+      }
+    },
+    iheart: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'iHeart Radio',
+        color: colors.blue,
+        image_url: 'iheart',
+        url: 'https://www.iheart.com/',
+        description: 'Opens the iHeart Radio home page for users if they are signed in.'
+      }
+    },
+    soundcloud: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Soundcloud',
+        color: colors.blue,
+        image_url: 'soundcloud',
+        url: 'https://www.soundcloud.com/',
+        description: 'Opens the Soundcloud home page for users if they are signed in.'
+      }
+    },
+    tidal: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Tifal',
+        color: colors.blue,
+        image_url: 'tidal',
+        url: 'https://www.tidal.com/',
+        description: 'Opens the Tidal home page for users if they are signed in.'
+      }
+    },
+    tunein: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'TuneIn',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.tunein.com/',
+        description: 'Opens the TuneIn home page for users if they are signed in.'
+      }
+    },
+    vimeo: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Vimeo',
+        color: colors.blue,
+        image_url: 'vimeo',
+        url: 'https://www.vimeo.com/',
+        description: 'Opens the Vimeo home page for users if they are signed in.'
+      }
+    },
+    'youtube-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Youtube Music',
+        color: colors.blue,
+        image_url: 'youtube-music',
+        url: 'https://www.youtube.com/',
+        description: 'Opens the Youtube Music home page for users if they are signed in.'
       }
     }
   },
@@ -776,7 +1305,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'box',
+        subkind: 'online-drive',
         label: 'Box',
         color: colors.blue,
         image_url: 'box',
@@ -788,7 +1317,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'dropbox',
+        subkind: 'online-drive',
         label: 'Dropbox',
         color: colors.blue,
         image_url: 'dropbox',
@@ -800,7 +1329,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'google-drive',
+        subkind: 'online-drive',
         label: 'Google Drive',
         color: colors.red,
         image_url: 'google-drive',
@@ -812,10 +1341,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-drive',
+        subkind: 'online-drive',
         label: 'iCloud Drive',
         color: colors.blue,
-        image_url: 'icloud-drive',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/iclouddrive/',
         description: 'Opens the iCloud Drive home page.'
       }
@@ -824,7 +1353,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'one-drive',
+        subkind: 'online-drive',
         label: 'OneDrive',
         color: colors.blue,
         image_url: 'one-drive',
