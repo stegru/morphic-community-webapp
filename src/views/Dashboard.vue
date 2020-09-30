@@ -95,7 +95,7 @@ import * as arrowLine from 'arrow-line'
 import BarPreview from '@/components/dashboard/BarPreview'
 import DrawerPreview from '@/components/dashboard/DrawerPreview'
 import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers } from '@/services/communityService'
+import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers, updateCommunityMember } from '@/services/communityService'
 
 export default {
   name: 'Dashboard',
@@ -165,9 +165,12 @@ export default {
         if (!this.$route.params.community && !this.communityId) {
           this.$store.dispatch('userCommunities', this.userId)
             .then((communities) => {
-              this.community = communities[0]
-              this.loadBars()
-              resolve()
+              // We ensure this.community has all the required fields - not only the id
+              getCommunity(communities[0].id).then((community) => {
+                this.community = community.data
+                this.loadBars()
+                resolve()
+              })
             })
             .catch(err => {
               reject(err)
@@ -205,7 +208,16 @@ export default {
               // ensure all members have a bar_id associated, else set default
               // on a brand new community the community doesn't have a default bar, so we use the first (and only) bar id
               let default_bar_id = this.community.default_bar_id ? this.community.default_bar_id : bars[0].id;
-              this.members = resp.data.members.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: default_bar_id })});
+              // Let's ensure that all the community members have a bar assigned.
+              // If not, add the the default one - usually required for the CM
+              this.members = resp.data.members.map(m => {
+                if (!m.bar_id) {
+                  Object.assign(m, { bar_id: default_bar_id })
+                  updateCommunityMember(this.communityId, m.id, m)
+                }
+                return m
+              });
+
               if (this.members.length > 0 && this.list.length > 0) {
                 for (let i = 0; i < this.list.length; i++) {
                   this.list[i].members = []
