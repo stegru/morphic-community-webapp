@@ -4,15 +4,21 @@
     <h1>{{memberDetails.id ? "Bar for " + memberName : "Community bar: " + barDetails.name}}</h1>
     <b-link to="/focused/home">Go back to community home</b-link>
     <br />
-      <b-link :to="{ name: 'Focused: Members using bar', query: { barId: barDetails.id } }">
+      <b-link v-if="$route.query.memberId" :to="{ path: '/focused/person', query: { memberId: memberId } }">
         <b-icon-person-circle></b-icon-person-circle>
-        <span v-if="$route.query.memberId">
+        <span>
           Member Details
         </span>
-        <span v-else-if="getMembersCount() === 0">
+      </b-link>
+      <div v-else-if="getMembersCount() === 0">
+        <b-icon-person-circle></b-icon-person-circle>
+        <span>
           Unused Bar
         </span>
-        <span v-else>
+      </div>
+      <b-link v-else :to="{ path: '/focused/people-using-bar', query: { barId: barDetails.id } }">>
+        <b-icon-person-circle></b-icon-person-circle>
+        <span>
           Members using this bar ({{ getMembersCount() }})
         </span>
       </b-link>
@@ -32,9 +38,9 @@
       Add a Button
     </b-link>
     <br>
-    <b-link :to="{ name: 'Focused: Button Catalog' }">
+    <!-- <b-link :to="{ name: 'Focused: Button Catalog' }">
       View the catalog of buttons available for the Morphic Bar
-    </b-link>
+    </b-link> -->
 
   </div>
 </template>
