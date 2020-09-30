@@ -57,6 +57,7 @@ export const icons = {
   skype: 'skype.svg',
   'google-calendar': 'logo_googleCalendar.svg',
   icloud: 'logo_icloud.svg',
+  aolmail: 'logo_aolOld.svg',
   telegram: 'telegram.svg',
   viber: 'viber.svg',
   whatsapp: 'whatsapp.svg',
@@ -567,7 +568,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'gmail',
+        subkind: 'email',
         label: 'Gmail',
         color: colors.red,
         image_url: 'gmail',
@@ -579,7 +580,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'outlook',
+        subkind: 'email',
         label: 'Outlook',
         color: colors.blue,
         image_url: 'outlook',
@@ -591,7 +592,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'yahoo-mail',
+        subkind: 'email',
         label: 'Yahoo Mail',
         color: colors.purple,
         image_url: 'yahoo-mail',
@@ -603,7 +604,7 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'aolmail',
+        subkind: 'email',
         label: 'AOL Mail',
         color: colors.blue,
         image_url: 'aolmail',
@@ -615,10 +616,10 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'icloud-mail',
+        subkind: 'email',
         label: 'iCloud',
         color: colors.blue,
-        image_url: 'icloud-mail',
+        image_url: 'icloud',
         url: 'https://www.icloud.com/mail',
         description: 'Opens the iCloud inbox in a browser.'
       }
