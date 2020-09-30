@@ -284,12 +284,12 @@
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
           <div id="buttonsPanel" class="fill-height bg-silver p-3">
-            <b-input-group id="search-group" size="sm" class="mb-3">
+            <!-- <b-input-group id="search-group" size="sm" class="mb-3">
               <b-form-input type="text" disabled></b-form-input>
               <b-input-group-append>
                 <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
               </b-input-group-append>
-            </b-input-group>
+            </b-input-group> -->
             <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
               <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
