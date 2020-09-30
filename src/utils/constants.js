@@ -95,7 +95,20 @@ export const icons = {
   macys: 'logo_macys.svg',
   target: 'logo_target.svg',
   walmart: 'logo_walmart.svg',
-  wayfair: 'logo_wayfair.png'
+  wayfair: 'logo_wayfair.png',
+  netflix: 'logo_netflix.svg',
+  pandora: 'logo_pandora.jpg',
+  spotify: 'logo_spotify.svg',
+  'amazon-music': 'logo_amazonMusic.png',
+  itunes: 'logo_itunes.svg',
+  deezer: 'logo_deezer.svg',
+  'disney-plus': 'logo_disneyPlus.svg',
+  hulu: 'logo_hulu.svg',
+  iheart: 'logo_iheartRadio.svg',
+  soundcloud: 'logo_soundcloud.svg',
+  tidal: 'logo_tidal.png',
+  vimeo: 'logo_vimeo.svg',
+  'youtube-music': 'logo_youtubeMusic.svg'
 }
 
 export const subkindIcons = {
@@ -1104,48 +1117,180 @@ export const buttonCatalog = {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'netflix',
+        subkind: 'multimedia',
         label: 'Netflix',
         color: colors.blue,
         image_url: 'netflix',
         url: 'https://www.netflix.com/',
-        description: 'Opens Netflix in a browser.'
+        description: 'Opens the Netflix home page for users if they are signed in.'
       }
     },
     pandora: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'pandora',
+        subkind: 'multimedia',
         label: 'Pandora',
         color: colors.blue,
         image_url: 'pandora',
         url: 'https://www.pandora.com/station',
-        description: 'Opens Pandora in a browser.'
+        description: 'Opens the Pandora home page for users if they are signed in.'
       }
     },
     spotify: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'spotify',
+        subkind: 'multimedia',
         label: 'Spotify',
         color: colors.blue,
         image_url: 'spotify',
         url: 'https://open.spotify.com/',
-        description: 'Opens Spotify in a browser.'
+        description: 'Opens the Spotify home page for users if they are signed in.'
       }
     },
     youtube: {
       kind: 'link',
       is_primary: true,
       configuration: {
-        subkind: 'youtube',
+        subkind: 'multimedia',
         label: 'Youtube',
         color: colors.blue,
         image_url: 'youtube',
         url: 'https://www.youtube.com/',
-        description: 'Opens Youtube in a browser.'
+        description: 'Opens the Youtube home page for users if they are signed in.'
+      }
+    },
+    'amazon-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Amazon Music',
+        color: colors.blue,
+        image_url: 'amazon-music',
+        url: 'https://music.amazon.com/home',
+        description: 'Opens the Amazon Music home page for users if they are signed in.'
+      }
+    },
+    'apple-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Apple Music',
+        color: colors.blue,
+        image_url: 'itunes',
+        url: 'https://music.apple.com/',
+        description: 'Opens the Apple Music home page for users if they are signed in.'
+      }
+    },
+    deezer: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Deezer',
+        color: colors.blue,
+        image_url: 'deezer',
+        url: 'https://www.deezer.com/',
+        description: 'Opens the Deezer home page for users if they are signed in.'
+      }
+    },
+    'disney-plus': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Disney Plus',
+        color: colors.blue,
+        image_url: 'disney-plus',
+        url: 'https://www.disneyplus.com/',
+        description: 'Opens the Disney Plus home page for users if they are signed in.'
+      }
+    },
+    hulu: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Hulu',
+        color: colors.blue,
+        image_url: 'hulu',
+        url: 'https://www.hulu.com/',
+        description: 'Opens the Hulu home page for users if they are signed in.'
+      }
+    },
+    iheart: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'iHeart Radio',
+        color: colors.blue,
+        image_url: 'iheart',
+        url: 'https://www.iheart.com/',
+        description: 'Opens the iHeart Radio home page for users if they are signed in.'
+      }
+    },
+    soundcloud: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Soundcloud',
+        color: colors.blue,
+        image_url: 'soundcloud',
+        url: 'https://www.soundcloud.com/',
+        description: 'Opens the Soundcloud home page for users if they are signed in.'
+      }
+    },
+    tidal: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Tifal',
+        color: colors.blue,
+        image_url: 'tidal',
+        url: 'https://www.tidal.com/',
+        description: 'Opens the Tidal home page for users if they are signed in.'
+      }
+    },
+    tunein: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'TuneIn',
+        color: colors.blue,
+        image_url: '',
+        url: 'https://www.tunein.com/',
+        description: 'Opens the TuneIn home page for users if they are signed in.'
+      }
+    },
+    vimeo: {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Vimeo',
+        color: colors.blue,
+        image_url: 'vimeo',
+        url: 'https://www.vimeo.com/',
+        description: 'Opens the Vimeo home page for users if they are signed in.'
+      }
+    },
+    'youtube-music': {
+      kind: 'link',
+      is_primary: true,
+      configuration: {
+        subkind: 'multimedia',
+        label: 'Youtube Music',
+        color: colors.blue,
+        image_url: 'youtube-music',
+        url: 'https://www.youtube.com/',
+        description: 'Opens the Youtube Music home page for users if they are signed in.'
       }
     }
   },
