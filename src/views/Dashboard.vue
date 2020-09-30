@@ -165,9 +165,12 @@ export default {
         if (!this.$route.params.community && !this.communityId) {
           this.$store.dispatch('userCommunities', this.userId)
             .then((communities) => {
-              this.community = communities[0]
-              this.loadBars()
-              resolve()
+              // We ensure this.community has all the required fields - not only the id
+              getCommunity(communities[0].id).then((community) => {
+                this.community = community.data
+                this.loadBars()
+                resolve()
+              })
             })
             .catch(err => {
               reject(err)
