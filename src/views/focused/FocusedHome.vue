@@ -21,7 +21,7 @@
       Click on the button to add your first one<br><br>
     </p>
     <p>
-      <b-form action="#/focused/bar-editor">
+      <b-form action="#/focused/add-community-bar">
         <b-button type="submit" variant="primary">Add a community bar</b-button>
       </b-form>
     </p>
