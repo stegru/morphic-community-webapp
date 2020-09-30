@@ -196,6 +196,9 @@
                 <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
                 <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
                 <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
+                <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
+
+
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
@@ -300,13 +303,13 @@
                       </template>
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
-                        <div style="width: 100%; display: inline-flex;">
-                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="max-width: 1.25rem; max-height: 100%;"/>
-                          <b-img v-else :src="'/icons/bootstrap.svg'" style="max-width: 1.25rem; max-height: 100%;"></b-img>
+                        <div style="width: 100%; display: inline-flex; align-items: center;">
+                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                          <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                           <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                         </div>
                         <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                        <div class="help">To add this button, drag, press enter, or click on a spot on the left</div>
+                        <div class="help">To add this button,, press ENTER, or drag button below onto the bar</div>
                         <div class="buttons">
                           <drag :data="button" type="catalogButtonNoImage">
                             <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
@@ -647,9 +650,12 @@
     width: 100%;
     display: block;
 
-    img {
-      max-width: 1rem;
-      height: 1rem;
+    img, svg {
+      max-width: 16px;
+      width: 16px;
+      max-width: 16px;
+      width: 16px;
+      display: inline-block;
     }
 
     .buttonsCatalogEntry {
