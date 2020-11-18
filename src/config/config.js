@@ -8,7 +8,7 @@ const CONF = {
     BACKEND_URL: 'http://localhost:5002'
   },
   PRODUCTION: {
-    BACKEND_URL: 'https://dev-morphic.morphiclite-oregondesignservices.org'
+    BACKEND_URL: 'https://api.morphic.org'
   }
 }
 
