@@ -40,10 +40,10 @@ variables:
 
 resources:
   repositories:
-    - repository: deploy-morphicweb
+    - repository: deploy-morphic-community-web
       type: github
-      endpoint: oregondesignservices
-      name: oregondesignservices/deploy-morphicweb
+      endpoint: raisingthefloor
+      name: raisingthefloor/deploy-morphic-community-web
       ref: $(deployRepoRef)
 
 pool:
@@ -72,16 +72,16 @@ stages:
       - job: update_deploy_tag
         condition: ne(variables['newDeployTag'], '')
         steps:
-          - checkout: deploy-morphicweb
+          - checkout: deploy-morphic-community-web
             persistCredentials: true
-            path: deploy-morphicweb
+            path: deploy-morphic-community-web
           - task: Bash@3
             env:
               NEWTAG: $(newDeployTag)
               BRANCH: $(deployRepoRef)
             inputs:
               targetType: 'inline'
-              workingDirectory: resources/community
+              workingDirectory: resources/community-1.0/
               script: |
                 set -e
                 set -x
