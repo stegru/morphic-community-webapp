@@ -87,7 +87,6 @@ export const icons = {
   reuters: 'logo_reuters.svg',
   usatoday: 'logo_usaToday.svg',
   wsj: 'logo_wsj.svg',
-  yahoo: 'logo_yahoo.svg',
   amazon: 'logo_amazon.svg',
   craigslist: 'logo_craigslist.svg',
   ebay: 'logo_ebay.png',
@@ -875,7 +874,7 @@ export const buttonCatalog = {
         description: 'Opens the HuffPost home page.'
       }
     },
-    "Los Angeles Times": {
+    'Los Angeles Times': {
       kind: 'link',
       is_primary: true,
       configuration: {
