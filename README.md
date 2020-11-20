@@ -10,7 +10,7 @@ Install the project dependencies:
 
 Serve the web-app:
 
-    npm run serve
+    NODE_ENV=local npm run serve
 
 This will start a development server on `0.0.0.0:8080` ([http://localhost:8080/](http://localhost:8080/)), which reloads
 when a file has been changed. Additionally, the web-app will assume the API server is listening at the same address
