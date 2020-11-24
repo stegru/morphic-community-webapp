@@ -236,7 +236,7 @@
             </p>
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
-          <div id="preview-holder" class="desktop fill-height mt-3">
+          <div id="preview-holder" class="desktop mt-3">
             <drop mode="cut" class="dragToDelete desktop-portion">
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
@@ -400,123 +400,87 @@
       }
     }
   }
-  #preview-holder {
-    border: 1px solid #002957;
+
+  #preview-holder.desktop {
+    width: 100%;
+    height: 600px;
+    display: flex;
 
     .desktop-portion {
+      display: inline-block;
       flex-grow: 1;
     }
 
-    #preview-bar, #preview-drawer {
-      padding-top: 10px;
-      padding-bottom: 5px;
-      display: flex;
-      min-height: 600px;
-      flex-direction: column;
+    #preview-bar {
+      border: 1px solid #002957;
       background: white;
       border-left: 1px solid #002957;
-      min-width: 120px;
-
       // vertical line separating bar from drawer
       background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
       background-repeat: no-repeat;
-      background-position: right 120px bottom 0px;
+      background-position: right 122px bottom 0px;
 
-      .minWidth1px {
-        min-width: 1px;
-      }
+      display: flex;
+      justify-content: center;
+      align-content: center;
 
-      .button-feedback, .feedback {
-        background-color: #e5f4ed;
-        border: 2px dashed rgb(16 141 74);
-        height: 50px;
-        margin-left: 10px;
-        margin-right: 10px;
-        border-radius: 10px;
-        margin-top: 10px;
+      // flex columns don't expand the container, so rotate the text flow here, and make the buttonList flex-direction to row
+      writing-mode: vertical-rl;
 
-        &.clickDropSpot {
-          margin-top: 0px;
+      .barPreviewEditor {
+        min-width: 120px;
+        flex-grow: 1;
+
+        .buttonsList {
+          height: 100%;
+
+          display: inline-flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-content: flex-start;
+
+          max-width: 400px;
+          // Hide the drawer by limiting the width
+          &:not(.showDrawer) {
+            width: 120px !important;
+            overflow: hidden;
+          }
+
+          & > div {
+            min-width: 50px;
+          }
+
+          // Place-holder for dropping a new button.
+          .button-feedback, .feedback {
+            display: block;
+            background-color: #e5f4ed;
+            border: 2px dashed rgb(16 141 74);
+            height: 50px;
+            min-width: 95px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+
+            &.clickDropSpot {
+              margin-top: 0px;
+            }
+          }
+        }
+
+        .buttonDragger {
+          writing-mode: horizontal-tb;
+          margin: 10px 10px 0 10px;
         }
       }
 
       .logoHolder {
-        width: 100%;
-        text-align: right;
-        padding-right: 32px;
-      }
-
-      .barPreviewEditor { // WAS ALSO: , .barPreview
-        // width: 120px;
-        // display: flex;
-        // flex-direction: column;
-        // flex-grow: 1;
-        // height: 500px;
-
-        .buttonDragger {
-          writing-mode: horizontal-tb;
-          margin-top: 10px;
-          margin-bottom: 0px;
-          margin-left: 10px;
-          margin-right: 10px;
-        }
-
-        .buttonsList {
-
-          // display: block;
-          overflow: hidden;
-          height: 500px;
-          min-width: 120px;
-          display: inline-flex;
-          writing-mode: vertical-rl;
-          flex-wrap: wrap;
-
-          // &.showDrawer {
-          //   flex-wrap: wrap;
-          // }
-
-          &:not(.showDrawer) {
-            // flex-wrap: wrap;
-            width: 120px !important;
-          }
-
-          button {
-            padding: 0px;
-          }
-
-
-
-          .draggable-area {
-            // min-width: 500px;
-            flex-grow: 1;
-            list-style: none;
-
-
-            .previewHolder {
-              width: 120px;
-              padding: 10px;
-              padding-top: 5px;
-              padding-bottom: 5px;
-              position: relative;
-
-              .overlay {
-                position: absolute;
-                top: 10px;
-                color: $primary-color !important;
-                background: rgba(255,255,255,0.7) !important;
-                font-size: 1.5rem;
-                cursor: pointer;
-                &:hover {
-                  background: white !important;
-                }
-                &:active, &:focus {
-                  color: #d60000 !important;
-                }
-              }
-            }
-          }
-        }
+        writing-mode: initial;
+        text-align: center;
+        width: 120px;
+        padding: 15px 0 15px 0;
       }
     }
   }
@@ -1203,7 +1167,7 @@ export default {
       addToBar: false,
       addToDrawer: false,
       newBar: false,
-      openDrawer: false,
+      openDrawer: true,
       successAlert: false,
       editDialogDetails: false,
       editDialogSubkindIcons: true,
