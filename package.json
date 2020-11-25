@@ -6,7 +6,7 @@
     "dev": "node_modules/.bin/eslint src/ && NODE_ENV=local vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "node_modules/.bin/eslint src/"
+    "lint": "node_modules/.bin/eslint src/**/*.{js,vue}"
   },
   "dependencies": {
     "arrow-line": "^0.7.4",
@@ -27,6 +27,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
+    "eslint-config-fluid": "^2.0.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",

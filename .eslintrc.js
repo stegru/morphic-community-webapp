@@ -1,11 +1,15 @@
 module.exports = {
   root: true,
   env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
     node: true
   },
   extends: [
     'plugin:vue/essential',
-    '@vue/standard'
+    '@vue/standard',
+    'eslint-config-fluid'
   ],
   parserOptions: {
     parser: 'babel-eslint'
@@ -13,6 +17,11 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    "semi": 0
+    "dot-notation": [
+      "error",
+      {
+        "allowKeywords": true
+      }
+    ]
   }
 }
