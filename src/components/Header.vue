@@ -56,30 +56,29 @@
     color: rgba(0, 0, 0, 0.65);
   }
 
-
 </style>
 
 <script>
-import { MESSAGES } from '@/utils/constants'
+import { MESSAGES } from "@/utils/constants";
 
 export default {
-  computed: {
-    isLoggedIn: function () { return this.$store.getters.isLoggedIn },
-    disableLogout: function () { return this.$store.getters.unsavedChanges },
-    focusMode: function () { return this.$route.path.includes("/focused/") }
-  },
+    computed: {
+        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
+        disableLogout: function () { return this.$store.getters.unsavedChanges; },
+        focusMode: function () { return this.$route.path.includes("/focused/"); }
+    },
 
-  methods: {
-    logout: function () {
-      if (this.disableLogout) {
-        window.confirm(MESSAGES.logoutAlert)
-      } else {
-        this.$store.dispatch('logout')
-          .then(() => {
-            this.$router.push('/')
-          })
-      }
+    methods: {
+        logout: function () {
+            if (this.disableLogout) {
+                window.confirm(MESSAGES.logoutAlert);
+            } else {
+                this.$store.dispatch("logout")
+                    .then(() => {
+                        this.$router.push("/");
+                    });
+            }
+        }
     }
-  }
-}
+};
 </script>

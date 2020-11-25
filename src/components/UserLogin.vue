@@ -49,70 +49,70 @@
 </template>
 
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, email, minLength } from 'vuelidate/lib/validators'
-import { ERROR_MAP, MESSAGES } from '@/utils/constants'
+import { validationMixin } from "vuelidate";
+import { required, email, minLength } from "vuelidate/lib/validators";
+import { ERROR_MAP, MESSAGES } from "@/utils/constants";
 
 export default {
-  mixins: [validationMixin],
-  data () {
-    return {
-      userInfo: {
-        email: '',
-        password: '',
-        keep_logged: 1
-      },
-      errorAlert: false,
-      successAlert: false,
-      errorMessage: null,
-      successMessage: MESSAGES.successfulLogin
-    }
-  },
-  validations: {
-    userInfo: {
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(6)
-      }
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v.userInfo[name]
-      return $dirty ? !$error : null
+    mixins: [validationMixin],
+    data() {
+        return {
+            userInfo: {
+                email: "",
+                password: "",
+                keep_logged: 1
+            },
+            errorAlert: false,
+            successAlert: false,
+            errorMessage: null,
+            successMessage: MESSAGES.successfulLogin
+        };
     },
-    onSubmit () {
-      this.$v.userInfo.$touch()
-      if (this.$v.userInfo.$anyError) {
-        return
-      }
-      this.$store.dispatch('login', this.$v.userInfo.$model)
-        .then(() => {
-          this.successAlert = true
-          setTimeout(() => {
-            this.successAlert = false
-            this.userInfo.email = ''
-            this.userInfo.password = ''
-            this.$router.push('/dashboard')
-          }, 1000)
-        })
-        .catch(err => {
-          if (err.response) {
-            if (err.response.data.error === 'invalid_credentials') {
-              this.errorMessage = ERROR_MAP[1]
-            } else {
-              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+    validations: {
+        userInfo: {
+            email: {
+                required,
+                email
+            },
+            password: {
+                required,
+                minLength: minLength(6)
             }
-          } else {
-            this.errorMessage = ERROR_MAP[500]
-          }
-          this.errorAlert = true
-        })
+        }
+    },
+    methods: {
+        validateState(name) {
+            const { $dirty, $error } = this.$v.userInfo[name];
+            return $dirty ? !$error : null;
+        },
+        onSubmit() {
+            this.$v.userInfo.$touch();
+            if (this.$v.userInfo.$anyError) {
+                return;
+            }
+            this.$store.dispatch("login", this.$v.userInfo.$model)
+                .then(() => {
+                    this.successAlert = true;
+                    setTimeout(() => {
+                        this.successAlert = false;
+                        this.userInfo.email = "";
+                        this.userInfo.password = "";
+                        this.$router.push("/dashboard");
+                    }, 1000);
+                })
+                .catch(err => {
+                    if (err.response) {
+                        if (err.response.data.error === "invalid_credentials") {
+                            this.errorMessage = ERROR_MAP[1];
+                        } else {
+                            this.errorMessage = ERROR_MAP[err.response.status] || "Something went wrong";
+                        }
+                    } else {
+                        this.errorMessage = ERROR_MAP[500];
+                    }
+                    this.errorAlert = true;
+                });
+        }
     }
-  }
-}
+};
 </script>

@@ -1,225 +1,225 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import store from '@/store'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import store from "@/store";
 
 // General Marketing, Login and Register Components
-import Home from '@/views/Home.vue'
-import Terms from '@/views/Terms.vue'
+import Home from "@/views/Home.vue";
+import Terms from "@/views/Terms.vue";
 
 // Dashboard Components
-import Dashboard from '@/views/Dashboard.vue'
-import MorphicBarPreconfigured from '@/views/MorphicBarPreconfigured.vue'
-import MorphicBarEditor from '@/views/MorphicBarEditor.vue'
-import MemberInvite from '@/views/MemberInvite.vue'
+import Dashboard from "@/views/Dashboard.vue";
+import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
+import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
+import MemberInvite from "@/views/MemberInvite.vue";
 
 // Focused Components
-import FocusedHome from '@/views/focused/FocusedHome.vue'
-import FocusedBarEditor from '@/views/focused/FocusedBarEditor.vue'
-import FocusedButtonCatalog from '@/views/focused/FocusedButtonCatalog.vue'
-import FocusedPeopleUsingBar from '@/views/focused/FocusedPeopleUsingBar.vue'
-import FocusedPersonPage from '@/views/focused/FocusedPersonPage.vue'
-import FocusedBarSettings from '@/views/focused/FocusedBarSettings.vue'
-import FocusedButtonEdit from '@/views/focused/FocusedButtonEdit.vue'
-import FocusedAddCommunityBar from '@/views/focused/FocusedAddCommunityBar.vue'
+import FocusedHome from "@/views/focused/FocusedHome.vue";
+import FocusedBarEditor from "@/views/focused/FocusedBarEditor.vue";
+import FocusedButtonCatalog from "@/views/focused/FocusedButtonCatalog.vue";
+import FocusedPeopleUsingBar from "@/views/focused/FocusedPeopleUsingBar.vue";
+import FocusedPersonPage from "@/views/focused/FocusedPersonPage.vue";
+import FocusedBarSettings from "@/views/focused/FocusedBarSettings.vue";
+import FocusedButtonEdit from "@/views/focused/FocusedButtonEdit.vue";
+import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
-    meta: {
-      title: 'Home :: Morphic Community',
-      locked: true
-    }
-  },
-  {
-    path: '/session-timed-out',
-    name: 'Home-session-timed-out',
-    component: Home,
-    props: { messageId: 'sessionTimedOut' },
-    meta: {
-      title: 'Home :: Morphic Community',
-      locked: true
-    }
-  },
-  {
-    path: '/terms-of-use',
-    name: 'Terms of Use',
-    component: Terms,
-    meta: {
-      title: 'Terms Of Use :: Morphic Community'
-    }
-  },
-  // {
-  //   path: '/registration',
-  //   name: 'Registration',
-  //   component: Registration,
-  //   meta: {
-  //     title: 'Community Registration :: Morphic Community',
-  //     locked: true
-  //   }
-  // },
-  // {
-  //   path: '/my-community',
-  //   name: 'My Community',
-  //   component: MyCommunity,
-  //   meta: {
-  //     title: 'My Community :: Morphic Community',
-  //     authRoute: true
-  //   }
-  // },
-  // {
-  //   path: '/reset-password',
-  //   name: 'Reset Password',
-  //   component: ResetPassword,
-  //   meta: {
-  //     title: 'Reset Password :: Morphic Community'
-  //   }
-  // },
+    {
+        path: "/",
+        name: "Home",
+        component: Home,
+        meta: {
+            title: "Home :: Morphic Community",
+            locked: true
+        }
+    },
+    {
+        path: "/session-timed-out",
+        name: "Home-session-timed-out",
+        component: Home,
+        props: { messageId: "sessionTimedOut" },
+        meta: {
+            title: "Home :: Morphic Community",
+            locked: true
+        }
+    },
+    {
+        path: "/terms-of-use",
+        name: "Terms of Use",
+        component: Terms,
+        meta: {
+            title: "Terms Of Use :: Morphic Community"
+        }
+    },
+    // {
+    //   path: '/registration',
+    //   name: 'Registration',
+    //   component: Registration,
+    //   meta: {
+    //     title: 'Community Registration :: Morphic Community',
+    //     locked: true
+    //   }
+    // },
+    // {
+    //   path: '/my-community',
+    //   name: 'My Community',
+    //   component: MyCommunity,
+    //   meta: {
+    //     title: 'My Community :: Morphic Community',
+    //     authRoute: true
+    //   }
+    // },
+    // {
+    //   path: '/reset-password',
+    //   name: 'Reset Password',
+    //   component: ResetPassword,
+    //   meta: {
+    //     title: 'Reset Password :: Morphic Community'
+    //   }
+    // },
 
-  // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: {
-      title: 'Dashboard :: Morphic Community',
-      authRoute: true
-    }
-  },
-  {
-    path: '/dashboard/morphicbar-preconfigured',
-    name: 'MorphicBar Preconfigured',
-    component: MorphicBarPreconfigured,
-    meta: {
-      title: 'Pick a bar :: Morphic Community',
-      authRoute: true
-    }
-  },
-  {
-    path: '/dashboard/morphicbar-editor/',
-    name: 'MorphicBar Editor',
-    component: MorphicBarEditor,
-    meta: {
-      title: 'MorphicBar Editor :: Morphic Community',
-      authRoute: true
-    }
-  },
-  {
-    path: '/dashboard/member-invite',
-    name: 'Member Invite',
-    component: MemberInvite,
-    meta: {
-      title: 'Member Invite :: Morphic Community',
-      authRoute: true
-    }
-  },
-  // {
-  //   path: '/dashboard/member/:memberId',
-  //   name: 'Member Editor',
-  //   component: MemberEditor,
-  //   meta: {
-  //     title: 'Member Details :: Morphic Community',
-  //     authRoute: true
-  //   }
-  // },
+    // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
+    {
+        path: "/dashboard",
+        name: "Dashboard",
+        component: Dashboard,
+        meta: {
+            title: "Dashboard :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/dashboard/morphicbar-preconfigured",
+        name: "MorphicBar Preconfigured",
+        component: MorphicBarPreconfigured,
+        meta: {
+            title: "Pick a bar :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/dashboard/morphicbar-editor/",
+        name: "MorphicBar Editor",
+        component: MorphicBarEditor,
+        meta: {
+            title: "MorphicBar Editor :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/dashboard/member-invite",
+        name: "Member Invite",
+        component: MemberInvite,
+        meta: {
+            title: "Member Invite :: Morphic Community",
+            authRoute: true
+        }
+    },
+    // {
+    //   path: '/dashboard/member/:memberId',
+    //   name: 'Member Editor',
+    //   component: MemberEditor,
+    //   meta: {
+    //     title: 'Member Details :: Morphic Community',
+    //     authRoute: true
+    //   }
+    // },
 
-  // Mobile-Focused-Accessible CM Webapp
-  {
-    path: '/focused/home',
-    name: 'Home: Bar and Member Page',
-    component: FocusedHome,
-    meta: {
-      title: 'Focused :: Home',
-      authRoute: true
+    // Mobile-Focused-Accessible CM Webapp
+    {
+        path: "/focused/home",
+        name: "Home: Bar and Member Page",
+        component: FocusedHome,
+        meta: {
+            title: "Focused :: Home",
+            authRoute: true
+        }
+    },
+    {
+        path: "/focused/bar-editor",
+        name: "Focused: Bar Editor",
+        component: FocusedBarEditor,
+        meta: {
+            title: "Focused :: Bar Editor"
+        }
+    },
+    {
+        path: "/focused/add-community-bar",
+        name: "Focused: Add Community Bar",
+        component: FocusedAddCommunityBar,
+        meta: {
+            title: "Focused :: Add community Bar"
+        }
+    },
+    {
+        path: "/focused/button-catalog",
+        name: "Focused: Button Catalog",
+        component: FocusedButtonCatalog,
+        meta: {
+            title: "Focused :: Button Catalog"
+        }
+    },
+    {
+        path: "/focused/people-using-bar",
+        name: "Focused: Members using bar",
+        component: FocusedPeopleUsingBar,
+        meta: {
+            title: "Focused :: Members using bar"
+        }
+    },
+    {
+        path: "/focused/person",
+        name: "Focused: Member",
+        component: FocusedPersonPage,
+        meta: {
+            title: "Focused :: Member"
+        }
+    },
+    {
+        path: "/focused/bar-settings",
+        name: "Focused: Bar settings",
+        component: FocusedBarSettings,
+        meta: {
+            title: "Focused :: Bar settings"
+        }
+    },
+    {
+        path: "/focused/button-edit",
+        name: "Focused: Button edit",
+        component: FocusedButtonEdit,
+        meta: {
+            title: "Focused :: Button edit"
+        }
     }
-  },
-  {
-    path: '/focused/bar-editor',
-    name: 'Focused: Bar Editor',
-    component: FocusedBarEditor,
-    meta: {
-      title: 'Focused :: Bar Editor'
-    }
-  },
-  {
-    path: '/focused/add-community-bar',
-    name: 'Focused: Add Community Bar',
-    component: FocusedAddCommunityBar,
-    meta: {
-      title: 'Focused :: Add community Bar'
-    }
-  },
-  {
-    path: '/focused/button-catalog',
-    name: 'Focused: Button Catalog',
-    component: FocusedButtonCatalog,
-    meta: {
-      title: 'Focused :: Button Catalog'
-    }
-  },
-  {
-    path: '/focused/people-using-bar',
-    name: 'Focused: Members using bar',
-    component: FocusedPeopleUsingBar,
-    meta: {
-      title: 'Focused :: Members using bar'
-    }
-  },
-  {
-    path: '/focused/person',
-    name: 'Focused: Member',
-    component: FocusedPersonPage,
-    meta: {
-      title: 'Focused :: Member'
-    }
-  },
-  {
-    path: '/focused/bar-settings',
-    name: 'Focused: Bar settings',
-    component: FocusedBarSettings,
-    meta: {
-      title: 'Focused :: Bar settings'
-    }
-  },
-  {
-    path: '/focused/button-edit',
-    name: 'Focused: Button edit',
-    component: FocusedButtonEdit,
-    meta: {
-      title: 'Focused :: Button edit'
-    }
-  }
-]
+];
 
 const router = new VueRouter({
-  routes
-})
+    routes
+});
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.authRoute)) {
-    if (store.getters.isLoggedIn) {
-      next()
-      return
+    if (to.matched.some(record => record.meta.authRoute)) {
+        if (store.getters.isLoggedIn) {
+            next();
+            return;
+        }
+        next("/");
+    } else if (to.matched.some(record => record.meta.locked)) {
+        if (!store.getters.isLoggedIn) {
+            next();
+            return;
+        }
+        next("/dashboard");
+    } else {
+        next();
     }
-    next('/')
-  } else if (to.matched.some(record => record.meta.locked)) {
-    if (!store.getters.isLoggedIn) {
-      next()
-      return
-    }
-    next('/dashboard')
-  } else {
-    next()
-  }
-})
+});
 
 router.afterEach((to) => {
-  Vue.nextTick(() => {
-    document.title = to.meta.title
-  })
-})
+    Vue.nextTick(() => {
+        document.title = to.meta.title;
+    });
+});
 
-export default router
+export default router;

@@ -198,7 +198,6 @@
                 <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
                 <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
 
-
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
@@ -658,591 +657,589 @@
 
 <script>
 
-import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
-import draggable from 'vuedraggable'
+import CommunityManager from "@/components/dashboardV2/CommunityManager";
+import PreviewItem from "@/components/dashboard/PreviewItem";
+import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
+import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
+import { predefinedBars } from "@/utils/predefined";
+import draggable from "vuedraggable";
 import { Drag, Drop, DropList, DropMask } from "vue-easy-dnd";
 
 export default {
-  name: 'MorphicBarEditor',
-  components: {
-    CommunityManager,
-    PreviewItem,
-    draggable,
-    Drag,
-    Drop,
-    DropList,
-    DropMask
-  },
-  methods: {
-    dropToBar: function (event) {
-      event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
-      event.data.id = this.generateId(event.data)
+    name: "MorphicBarEditor",
+    components: {
+        CommunityManager,
+        PreviewItem,
+        draggable,
+        Drag,
+        Drop,
+        DropList,
+        DropMask
+    },
+    methods: {
+        dropToBar: function (event) {
+            event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
+            event.data.id = this.generateId(event.data);
 
-      if (event.type == "catalogButtonNoImage") {
-        event.data.configuration.image_url = "";
-      }
-      // insert in new position (default to 0)
-      this.barDetails.items.splice(event.index || 0, 0, event.data);
-      // close any expanded button
-      this.expandedCatalogButtonId = undefined;
-      this.setBarChanged();
-      return true;
-    },
-
-    setBarChanged: function () {
-      this.isChanged = true;
-      this.barSelectedInDropdown = 'customized';
-    },
-
-    revertBar: function () {
-      if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
-        this.isChanged = false;
-        this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
-        this.barSelectedInDropdown = this.barDetails.id;
-      }
-    },
-    dropOnClickToAdd: function (event) {
-      this.dropToBar(event);
-    },
-    changeUserBarToCommunityBar: function () {
-      if (this.isChanged || this.barDetails.is_shared == false) {
-        if (false == confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
-          return;
-        }
-      }
-
-      // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
-      updateCommunityMember(this.community.id, this.memberDetails.id, {
-        first_name: this.memberDetails.first_name,
-        last_name: this.memberDetails.last_name,
-        bar_id: this.barSelectedInDropdown,
-        role: this.memberDetails.role
-      }).then(r => {
-        getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
-          this.barDetails = newBarDetails.data;
-          this.isChanged = false;
-          this.newBar = false;
-          this.memberDetails.bar_id = this.barSelectedInDropdown;
-          this.updateOriginalBarDetails();
-        });
-      });
-    },
-    // used to avoid bug where a "click" event is triggered at end of drag
-    setDragInProgress: function (newValue) {
-      this.dragInProgress = newValue;
-    },
-
-    removeButton: function (item, itemList) {
-      let compareObjects = function (x, y) {
-        for (let key in x) {
-          if (x[key] != y[key]) {
-            return false;
-          } else {
-            if (x[key] instanceof Object && y[key] instanceof Object) {
-              if (compareObjects(x[key], y[key]) == false) {
-                return false;
-              }
+            if (event.type == "catalogButtonNoImage") {
+                event.data.configuration.image_url = "";
             }
-          }
-        }
-        return true;
-      };
-      let index = itemList.findIndex(x => compareObjects(x, item));
-      itemList.splice(index, 1);
-    },
+            // insert in new position (default to 0)
+            this.barDetails.items.splice(event.index || 0, 0, event.data);
+            // close any expanded button
+            this.expandedCatalogButtonId = undefined;
+            this.setBarChanged();
+            return true;
+        },
 
-    getEmailAndSendInvite() {
-      this.invitationEmail = "";
-      this.$bvModal.show('sendEmailInvitationModal');
-    },
-    sendInvite() {
-      if (this.invitationEmail) {
-        let communityId = this.$store.getters.communityId;
-        inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
-        this.memberDetails.state = 'invited';
-      }
-    },
+        setBarChanged: function () {
+            this.isChanged = true;
+            this.barSelectedInDropdown = "customized";
+        },
 
-    loadAllData: function () {
-      this.loadBarData()
-      this.loadBarMembers()
-      this.getCommunityData()
+        revertBar: function () {
+            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
+                this.isChanged = false;
+                this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
+                this.barSelectedInDropdown = this.barDetails.id;
+            }
+        },
+        dropOnClickToAdd: function (event) {
+            this.dropToBar(event);
+        },
+        changeUserBarToCommunityBar: function () {
+            if (this.isChanged || this.barDetails.is_shared == false) {
+                if (confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.") == false) {
+                    return;
+                }
+            }
 
-      if (this.activeMemberId) {
-        this.loadMemberData()
-      }
-    },
-
-    /** Loads the initial bar data */
-    loadBarData: function () {
-      var barId = this.$route.query.barId;
-
-      if (barId === 'new') {
-        // Create a new empty bar.
-        this.newBar = true;
-        this.barDetails = this.newBarDetails;
-      } else if (barId.indexOf('predefined') !== -1) {
-        // Create a bar from the predefined collection.
-        var bar = this.predefinedBars.find(function (predefined) {
-          return predefined.id === barId;
-        });
-
-        if (bar) {
-          this.newBar = true;
-          this.barDetails = this.newBarDetails;
-          this.barDetails.items = bar.items;
-          this.addBar();
-        }
-      } else {
-        // Load a saved bar.
-        getCommunityBar(this.communityId, barId)
-          .then(resp => {
-            this.barDetails = resp.data;
-            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-          })
-          .catch(err => {
-            console.error(err);
-          })
-      }
-    },
-    addIds: function (items) {
-      return items.map(item => item.id = this.generateId(item));
-    },
-    // hack to refresh css rendering due to bars being fucked up in their CSS
-    refreshBar() {
-      this.$refs.myref.classList.contains("minWidth1px") ?
-        this.$refs.myref.classList.remove("minWidth1px") :
-        this.$refs.myref.classList.add("minWidth1px");
-    }
-    ,
-    distributeItems: function (items) {
-      // add id's
-      this.addIds(items);
-      // items.map(item => item.id = this.generateId(item));
-    },
-    deleteMember: function () {
-      deleteCommunityMember(this.communityId, this.memberDetails.id)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulMemberDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    changeMemberRole: function () {
-      if (this.memberDetails.role === 'member') {
-        this.memberDetails.role = 'manager'
-      } else {
-        this.memberDetails.role = 'member'
-      }
-      updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulRoleChange
-            this.successAlert = true
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    updateOriginalBarDetails: function () {
-      this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-    },
-    addPersonalBar: function () {
-      if (this.barDetails.is_shared) {
-        this.onSave = true
-
-        this.barDetails.name = this.memberDetails.first_name
-        this.barDetails.is_shared = false
-
-        const data = this.barDetails
-        // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-        // data.items = this.primaryItems.concat(drawerItems)
-
-        createCommunityBar(this.communityId, data)
-          .then((resp) => {
-            if (resp.status === 200) {
-              this.memberDetails.bar_id = resp.data.bar.id
-              updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                .then((resp) => {
-                  if (resp.status === 200) {
-                    this.successMessage = MESSAGES.barUpdated
-                    this.successAlert = true
-                    this.isChanged = false
+            // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
+            updateCommunityMember(this.community.id, this.memberDetails.id, {
+                first_name: this.memberDetails.first_name,
+                last_name: this.memberDetails.last_name,
+                bar_id: this.barSelectedInDropdown,
+                role: this.memberDetails.role
+            }).then(r => {
+                getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
+                    this.barDetails = newBarDetails.data;
+                    this.isChanged = false;
+                    this.newBar = false;
+                    this.memberDetails.bar_id = this.barSelectedInDropdown;
                     this.updateOriginalBarDetails();
-                    setTimeout(() => {
-                      this.successAlert = false
-                    }, 3000)
-                  }
+                });
+            });
+        },
+        // used to avoid bug where a "click" event is triggered at end of drag
+        setDragInProgress: function (newValue) {
+            this.dragInProgress = newValue;
+        },
+
+        removeButton: function (item, itemList) {
+            const compareObjects = function (x, y) {
+                for (const key in x) {
+                    if (x[key] != y[key]) {
+                        return false;
+                    } else {
+                        if (x[key] instanceof Object && y[key] instanceof Object) {
+                            if (compareObjects(x[key], y[key]) == false) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            };
+            const index = itemList.findIndex(x => compareObjects(x, item));
+            itemList.splice(index, 1);
+        },
+
+        getEmailAndSendInvite() {
+            this.invitationEmail = "";
+            this.$bvModal.show("sendEmailInvitationModal");
+        },
+        sendInvite() {
+            if (this.invitationEmail) {
+                const communityId = this.$store.getters.communityId;
+                inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
+                this.memberDetails.state = "invited";
+            }
+        },
+
+        loadAllData: function () {
+            this.loadBarData();
+            this.loadBarMembers();
+            this.getCommunityData();
+
+            if (this.activeMemberId) {
+                this.loadMemberData();
+            }
+        },
+
+        /** Loads the initial bar data */
+        loadBarData: function () {
+            var barId = this.$route.query.barId;
+
+            if (barId === "new") {
+                // Create a new empty bar.
+                this.newBar = true;
+                this.barDetails = this.newBarDetails;
+            } else if (barId.indexOf("predefined") !== -1) {
+                // Create a bar from the predefined collection.
+                var bar = this.predefinedBars.find(function (predefined) {
+                    return predefined.id === barId;
+                });
+
+                if (bar) {
+                    this.newBar = true;
+                    this.barDetails = this.newBarDetails;
+                    this.barDetails.items = bar.items;
+                    this.addBar();
+                }
+            } else {
+                // Load a saved bar.
+                getCommunityBar(this.communityId, barId)
+                    .then(resp => {
+                        this.barDetails = resp.data;
+                        this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
+        },
+        addIds: function (items) {
+            return items.map(item => item.id = this.generateId(item));
+        },
+        // hack to refresh css rendering due to bars being fucked up in their CSS
+        refreshBar() {
+            this.$refs.myref.classList.contains("minWidth1px")
+                ? this.$refs.myref.classList.remove("minWidth1px")
+                : this.$refs.myref.classList.add("minWidth1px");
+        },
+        distributeItems: function (items) {
+            // add id's
+            this.addIds(items);
+            // items.map(item => item.id = this.generateId(item));
+        },
+        deleteMember: function () {
+            deleteCommunityMember(this.communityId, this.memberDetails.id)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.successfulMemberDelete;
+                        this.successAlert = true;
+                        setTimeout(() => {
+                            this.$router.push("/dashboard");
+                        }, 3000);
+                    }
                 })
                 .catch(err => {
-                  console.error(err)
-                })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      } else {
-        this.saveBar()
-      }
-    },
-    addBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      data.is_shared = true
-      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      // data.items = this.primaryItems.concat(drawerItems)
-
-      createCommunityBar(this.communityId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barAdded
-            this.successAlert = true
-            this.isChanged = false
-            this.updateOriginalBarDetails();
-
-            setTimeout(() => {
-              this.successAlert = false
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    saveBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      // data.items = this.primaryItems.concat(drawerItems)
-
-      updateCommunityBar(this.communityId, this.$route.query.barId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barUpdated
-            this.successAlert = true
-            this.isChanged = false
-            this.updateOriginalBarDetails();
-
-            setTimeout(() => {
-              this.successAlert = false
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    deleteBar: function () {
-      deleteCommunityBar(this.communityId, this.$route.query.barId)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulBarDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    expandCatalogButton: function (button, buttonId) {
-      this.expandedCatalogButtonId = buttonId;
-      this.expandedCatalogButton = button;
-    },
-    buttonToRemove: function (item) {
-      // remove from items list
-      // bar and drawer lists are automatically updated from watcher
-      this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
-      this.$bvModal.hide('modalEditGeneric')
-      this.setBarChanged();
-    },
-    buttonToEdit: function (item, evt) {
-      if (this.dragInProgress) {
-        return;
-      }
-      this.buttonEditStorage = item;
-      this.$bvModal.show('modalEditGeneric')
-    },
-    refreshButton: function (updated) {
-      // updating the data in a button (on edit)
-      this.editDialogDetails = false
-      this.editDialogSubkindIcons = true
-      if (updated) {
-        this.setBarChanged();
-      }
-    },
-    editChangeColor: function (hex) {
-      this.buttonEditStorage.configuration.color = hex
-    },
-    editChangeIcon: function (icon) {
-      this.buttonEditStorage.configuration.image_url = icon
-    },
-    getMembersCount: function () {
-      if (this.members && this.members.length > 0) {
-        return this.members.length
-      }
-      return 0
-    },
-    loadBarMembers: function () {
-      getCommunityBars(this.communityId)
-        .then(resp => {
-          const barsData = resp.data.bars
-          getCommunityMembers(this.communityId)
-            .then((resp) => {
-              this.barsList = barsData
-              this.membersList = resp.data.members;
-              this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
-
-              if (resp.data.members.length > 0) {
-                for (let i = 0; i < resp.data.members.length; i++) {
-                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
-                    this.members.push(resp.data.members[i])
-                  }
-                }
-              }
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getBarRemoveValidity: function () {
-      if (this.barDetails.name !== 'Default' && this.getMembersCount() === 0) {
-        return true
-      }
-      return false
-    },
-    loadMemberData: function () {
-      getCommunityMember(this.communityId, this.activeMemberId)
-        .then((resp) => {
-          this.memberDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getCommunityData: function () {
-      getCommunity(this.communityId)
-        .then((community) => {
-          this.community = community.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    generateId: function (item) {
-      let id = ''
-      if (item) {
-        id += Math.floor(Math.random() * Math.floor(99999999))
-        id += '-' + item.configuration.label.toLowerCase()
-        id += '-' + (item.configuration.subkind ? 'sub-' + item.configuration.subkind.toLowerCase() : 'generic-kind')
-        id += '-' + Math.floor(Math.random() * Math.floor(99999999))
-      }
-      return id
-    },
-    addIdsToCatalogButtons(buttonCatalog) {
-      for (let category in buttonCatalog) {
-        for (let button in buttonCatalog[category]) {
-          buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
-        }
-      }
-      return buttonCatalog;
-    },
-    updateAvailableBars() {
-      this.availableBars = this.barsList.filter((bar) => {
-        return bar.is_shared;
-      });
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    editSubKindIcons: function () {
-      const data = {}
-      if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-        for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-          data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]
-        }
-      }
-      return data
-    },
-    activeMemberId: function () { return this.$route.query.memberId },
-  },
-  mounted () {
-    this.loadAllData()
-  },
-  watch: {
-    'barDetails.items': function (newValue, oldValue) {
-      this.distributeItems(newValue)
-    },
-    'memberDetails.id': function (newValue, oldValue) {
-      this.updateAvailableBars();
-      this.barSelectedInDropdown = this.memberDetails.bar_id;
-
-    },
-    barsList: function (newValue) {
-      this.updateAvailableBars();
-    },
-    makeAButtons: function (newValue, oldValue) {
-      if (!this.dragMakeAButton) {
-        this.makeAButtons = oldValue
-        this.dragMakeAButton = true
-      }
-    },
-    predefinedButtons: function (newValue, oldValue) {
-      if (!this.dragPredefinedButton) {
-        this.predefinedButtons = oldValue
-        this.dragPredefinedButton = true
-      }
-    },
-    drawerItemsSecond: function (newValue, oldValue) {
-      if (oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-        }
-      }
-    },
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
-    },
-    '$route.query': function () {
-      this.members = []
-      this.initialChangesPrimaryItems = false
-      this.initialChangesDrawerItems = false
-      this.loadAllData()
-    }
-  },
-  beforeRouteUpdate (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        this.isChanged = false
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  beforeUpdate() {
-    this.refreshBar();
-  },
-  data () {
-    return {
-      // messages
-      leavePageMessage: MESSAGES.leavePageAlert,
-      successMessage: '',
-      availableBars: [],
-      barSelectedInDropdown: '',
-      // flags
-      addToBar: false,
-      addToDrawer: false,
-      newBar: false,
-      openDrawer: true,
-      successAlert: false,
-      editDialogDetails: false,
-      editDialogSubkindIcons: true,
-      tab: 0,
-      dragFromEditor: false,
-      isChanged: false,
-      editBarName: false,
-      onSave: false,
-      initialChangesPrimaryItems: false,
-      initialChangesDrawerItems: false,
-      // data for the community manager
-      community: {},
-      barsList: [],
-      membersList: [],
-
-      buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
-      dragInProgress: false,
-      expandedCatalogButtonId: null,
-
-      // storage
-      buttonStorage: {},
-      buttonEditStorage: {
-        configuration: {
-          label: '',
-          color: '',
-          image_url: ''
-        }
-      },
-      invitationEmail: '',
-      barDetails: {},
-      originalBarDetails: {},
-      members: [],
-      memberDetails: {},
-      // drawerItems: [],
-      // drawerItemsSecond: [],
-      // primaryItems: [],
-      // makeAButtons: this.getMakeAButtons(),
-      // predefinedButtons: this.getPredefinedButtons(),
-
-      // configurations
-      preview: {
-        drawer: {
-          w: 2,
-          h: 6
+                    console.error(err);
+                });
         },
-        bar: {
-          h: 100
+        changeMemberRole: function () {
+            if (this.memberDetails.role === "member") {
+                this.memberDetails.role = "manager";
+            } else {
+                this.memberDetails.role = "member";
+            }
+            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.successfulRoleChange;
+                        this.successAlert = true;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        updateOriginalBarDetails: function () {
+            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+        },
+        addPersonalBar: function () {
+            if (this.barDetails.is_shared) {
+                this.onSave = true;
+
+                this.barDetails.name = this.memberDetails.first_name;
+                this.barDetails.is_shared = false;
+
+                const data = this.barDetails;
+                // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+                // data.items = this.primaryItems.concat(drawerItems)
+
+                createCommunityBar(this.communityId, data)
+                    .then((resp) => {
+                        if (resp.status === 200) {
+                            this.memberDetails.bar_id = resp.data.bar.id;
+                            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                                .then((resp) => {
+                                    if (resp.status === 200) {
+                                        this.successMessage = MESSAGES.barUpdated;
+                                        this.successAlert = true;
+                                        this.isChanged = false;
+                                        this.updateOriginalBarDetails();
+                                        setTimeout(() => {
+                                            this.successAlert = false;
+                                        }, 3000);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            } else {
+                this.saveBar();
+            }
+        },
+        addBar: function () {
+            this.onSave = true;
+            const data = this.barDetails;
+            data.is_shared = true;
+            // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+            // data.items = this.primaryItems.concat(drawerItems)
+
+            createCommunityBar(this.communityId, data)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.barAdded;
+                        this.successAlert = true;
+                        this.isChanged = false;
+                        this.updateOriginalBarDetails();
+
+                        setTimeout(() => {
+                            this.successAlert = false;
+                            this.$router.push("/dashboard");
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        saveBar: function () {
+            this.onSave = true;
+            const data = this.barDetails;
+            // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+            // data.items = this.primaryItems.concat(drawerItems)
+
+            updateCommunityBar(this.communityId, this.$route.query.barId, data)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.barUpdated;
+                        this.successAlert = true;
+                        this.isChanged = false;
+                        this.updateOriginalBarDetails();
+
+                        setTimeout(() => {
+                            this.successAlert = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        deleteBar: function () {
+            deleteCommunityBar(this.communityId, this.$route.query.barId)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.successfulBarDelete;
+                        this.successAlert = true;
+                        setTimeout(() => {
+                            this.$router.push("/dashboard");
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        expandCatalogButton: function (button, buttonId) {
+            this.expandedCatalogButtonId = buttonId;
+            this.expandedCatalogButton = button;
+        },
+        buttonToRemove: function (item) {
+            // remove from items list
+            // bar and drawer lists are automatically updated from watcher
+            this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
+            this.$bvModal.hide("modalEditGeneric");
+            this.setBarChanged();
+        },
+        buttonToEdit: function (item, evt) {
+            if (this.dragInProgress) {
+                return;
+            }
+            this.buttonEditStorage = item;
+            this.$bvModal.show("modalEditGeneric");
+        },
+        refreshButton: function (updated) {
+            // updating the data in a button (on edit)
+            this.editDialogDetails = false;
+            this.editDialogSubkindIcons = true;
+            if (updated) {
+                this.setBarChanged();
+            }
+        },
+        editChangeColor: function (hex) {
+            this.buttonEditStorage.configuration.color = hex;
+        },
+        editChangeIcon: function (icon) {
+            this.buttonEditStorage.configuration.image_url = icon;
+        },
+        getMembersCount: function () {
+            if (this.members && this.members.length > 0) {
+                return this.members.length;
+            }
+            return 0;
+        },
+        loadBarMembers: function () {
+            getCommunityBars(this.communityId)
+                .then(resp => {
+                    const barsData = resp.data.bars;
+                    getCommunityMembers(this.communityId)
+                        .then((resp) => {
+                            this.barsList = barsData;
+                            this.membersList = resp.data.members;
+                            this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id }); });
+
+                            if (resp.data.members.length > 0) {
+                                for (let i = 0; i < resp.data.members.length; i++) {
+                                    if (this.$route.query.barId === resp.data.members[i].bar_id) {
+                                        this.members.push(resp.data.members[i]);
+                                    }
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getBarRemoveValidity: function () {
+            if (this.barDetails.name !== "Default" && this.getMembersCount() === 0) {
+                return true;
+            }
+            return false;
+        },
+        loadMemberData: function () {
+            getCommunityMember(this.communityId, this.activeMemberId)
+                .then((resp) => {
+                    this.memberDetails = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getCommunityData: function () {
+            getCommunity(this.communityId)
+                .then((community) => {
+                    this.community = community.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        generateId: function (item) {
+            let id = "";
+            if (item) {
+                id += Math.floor(Math.random() * Math.floor(99999999));
+                id += "-" + item.configuration.label.toLowerCase();
+                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
+            }
+            return id;
+        },
+        addIdsToCatalogButtons(buttonCatalog) {
+            for (const category in buttonCatalog) {
+                for (const button in buttonCatalog[category]) {
+                    buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
+                }
+            }
+            return buttonCatalog;
+        },
+        updateAvailableBars() {
+            this.availableBars = this.barsList.filter((bar) => {
+                return bar.is_shared;
+            });
         }
-      },
-      newBarDetails: {
-        name: 'New Bar',
-        is_shared: false,
-        items: []
-      },
-      bar: {
-        settings: {
-          barOnRight: true,
-          cannotClose: false,
-          startsOpen: false
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; },
+        editSubKindIcons: function () {
+            const data = {};
+            if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
+                for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
+                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]];
+                }
+            }
+            return data;
+        },
+        activeMemberId: function () { return this.$route.query.memberId; }
+    },
+    mounted() {
+        this.loadAllData();
+    },
+    watch: {
+        "barDetails.items": function (newValue, oldValue) {
+            this.distributeItems(newValue);
+        },
+        "memberDetails.id": function (newValue, oldValue) {
+            this.updateAvailableBars();
+            this.barSelectedInDropdown = this.memberDetails.bar_id;
+        },
+        barsList: function (newValue) {
+            this.updateAvailableBars();
+        },
+        makeAButtons: function (newValue, oldValue) {
+            if (!this.dragMakeAButton) {
+                this.makeAButtons = oldValue;
+                this.dragMakeAButton = true;
+            }
+        },
+        predefinedButtons: function (newValue, oldValue) {
+            if (!this.dragPredefinedButton) {
+                this.predefinedButtons = oldValue;
+                this.dragPredefinedButton = true;
+            }
+        },
+        drawerItemsSecond: function (newValue, oldValue) {
+            if (oldValue.length !== newValue.length) {
+                this.isChanged = true;
+            }
+            let item = {};
+            if (newValue && newValue.length > 0) {
+                for (let i = 0; i < newValue.length; i++) {
+                    if (newValue[i].is_primary === true) {
+                        item = newValue[i];
+                        item.is_primary = false;
+                    }
+                }
+            }
+        },
+        isChanged: function () {
+            this.$store.dispatch("unsavedChanges", this.isChanged);
+        },
+        "$route.query": function () {
+            this.members = [];
+            this.initialChangesPrimaryItems = false;
+            this.initialChangesDrawerItems = false;
+            this.loadAllData();
         }
-      },
-      predefinedBars: predefinedBars,
-      colors: colors,
-      icons: icons,
-      subkindIcons: subkindIcons
+    },
+    beforeRouteUpdate(to, from, next) {
+        if (this.isChanged) {
+            const confirm = window.confirm(this.leavePageMessage);
+            if (confirm) {
+                this.isChanged = false;
+                next();
+            } else {
+                next(false);
+            }
+        } else {
+            next();
+        }
+    },
+    beforeRouteLeave(to, from, next) {
+        if (this.isChanged) {
+            const confirm = window.confirm(this.leavePageMessage);
+            if (confirm) {
+                next();
+            } else {
+                next(false);
+            }
+        } else {
+            next();
+        }
+    },
+    beforeUpdate() {
+        this.refreshBar();
+    },
+    data() {
+        return {
+            // messages
+            leavePageMessage: MESSAGES.leavePageAlert,
+            successMessage: "",
+            availableBars: [],
+            barSelectedInDropdown: "",
+            // flags
+            addToBar: false,
+            addToDrawer: false,
+            newBar: false,
+            openDrawer: true,
+            successAlert: false,
+            editDialogDetails: false,
+            editDialogSubkindIcons: true,
+            tab: 0,
+            dragFromEditor: false,
+            isChanged: false,
+            editBarName: false,
+            onSave: false,
+            initialChangesPrimaryItems: false,
+            initialChangesDrawerItems: false,
+            // data for the community manager
+            community: {},
+            barsList: [],
+            membersList: [],
+
+            buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
+            dragInProgress: false,
+            expandedCatalogButtonId: null,
+
+            // storage
+            buttonStorage: {},
+            buttonEditStorage: {
+                configuration: {
+                    label: "",
+                    color: "",
+                    image_url: ""
+                }
+            },
+            invitationEmail: "",
+            barDetails: {},
+            originalBarDetails: {},
+            members: [],
+            memberDetails: {},
+            // drawerItems: [],
+            // drawerItemsSecond: [],
+            // primaryItems: [],
+            // makeAButtons: this.getMakeAButtons(),
+            // predefinedButtons: this.getPredefinedButtons(),
+
+            // configurations
+            preview: {
+                drawer: {
+                    w: 2,
+                    h: 6
+                },
+                bar: {
+                    h: 100
+                }
+            },
+            newBarDetails: {
+                name: "New Bar",
+                is_shared: false,
+                items: []
+            },
+            bar: {
+                settings: {
+                    barOnRight: true,
+                    cannotClose: false,
+                    startsOpen: false
+                }
+            },
+            predefinedBars: predefinedBars,
+            colors: colors,
+            icons: icons,
+            subkindIcons: subkindIcons
+        };
     }
-  }
-}
+};
 </script>

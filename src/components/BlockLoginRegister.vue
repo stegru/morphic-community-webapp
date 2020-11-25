@@ -23,14 +23,14 @@
 </style>
 
 <script>
-import UserLogin from '@/components/UserLogin'
-import UserRegistration from '@/components/UserRegistration'
+import UserLogin from "@/components/UserLogin";
+import UserRegistration from "@/components/UserRegistration";
 
 export default {
-  name: 'BlockLoginRegister',
-  components: {
-    UserLogin,
-    UserRegistration
-  }
-}
+    name: "BlockLoginRegister",
+    components: {
+        UserLogin,
+        UserRegistration
+    }
+};
 </script>

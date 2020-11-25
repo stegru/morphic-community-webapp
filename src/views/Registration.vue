@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import UserRegistration from '@/components/UserRegistration'
+import UserRegistration from "@/components/UserRegistration";
 
 export default {
-  components: {
-    UserRegistration
-  }
-}
+    components: {
+        UserRegistration
+    }
+};
 </script>

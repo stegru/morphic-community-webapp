@@ -44,56 +44,56 @@
 </template>
 
 <script>
-import { required, email } from 'vuelidate/lib/validators'
-import { ERROR_MAP, MESSAGES } from '@/utils/constants'
+import { required, email } from "vuelidate/lib/validators";
+import { ERROR_MAP, MESSAGES } from "@/utils/constants";
 
 export default {
-  data () {
-    return {
-      form: {
-        email: ''
-      },
-      errorAlert: false,
-      successAlert: false,
-      errorMessage: null,
-      successMessage: MESSAGES.successfulReset,
-      emailValidationError: MESSAGES.emailValidationError
-    }
-  },
-  validations: {
-    form: {
-      email: {
-        required,
-        email
-      }
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v.form[name]
-      return $dirty ? !$error : null
+    data() {
+        return {
+            form: {
+                email: ""
+            },
+            errorAlert: false,
+            successAlert: false,
+            errorMessage: null,
+            successMessage: MESSAGES.successfulReset,
+            emailValidationError: MESSAGES.emailValidationError
+        };
     },
-    async onSubmit () {
-      this.$v.form.$touch()
-      if (this.$v.form.$anyError) {
-        return
-      }
-      this.$store.dispatch('resetPassword', this.$v.form.$model)
-        .then(() => {
-          this.successAlert = true
-          setTimeout(() => {
-            this.$router.push('/')
-          }, 2000)
-        })
-        .catch(err => {
-          if (err.response) {
-            this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : 'Something went wrong'))
-          } else {
-            this.errorMessage = ERROR_MAP[500]
-          }
-          this.errorAlert = true
-        })
+    validations: {
+        form: {
+            email: {
+                required,
+                email
+            }
+        }
+    },
+    methods: {
+        validateState(name) {
+            const { $dirty, $error } = this.$v.form[name];
+            return $dirty ? !$error : null;
+        },
+        async onSubmit() {
+            this.$v.form.$touch();
+            if (this.$v.form.$anyError) {
+                return;
+            }
+            this.$store.dispatch("resetPassword", this.$v.form.$model)
+                .then(() => {
+                    this.successAlert = true;
+                    setTimeout(() => {
+                        this.$router.push("/");
+                    }, 2000);
+                })
+                .catch(err => {
+                    if (err.response) {
+                        this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : "Something went wrong"));
+                    } else {
+                        this.errorMessage = ERROR_MAP[500];
+                    }
+                    this.errorAlert = true;
+                });
+        }
     }
-  }
-}
+};
 </script>

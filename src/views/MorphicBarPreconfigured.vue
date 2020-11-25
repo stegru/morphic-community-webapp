@@ -52,53 +52,53 @@
 </style>
 
 <script>
-import BarPreview from '@/components/dashboard/BarPreview'
-import { predefinedBars } from '@/utils/predefined'
-import {createCommunityBar} from "@/services/communityService";
-import {MESSAGES} from "@/utils/constants";
+import BarPreview from "@/components/dashboard/BarPreview";
+import { predefinedBars } from "@/utils/predefined";
+import { createCommunityBar } from "@/services/communityService";
+import { MESSAGES } from "@/utils/constants";
 
 export default {
-  name: 'MorphicBarPreconfigured',
-  components: {
-    BarPreview
-  },
-  data () {
-    return {
-      list: predefinedBars
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  methods: {
+    name: "MorphicBarPreconfigured",
+    components: {
+        BarPreview
+    },
+    data() {
+        return {
+            list: predefinedBars
+        };
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    methods: {
     /**
      * Creates a new bar, based on a predefined bar.
-     * @param {String} predefinedId ID of the predefined bar.
+     * @param {String} predefinedId - ID of the predefined bar.
      */
-    createBar: function (predefinedId) {
-      var bar = this.list.find(function (predefined) {
-        return predefined.id === predefinedId;
-      });
-
-      var barDetails = {
-        name: "New Bar",
-        is_shared: true,
-        items: bar.items
-      };
-
-      createCommunityBar(this.communityId, barDetails)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.$router.push({
-              name: "MorphicBar Editor",
-              query: { barId: resp.data.bar.id }
+        createBar: function (predefinedId) {
+            var bar = this.list.find(function (predefined) {
+                return predefined.id === predefinedId;
             });
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
+
+            var barDetails = {
+                name: "New Bar",
+                is_shared: true,
+                items: bar.items
+            };
+
+            createCommunityBar(this.communityId, barDetails)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.$router.push({
+                            name: "MorphicBar Editor",
+                            query: { barId: resp.data.bar.id }
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }
-  }
-}
+};
 </script>
