@@ -44,21 +44,21 @@
 
 <script>
 
-import MembersList from '@/components/dashboardV2/MembersList'
-import BarsList from '@/components/dashboardV2/BarsList'
+import MembersList from "@/components/dashboardV2/MembersList";
+import BarsList from "@/components/dashboardV2/BarsList";
 
 export default {
-  name: 'CommunityManager',
-  components: {
-    MembersList,
-    BarsList
-  },
-  props: {
-    community: Object,
-    bars: Array,
-    members: Array,
-    activeBarId: String,
-    activeMemberId: String
-  }
-}
+    name: "CommunityManager",
+    components: {
+        MembersList,
+        BarsList
+    },
+    props: {
+        community: Object,
+        bars: Array,
+        members: Array,
+        activeBarId: String,
+        activeMemberId: String
+    }
+};
 </script>

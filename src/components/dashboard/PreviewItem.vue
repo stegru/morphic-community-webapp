@@ -167,29 +167,28 @@
 
 <script>
 
-import { colors, icons } from '@/utils/constants'
+import { colors, icons } from "@/utils/constants";
 
 export default {
-  name: 'PreviewItem',
-  props: {
-    item: Object,
-    simplified: Boolean,
-    noImage: Boolean
-  },
-  data () {
-    return {
-      colors: colors,
-      icons: icons
+    name: "PreviewItem",
+    props: {
+        item: Object,
+        simplified: Boolean,
+        noImage: Boolean
+    },
+    data() {
+        return {
+            colors: colors,
+            icons: icons
+        };
+    },
+    methods: {
+        addToBar: function (item, event) {
+            this.$emit("addToBarFromPreview", {
+                data: item,
+                type: event.srcElement._prevClass === "noImage" ? "catalogButtonNoImage" : "catalogButtonWithImage"
+            });
+        }
     }
-  },
-  methods: {
-    addToBar: function (item, event) {
-      this.$emit('addToBarFromPreview', {
-        data: item,
-        type: event.srcElement._prevClass === "noImage"? "catalogButtonNoImage": "catalogButtonWithImage"
-      })
-
-    }
-  }
-}
+};
 </script>

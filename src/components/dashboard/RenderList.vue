@@ -22,43 +22,43 @@
 </template>
 
 <script>
-import RenderListItem from '@/components/dashboard/RenderListItem'
-import { getCommunityBar } from '@/services/communityService'
+import RenderListItem from "@/components/dashboard/RenderListItem";
+import { getCommunityBar } from "@/services/communityService";
 
 export default {
-  name: 'RenderList',
-  props: {
-    barId: String
-  },
-  components: {
-    RenderListItem
-  },
-  data () {
-    return {
-      primaryItems: [],
-      extraItems: []
+    name: "RenderList",
+    props: {
+        barId: String
+    },
+    components: {
+        RenderListItem
+    },
+    data() {
+        return {
+            primaryItems: [],
+            extraItems: []
+        };
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    mounted() {
+        getCommunityBar(this.communityId, this.barId)
+            .then(resp => {
+                const items = resp.data.items;
+                if (items.length > 0) {
+                    for (var i = items.length - 1; i >= 0; i--) {
+                        if (items[i].is_primary) {
+                            this.primaryItems.push(items[i]);
+                        } else {
+                            this.extraItems.push(items[i]);
+                        }
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    getCommunityBar(this.communityId, this.barId)
-      .then(resp => {
-        const items = resp.data.items
-        if (items.length > 0) {
-          for (var i = items.length - 1; i >= 0; i--) {
-            if (items[i].is_primary) {
-              this.primaryItems.push(items[i])
-            } else {
-              this.extraItems.push(items[i])
-            }
-          }
-        }
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
-}
+};
 </script>

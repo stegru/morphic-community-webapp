@@ -58,153 +58,142 @@
 
 <script>
 
-import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import BarExplainer from '@/components/dashboardV2/BarExplainer'
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { addCommunityMember, inviteCommunityMember, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
-import draggable from 'vuedraggable'
+import { addCommunityMember, inviteCommunityMember, getCommunity, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
+import { MESSAGES } from "@/utils/constants";
 
 export default {
-  name: 'FocusedPersonPage',
-  components: {
-    CommunityManager,
-    BarExplainer,
-    PreviewItem,
-    draggable
-  },
-  methods: {
-    deleteMemberClicked: function () {
-      if (confirm("Are you sure you want to delete member? This cannot be undone")) {
-        deleteCommunityMember(this.communityId, this.memberDetails.id)
-          .then((resp) => {
-            delete this.memberDetails.id;
-            this.navigateBack();
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      }
+    name: "FocusedPersonPage",
+    components: {
     },
-    changeUserRole: function () {
-      if (this.memberDetails.role === 'member') {
-        this.memberDetails.role = 'manager'
-      } else {
-        this.memberDetails.role = 'member'
-      }
-      updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulRoleChange
-            this.successAlert = true
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    loadMemberData: function () {
-      getCommunityMember(this.communityId, this.$route.query.memberId)
-        .then((resp) => {
-          this.memberDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getCommunityData: function() {
-      getCommunity(this.communityId)
-        .then((community) => {
-          this.community = community.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
+    methods: {
+        deleteMemberClicked: function () {
+            if (confirm("Are you sure you want to delete member? This cannot be undone")) {
+                deleteCommunityMember(this.communityId, this.memberDetails.id)
+                    .then((resp) => {
+                        delete this.memberDetails.id;
+                        this.navigateBack();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
+        },
+        changeUserRole: function () {
+            if (this.memberDetails.role === "member") {
+                this.memberDetails.role = "manager";
+            } else {
+                this.memberDetails.role = "member";
+            }
+            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.successMessage = MESSAGES.successfulRoleChange;
+                        this.successAlert = true;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        loadMemberData: function () {
+            getCommunityMember(this.communityId, this.$route.query.memberId)
+                .then((resp) => {
+                    this.memberDetails = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getCommunityData: function () {
+            getCommunity(this.communityId)
+                .then((community) => {
+                    this.community = community.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
 
-    addMember: function () {
-      let member = {
-        first_name: this.firstNameInput,
-        last_name: this.lastNameInput,
-      }
-      addCommunityMember(this.communityId, member)
-        .then(resp => {
-          // save bar_id as default community bar:
-          member = resp.data.member;
-          member.bar_id = this.community.default_bar_id
-          updateCommunityMember(this.communityId, member.id, member).then(resp2 => {
-            this.memberDetails = member;
-            this.navigateBack();
-          });
-        }).catch(e => { console.error(e) });
-
+        addMember: function () {
+            let member = {
+                first_name: this.firstNameInput,
+                last_name: this.lastNameInput
+            };
+            addCommunityMember(this.communityId, member)
+                .then(resp => {
+                    // save bar_id as default community bar:
+                    member = resp.data.member;
+                    member.bar_id = this.community.default_bar_id;
+                    updateCommunityMember(this.communityId, member.id, member).then(resp2 => {
+                        this.memberDetails = member;
+                        this.navigateBack();
+                    });
+                }).catch(e => { console.error(e); });
+        },
+        navigateBack: function () {
+            if (this.isAddMemberView && !this.memberDetails.id) {
+                this.$router.push("/focused/home");
+            } else if (this.memberDetails.id) {
+                this.$router.push({ path: "/focused/bar-editor", query: { barId: this.memberDetails.bar_id, memberId: this.memberDetails.id } });
+            } else {
+                this.$router.push("/focused/home");
+            }
+        },
+        sendInviteClicked() {
+            this.isGetEmailView = true;
+        },
+        sendInvite() {
+            if (this.emailInput) {
+                const communityId = this.$store.getters.communityId;
+                inviteCommunityMember(communityId, this.memberDetails.id, this.emailInput);
+                this.memberDetails.state = "invited";
+                this.isGetEmailView = false;
+            }
+        },
+        checkEmail() {
+            return this.emailInput.match("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+        }
     },
-    navigateBack: function () {
-      if (this.isAddMemberView && !this.memberDetails.id) {
-        this.$router.push('/focused/home')
-      } else if (this.memberDetails.id) {
-        this.$router.push({path: '/focused/bar-editor', query: { barId: this.memberDetails.bar_id, memberId: this.memberDetails.id}});
-      } else {
-        this.$router.push('/focused/home');
-      }
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
     },
-    sendInviteClicked() {
-      this.isGetEmailView = true;
-
-    },
-    sendInvite() {
-      if (this.emailInput) {
-        let communityId = this.$store.getters.communityId;
-        inviteCommunityMember(communityId, this.memberDetails.id, this.emailInput);
-        this.memberDetails.state = 'invited';
-        this.isGetEmailView = false;
-      }
-    },
-    checkEmail() {
-      return this.emailInput.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    this.getCommunityData();
-      if (this.$route.query.memberId) {
-        this.isAddMemberView = false;
-        this.loadMemberData()
-      }
+    mounted() {
+        this.getCommunityData();
+        if (this.$route.query.memberId) {
+            this.isAddMemberView = false;
+            this.loadMemberData();
+        }
     // if (this.$route.query.memberId) {
     //   this.loadMemberData()
     // }
     // this.getCommunityData()
-  },
-  watch: {
-    '$route.query': function () {
-      if (this.$route.query.memberId) {
-        this.isAddMemberView = false;
-        this.loadMemberData()
-      }
-    }
-  },
-  data () {
-    return {
-      // sgithens focused
-      member: {},
-      isAddMemberView: true,
-      isGetEmailView: false,
-      community: {},
-      barsList: [],
-      barDetails: {},
-      memberDetails: {},
+    },
+    watch: {
+        "$route.query": function () {
+            if (this.$route.query.memberId) {
+                this.isAddMemberView = false;
+                this.loadMemberData();
+            }
+        }
+    },
+    data() {
+        return {
+            // sgithens focused
+            member: {},
+            isAddMemberView: true,
+            isGetEmailView: false,
+            community: {},
+            barsList: [],
+            barDetails: {},
+            memberDetails: {},
 
-      // new member stuff:
-      firstNameInput: "",
-      lastNameInput: "",
+            // new member stuff:
+            firstNameInput: "",
+            lastNameInput: "",
 
-      // send invite stuff
-      emailInput: ""
+            // send invite stuff
+            emailInput: ""
+        };
     }
-  }
-}
+};
 </script>

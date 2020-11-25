@@ -63,40 +63,40 @@
 </style>
 <script>
 
-import { createCommunityBar } from '@/services/communityService'
-import { colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
+import { createCommunityBar } from "@/services/communityService";
+import { colors, icons } from "@/utils/constants";
+import { predefinedBars } from "@/utils/predefined";
 
 export default {
-  name: 'FocusedAddCommunityBar',
-  components: {
-  },
-  methods: {
-      selectedBar: function (bar) {
-          let barToSave = {
-              is_shared: true,
-              name: "My Community Bar"
-          };
-          barToSave.items = bar ? bar.items : [];
+    name: "FocusedAddCommunityBar",
+    components: {
+    },
+    methods: {
+        selectedBar: function (bar) {
+            const barToSave = {
+                is_shared: true,
+                name: "My Community Bar"
+            };
+            barToSave.items = bar ? bar.items : [];
 
-          createCommunityBar(this.communityId, barToSave).then(() => {
-              this.$router.push('/focused/home');
-          });
-      },
-      cancelClicked: function () {
-        this.$router.push('/focused/home');
-      }
+            createCommunityBar(this.communityId, barToSave).then(() => {
+                this.$router.push("/focused/home");
+            });
+        },
+        cancelClicked: function () {
+            this.$router.push("/focused/home");
+        }
 
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  data () {
-    return {
-        predefinedBarsList: predefinedBars,
-        icons: icons,
-        colors: colors
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    data() {
+        return {
+            predefinedBarsList: predefinedBars,
+            icons: icons,
+            colors: colors
+        };
     }
-  }
-}
+};
 </script>

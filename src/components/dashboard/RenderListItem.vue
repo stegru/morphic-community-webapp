@@ -17,18 +17,18 @@
 
 <script>
 
-import { colors, icons } from '@/utils/constants'
+import { colors, icons } from "@/utils/constants";
 
 export default {
-  name: 'RenderListItem',
-  props: {
-    item: Object
-  },
-  data () {
-    return {
-      colors: colors,
-      icons: icons
+    name: "RenderListItem",
+    props: {
+        item: Object
+    },
+    data() {
+        return {
+            colors: colors,
+            icons: icons
+        };
     }
-  }
-}
+};
 </script>

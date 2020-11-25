@@ -57,60 +57,58 @@
 </style>
 
 <script>
-import { inviteCommunityMember } from '@/services/communityService'
-
+import { inviteCommunityMember } from "@/services/communityService";
 
 export default {
-  name: 'MembersList',
-  props: {
-    members: Array,
-    activeMemberId: String,
-    bars: Array,
-    activeBarId: String,
-    community: Object
-  },
-  computed: {
-    orderedMembers: function () {
-      console.log("Kasper");
-      if (this.members.length) {
-        // first member is community manager
-        const alphabetical = this.members.slice(1);
-        alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0))
-        alphabetical.reverse();
-        return [this.members[0]].concat(alphabetical);
-      } else {
-        return [];
-      }
-
-    }
-  },
-  data () {
-    return {
-      invitationEmail: "",
-      activeMember: {}
-    }
-  },
-  methods: {
-    getEmailAndSendInvite() {
-      this.activeMember = this.members.find(x => x.id == this.activeMemberId);
-      this.invitationEmail = "";
-      this.$bvModal.show('sendEmailInvitationFromMembersListModal');
+    name: "MembersList",
+    props: {
+        members: Array,
+        activeMemberId: String,
+        bars: Array,
+        activeBarId: String,
+        community: Object
     },
-    sendInvite() {
-      if (this.invitationEmail) {
-        let communityId = this.$store.getters.communityId;
-        inviteCommunityMember(communityId, this.activeMemberId, this.invitationEmail);
-        this.activeMember.state = 'invited';
-      }
-    },
-    isCommunityBar: function (barId) {
-      for (let i = 0; i < this.bars.length; i++) {
-        if (this.bars[i].id === barId) {
-          return this.bars[i].is_shared
+    computed: {
+        orderedMembers: function () {
+            console.log("Kasper");
+            if (this.members.length) {
+                // first member is community manager
+                const alphabetical = this.members.slice(1);
+                alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0));
+                alphabetical.reverse();
+                return [this.members[0]].concat(alphabetical);
+            } else {
+                return [];
+            }
         }
-      }
-      return false
+    },
+    data() {
+        return {
+            invitationEmail: "",
+            activeMember: {}
+        };
+    },
+    methods: {
+        getEmailAndSendInvite() {
+            this.activeMember = this.members.find(x => x.id === this.activeMemberId);
+            this.invitationEmail = "";
+            this.$bvModal.show("sendEmailInvitationFromMembersListModal");
+        },
+        sendInvite() {
+            if (this.invitationEmail) {
+                const communityId = this.$store.getters.communityId;
+                inviteCommunityMember(communityId, this.activeMemberId, this.invitationEmail);
+                this.activeMember.state = "invited";
+            }
+        },
+        isCommunityBar: function (barId) {
+            for (let i = 0; i < this.bars.length; i++) {
+                if (this.bars[i].id === barId) {
+                    return this.bars[i].is_shared;
+                }
+            }
+            return false;
+        }
     }
-  }
-}
+};
 </script>
