@@ -91,17 +91,13 @@
 </style>
 
 <script>
-import * as arrowLine from "arrow-line";
-import BarPreview from "@/components/dashboard/BarPreview";
-import DrawerPreview from "@/components/dashboard/DrawerPreview";
+import * as ArrowLine from "arrow-line";
 import CommunityManager from "@/components/dashboardV2/CommunityManager";
-import { getCommunityBars, getCommunity, createCommunityBar, getCommunityMembers, updateCommunityMember } from "@/services/communityService";
+import { getCommunityBars, getCommunity, getCommunityMembers, updateCommunityMember } from "@/services/communityService";
 
 export default {
     name: "Dashboard",
     components: {
-        BarPreview,
-        DrawerPreview,
         CommunityManager
     },
     data() {
@@ -147,7 +143,7 @@ export default {
         const that = this;
         this.$nextTick(function () {
             window.addEventListener("resize", function () { that.$forceUpdate(); });
-        })(that);
+        });
     },
     beforeDestroy: function () {
         this.cleanUpArrows();
@@ -207,12 +203,12 @@ export default {
                             this.list = this.autoHideDetails(bars, true);
                             // ensure all members have a bar_id associated, else set default
                             // on a brand new community the community doesn't have a default bar, so we use the first (and only) bar id
-                            const default_bar_id = this.community.default_bar_id ? this.community.default_bar_id : bars[0].id;
+                            const defaultBarId = this.community.default_bar_id ? this.community.default_bar_id : bars[0].id;
                             // Let's ensure that all the community members have a bar assigned.
                             // If not, add the the default one - usually required for the CM
                             this.members = resp.data.members.map(m => {
                                 if (!m.bar_id) {
-                                    Object.assign(m, { bar_id: default_bar_id });
+                                    Object.assign(m, { bar_id: defaultBarId });
                                     updateCommunityMember(this.communityId, m.id, m);
                                 }
                                 return m;
@@ -267,7 +263,7 @@ export default {
                 y: firstBarRect.y + firstBarRect.height / 2 + 2
             };
 
-            this.editBarArrow = new arrowLine(source0, target0, { curvature: 0.5, forceDirection: "horizontal" });
+            this.editBarArrow = new ArrowLine(source0, target0, { curvature: 0.5, forceDirection: "horizontal" });
 
             // MembersHint
             const membersHintRect = this.$refs.MembersHint.getBoundingClientRect();
@@ -281,7 +277,7 @@ export default {
                 x: AddPeopleIconRect.x + AddPeopleIconRect.width,
                 y: AddPeopleIconRect.y + AddPeopleIconRect.height / 2 + 2
             };
-            this.addPeopleArrow = new arrowLine(source1, target1, { curvature: 0.5, forceDirection: "horizontal" });
+            this.addPeopleArrow = new ArrowLine(source1, target1, { curvature: 0.5, forceDirection: "horizontal" });
 
             // PersonHint
             if (this.members.length > 1) {
@@ -298,7 +294,7 @@ export default {
                     x: firstMemberRect.x + firstMemberRect.width,
                     y: firstMemberRect.y + firstMemberRect.height / 2 + 2
                 };
-                this.editPersonArrow = new arrowLine(source2, target2, { curvature: 1.5, forceDirection: "horizontal" });
+                this.editPersonArrow = new ArrowLine(source2, target2, { curvature: 1.5, forceDirection: "horizontal" });
             }
         },
         cleanUpArrows: function () {

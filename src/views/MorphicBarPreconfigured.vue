@@ -55,7 +55,6 @@
 import BarPreview from "@/components/dashboard/BarPreview";
 import { predefinedBars } from "@/utils/predefined";
 import { createCommunityBar } from "@/services/communityService";
-import { MESSAGES } from "@/utils/constants";
 
 export default {
     name: "MorphicBarPreconfigured",

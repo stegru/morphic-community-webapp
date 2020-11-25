@@ -662,26 +662,23 @@ import PreviewItem from "@/components/dashboard/PreviewItem";
 import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
 import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
-import draggable from "vuedraggable";
-import { Drag, Drop, DropList, DropMask } from "vue-easy-dnd";
+import { Drag, Drop, DropList } from "vue-easy-dnd";
 
 export default {
     name: "MorphicBarEditor",
     components: {
         CommunityManager,
         PreviewItem,
-        draggable,
         Drag,
         Drop,
-        DropList,
-        DropMask
+        DropList
     },
     methods: {
         dropToBar: function (event) {
             event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
             event.data.id = this.generateId(event.data);
 
-            if (event.type == "catalogButtonNoImage") {
+            if (event.type === "catalogButtonNoImage") {
                 event.data.configuration.image_url = "";
             }
             // insert in new position (default to 0)
@@ -708,8 +705,8 @@ export default {
             this.dropToBar(event);
         },
         changeUserBarToCommunityBar: function () {
-            if (this.isChanged || this.barDetails.is_shared == false) {
-                if (confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.") == false) {
+            if (this.isChanged || !this.barDetails.is_shared) {
+                if (!confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
                     return;
                 }
             }
@@ -738,11 +735,11 @@ export default {
         removeButton: function (item, itemList) {
             const compareObjects = function (x, y) {
                 for (const key in x) {
-                    if (x[key] != y[key]) {
+                    if (x[key] !== y[key]) {
                         return false;
                     } else {
                         if (x[key] instanceof Object && y[key] instanceof Object) {
-                            if (compareObjects(x[key], y[key]) == false) {
+                            if (compareObjects(x[key], y[key]) === false) {
                                 return false;
                             }
                         }
@@ -809,7 +806,7 @@ export default {
             }
         },
         addIds: function (items) {
-            return items.map(item => item.id = this.generateId(item));
+            items.forEach(item => { item.id = this.generateId(item); });
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
         refreshBar() {

@@ -67,21 +67,15 @@
 
 <script>
 
-import RenderList from "@/components/dashboard/RenderList";
-import BarPreview from "@/components/dashboard/BarPreview";
-import DrawerPreview from "@/components/dashboard/DrawerPreview";
 import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 // import { availableItems } from '@/utils/constants'
 
 export default {
     name: "MemberInvite",
     mixins: [validationMixin],
     components: {
-        RenderList,
-        BarPreview,
-        DrawerPreview
     },
     data() {
         return {
@@ -109,9 +103,6 @@ export default {
         },
         onSubmit() {
             this.$v.$touch();
-            if (this.$v.$anyError) {
-
-            }
         },
         addMember(invite) {
             let member = {
@@ -125,7 +116,7 @@ export default {
                     };
                     if (resp.status === 200) {
                         if (invite) {
-                            inviteCommunityMember(this.communityId, member_id);
+                            inviteCommunityMember(this.communityId, member.member_id);
                         }
                         setTimeout(() => {
                             this.attachBar(resp.data.member);
