@@ -777,26 +777,35 @@ export default {
       }
     },
 
+    /** Loads the initial bar data */
     loadBarData: function () {
-      if (this.$route.query.barId === 'new') {
-        this.newBar = true
-        this.barDetails = this.newBarDetails
-      } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
-        for (let i = 0; i < this.predefinedBars.length; i++) {
-          if (this.predefinedBars[i].id === this.$route.query.barId) {
-            this.newBar = true
-            this.barDetails = this.newBarDetails
-            this.barDetails.items = this.predefinedBars[i].items;
-          }
+      var barId = this.$route.query.barId;
+
+      if (barId === 'new') {
+        // Create a new empty bar.
+        this.newBar = true;
+        this.barDetails = this.newBarDetails;
+      } else if (barId.indexOf('predefined') !== -1) {
+        // Create a bar from the predefined collection.
+        var bar = this.predefinedBars.find(function (predefined) {
+          return predefined.id === barId;
+        });
+
+        if (bar) {
+          this.newBar = true;
+          this.barDetails = this.newBarDetails;
+          this.barDetails.items = bar.items;
+          this.addBar();
         }
       } else {
-        getCommunityBar(this.communityId, this.$route.query.barId)
+        // Load a saved bar.
+        getCommunityBar(this.communityId, barId)
           .then(resp => {
-            this.barDetails = resp.data
+            this.barDetails = resp.data;
             this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
           })
           .catch(err => {
-            console.error(err)
+            console.error(err);
           })
       }
     },
