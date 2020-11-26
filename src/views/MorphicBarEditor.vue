@@ -630,13 +630,11 @@
   #preview-bar, #preview-drawer {
     .buttonsCatalogEntry {
       .active {
-        background-color: none;
-        border: 0px;
-        width: default;
+        background-color: transparent;
+        border: 0;
+        width: initial;
 
         .buttons {
-          display: inherit !important;
-
           button.withImage {
             display: none;
           }

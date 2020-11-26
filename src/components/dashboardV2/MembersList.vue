@@ -70,7 +70,6 @@ export default {
     },
     computed: {
         orderedMembers: function () {
-            console.log("Kasper");
             if (this.members.length) {
                 // first member is community manager
                 const alphabetical = this.members.slice(1);
