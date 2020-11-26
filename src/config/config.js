@@ -2,14 +2,14 @@ const ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toUpperCase() : "LOCAL";
 
 const CONF = {
     LOCAL: {
-    // This should be the address of the development server.
-        BACKEND_URL: "http://10.0.0.2:8080"
+        // Local development server will redirect all API requests (/v1/*) to the local API server (see vue.config.js)
+        API_URL: process.env.VUE_APP_API_URL ?? new URL(location.href).origin
     },
     DEVELOPMENT: {
-        BACKEND_URL: "https://api.morphic.dev"
+        API_URL: "https://api.morphic.dev"
     },
     PRODUCTION: {
-        BACKEND_URL: "https://api.morphic.org"
+        API_URL: "https://api.morphic.org"
     }
 };
 

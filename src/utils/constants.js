@@ -1,6 +1,6 @@
 import { CONFIG } from "@/config/config";
 
-export const BASE_URL = CONFIG.BACKEND_URL;
+export const API_URL = CONFIG.API_URL;
 export const ERROR_MAP = {
     1: "Incorrect username or password!",
     2: "That email address already exists!",
