@@ -1,0 +1,42 @@
+name: check and build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Making it
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+
+      - name: Getting node.js
+        uses: actions/steup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: npm install
+        run: npm install
+
+      - name: Looking for crap code
+        run: npm run lint
+
+      - name: Building prod
+        run: npm run build
+
+      - name: Building dev
+        run: npm run build
+
+      - name: Archiving prod
+        uses: actions/upload-artifact@v2
+        with:
+          name: webapp-prod
+          path: dist/
+
+      - name: Archiving dev
+        uses: actions/upload-artifact@v2
+        with:
+          name: webapp-dev
+          path: dev/
