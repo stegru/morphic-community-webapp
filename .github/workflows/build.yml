@@ -27,7 +27,7 @@ jobs:
         run: npm run build
 
       - name: Building dev
-        run: npm run build
+        run: npm run build-dev
 
       - name: Archiving prod
         uses: actions/upload-artifact@v2
