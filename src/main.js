@@ -6,7 +6,7 @@ import store from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import { HTTP } from "@/services/index";
-linter error (js file)
+
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
