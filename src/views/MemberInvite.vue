@@ -71,7 +71,7 @@ import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateComm
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 // import { availableItems } from '@/utils/constants'
-
+linter error (vue file)
 export default {
     name: "MemberInvite",
     mixins: [validationMixin],
