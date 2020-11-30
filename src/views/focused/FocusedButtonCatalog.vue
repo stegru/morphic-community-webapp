@@ -16,13 +16,13 @@
           <ul class="ButtonsCatalogEntries">
             <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
               <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
               </b-link>
               <div v-else class="active" style="max-width: 400px">
                 <div style="width: 100%; display: inline-flex; align-items: center;">
-                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                  <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
                   <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                   <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                 </div>

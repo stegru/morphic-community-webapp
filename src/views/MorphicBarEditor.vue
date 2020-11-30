@@ -276,6 +276,7 @@
           </div>
         </div>
       </b-col>
+
       <!-- Button Catalogue -->
       <b-col md="2">
         <drop class="cut" mode="cut">
@@ -293,7 +294,7 @@
               <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
-                  <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
+                  <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
                     <!-- Render each button as draggable -->
                     <drag :data="button" type="catalogButtonNoImage">
                       <!-- Define looks when dragged -->
@@ -303,7 +304,7 @@
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
                         <div style="width: 100%; display: inline-flex; align-items: center;">
-                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                          <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
                           <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                           <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                         </div>
@@ -318,15 +319,15 @@
                             <template v-slot:drag-image>
                               <PreviewItem :item="button" :noImage="false" class="noImage" />
                             </template>
-                            <PreviewItem :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
+                            <PreviewItem v-if="button.configuration.image_url" :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
                           </drag>
                         </div>
                       </div>
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                        <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                        <b-icon v-else icon="bootstrap"></b-icon>
-                        {{ button.configuration.label }}
+                        <div class="imageWrapper">
+                          <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" />
+                        </div>{{ button.configuration.label }}
                       </b-link>
                     </drag>
                   </li>
@@ -494,11 +495,41 @@
         font-weight: bold;
       }
     }
-
+img:before {
+  content:  " ";
+}
     .ButtonsCatalogEntries {
-      padding-inline-start: 17px;
+      padding-left: 30px;
       list-style: none;
+
       .buttonsCatalogEntry {
+
+        position: relative;
+
+        .imageWrapper {
+          // Position the icon to the left, and remove it from the flow.
+          display: inline-block;
+          position: relative;
+          left: -23px;
+          width: 0;
+          overflow: visible;
+
+          img {
+            transition: all 0.2s ease-in-out;
+          }
+        }
+
+        a:hover {
+          .imageWrapper img {
+            transform: scale(1.5);
+          }
+        }
+
+        &.noImage {
+          img {
+            display: none;
+          }
+        }
 
         .active {
           background-color: #e0f1d7;
@@ -1072,7 +1103,7 @@ export default {
             const data = {};
             if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
                 for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]];
+                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
                 }
             }
             return data;

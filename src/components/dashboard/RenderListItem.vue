@@ -1,6 +1,6 @@
 <template>
   <span :style="'color: ' + (item.configuration.color || colors.blue) + ';'" class="listItem">
-    <b-img v-if="item.configuration.image_url && icons[item.configuration.image_url]" :src="'/icons/' + icons[item.configuration.image_url]" />
+    <b-img v-if="item.configuration.image_url" :src="item.configuration.image_url" />
     <b-icon v-else icon="bootstrap"></b-icon>
     {{ item.configuration.label }}
   </span>

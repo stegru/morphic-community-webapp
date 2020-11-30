@@ -156,19 +156,34 @@ var catalog = {
     "Online Drives": "onlineFileDrives"
 };
 
+/**
+ * Gets the items for the given category
+ * @param {String} category The category id (button.configuration.category).
+ * @return {Array<BarItem>} The items for the category.
+ */
 function getGroupItems(category) {
+    var getHost = /.*:\/\/([^/:]+)/;
     var result = {};
-    for (const [key, value] of Object.entries(allButtons)) {
-        if (value.configuration.category === category) {
-            if (typeof(value.configuration.color) === "string") {
-                value.configuration.color = colors[value.configuration.color];
+    for (const [key, button] of Object.entries(allButtons)) {
+        if (button.configuration.category === category) {
+            if (typeof(button.configuration.color) === "string") {
+                button.configuration.color = colors[button.configuration.color];
             }
-            if (typeof(value.configuration.image_url) === "string") {
-                if (value.configuration.image_url.indexOf("/") === -1) {
-                    value.configuration.image_url = "/icons/" + value.configuration.image_url;
+
+            // Use the site's favicon if there's no local image.
+            if (!button.configuration.image_url && button.configuration.url) {
+                var m = getHost.exec(button.configuration.url);
+                if (m) {
+                    button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
                 }
             }
-            result[key] = value;
+
+            if (typeof(button.configuration.image_url) === "string") {
+                if (button.configuration.image_url.indexOf("/") === -1) {
+                    button.configuration.image_url = "/icons/" + button.configuration.image_url;
+                }
+            }
+            result[key] = button;
         }
     }
     return result;

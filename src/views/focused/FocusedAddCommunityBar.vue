@@ -22,7 +22,7 @@
                 <li v-for="(button, bIndex) in bar.items" :key="bIndex">
                     <span :style="'color: ' + (button.configuration.color || colors.blue)">
                         <span class="icon">
-                            <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                            <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" />
                             <b-icon v-else icon="bootstrap"></b-icon>
                         </span>
                         {{ button.configuration.label }}

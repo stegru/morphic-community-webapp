@@ -29,9 +29,8 @@ export const allButtons = {
         is_primary: true,
         configuration: {
             category: "weather",
-            label: "AccuWeather shit",
-            color: "red",
-            image_url: "logo_accuweather",
+            label: "AccuWeather",
+            color: "blue",
             url: "https://www.accuweather.com/",
             description: "Opens the local AccuWeather home page."
         }
@@ -273,7 +272,6 @@ export const allButtons = {
             category: "email",
             label: "E-mail",
             color: "blue",
-            image_url: "logo_mail.jpg",
             url: "Default email app on computer",
             description: "Opens the default email app on the computer."
         }
@@ -649,7 +647,6 @@ export const allButtons = {
             category: "weather",
             label: "National Weather Service",
             color: "blue",
-            image_url: "logo_nationalWeatherService.jpg",
             url: "https://www.weather.gov/",
             description: "Opens the National Weather Service home page."
         }
@@ -752,7 +749,7 @@ export const allButtons = {
             description: "Allows you to create a button that opens an Application.",
             default: "$defaultApp",
             color: "blue",
-            image_url: "question_solid",
+            image_url: "generic-app.svg",
             parameters: [
                 "defaultApp"
             ]
@@ -765,7 +762,7 @@ export const allButtons = {
             category: "make",
             label: "To open a Web Page",
             color: "blue",
-            image_url: "question_solid",
+            image_url: "web-browser.svg",
             url: "$url",
             description: "Allows you to create a button that opens a Web Page.",
             parameters: [
@@ -893,6 +890,7 @@ export const allButtons = {
             description: "Allows you to create a button to skype-call a particular person.",
             default: "skype",
             color: "blue",
+            image_url: "skype.svg",
             args: "$skypeId",
             parameters: [
                 "skypeId"
@@ -1000,7 +998,6 @@ export const allButtons = {
             category: "weather",
             label: "The Weather Channel",
             color: "blue",
-            image_url: "logo_weatherChannel.svg",
             url: "https://weather.com/",
             description: "Opens the local Weather Channel home page."
         }
@@ -1047,7 +1044,6 @@ export const allButtons = {
             category: "multimedia",
             label: "TuneIn",
             color: "blue",
-            image_url: "logo_tunein.svg",
             url: "https://tunein.com/"
         }
     },
