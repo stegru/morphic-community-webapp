@@ -1,4 +1,4 @@
-import { buttonCatalog } from "@/utils/constants";
+import { allButtons } from "@/utils/constants";
 
 // setting the base data
 export const predefinedBars = [
@@ -8,11 +8,11 @@ export const predefinedBars = [
         name: "Predefined Preset",
         desc: "This is predefined default bar with some items inside, use it as a start...",
         items: [
-            buttonCatalog["Email - Websites"].outlook,
-            buttonCatalog["Email - Websites"].gmail,
-            buttonCatalog["Social Media Sites"].reddit,
-            buttonCatalog["Social Media Sites"].facebook,
-            buttonCatalog["Call a Person"].skype
+            allButtons.outlook_com_mail,
+            allButtons.gmail,
+            allButtons.reddit,
+            allButtons.facebook,
+            allButtons.skype
         ]
     },
     {
@@ -21,9 +21,9 @@ export const predefinedBars = [
         name: "Predefined Preset",
         desc: "This is predefined default bar with some items inside, use it as a start...",
         items: [
-            buttonCatalog["Email - Websites"].gmail,
-            buttonCatalog["Social Media Sites"].reddit,
-            buttonCatalog["Call a Person"].skype
+            allButtons.gmail,
+            allButtons.reddit,
+            allButtons.skype
         ]
     },
     {
@@ -32,10 +32,10 @@ export const predefinedBars = [
         name: "Predefined Preset",
         desc: "This is predefined default bar with some items inside, use it as a start...",
         items: [
-            buttonCatalog["Email - Websites"].outlook,
-            buttonCatalog["Email - Websites"].gmail,
-            buttonCatalog["Social Media Sites"].reddit,
-            buttonCatalog["Social Media Sites"].facebook
+            allButtons.outlook_com_mail,
+            allButtons.gmail,
+            allButtons.reddit,
+            allButtons.facebook
         ]
     },
     {
@@ -44,9 +44,9 @@ export const predefinedBars = [
         name: "Predefined Preset",
         desc: "This is predefined default bar with some items inside, use it as a start...",
         items: [
-            buttonCatalog["Email - Websites"].gmail,
-            buttonCatalog["Call a Person"].skype,
-            buttonCatalog["Social Media Sites"].facebook
+            allButtons.gmail,
+            allButtons.skype,
+            allButtons.facebook
         ]
     }
 ];

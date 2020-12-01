@@ -12,7 +12,7 @@ export const allButtons = {
             description: "Opens the Google Calendar for the user if they are signed in."
         }
     },
-    "abc-news": {
+    abc_news: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -35,7 +35,7 @@ export const allButtons = {
             description: "Opens the local AccuWeather home page."
         }
     },
-    "al-jazeera": {
+    al_jazeera: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -59,7 +59,7 @@ export const allButtons = {
             description: "Opens the Amazon (US) home page."
         }
     },
-    "amazon-music": {
+    amazon_music: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -70,7 +70,7 @@ export const allButtons = {
             url: "https://music.amazon.com/home"
         }
     },
-    "aol-mail": {
+    aol_mail: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -82,7 +82,7 @@ export const allButtons = {
             description: "Opens the AOL Mail inbox in a browser."
         }
     },
-    "apple-music": {
+    apple_music: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -93,7 +93,7 @@ export const allButtons = {
             url: "https://music.apple.com/"
         }
     },
-    "bbc-news": {
+    bbc_news: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -105,7 +105,7 @@ export const allButtons = {
             description: "Opens the BBC News home page."
         }
     },
-    "best-buy": {
+    best_buy: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -152,7 +152,7 @@ export const allButtons = {
             description: "Opens Calendly"
         }
     },
-    "cbs-news": {
+    cbs_news: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -265,7 +265,7 @@ export const allButtons = {
             url: "https://www.deezer.com/"
         }
     },
-    "default-mail-app": {
+    default_mail_app: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -276,7 +276,7 @@ export const allButtons = {
             description: "Opens the default email app on the computer."
         }
     },
-    "disney-plus": {
+    disney_plus: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -299,7 +299,7 @@ export const allButtons = {
             description: "Opens the dropbox home page."
         }
     },
-    "drudge-report": {
+    drudge_report: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -359,7 +359,7 @@ export const allButtons = {
             description: "Opens the Forbes home page."
         }
     },
-    "fox-news": {
+    fox_news: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -383,7 +383,7 @@ export const allButtons = {
             description: "Opens the Gmail inbox in a browser."
         }
     },
-    "google-calendar": {
+    google_calendar: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -395,7 +395,7 @@ export const allButtons = {
             description: "Opens the Google Calendar for the user if they are signed in."
         }
     },
-    "google-drive": {
+    google_drive: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -407,7 +407,7 @@ export const allButtons = {
             description: "Opens the Google Drive home page."
         }
     },
-    "google-news": {
+    google_news: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -471,7 +471,19 @@ export const allButtons = {
             description: "Opens the iCloud Calendar for the user if they are signed in."
         }
     },
-    "icloud-drive": {
+    icloud_calendar: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            category: "calendar",
+            label: "iCloud Calendar",
+            color: "blue",
+            image_url: "",
+            url: "https://www.icloud.com/calendar/",
+            description: "Opens the iCloud Calendar for the user if they are signed in."
+        }
+    },
+    icloud_drive: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -482,7 +494,7 @@ export const allButtons = {
             description: "Opens the iCloud Drive home page."
         }
     },
-    "icloud-mail": {
+    icloud_mail: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -494,7 +506,7 @@ export const allButtons = {
             description: "Opens the iCloud inbox in a browser."
         }
     },
-    "iheart-radio": {
+    iheart_radio: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -586,7 +598,7 @@ export const allButtons = {
             color: "blue"
         }
     },
-    "los-angeles-times": {
+    los_angeles_times: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -628,7 +640,7 @@ export const allButtons = {
             }
         }
     },
-    "mail-online-daily-mail": {
+    mail_online_daily_mail: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -640,7 +652,7 @@ export const allButtons = {
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
-    "national-weather-service": {
+    national_weather_service: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -651,7 +663,7 @@ export const allButtons = {
             description: "Opens the National Weather Service home page."
         }
     },
-    "nbc-news": {
+    nbc_news: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -674,7 +686,7 @@ export const allButtons = {
             url: "https://www.netflix.com/"
         }
     },
-    "new-york-post": {
+    new_york_post: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -781,7 +793,19 @@ export const allButtons = {
             description: "Opens the Outlook.com Calendar page for the user if they are signed in."
         }
     },
-    "outlook-com-mail": {
+    outlook_com_calendar: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            category: "calendar",
+            label: "Outlook.com Calendar",
+            color: "blue",
+            image_url: "",
+            url: "https://outlook.live.com/calendar/0/",
+            description: "Opens the Outlook.com Calendar page for the user if they are signed in."
+        }
+    },
+    outlook_com_mail: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -931,7 +955,7 @@ export const allButtons = {
             description: "Opens the Target home page."
         }
     },
-    "the-guardian": {
+    the_guardian: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -943,7 +967,7 @@ export const allButtons = {
             description: "Opens The Guardian home page."
         }
     },
-    "the-hill": {
+    the_hill: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -955,7 +979,7 @@ export const allButtons = {
             description: "Opens The Hill home page."
         }
     },
-    "the-new-york-times": {
+    the_new_york_times: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -967,7 +991,7 @@ export const allButtons = {
             description: "Opens The New York Times home page."
         }
     },
-    "the-wall-street-journal": {
+    the_wall_street_journal: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -979,7 +1003,7 @@ export const allButtons = {
             description: "Opens The Wall Street Journal home page."
         }
     },
-    "the-washington-post": {
+    the_washington_post: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -991,7 +1015,7 @@ export const allButtons = {
             description: "Opens The Washington Post home page."
         }
     },
-    "the-weather-channel": {
+    the_weather_channel: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -1013,7 +1037,7 @@ export const allButtons = {
             url: "https://tidal.com/"
         }
     },
-    "top-15-news-sites": {
+    top_15_news_sites: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -1074,7 +1098,7 @@ export const allButtons = {
             description: "Opens the Twitter home page for the user if they are signed in."
         }
     },
-    "us-news": {
+    us_news: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -1086,7 +1110,7 @@ export const allButtons = {
             description: "Opens the US News & World Report home page."
         }
     },
-    "usa-today": {
+    usa_today: {
         kind: "link",
         is_primary: false,
         configuration: {
@@ -1151,7 +1175,7 @@ export const allButtons = {
             description: "Opens the Wayfair home page."
         }
     },
-    "weather-underground": {
+    weather_underground: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -1174,7 +1198,19 @@ export const allButtons = {
             description: "Opens the Yahoo! Calendar page for the user if they are signed in."
         }
     },
-    "yahoo-mail": {
+    yahoo_calendar: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            category: "calendar",
+            label: "Yahoo! Calendar",
+            color: "blue",
+            image_url: "logo_yahoo.svg",
+            url: "https://calendar.yahoo.com/",
+            description: "Opens the Yahoo! Calendar page for the user if they are signed in."
+        }
+    },
+    yahoo_mail: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -1186,7 +1222,7 @@ export const allButtons = {
             description: "Opens the Yahoo! Mail inbox in a browser."
         }
     },
-    "yahoo-news": {
+    yahoo_news: {
         kind: "link",
         is_primary: true,
         configuration: {
@@ -1209,7 +1245,7 @@ export const allButtons = {
             url: "https://www.youtube.com/"
         }
     },
-    "youtube-music": {
+    youtube_music: {
         kind: "link",
         is_primary: false,
         configuration: {

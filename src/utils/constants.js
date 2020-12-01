@@ -124,6 +124,9 @@ export const subkindIcons = {
     aolmail: ["envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"]
 };
 
+/**
+ * All defined buttons.
+ */
 export const allButtons = allButtonsSrc;
 
 var catalog = {
@@ -195,4 +198,7 @@ Object.keys(catalog).forEach(key => {
     }
 });
 
+/**
+ * @type {Object<String,Object<String,BarItem>>} Button catalog.
+ */
 export const buttonCatalog = catalog;
