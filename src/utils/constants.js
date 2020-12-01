@@ -1,5 +1,6 @@
 import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
+import * as params from "./params.js";
 
 export const API_URL = CONFIG.API_URL;
 export const ERROR_MAP = {
@@ -123,6 +124,8 @@ export const subkindIcons = {
     "yahoo-mail": ["yahoo-mail", "envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"],
     aolmail: ["envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"]
 };
+
+Object.values(allButtonsSrc).forEach(params.prepareBarItem);
 
 /**
  * All defined buttons.
