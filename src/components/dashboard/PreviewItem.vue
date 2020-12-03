@@ -1,45 +1,56 @@
 <template>
-  <!-- Simplified button (no text and small size) -->
-  <button v-if="simplified" class="previewItem simplified" @click="addToBar(item, $event)">
-    <div v-if="item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="multiButton">
-      <div class="buttons" style="margin-top: 5px;">
-        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index" class="rounded multiButton"
-                :style="'background: '+colors.default_button"
+
+  <button class="previewItem" id="previewItemButton"
+          :class="[buttonClass, {broken: hasError}]"
+          v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}">
+
+    <!-- Simplified button (no text and small size) -->
+    <template v-if="buttonClass === 'simplified'">
+      <div v-if="item.configuration.visual && item.configuration.visual.type === 'multiButton'" class="multiButton">
+        <div class="buttons" style="margin-top: 5px;">
+          <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+                  class="rounded multiButton"
+                  :style="'background: '+colors.default_button"
+                  v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+          </button>
+        </div>
+      </div>
+      <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
+      </div>
+      <div v-else class="regular" :style="'background: '+colors.default_button">
+        <div class="imageContainer" :style="'border-color: '+colors.default_button">
+          <b-img :src="item.configuration.image_url"/>
+        </div>
+      </div>
+    </template>
+
+    <!-- Multibutton rendering -->
+    <template v-else-if="buttonClass === 'multiButton'">
+      <label>{{ item.configuration.label }}</label>
+      <div class="buttons">
+        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+                :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
                 v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+          {{ button }}
         </button>
       </div>
-    </div>
-    <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
-    </div>
-    <div v-else class="regular" :style="'background: '+colors.default_button">
-      <div class="imageContainer" :style="'border-color: '+colors.default_button">
+    </template>
+
+    <!-- Normal button with/without image -->
+    <template v-else>
+      <div v-if="item.configuration.image_url && !noImage"
+           :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
+           class="iconHolder">
         <b-img :src="item.configuration.image_url"/>
       </div>
-    </div>
+      <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'"
+         v-bind:class="{ withImage: !noImage && item.configuration.image_url }">{{ item.configuration.label }}</b>
+    </template>
+
+    <img v-if="hasError" id="warningIcon" class="errorIcon" src="/img/warning.svg" alt="This item has a problem." />
+
   </button>
 
-  <!-- Multibutton rendering -->
-  <button v-else-if="item.configuration && item.configuration.visual && item.configuration.visual.type == 'multiButton'" class="previewItem multiButton">
-    <label>{{item.configuration.label}}</label>
-    <div class="buttons" >
-      <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
-              :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
-              v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
-        {{button}}
-      </button>
-    </div>
-  </button>
-
-  <!-- Normal button with/without image -->
-  <button v-else class="previewItem standardButton">
-    <div
-      v-if="item.configuration.image_url && !noImage"
-      :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
-      class="iconHolder">
-      <b-img :src="item.configuration.image_url" />
-    </div>
-    <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'" v-bind:class="{ withImage: !noImage && item.configuration.image_url }">{{ item.configuration.label}}</b>
-  </button>
 </template>
 
 <style lang="scss">
@@ -162,6 +173,20 @@
         }
       }
     }
+
+    .errorIcon { display: none; }
+  }
+  #preview-bar .previewItem.broken {
+    .errorIcon {
+      width: 35px;
+      height: 35px;
+      display: inline-block;
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+    }
+
+    opacity: 0.8;
   }
 </style>
 
@@ -172,6 +197,7 @@ import { colors, icons } from "@/utils/constants";
 export default {
     name: "PreviewItem",
     props: {
+        /** @type {BarItem} */
         item: Object,
         simplified: Boolean,
         noImage: Boolean
@@ -184,10 +210,35 @@ export default {
     },
     methods: {
         addToBar: function (item, event) {
-            this.$emit("addToBarFromPreview", {
-                data: item,
-                type: event.srcElement._prevClass === "noImage" ? "catalogButtonNoImage" : "catalogButtonWithImage"
-            });
+            if (this.simplified) {
+                this.$emit("addToBarFromPreview", {
+                    data: item,
+                    type: event.srcElement._prevClass === "noImage" ? "catalogButtonNoImage" : "catalogButtonWithImage"
+                });
+            }
+        }
+    },
+    computed: {
+        hasError: function () {
+            /** @type {BarItem} */
+            var item = this.item;
+            return item.configuration.hasError && !item.configuration.catalogItem;
+        },
+        /**
+         * Determines how the item is displayed.
+         * @return {String} "simplified", "multiButton", "standardButton"
+         */
+        buttonClass: function () {
+            /** @type {BarItem} */
+            var item = this.item;
+
+            if (this.simplified) {
+                return "simplified";
+            } else if (item.configuration.visual && item.configuration.visual.type === "multiButton") {
+                return "multiButton";
+            } else {
+                return "standardButton";
+            }
         }
     }
 };

@@ -757,14 +757,12 @@ export const allButtons = {
         is_primary: true,
         configuration: {
             category: "make",
-            label: "To open an Application",
+            label: "Open App",
             description: "Allows you to create a button that opens an Application.",
             default: "$defaultApp",
             color: "blue",
             image_url: "generic-app.svg",
-            parameters: [
-                "defaultApp"
-            ]
+            catalogLabel: "To open an Application"
         }
     },
     "open-link": {
@@ -772,14 +770,12 @@ export const allButtons = {
         is_primary: true,
         configuration: {
             category: "make",
-            label: "To open a Web Page",
+            label: "Open Web Page",
             color: "blue",
             image_url: "web-browser.svg",
             url: "$url",
             description: "Allows you to create a button that opens a Web Page.",
-            parameters: [
-                "url"
-            ]
+            catalogLabel: "To open a Web Page"
         }
     },
     "outlook-com-calendar": {
@@ -915,10 +911,7 @@ export const allButtons = {
             default: "skype",
             color: "blue",
             image_url: "skype.svg",
-            args: "$skypeId",
-            parameters: [
-                "skypeId"
-            ]
+            args: "$skypeId"
         }
     },
     soundcloud: {

@@ -1,16 +1,32 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <b-modal id="modalEditGeneric" @ok="refreshButton(true)" @cancel="refreshButton(false)" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
+    <b-modal id="modalEditGeneric"
+             @ok="refreshButton(true)" @cancel="refreshButton(false)"
+             size="lg" scrollable centered
+             footer-bg-variant="light"
+             ok-title="Update Button"
+             title="Edit button">
       <div v-if="buttonEditStorage">
+        <b-form>
         <b-row>
           <b-col md="6">
-            <h5><b>{{ buttonEditStorage.configuration.label }}</b></h5>
-            <p>What text do you want on the button?</p>
-            <div role="group" class="mb-3">
-              <label for="modalEditGenericLabel">Text on the button</label>
-              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" maxLength="35" />
+            <div v-for="(value, paramKey, index) in buttonEditStorage.configuration.parameters"
+                 :key="paramKey"
+                 role="group" class="mb-3">
+              <b-form-group :label="allParameters[paramKey].label"
+                            :label-for="'barItem_' + paramKey"
+                            :invalid-feedback="editValidation(paramKey)">
+                <b-form-input :id="'barItem_' + paramKey"
+                              :name="paramKey"
+                              v-model="buttonEditStorage.configuration.parameters[paramKey]"
+                              :state="!editValidation(paramKey)"
+                              :autofocus="!index"
+                              v-bind="allParameters[paramKey].attrs"
+                />
+              </b-form-group>
             </div>
+
             <div class="bg-silver rounded p-3">
               <p v-if="editDialogDetails" class="text-right small mb-0">
                 (<b-link @click="editDialogDetails = false">Hide</b-link>)
@@ -87,8 +103,10 @@
             </div>
           </b-col>
         </b-row>
+        </b-form>
       </div>
     </b-modal>
+
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
     </b-modal>
@@ -243,6 +261,7 @@
               <div class="desktop-portion">
               </div>
             </drop>
+
             <!-- Buttons Bar -->
             <div id="preview-bar">
               <div class="barPreviewEditor" ref="myref">
@@ -327,7 +346,7 @@
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
                         <div class="imageWrapper">
                           <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" />
-                        </div>{{ button.configuration.label }}
+                        </div>{{ button.configuration.catalogLabel || button.configuration.label }}
                       </b-link>
                     </drag>
                   </li>
@@ -692,6 +711,7 @@ import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMemb
 import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
+import * as params from "@/utils/params";
 
 export default {
     name: "MorphicBarEditor",
@@ -703,19 +723,45 @@ export default {
         DropList
     },
     methods: {
+        /**
+         * Validate a parameter field in the button edit dialog.
+         * @param {String} paramKey The parameter key.
+         * @return {String} The validation error message (or null if valid)
+         */
+        editValidation: function (paramKey) {
+            return params.getValidationError(this.buttonEditStorage, paramKey);
+        },
         dropToBar: function (event) {
             event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
-            event.data.id = this.generateId(event.data);
-
             if (event.type === "catalogButtonNoImage") {
                 event.data.configuration.image_url = "";
             }
+            this.addBarItem(event.data, event.index);
+            return true;
+        },
+
+        /**
+         * Add an item to the bar.
+         * @param {BarItem} button The new button
+         * @param {Number} [insertAt] The index of the new button.
+         */
+        addBarItem: function (button, insertAt) {
+            button.id = this.generateId(button);
+            delete button.configuration.catalogItem;
+            delete button.configuration.catalogLabel;
+
             // insert in new position (default to 0)
-            this.barDetails.items.splice(event.index || 0, 0, event.data);
+            this.barDetails.items.splice(insertAt || 0, 0, button);
             // close any expanded button
             this.expandedCatalogButtonId = undefined;
             this.setBarChanged();
-            return true;
+
+            params.setInitial(button);
+
+            // Edit the button, if it has parameterised fields.
+            if (button.configuration.hasError) {
+                this.buttonToEdit(button);
+            }
         },
 
         setBarChanged: function () {
@@ -996,12 +1042,16 @@ export default {
             this.$bvModal.hide("modalEditGeneric");
             this.setBarChanged();
         },
-        buttonToEdit: function (item, evt) {
-            if (this.dragInProgress) {
-                return;
+
+        /**
+         * Shows the edit button dialog.
+         * @param {BarItem} item The item to edit
+         */
+        buttonToEdit: function (item) {
+            if (!this.dragInProgress) {
+                this.buttonEditStorage = item;
+                this.$bvModal.show("modalEditGeneric");
             }
-            this.buttonEditStorage = item;
-            this.$bvModal.show("modalEditGeneric");
         },
         refreshButton: function (updated) {
             // updating the data in a button (on edit)
@@ -1114,6 +1164,12 @@ export default {
         this.loadAllData();
     },
     watch: {
+        "buttonEditStorage.configuration": {
+            handler: function (newValue, oldValue) {
+                params.applyParameters(this.buttonEditStorage);
+            },
+            deep: true
+        },
         "barDetails.items": function (newValue, oldValue) {
             this.distributeItems(newValue);
         },
@@ -1215,6 +1271,7 @@ export default {
             barsList: [],
             membersList: [],
 
+            /** @type {Object<String,Object<String,BarItem>>} Button catalog. */
             buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
             dragInProgress: false,
             expandedCatalogButtonId: null,
@@ -1222,13 +1279,15 @@ export default {
             // storage
             buttonStorage: {},
             buttonEditStorage: {
+                /** @type {BarItemConfiguration} */
                 configuration: {
-                    label: "",
+                    label: "hi",
                     color: "",
                     image_url: ""
                 }
             },
             invitationEmail: "",
+            /** @type {BarDetails} */
             barDetails: {},
             originalBarDetails: {},
             members: [],
@@ -1264,7 +1323,8 @@ export default {
             predefinedBars: predefinedBars,
             colors: colors,
             icons: icons,
-            subkindIcons: subkindIcons
+            subkindIcons: subkindIcons,
+            allParameters: params.allParameters
         };
     }
 };

@@ -189,6 +189,9 @@ function getGroupItems(category) {
                     button.configuration.image_url = "/icons/" + button.configuration.image_url;
                 }
             }
+
+            button.configuration.catalogItem = true;
+
             result[key] = button;
         }
     }

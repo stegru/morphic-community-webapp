@@ -1,69 +1,163 @@
+/*
+
+Some bar items require extra information. A field in the button configuration object can have a named placeholder
+in the text (like $value or `${value}`).
+
+These placeholders are extracted from the fields, the name being a key in the `allParameters` object.
+These are then used to create input fields in the editor dialog.
+
+*/
+
 /**
- * @typedef {Object<String, ItemParameter>} ItemParameters
+ * The parameters of a bar item.
+ * @typedef {Array<ItemParameter>|Object<String,String>} ItemParameters
+ */
+
+/**
+ * A parameter.
+ * @typedef {Object} ParameterInfo
+ * @property {*} initial The initial value.
+ * @property {String} label Text displayed with the input field.
+ * @property {String} attrs The HTML attributes for the input element.
+ * @property {Object<string,Object>} validation The validation rules.
+ */
+
+/**
  *
+ * @type {Object<String,ParameterInfo>}
  */
+export const allParameters = {
+    label: {
+        // This is used automatically by all items.
+        label: "Text on the button",
+        validation: {
+            required: "Button label is required."
+        }
+    },
+    url: {
+        label: "The site to open",
+        attrs: {
+            autocomplete: "url",
+            type: "url"
+        },
+        validation: {
+            required: "Site link is required."
+        }
+    },
+    skypeId: {
+        label: "Skype ID of who to call.",
+        validation: {
+            required: "SkypeId is required"
+        }
+    }
+};
+
 /**
- * @typedef {Object} ItemParameter
- * @property {String} paramKey paramKey.
- * @property {Any} value The value.
+ * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
  */
+const validators = {
+    required(value) {
+        return value && value !== "";
+    }
+};
+
+const origFieldPrefix = "_orig_";
 
 /**
  * Prepares the parameter information on a button, during initial load.
  * @param {BarItem} button The button.
  */
 export function prepareBarItem(button) {
-    const params = button.configuration.parameters;
-    delete button.configuration.parameters;
+    /** @type {ItemParameters} */
+    const params = {};
+    const paramFields = [];
 
-    if (params && params.length > 0) {
-        const paramFields = [];
+    // Always allow the label field to be edited.
+    const initialLabel = button.configuration.label;
+    button.configuration.label = "$label";
 
-        // Create an original copy of the fields which contain parameter expanders
-        Object.keys(button.configuration).forEach(key => {
-            const value = button.configuration[key];
-            if (containsParameter(value)) {
-                button.configuration[`$${key}`] = value;
-            }
+    Object.keys(button.configuration).forEach(key => {
+        const value = button.configuration[key];
+        if (containsParameter(value)) {
+            // Create an original copy of the field (the field will be over-written by the expanded string)
+            button.configuration[`${origFieldPrefix}${key}`] = value;
+
+            // Extract the parameters
+            getParameterNames(value).forEach(paramKey => {
+                var paramInfo = allParameters[paramKey];
+                if (!paramInfo) {
+                    // This parameter is unknown
+                    paramInfo = (allParameters[paramKey] = {
+                        label: paramKey
+                    });
+                }
+                params[paramKey] = paramInfo.initial || "";
+            });
+
             paramFields.push(key);
-        });
+        }
+    });
 
-        // Replace the initial parameters array with an associative array, to handle more information
-        /** @type {ItemParameters} */
-        const newParams = {};
-        params.forEach(key => {
-            newParams[key] = {
-                paramKey: key,
-                value: undefined
-            };
-        });
-
-        button.configuration.paramFields = paramFields;
-        button.configuration.parameters = newParams;
+    if (params.label !== undefined) {
+        // Set the value of the label to what it already was.
+        delete params.label; // Delete it, so it's at the bottom of the dialog.
+        params.label = initialLabel;
     }
+
+    button.configuration.paramFields = paramFields;
+    button.configuration.parameters = params;
+
+    setInitial(button);
 }
 
 /**
- * Apply the parameter values to the button fields.
+ * Set the initial values of the parameters.
+ *
  * @param {BarItem} button The button.
- * @param {Object} [newValues] New values to add.
  */
-export function applyParameters(button, newValues) {
-    const params = button.configuration.parameters;
-    if (params) {
-        if (newValues) {
-            /** @param {ItemParameter} param */
-            Object.values(params).forEach(param => {
-                if (newValues[param] !== undefined) {
-                    param.value = newValues[param];
-                }
-            });
+export function setInitial(button) {
+    Object.keys(button.configuration.parameters).forEach(paramKey => {
+        const initialValue = allParameters[paramKey].initial;
+        if (initialValue !== undefined) {
+            button.configuration.parameters[paramKey] = initialValue;
         }
+    });
 
-        button.configuration.paramFields.forEach(key => {
-            button.configuration[key] = replaceParameters(params, button.configuration[`$${key}`]);
-        });
+    applyParameters(button);
+}
+
+/**
+ * Apply the parameter values to the button fields. Call whenever a value in the button's parameters object has changed.
+ *
+ * @param {BarItem} button The bar item.
+ */
+export function applyParameters(button) {
+    const params = button.configuration.parameters;
+
+    button.configuration.paramFields.forEach(key => {
+        button.configuration[key] = replaceParameters(params, button.configuration[`${origFieldPrefix}${key}`]);
+    });
+
+    button.configuration.hasError = validate(button) ? undefined : true;
+}
+
+// Matches all `${name1}` or `$name2` in a string.
+const matchExpanders = /\$\{(?<name1>[^}]+)\}|\$(?<name2>\w+)/g;
+
+/**
+ * Gets the parameter expanders in a string.
+ *
+ * @param {String} input The string to examine.
+ * @return {Array<String>} The parameter names.
+ */
+function getParameterNames(input) {
+    const paramNames = [];
+    var match;
+    while ((match = matchExpanders.exec(input))) {
+        paramNames.push(match.groups.name1 || match.groups.name2);
     }
+
+    return paramNames;
 }
 
 /**
@@ -73,12 +167,9 @@ export function applyParameters(button, newValues) {
  * @return {String} The input string, with the parameter expanders replaced with their value.
  */
 function replaceParameters(params, input) {
-    // Matches `${name1}` and `$name2`
-    const re = /\$\{(?<name1>[^}]+)\}|\$(?<name2>\w+)/g;
-
-    return input.replace(re, (match, name1, name2) => {
+    return input.replace(matchExpanders, (match, name1, name2) => {
         var name = name1 || name2;
-        return (params[name] && params[name].value) || "";
+        return params[name] || "";
     });
 }
 
@@ -89,4 +180,50 @@ function replaceParameters(params, input) {
  */
 function containsParameter(value) {
     return typeof(value) === "string" && value.includes("$");
+}
+
+/**
+ * Validates all parameters of a button.
+ * @param {BarItem} button The button.
+ * @return {Boolean} true if valid.
+ */
+function validate(button) {
+    return Object.keys(button.configuration.parameters).every((paramKey) => {
+        return !getValidationError(button, paramKey);
+    });
+}
+
+/**
+ * Validate a parameter field in the button edit dialog.
+ * @param {BarItem} button The button.
+ * @param {String} paramKey The parameter key.
+ * @return {String} The validation error message (or null if valid)
+ */
+export function getValidationError(button, paramKey) {
+    const paramInfo = allParameters[paramKey];
+    const value = button.configuration.parameters[paramKey];
+
+    var errorMessage;
+
+    if (paramInfo.validation) {
+        Object.keys(paramInfo.validation).every(key => {
+            const validator = validators[key];
+            var ok = false;
+            if (validator) {
+                if (typeof(validator) === "function") {
+                    ok = validator(value);
+                } else if (validator instanceof RegExp) {
+                    ok = validator.test(value);
+                }
+            }
+
+            if (!ok) {
+                var v = paramInfo.validation[key];
+                errorMessage = (typeof(v) === "string") ? v : v.message || "error";
+            }
+            return ok;
+        });
+    }
+
+    return errorMessage;
 }

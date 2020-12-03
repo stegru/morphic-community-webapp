@@ -9,8 +9,8 @@ module.exports = {
   extends: [
     "plugin:vue/essential",
     "@vue/standard",
-    "eslint-config-fluid",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "eslint-config-fluid"
   ],
   parserOptions: {
     parser: "babel-eslint"
@@ -18,6 +18,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-multiple-empty-lines": "off",
     "dot-notation": [
       "error",
       {
@@ -26,6 +27,7 @@ module.exports = {
     ],
     "jsdoc/require-jsdoc": 0,
     "jsdoc/newline-after-description": 0,
+    "jsdoc/require-hyphen-before-param-description": "off",
     "jsdoc/no-undefined-types": 0, // https://github.com/gajus/eslint-plugin-jsdoc/issues/99
 
   }
