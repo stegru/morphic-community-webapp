@@ -3,9 +3,21 @@
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
      <button @click="deleteButton" class="text-danger">Remove Button</button>
      <b-form>
-        <b-form-group id="name" label="Text on the button" label-for="button-label-input">
-          <b-form-input id="button-label-input" v-model="button.configuration.label"></b-form-input>
-        </b-form-group>
+       <div v-for="(value, paramKey, index) in button.configuration.parameters"
+            :key="paramKey"
+            role="group" class="mb-3">
+         <b-form-group :label="allParameters[paramKey].label"
+                       :label-for="'barItem_' + paramKey"
+                       :invalid-feedback="editValidation(paramKey)">
+           <b-form-input :id="'barItem_' + paramKey"
+                         :name="paramKey"
+                         v-model="button.configuration.parameters[paramKey]"
+                         :state="!editValidation(paramKey)"
+                         :autofocus="!index"
+                         v-bind="allParameters[paramKey].attrs"
+           />
+         </b-form-group>
+       </div>
 
         <!-- TODO CHANGE ICONS -->
 
@@ -37,6 +49,7 @@
 
 import { getCommunityBar, saveCommunityBar, getCommunityMember, createCommunityBar, updateCommunityMember } from "@/services/communityService";
 import { colors } from "@/utils/constants";
+import * as params from "@/utils/params";
 
 export default {
     name: "MemberInvite",
@@ -103,6 +116,14 @@ export default {
         },
         navigateBack: function () {
             this.$router.push({ path: "/focused/bar-editor", query: { barId: this.barId, memberId: this.memberId } });
+        },
+        /**
+         * Validate a parameter field in the button edit dialog.
+         * @param {String} paramKey The parameter key.
+         * @return {String} The validation error message (or null if valid)
+         */
+        editValidation: function (paramKey) {
+            return params.getValidationError(this.button, paramKey);
         }
     },
     computed: {
@@ -145,6 +166,12 @@ export default {
         }
     },
     watch: {
+        "button.configuration": {
+            handler: function (newValue, oldValue) {
+                params.applyParameters(this.button);
+            },
+            deep: true
+        }
     },
     data() {
         return {
@@ -160,7 +187,8 @@ export default {
                 configuration: {}
             },
             colors: colors,
-            availablePositions: {}
+            availablePositions: {},
+            allParameters: params.allParameters
         };
     }
 };

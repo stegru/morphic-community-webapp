@@ -116,6 +116,7 @@ import PreviewItem from "@/components/dashboard/PreviewItem";
 import { saveCommunityBar, getCommunityBar, createCommunityBar, getCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { buttonCatalog, colors, icons, subkindIcons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
+import * as params from "@/utils/params";
 
 export default {
     name: "MemberInvite",
@@ -129,10 +130,14 @@ export default {
         addButtonToBar: function (button, withImage) {
             // copy button:
             const toSave = { ...button, configuration: { ...button.configuration } };
+
             // delete image if required
             if (!withImage && toSave.configuration.image_url) {
                 delete toSave.configuration.image_url;
             }
+
+            // initialise the parameters
+            params.setInitial(button);
 
             // add to items:
             this.barDetails.items.push(toSave);
