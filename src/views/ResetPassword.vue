@@ -11,9 +11,6 @@
           <b-alert variant="danger" :show="errorAlert">
             {{ errorMessage }}
           </b-alert>
-          <b-alert variant="success" :show="successAlert">
-            {{ successMessage }}
-          </b-alert>
           <b-form-group>
             <b-form-input
               v-model="$v.form.email.$model"
@@ -54,9 +51,7 @@ export default {
                 email: ""
             },
             errorAlert: false,
-            successAlert: false,
             errorMessage: null,
-            successMessage: MESSAGES.successfulReset,
             emailValidationError: MESSAGES.emailValidationError
         };
     },
@@ -80,10 +75,8 @@ export default {
             }
             this.$store.dispatch("resetPassword", this.$v.form.$model)
                 .then(() => {
-                    this.successAlert = true;
-                    setTimeout(() => {
-                        this.$router.push("/");
-                    }, 2000);
+                    this.showMessage(MESSAGES.successfulReset);
+                    this.$router.push("/");
                 })
                 .catch(err => {
                     if (err.response) {

@@ -4,9 +4,6 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <b-alert variant="success" :show="successAlert">
-      {{ successMessage }}
-    </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <b-form-group
         label="Enter your email:"
@@ -51,7 +48,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email, minLength } from "vuelidate/lib/validators";
-import { ERROR_MAP, MESSAGES } from "@/utils/constants";
+import { ERROR_MAP } from "@/utils/constants";
 
 export default {
     mixins: [validationMixin],
@@ -63,9 +60,7 @@ export default {
                 keep_logged: 1
             },
             errorAlert: false,
-            successAlert: false,
-            errorMessage: null,
-            successMessage: MESSAGES.successfulLogin
+            errorMessage: null
         };
     },
     validations: {
@@ -92,13 +87,9 @@ export default {
             }
             this.$store.dispatch("login", this.$v.userInfo.$model)
                 .then(() => {
-                    this.successAlert = true;
-                    setTimeout(() => {
-                        this.successAlert = false;
-                        this.userInfo.email = "";
-                        this.userInfo.password = "";
-                        this.$router.push("/dashboard");
-                    }, 1000);
+                    this.userInfo.email = "";
+                    this.userInfo.password = "";
+                    this.$router.push("/dashboard");
                 })
                 .catch(err => {
                     if (err.response) {

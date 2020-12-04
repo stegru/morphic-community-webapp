@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container fluid id="PageContainer">
     <Header />
     <router-view />
     <Footer />
@@ -45,6 +45,10 @@
 
   .rounded {
     border-radius: 1rem;
+  }
+
+  #PageContainer {
+    padding: 0;
   }
 
   .desktop {

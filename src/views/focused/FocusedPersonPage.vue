@@ -87,8 +87,7 @@ export default {
             updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulRoleChange;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.successfulRoleChange);
                     }
                 })
                 .catch(err => {

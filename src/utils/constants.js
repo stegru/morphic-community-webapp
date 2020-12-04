@@ -11,19 +11,18 @@ export const ERROR_MAP = {
     500: "Network error, cannot connect to the server! Please check your internet connection."
 };
 export const MESSAGES = {
-    successfulLogin: "Successfully logged in",
     successfulRegistration: "Registration completed successfully",
     successfulReset: "Reset password successful",
     emailValidationError: "This is a required field and must be a valid email address.",
     successfulSave: "Successfully saved",
     barUpdated: "Bar successfully saved.",
-    barAdded: "Bar successfully added, you will be returned to Dashboard soon...",
+    barAdded: "Bar successfully added.",
     sessionTimedOut: "Your session was expired. Please login again.",
     leavePageAlert: "Do you really want to leave? You have unsaved changes!",
     logoutAlert: "Please save, or discard your chances before logging out!",
     successfulRoleChange: "Member role changed successfully",
-    successfulMemberDelete: "Member deleted successfully, you will be returned to Dashboard soon...",
-    successfulBarDelete: "Bar successfully deleted, you will be returned to Dashboard soon..."
+    successfulMemberDelete: "Member deleted successfully.",
+    successfulBarDelete: "Bar successfully deleted."
 };
 
 export const colors = {

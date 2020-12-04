@@ -117,11 +117,8 @@ export default {
             deleteCommunityMember(this.communityId, this.memberDetails.id)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulMemberDelete;
-                        this.successAlert = true;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.showMessage(MESSAGES.successfulMemberDelete);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -137,8 +134,7 @@ export default {
             updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulRoleChange;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.successfulRoleChange);
                     }
                 })
                 .catch(err => {
@@ -163,12 +159,9 @@ export default {
                             updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                                 .then((resp) => {
                                     if (resp.status === 200) {
-                                        this.successMessage = MESSAGES.barAdded;
-                                        this.successAlert = true;
+                                        this.showMessage(MESSAGES.barAdded);
                                         this.isChanged = false;
-                                        setTimeout(() => {
-                                            this.$router.push("/dashboard");
-                                        }, 3000);
+                                        this.$router.push("/dashboard");
                                     }
                                 })
                                 .catch(err => {
@@ -192,12 +185,9 @@ export default {
             createCommunityBar(this.communityId, data)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.barAdded;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.barAdded);
                         this.isChanged = false;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -213,12 +203,9 @@ export default {
             updateCommunityBar(this.communityId, this.$route.query.barId, data)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.barUpdated;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.barUpdated);
                         this.isChanged = false;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -229,11 +216,8 @@ export default {
             deleteCommunityBar(this.communityId, this.$route.query.barId)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulBarDelete;
-                        this.successAlert = true;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.showMessage(MESSAGES.successfulBarDelete);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -622,14 +606,12 @@ export default {
         return {
             // messages
             leavePageMessage: MESSAGES.leavePageAlert,
-            successMessage: "",
 
             // flags
             addToBar: false,
             addToDrawer: false,
             newBar: false,
             openDrawer: false,
-            successAlert: false,
             editDialogDetails: false,
             editDialogSubkindIcons: true,
             tab: 0,

@@ -3,9 +3,6 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <b-alert variant="success" :show="successAlert">
-      {{ successMessage }}
-    </b-alert>
     <b-form-group
       label="Community:"
       label-for="community-name"
@@ -144,9 +141,7 @@ export default {
                 // paymentOptions: 'stripe'
             },
             errorAlert: false,
-            successAlert: false,
-            errorMessage: null,
-            successMessage: MESSAGES.successfulRegistration
+            errorMessage: null
         };
     },
     validations: {
@@ -186,15 +181,13 @@ export default {
             }
             this.$store.dispatch("register", this.$v.form.$model)
                 .then(() => {
-                    this.successAlert = true;
+                    this.showMessage(MESSAGES.successfulRegistration);
                     this.$store.dispatch("login", this.$v.form.$model)
                         .then(() => {
-                            setTimeout(() => {
-                                this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
-                                    .then(() => {
-                                        this.$router.push("/dashboard");
-                                    });
-                            }, 1000);
+                            this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
+                                .then(() => {
+                                    this.$router.push("/dashboard");
+                                });
                         });
                 })
                 .catch(err => {

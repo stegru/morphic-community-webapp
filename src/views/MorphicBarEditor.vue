@@ -125,15 +125,13 @@
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
-    <b-row>
+    <b-row no-gutters id="EditorContainer">
       <b-col md="2">
         <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
-          <b-alert variant="success" :show="successAlert">
-            <span>{{ successMessage }}</span>
-          </b-alert>
+
           <!-- Topmost area above desktop image -->
           <div id="bar-info">
             <div class="bar-name">
@@ -364,7 +362,13 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  #EditorContainer {
+
+  }
+
   #barEditor {
+    padding-left: 15px;
+    padding-right: 15px;
     #bar-info {
       display: flex;
 
@@ -898,11 +902,8 @@ export default {
             deleteCommunityMember(this.communityId, this.memberDetails.id)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulMemberDelete;
-                        this.successAlert = true;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.showMessage(MESSAGES.successfulMemberDelete);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -918,8 +919,7 @@ export default {
             updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulRoleChange;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.successfulRoleChange);
                     }
                 })
                 .catch(err => {
@@ -947,13 +947,9 @@ export default {
                             updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
                                 .then((resp) => {
                                     if (resp.status === 200) {
-                                        this.successMessage = MESSAGES.barUpdated;
-                                        this.successAlert = true;
+                                        this.showMessage(MESSAGES.barUpdated);
                                         this.isChanged = false;
                                         this.updateOriginalBarDetails();
-                                        setTimeout(() => {
-                                            this.successAlert = false;
-                                        }, 3000);
                                     }
                                 })
                                 .catch(err => {
@@ -978,15 +974,11 @@ export default {
             createCommunityBar(this.communityId, data)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.barAdded;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.barAdded);
                         this.isChanged = false;
                         this.updateOriginalBarDetails();
 
-                        setTimeout(() => {
-                            this.successAlert = false;
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -1002,14 +994,9 @@ export default {
             updateCommunityBar(this.communityId, this.$route.query.barId, data)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.barUpdated;
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.barUpdated);
                         this.isChanged = false;
                         this.updateOriginalBarDetails();
-
-                        setTimeout(() => {
-                            this.successAlert = false;
-                        }, 3000);
                     }
                 })
                 .catch(err => {
@@ -1020,11 +1007,8 @@ export default {
             deleteCommunityBar(this.communityId, this.$route.query.barId)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successMessage = MESSAGES.successfulBarDelete;
-                        this.successAlert = true;
-                        setTimeout(() => {
-                            this.$router.push("/dashboard");
-                        }, 3000);
+                        this.showMessage(MESSAGES.successfulBarDelete);
+                        this.$router.push("/dashboard");
                     }
                 })
                 .catch(err => {
@@ -1248,7 +1232,6 @@ export default {
         return {
             // messages
             leavePageMessage: MESSAGES.leavePageAlert,
-            successMessage: "",
             availableBars: [],
             barSelectedInDropdown: "",
             // flags
@@ -1256,7 +1239,6 @@ export default {
             addToDrawer: false,
             newBar: false,
             openDrawer: true,
-            successAlert: false,
             editDialogDetails: false,
             editDialogSubkindIcons: true,
             tab: 0,

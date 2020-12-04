@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top">
+    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav">
       <h1>
         <b-navbar-brand to="/" title="Morphic Community">
           <img src="/img/logo-color.svg" alt="logo">
@@ -31,8 +31,6 @@
 
 <style>
   nav#top {
-    margin: 1rem 0 0 0;
-    border-radius: .3rem;
   }
 
   nav#top a.nav-link:focus {

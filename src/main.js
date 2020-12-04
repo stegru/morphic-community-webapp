@@ -30,6 +30,30 @@ Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 Vue.use(Vuex);
 
+var toastSheet;
+
+Vue.mixin({
+    methods: {
+        showMessage(message, title, options) {
+
+            if (!toastSheet) {
+                const navHeight = document.querySelector("nav#top .navbar-nav").getBoundingClientRect().bottom;
+                toastSheet = document.createElement("style");
+                toastSheet.innerHTML = `.toast-height {margin-top:${navHeight}px}`;
+                document.body.appendChild(toastSheet);
+            }
+
+            this.$root.$bvToast.toast(message, Object.assign({
+                variant: "success",
+                title: title,
+                noCloseButton: !title,
+                toastClass: "toast-height",
+                toaster: "b-toaster-top-center"
+            }, options));
+        }
+    }
+});
+
 Vue.config.productionTip = false;
 new Vue({
     router,

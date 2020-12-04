@@ -7,9 +7,6 @@
       <p class="my-4">Are you sure you want to save changes?</p>
     </b-modal>
     <div class="bg-silver rounded p-3">
-      <b-alert variant="success" :show="successAlert">
-        {{ successMessage }}
-      </b-alert>
       <h4 class="mb-3">Member Details</h4>
       <h5>{{ member.first_name }} {{ member.last_name }}</h5>
       <b-link v-if="member.email" :href="'mailto:'+member.email">{{ member.email }}</b-link>
@@ -110,8 +107,6 @@ export default {
             // availableItems: availableItems,
             currentMorphicBar: "",
             memberId: "",
-            successAlert: false,
-            successMessage: MESSAGES.successfulSave,
             member: {
                 first_name: "",
                 last_name: ""
@@ -140,7 +135,7 @@ export default {
             updateCommunityMember(this.communityId, this.member.id, this.member)
                 .then((resp) => {
                     if (resp.status === 200) {
-                        this.successAlert = true;
+                        this.showMessage(MESSAGES.successfulSave);
                     }
                 })
                 .catch(err => {
