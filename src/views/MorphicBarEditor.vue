@@ -14,7 +14,7 @@
             <div v-for="(value, paramKey, index) in buttonEditStorage.configuration.parameters"
                  :key="paramKey"
                  role="group" class="mb-3">
-              <b-form-group :label="allParameters[paramKey].label"
+385              <b-form-group :label="allParameters[paramKey].label"
                             :label-for="'barItem_' + paramKey"
                             :invalid-feedback="editValidation(paramKey)">
                 <b-form-input :id="'barItem_' + paramKey"
@@ -873,15 +873,20 @@ export default {
                     this.addBar();
                 }
             } else {
-                // Load a saved bar.
-                getCommunityBar(this.communityId, barId)
-                    .then(resp => {
-                        this.barDetails = resp.data;
-                        this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
+                const unsavedBar = this.$store.getters.unsavedBar;
+                if (unsavedBar && unsavedBar.id === barId) {
+                    this.barDetails = unsavedBar;
+                } else {
+                    // Load a saved bar.
+                    getCommunityBar(this.communityId, barId)
+                        .then(resp => {
+                            this.barDetails = resp.data;
+                            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                }
             }
         },
         addIds: function (items) {
@@ -1192,6 +1197,7 @@ export default {
         },
         isChanged: function () {
             this.$store.dispatch("unsavedChanges", this.isChanged);
+            this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
         },
         "$route.query": function () {
             this.members = [];

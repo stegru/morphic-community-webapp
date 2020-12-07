@@ -9,8 +9,8 @@
       </h1>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item to="/dashboard/" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard Mode</b></b-nav-item>
-        <b-nav-item to="/focused/home" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Focus/Mobile Mode</b></b-nav-item>
+        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard Mode</b></b-nav-item>
+        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Focus/Mobile Mode</b></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -61,9 +61,21 @@ import { MESSAGES } from "@/utils/constants";
 
 export default {
     computed: {
-        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
-        disableLogout: function () { return this.$store.getters.unsavedChanges; },
-        focusMode: function () { return this.$route.path.includes("/focused/"); }
+        isLoggedIn: function () {
+            return this.$store.getters.isLoggedIn;
+        },
+        disableLogout: function () {
+            return this.$store.getters.unsavedChanges;
+        },
+        focusMode: function () {
+            return this.$route.path.includes("/focused/");
+        },
+        focusedUrl: function () {
+            return this.getUrl(true).href;
+        },
+        dashboardUrl: function () {
+            return this.getUrl(false).href;
+        }
     },
 
     methods: {
@@ -75,6 +87,19 @@ export default {
                     .then(() => {
                         this.$router.push("/");
                     });
+            }
+        },
+        getBarId: function () {
+            return this.$route.query.barId;
+        },
+        getUrl: function (focused) {
+            const barId = this.getBarId();
+            if (barId) {
+                const name = focused ? "Focused: Bar Editor" : "MorphicBar Editor";
+                return this.$router.resolve({name: name, query: {barId: barId}});
+            } else {
+                const name = focused ? "Home: Bar and Member Page" : "Dashboard";
+                return this.$router.resolve({name: name});
             }
         }
     }

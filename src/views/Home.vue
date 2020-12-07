@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-alert variant="success" :show="showMessage">
+    <b-alert variant="success" :show="displayMessage">
       <span> {{ messageData }}</span>
     </b-alert>
     <BlockLoginRegister />
@@ -18,7 +18,7 @@ export default {
     },
     data() {
         return {
-            showMessage: false,
+            displayMessage: false,
             messageData: MESSAGES.sessionTimedOut
         };
     },
@@ -27,7 +27,7 @@ export default {
     },
     mounted() {
         if (this.messageId) {
-            this.showMessage = true;
+            this.displayMessage = true;
         }
     }
 };

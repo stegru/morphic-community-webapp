@@ -20,6 +20,7 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-multiple-empty-lines": "off",
     "padded-blocks": "off",
+    "object-curly-spacing": "off",
     "dot-notation": [
       "error",
       {

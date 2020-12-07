@@ -15,7 +15,8 @@ export default new Vuex.Store({
         user: {},
         community: {},
         errorMessage: {},
-        unsavedChanges: false
+        unsavedChanges: false,
+        unsavedBar: {}
     },
     mutations: {
         auth_request(state) {
@@ -55,6 +56,9 @@ export default new Vuex.Store({
         },
         unsavedChanges(state, isChanged) {
             state.unsavedChanges = isChanged;
+        },
+        unsavedBar(state, barDetails) {
+            state.unsavedBar = barDetails;
         }
     },
     actions: {
@@ -161,6 +165,9 @@ export default new Vuex.Store({
         },
         unsavedChanges({ commit }, isChanged) {
             commit("unsavedChanges", isChanged);
+        },
+        unsavedBar({ commit }, barDetails) {
+            commit("unsavedBar", barDetails);
         }
     },
     getters: {
@@ -168,6 +175,8 @@ export default new Vuex.Store({
         authStatus: state => state.status,
         userId: state => state.userId,
         communityId: state => state.communityId,
-        unsavedChanges: state => state.unsavedChanges
+        unsavedChanges: state => state.unsavedChanges,
+        /** @type {BarDetails} */
+        unsavedBar: state => state.unsavedBar
     }
 });

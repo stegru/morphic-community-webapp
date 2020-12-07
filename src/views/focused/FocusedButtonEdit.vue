@@ -147,13 +147,22 @@ export default {
         this.communityId = this.$route.query.communityId;
         this.memberId = this.$route.query.memberId;
 
-        // load bar and content (incl. button)
-        getCommunityBar(this.communityId, this.barId).then(b => {
-            this.barDetails = b.data;
+        const unsavedBar = this.$store.getters.unsavedBar;
+        const loaded = (barDetails) => {
+            this.barDetails = barDetails;
             // find button:
             this.button = this.barDetails.items[this.buttonIndex];
             this.setAvailablePositions();
-        });
+        };
+
+        if (unsavedBar && unsavedBar.id === this.barId) {
+            loaded(unsavedBar);
+        } else {
+            // load bar and content (incl. button)
+            getCommunityBar(this.communityId, this.barId).then(b => {
+                loaded(b.data);
+            });
+        }
         // load member if set:
         if (this.memberId) {
             getCommunityMember(this.communityId, this.memberId)

@@ -448,13 +448,19 @@ export default {
                 }
             }
         } else {
-            getCommunityBar(this.communityId, this.$route.query.barId)
-                .then(resp => {
-                    this.barDetails = resp.data;
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+            const barId = this.$route.query.barId;
+            const unsavedBar = this.$store.getters.unsavedBar;
+            if (unsavedBar && unsavedBar.id === barId) {
+                this.barDetails = unsavedBar;
+            } else {
+                getCommunityBar(this.communityId, barId)
+                    .then(resp => {
+                        this.barDetails = resp.data;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
         }
         if (this.$route.query.memberId) {
             this.memberId = this.$route.query.memberId;
@@ -539,6 +545,7 @@ export default {
         },
         isChanged: function () {
             this.$store.dispatch("unsavedChanges", this.isChanged);
+            this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
         },
         "$route.query": function () {
             this.initialChangesPrimaryItems = false;
