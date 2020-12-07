@@ -255,7 +255,7 @@ export default {
                 [
                     this.$refs.EditMemberHint,
                     "#CommunityManager #MembersList ul > li:first-child > :first-child",
-                    this.$refs.EditMemberHint.querySelector(":first-child")
+                    this.$refs.EditMemberHint && this.$refs.EditMemberHint.querySelector(":first-child")
                 ]
             ];
 
@@ -277,25 +277,38 @@ export default {
                     }
                 };
 
-                createPopper(virtualElement, hint, {
-                    placement: "right-start",
-                    onFirstUpdate: (state) => {
-                        const targetRect = target.getBoundingClientRect();
-                        const sourceRect = arrowFrom.getBoundingClientRect();
-
-                        const sourcePoint = {
-                            x: sourceRect.x - 1,
-                            y: sourceRect.y + sourceRect.height / 2
-                        };
-                        const targetPoint = {
-                            x: targetRect.x + targetRect.width,
-                            y: targetRect.y + targetRect.height / 2 + 2
-                        };
-
-                        const arrow = new ArrowLine(sourcePoint, targetPoint, { curvature: 0.5, forceDirection: "horizontal" });
-                        this.arrows.push(arrow);
+                if (!hint || !target) {
+                    if (hint) {
+                        hint.style.display = "none";
                     }
-                });
+
+                    if (target) {
+                        target.style.display = "none";
+                    }
+                } else {
+                    createPopper(virtualElement, hint, {
+                        placement: "right-start",
+                        onFirstUpdate: (state) => {
+                            const targetRect = target.getBoundingClientRect();
+                            const sourceRect = arrowFrom.getBoundingClientRect();
+
+                            const sourcePoint = {
+                                x: sourceRect.x - 1,
+                                y: sourceRect.y + sourceRect.height / 2
+                            };
+                            const targetPoint = {
+                                x: targetRect.x + targetRect.width,
+                                y: targetRect.y + targetRect.height / 2 + 2
+                            };
+
+                            const arrow = new ArrowLine(sourcePoint, targetPoint, {
+                                curvature: 0.5,
+                                forceDirection: "horizontal"
+                            });
+                            this.arrows.push(arrow);
+                        }
+                    });
+                }
 
             });
         },
