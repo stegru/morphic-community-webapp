@@ -14,7 +14,7 @@
             <div v-for="(value, paramKey, index) in buttonEditStorage.configuration.parameters"
                  :key="paramKey"
                  role="group" class="mb-3">
-385              <b-form-group :label="allParameters[paramKey].label"
+              <b-form-group :label="allParameters[paramKey].label"
                             :label-for="'barItem_' + paramKey"
                             :invalid-feedback="editValidation(paramKey)">
                 <b-form-input :id="'barItem_' + paramKey"

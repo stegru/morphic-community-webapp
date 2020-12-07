@@ -281,10 +281,6 @@ export default {
                     if (hint) {
                         hint.style.display = "none";
                     }
-
-                    if (target) {
-                        target.style.display = "none";
-                    }
                 } else {
                     createPopper(virtualElement, hint, {
                         placement: "right-start",
