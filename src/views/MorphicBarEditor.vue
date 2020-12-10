@@ -1,111 +1,7 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <b-modal id="modalEditGeneric"
-             @ok="refreshButton(true)" @cancel="refreshButton(false)"
-             size="lg" scrollable centered
-             footer-bg-variant="light"
-             ok-title="Update Button"
-             title="Edit button">
-      <div v-if="buttonEditStorage">
-        <b-form>
-        <b-row>
-          <b-col md="6">
-            <div v-for="(value, paramKey, index) in buttonEditStorage.configuration.parameters"
-                 :key="paramKey"
-                 role="group" class="mb-3">
-              <b-form-group :label="allParameters[paramKey].label"
-                            :label-for="'barItem_' + paramKey"
-                            :invalid-feedback="editValidation(paramKey)">
-                <b-form-input :id="'barItem_' + paramKey"
-                              :name="paramKey"
-                              v-model="buttonEditStorage.configuration.parameters[paramKey]"
-                              :state="!editValidation(paramKey)"
-                              :autofocus="!index"
-                              v-bind="allParameters[paramKey].attrs"
-                />
-              </b-form-group>
-            </div>
-
-            <div class="bg-silver rounded p-3">
-              <p v-if="editDialogDetails" class="text-right small mb-0">
-                (<b-link @click="editDialogDetails = false">Hide</b-link>)
-              </p>
-              <p v-else class="small">
-                Optional: <b-link @click="editDialogDetails = true">Customize the button (color &amp; picture)</b-link>
-              </p>
-              <div v-if="editDialogDetails">
-                <h6><b>Color for button</b></h6>
-                <div class="bg-white rounded p-3 mb-4">
-                  <div
-                    v-for="(hex, name) in colors"
-                    :key="name"
-                    @click="editChangeColor(hex)"
-                    :title="name"
-                    :class="{ active: (buttonEditStorage.configuration.color || colors.blue) === hex }"
-                    class="colorBoxHolder"
-                    >
-                    <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
-                  </div>
-                </div>
-
-                <h6><b>Picture for button</b></h6>
-                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
-                  <div
-                    v-for="(filename, icon) in editSubKindIcons"
-                    :key="icon"
-                    @click="editChangeIcon(icon)"
-                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
-                    class="iconBoxHolder"
-                    >
-                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
-                    </div>
-                  </div>
-                </div>
-                <div v-else class="bg-white rounded p-3 compactIconHolder">
-                  <div class="iconBoxHolder" :class="{ active: (!buttonEditStorage.configuration.image_url) }">
-                    <div
-                      @click="editChangeIcon('')"
-                      :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'"
-                      class="iconBox"
-                      >
-                      <p>No image</p>
-                    </div>
-                  </div>
-                  <div
-                    v-for="(filename, icon) in icons"
-                    :key="icon"
-                    @click="editChangeIcon(icon)"
-                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
-                    class="iconBoxHolder"
-                    >
-                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
-                    </div>
-                  </div>
-                </div>
-                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="text-center pt-2">
-                  <b-button @click="editDialogSubkindIcons = false" variant="outline-dark" size="sm">Pick from more pictures</b-button>
-                </div>
-              </div>
-            </div>
-          </b-col>
-          <b-col md="6">
-            <div class="max-height bg-silver rounded p-3 text-center">
-              <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage)" class="text-danger">Remove Button</b-link></p>
-              <p class="">This is the button you are making</p>
-              <div class="barPreview rounded">
-                <div class="previewHolder">
-                  <PreviewItem :item="buttonEditStorage" />
-                </div>
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-        </b-form>
-      </div>
-    </b-modal>
+    <EditButtonDialog ref="editDialog" />
 
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
@@ -268,7 +164,7 @@
                     <drag :key="item.id"
                       @dragstart="setDragInProgress(true)"
                       @dragend="setDragInProgress(false)"
-                      @click="buttonToEdit(item, $event)"
+                      @click="showEditDialog(item, $event)"
                       @cut="removeButton(item, barDetails.items)"
                       class="buttonDragger">
                       <div :key="item.id" class="previewHolder">
@@ -712,14 +608,16 @@ img:before {
 import CommunityManager from "@/components/dashboardV2/CommunityManager";
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
-import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
+import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as params from "@/utils/params";
+import EditButtonDialog from "@/views/EditButtonDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        EditButtonDialog,
         CommunityManager,
         PreviewItem,
         Drag,
@@ -727,14 +625,6 @@ export default {
         DropList
     },
     methods: {
-        /**
-         * Validate a parameter field in the button edit dialog.
-         * @param {String} paramKey The parameter key.
-         * @return {String} The validation error message (or null if valid)
-         */
-        editValidation: function (paramKey) {
-            return params.getValidationError(this.buttonEditStorage, paramKey);
-        },
         dropToBar: function (event) {
             event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
             if (event.type === "catalogButtonNoImage") {
@@ -764,7 +654,7 @@ export default {
 
             // Edit the button, if it has parameterised fields.
             if (button.configuration.hasError) {
-                this.buttonToEdit(button);
+                this.showEditDialog(button);
             }
         },
 
@@ -1028,33 +918,22 @@ export default {
             // remove from items list
             // bar and drawer lists are automatically updated from watcher
             this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
-            this.$bvModal.hide("modalEditGeneric");
             this.setBarChanged();
         },
 
         /**
          * Shows the edit button dialog.
-         * @param {BarItem} item The item to edit
+         * @param {BarItem} [item] The item to edit.
          */
-        buttonToEdit: function (item) {
+        showEditDialog: function (item) {
             if (!this.dragInProgress) {
-                this.buttonEditStorage = item;
-                this.$bvModal.show("modalEditGeneric");
+                this.selectedItem = item;
+                this.editDialog.showDialog(item).then(changed => {
+                    if (changed) {
+                        this.setBarChanged();
+                    }
+                });
             }
-        },
-        refreshButton: function (updated) {
-            // updating the data in a button (on edit)
-            this.editDialogDetails = false;
-            this.editDialogSubkindIcons = true;
-            if (updated) {
-                this.setBarChanged();
-            }
-        },
-        editChangeColor: function (hex) {
-            this.buttonEditStorage.configuration.color = hex;
-        },
-        editChangeIcon: function (icon) {
-            this.buttonEditStorage.configuration.image_url = icon;
         },
         getMembersCount: function () {
             if (this.members && this.members.length > 0) {
@@ -1138,27 +1017,13 @@ export default {
     },
     computed: {
         communityId: function () { return this.$store.getters.communityId; },
-        editSubKindIcons: function () {
-            const data = {};
-            if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-                for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
-                }
-            }
-            return data;
-        },
-        activeMemberId: function () { return this.$route.query.memberId; }
+        activeMemberId: function () { return this.$route.query.memberId; },
+        editDialog: function () { return this.$refs.editDialog; }
     },
     mounted() {
         this.loadAllData();
     },
     watch: {
-        "buttonEditStorage.configuration": {
-            handler: function (newValue, oldValue) {
-                params.applyParameters(this.buttonEditStorage);
-            },
-            deep: true
-        },
         "barDetails.items": function (newValue, oldValue) {
             this.distributeItems(newValue);
         },
@@ -1245,8 +1110,7 @@ export default {
             addToDrawer: false,
             newBar: false,
             openDrawer: true,
-            editDialogDetails: false,
-            editDialogSubkindIcons: true,
+            editDialogShown: false,
             tab: 0,
             dragFromEditor: false,
             isChanged: false,
@@ -1266,7 +1130,11 @@ export default {
 
             // storage
             buttonStorage: {},
-            buttonEditStorage: {
+            /**
+             * The selected item.
+             * @type {BarItem}
+             */
+            selectedItem: {
                 /** @type {BarItemConfiguration} */
                 configuration: {
                     label: "hi",
@@ -1309,10 +1177,7 @@ export default {
                 }
             },
             predefinedBars: predefinedBars,
-            colors: colors,
-            icons: icons,
-            subkindIcons: subkindIcons,
-            allParameters: params.allParameters
+            colors: colors
         };
     }
 };
