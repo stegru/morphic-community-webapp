@@ -1,5 +1,6 @@
 import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
+import { allIcons as allIconsSrc } from "./allIcons.js";
 import * as params from "./params.js";
 
 export const API_URL = CONFIG.API_URL;
@@ -35,175 +36,165 @@ export const colors = {
     default_button: "rgb(0, 47, 87)"
 };
 
-// You can check the provenance of the icons in the following spreadsheet:
-// https://docs.google.com/spreadsheets/d/1pIb2_cjtCi1nybtRAEL-wFUv6Yv0gxqYipmTGTxCsyE/
-export const icons = {
-    bootstrap: "bootstrap.svg",
-    gmail: "gmail.svg",
-    outlook: "outlook.svg",
-    "yahoo-mail": "yahoo-mail.svg",
-    envelope: "envelope.svg",
-    "envelope-open": "envelope-open.svg",
-    "envelope-open-text": "envelope-open-text.svg",
-    "envelope-outline": "envelope-outline.svg",
-    "envelope-outline-open": "envelope-outline-open.svg",
-    facebook: "facebook.svg",
-    nextdoor: "logo_nextdoor.svg",
-    pinterest: "logo_pinterest.svg",
-    twitter: "twitter.svg",
-    imgur: "logo_imgur.svg",
-    instagram: "logo_instagram.svg",
-    linkedin: "logo_linkedIn.svg",
-    reddit: "reddit.svg",
-    tumblr: "logo_tumblr.svg",
-    paypal: "paypal.svg",
-    skype: "skype.svg",
-    "google-calendar": "logo_googleCalendar.svg",
-    icloud: "logo_icloud.svg",
-    aolmail: "logo_aolOld.svg",
-    telegram: "telegram.svg",
-    viber: "viber.svg",
-    whatsapp: "whatsapp.svg",
-    youtube: "youtube.svg",
-    cnn: "logo_cnn.svg",
-    foxnews: "logo_foxNews.svg",
-    "google-news": "logo_googleNews.svg",
-    nytimes: "logo_newYorkTimes.svg",
-    "the-washington-post": "logo_washingtonPost.svg",
-    yahoo: "logo_yahoo.svg",
-    abcnews: "logo_abcNews.svg",
-    aljazeera: "logo_alJazeera.jpg",
-    bbc: "logo_bbc.svg",
-    bloomberg: "logo_bloomberg.svg",
-    cbsnews: "logo_cbsNews.svg",
-    cnbc: "logo_cnbc.svg",
-    drudgereport: "logo_drudgeReport.svg",
-    forbes: "logo_forbes.svg",
-    theguardian: "logo_theGuardian.svg",
-    thehill: "logo_theHill.jpeg",
-    huffpost: "logo_huffpost.svg",
-    latimes: "logo_laTimes.svg",
-    nbcnews: "logo_nbcNews.svg",
-    npr: "logo_npr.svg",
-    reuters: "logo_reuters.svg",
-    usatoday: "logo_usaToday.svg",
-    wsj: "logo_wsj.svg",
-    amazon: "logo_amazon.svg",
-    craigslist: "logo_craigslist.svg",
-    ebay: "logo_ebay.png",
-    etsy: "logo_etsy.svg",
-    bestbuy: "logo_bestBuy.svg",
-    kohls: "logo_kohls.svg",
-    macys: "logo_macys.svg",
-    target: "logo_target.svg",
-    walmart: "logo_walmart.svg",
-    wayfair: "logo_wayfair.png",
-    netflix: "logo_netflix.svg",
-    pandora: "logo_pandora.jpg",
-    spotify: "logo_spotify.svg",
-    "amazon-music": "logo_amazonMusic.png",
-    itunes: "logo_itunes.svg",
-    deezer: "logo_deezer.svg",
-    "disney-plus": "logo_disneyPlus.svg",
-    hulu: "logo_hulu.svg",
-    iheart: "logo_iheartRadio.svg",
-    soundcloud: "logo_soundcloud.svg",
-    tidal: "logo_tidal.png",
-    vimeo: "logo_vimeo.svg",
-    "youtube-music": "logo_youtubeMusic.svg",
-    box: "logo_box.svg",
-    dropbox: "logo_dropbox.svg",
-    "google-drive": "logo_googleDrive.svg",
-    "one-drive": "logo_onedrive.svg"
-};
 
-export const subkindIcons = {
-    gmail: ["gmail", "envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"],
-    outlook: ["outlook", "envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"],
-    "yahoo-mail": ["yahoo-mail", "envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"],
-    aolmail: ["envelope", "envelope-open", "envelope-open-text", "envelope-outline", "envelope-outline-open"]
-};
+/**
+ * All icons. Map of iconKey => file
+ * @type {Object<String,String>}
+ */
+export const icons = {};
 
-Object.values(allButtonsSrc).forEach(params.prepareBarItem);
+/**
+ * Icons which apply to specific sub-kinds.
+ * Map of subkind => array of iconKeys.
+ * @type {Object<String,Array<String>>}
+ */
+export const groupedIcons = {};
+groupedIcons.make = [];
+Object.keys(allIconsSrc).forEach(iconId => {
+    var filename = allIconsSrc[iconId];
+    icons[iconId] = filename;
+
+    const isSubKind = iconId.includes("$");
+    const isGeneric = !isSubKind && !filename.startsWith("logo_");
+
+    const group = isGeneric
+        ? "generic"
+        : (isSubKind && iconId.split("$", 2)[0]);
+
+    if (group) {
+        if (groupedIcons[group]) {
+            groupedIcons[group].push(iconId);
+        } else {
+            groupedIcons[group] = [iconId];
+        }
+
+        // Add all icons to the generic buttons
+        groupedIcons.make.push(iconId);
+    }
+});
+
 
 /**
  * All defined buttons.
+ * @type {Object<String,BarItem>}
  */
 export const allButtons = allButtonsSrc;
 
-var catalog = {
-    "Make a button": "make",
-    "Call a Person": "call",
-    "Meeting Room": "meeting",
-    "Action Buttons": "action",
-    "Calendar - App on Computer": "local-calendar",
-    "Calendar - Website": "calendar",
-    "Social Media Sites": "socialMedia",
-    "Email - App on Computer": "local-email",
-    "Email - Websites": "email",
-    "Photo Sharing": {
-        "Google Photos": {
-            kind: "link",
-            is_primary: true,
-            configuration: {
-                subkind: "google-photos",
-                label: "Google Photos",
-                color: colors.blue,
-                image_url: "google-photos",
-                url: "https://photos.google.com",
-                description: "Opens your Google Photos in a browser."
-            }
+/**
+ * The default icon for each button.
+ * @type {Object<String,String>}
+ */
+export const defaultIcons = {
+
+};
+
+/** Gets the host part of a URL */
+const getHost = /.*:\/\/([^/:]+)/;
+
+Object.keys(allButtons).forEach((buttonKey) => {
+    const button = allButtons[buttonKey];
+
+    // Fix the color
+    if (!button.configuration.color || typeof(button.configuration.color) === "string") {
+        button.configuration.color = colors[button.configuration.color || "blue"];
+    }
+
+    // Use the site's favicon if there's no local image.
+    if (!button.configuration.image_url && button.configuration.url) {
+        var m = getHost.exec(button.configuration.url);
+        if (m) {
+            button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
         }
+    }
+
+    defaultIcons[buttonKey] = button.configuration.image_url;
+    button.buttonKey = buttonKey;
+    params.prepareBarItem(button);
+});
+
+var catalog = {
+    make: {
+        title: "Make a button",
+        defaultIcon: undefined
     },
-    News: "news",
-    Shopping: "shopping",
-    Media: "multimedia",
-    "Online Drives": "onlineFileDrives"
+    call: {
+        title: "Call a Person",
+        defaultIcon: undefined
+    },
+    meeting: {
+        title: "Meeting Room",
+        defaultIcon: "comments"
+    },
+    action: {
+        title: "Action Buttons",
+        defaultIcon: undefined
+    },
+    "local-calendar": {
+        title: "Calendar - App on Computer",
+        defaultIcon: "calendar$calendar"
+    },
+    calendar: {
+        title: "Calendar - Website",
+        defaultIcon: "calendar$calendar"
+    },
+    socialMedia: {
+        title: "Social Media Sites",
+        defaultIcon: undefined
+    },
+    "local-email": {
+        title: "Email - App on Computer",
+        defaultIcon: undefined
+    },
+    email: {
+        title: "Email - Websites",
+        defaultIcon: "email$envelope"
+    },
+    photo: {
+        title: "Photo Sharing",
+        defaultIcon: undefined
+    },
+    news: {
+        title: "News",
+        defaultIcon: "newspaper"
+    },
+    shopping: {
+        title: "Shopping",
+        defaultIcon: undefined
+    },
+    multimedia: {
+        title: "Media",
+        defaultIcon: undefined
+    },
+    onlineFileDrives: {
+        title: "Online Drives",
+        defaultIcon: undefined
+    }
 };
 
 /**
- * Gets the items for the given category
- * @param {String} category The category id (button.configuration.category).
- * @return {Array<BarItem>} The items for the category.
+ * Gets the items for the given subkind
+ * @param {String} subkind The subkind id (button.configuration.subkind).
+ * @return {Array<BarItem>} The items for the subkind.
  */
-function getGroupItems(category) {
-    var getHost = /.*:\/\/([^/:]+)/;
+function getGroupItems(subkind) {
     var result = {};
     for (const [key, button] of Object.entries(allButtons)) {
-        if (button.configuration.category === category) {
-            if (typeof(button.configuration.color) === "string") {
-                button.configuration.color = colors[button.configuration.color];
-            }
-
-            // Use the site's favicon if there's no local image.
-            if (!button.configuration.image_url && button.configuration.url) {
-                var m = getHost.exec(button.configuration.url);
-                if (m) {
-                    button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
-                }
-            }
-
-            if (typeof(button.configuration.image_url) === "string") {
-                if (button.configuration.image_url.indexOf("/") === -1) {
-                    button.configuration.image_url = "/icons/" + button.configuration.image_url;
-                }
-            }
-
+        if (button.subkind === subkind) {
             button.configuration.catalogItem = true;
-
+            if (!button.configuration.image_url) {
+                button.configuration.image_url = catalog[subkind].defaultIcon;
+            }
             result[key] = button;
         }
     }
     return result;
 }
 
-Object.keys(catalog).forEach(key => {
-    if (typeof(catalog[key]) === "string") {
-        catalog[key] = getGroupItems(catalog[key]);
-    }
-});
-
 /**
  * @type {Object<String,Object<String,BarItem>>} Button catalog.
  */
-export const buttonCatalog = catalog;
+export const buttonCatalog = {};
+
+Object.keys(catalog).forEach(key => {
+    buttonCatalog[catalog[key].title] = getGroupItems(key);
+});

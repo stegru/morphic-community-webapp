@@ -6,6 +6,7 @@ import store from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import { HTTP } from "@/services/index";
+import { icons } from "@/utils/constants";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -50,6 +51,23 @@ Vue.mixin({
                 toastClass: "toast-height",
                 toaster: "b-toaster-top-center"
             }, options));
+        },
+        /**
+         * Gets the url of an icon
+         * @param {String} image The icon identified (from image_url)
+         * @return {string} The url.
+         */
+        getIconUrl(image) {
+            var togo;
+            if (image.includes("/")) {
+                togo = image;
+            } else {
+                if (!image.includes(".")) {
+                    togo = icons[image];
+                }
+                togo = "/icons/" + togo;
+            }
+            return togo;
         }
     }
 });

@@ -48,20 +48,7 @@
                 </div>
 
                 <h6><b>Picture for button</b></h6>
-                <div v-if="button.configuration.subkind && subKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
-                  <div
-                          v-for="(filename, icon) in subKindIcons"
-                          :key="icon"
-                          @click="changeIcon(icon)"
-                          :class="{ active: button.configuration.image_url === icon }"
-                          class="iconBoxHolder"
-                  >
-                    <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" />
-                    </div>
-                  </div>
-                </div>
-                <div v-else class="bg-white rounded p-3 compactIconHolder">
+                <div class="bg-white rounded p-3 compactIconHolder">
                   <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
                     <div
                             @click="changeIcon('')"
@@ -71,20 +58,16 @@
                       <p>No image</p>
                     </div>
                   </div>
-                  <div
-                          v-for="(filename, icon) in icons"
-                          :key="icon"
-                          @click="changeIcon(icon)"
-                          :class="{ active: button.configuration.image_url === icon }"
-                          class="iconBoxHolder"
+                  <div v-for="(filename, icon) in listedIcons"
+                       :key="icon"
+                       @click="changeIcon(icon)"
+                       :class="{ active: button.configuration.image_url === icon }"
+                       class="iconBoxHolder"
                   >
                     <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" />
+                      <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
                     </div>
                   </div>
-                </div>
-                <div v-if="button.configuration.subkind && subKindIcons && editDialogSubkindIcons" class="text-center pt-2">
-                  <b-button @click="editDialogSubkindIcons = false" variant="outline-dark" size="sm">Pick from more pictures</b-button>
                 </div>
               </div>
             </div>
@@ -109,7 +92,7 @@
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { colors, icons, subkindIcons } from "@/utils/constants";
+import { colors, icons, defaultIcons, groupedIcons } from "@/utils/constants";
 import * as params from "@/utils/params";
 
 export default {
@@ -134,14 +117,45 @@ export default {
             button: null,
             allParameters: params.allParameters,
             showExtra: false,
-            editDialogSubkindIcons: true,
 
             dialogClosed: null,
 
-            colors: colors,
-            icons: icons,
-            subkindIcons: subkindIcons
+            colors: colors
         };
+    },
+
+    computed: {
+        /**
+         * Gets the icons to be shown in the list.
+         */
+        listedIcons: function () {
+            const defaultIcon = defaultIcons[this.button.buttonKey];
+            const iconKeys = [];
+
+            // Get the icons of the same category.
+            var group = groupedIcons[this.button.subkind];
+            if (!group && this.button.subkind.startsWith("local-")) {
+                group = groupedIcons[this.button.subkind.substr(6)];
+            }
+
+            if (group) {
+                iconKeys.push.apply(iconKeys, group);
+            }
+
+            // Add the generic icons
+            iconKeys.push.apply(iconKeys, groupedIcons.generic);
+
+            const togo = {};
+            if (defaultIcon) {
+                togo[defaultIcon] = icons[defaultIcon];
+            }
+
+            iconKeys.forEach(key => {
+                togo[key] = icons[key];
+            });
+
+            return togo;
+        }
     },
 
     methods: {
@@ -158,15 +172,6 @@ export default {
         },
         changeIcon: function (icon) {
             this.button.configuration.image_url = icon;
-        },
-        subKindIcons: function () {
-            const data = {};
-            if (this.button.configuration.subkind && this.subkindIcons[this.button.configuration.subkind]) {
-                for (let i = 0; i < this.subkindIcons[this.button.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.button.configuration.subkind][i]] = this.subkindIcons[this.button.configuration.subkind][i];
-                }
-            }
-            return data;
         },
         /**
          * Closes the dialog.

@@ -217,7 +217,7 @@
                       <!-- Define looks when selected (expanded) -->
                       <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
                         <div style="width: 100%; display: inline-flex; align-items: center;">
-                          <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                          <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
                           <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                           <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                         </div>
@@ -239,7 +239,7 @@
                       <!-- Define looks when not selected -->
                       <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
                         <div class="imageWrapper">
-                          <b-img v-if="button.configuration.image_url" :src="button.configuration.image_url" />
+                          <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
                         </div>{{ button.configuration.catalogLabel || button.configuration.label }}
                       </b-link>
                     </drag>

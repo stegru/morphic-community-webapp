@@ -1,34 +1,23 @@
-// auto-generated
+// This file is auto-generated from https://docs.google.com/spreadsheets/d/1F6Ap2czNsMw-KrmRjvgoELh1DzcZaqnHNQvpiUhD3LY.
 
 export const allButtons = {
-    "Calendar - Website": {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            category: "calendar",
-            label: "Google Calendar",
-            color: "blue",
-            url: "https://calendar.google.com/calendar/r",
-            description: "Opens the Google Calendar for the user if they are signed in."
-        }
-    },
     abc_news: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "ABC News",
             color: "blue",
-            image_url: "logo_abcNews.svg",
+            image_url: "abcnews",
             url: "https://abcnews.go.com/",
             description: "Opens the ABC News home page."
         }
     },
     accuweather: {
         kind: "link",
+        subkind: "weather",
         is_primary: true,
         configuration: {
-            category: "weather",
             label: "AccuWeather",
             color: "blue",
             url: "https://www.accuweather.com/",
@@ -37,115 +26,126 @@ export const allButtons = {
     },
     al_jazeera: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Al Jazeera",
             color: "blue",
-            image_url: "logo_alJazeera.jpg",
+            image_url: "aljazeera",
             url: "https://www.aljazeera.com/",
             description: "Opens the Al Jazeera home page."
         }
     },
     amazon: {
         kind: "link",
+        subkind: "shopping",
         is_primary: true,
         configuration: {
-            category: "shopping",
             label: "Amazon",
             color: "blue",
-            image_url: "logo_amazon.svg",
+            image_url: "amazon",
             url: "https://www.amazon.com/",
             description: "Opens the Amazon (US) home page."
         }
     },
     amazon_music: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Amazon Music",
             color: "blue",
-            image_url: "logo_amazonMusic.png",
+            image_url: "amazonmusic",
             url: "https://music.amazon.com/home"
         }
     },
     aol_mail: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "AOL Mail",
             color: "blue",
-            image_url: "logo_aolOld.svg",
+            image_url: "aolold",
             url: "https://mail.aol.com/webmail-std/en-us/suite",
             description: "Opens the AOL Mail inbox in a browser."
         }
     },
     apple_music: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Apple Music",
             color: "blue",
-            image_url: "logo_itunes.svg",
+            image_url: "itunes",
             url: "https://music.apple.com/"
         }
     },
     bbc_news: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "BBC News",
             color: "blue",
-            image_url: "logo_bbc.svg",
+            image_url: "bbc",
             url: "https://www.bbc.com/news",
             description: "Opens the BBC News home page."
         }
     },
     best_buy: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Best Buy",
             color: "blue",
-            image_url: "logo_bestBuy.svg",
+            image_url: "bestbuy",
             url: "https://www.bestbuy.com/",
             description: "Opens the Best Buy home page."
         }
     },
     bloomberg: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Bloomberg",
             color: "blue",
-            image_url: "logo_bloomberg.svg",
+            image_url: "bloomberg",
             url: "https://www.bloomberg.com/",
             description: "Opens the Bloomberg home page."
         }
     },
     box: {
         kind: "link",
+        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
-            category: "onlineFileDrives",
             label: "Box",
             color: "blue",
-            image_url: "logo_box.svg",
+            image_url: "box",
             url: "https://app.box.com/folder/0",
             description: "Opens the Box home page."
         }
     },
-    calendly: {
+    calendar_website: {
         kind: "link",
+        subkind: "calendar",
         is_primary: true,
         configuration: {
-            category: "calendar",
+            label: "Google Calendar",
+            color: "blue",
+            url: "https://calendar.google.com/calendar/r",
+            description: "Opens the Google Calendar for the user if they are signed in."
+        }
+    },
+    calendly: {
+        kind: "link",
+        subkind: "calendar",
+        is_primary: true,
+        configuration: {
             label: "Calendly",
             color: "blue",
             url: "https://calendly.com/",
@@ -154,21 +154,21 @@ export const allButtons = {
     },
     cbs_news: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "CBS News",
             color: "blue",
-            image_url: "logo_cbsNews.svg",
+            image_url: "cbsnews",
             url: "https://www.cbsnews.com/",
             description: "Opens the CBS News home page."
         }
     },
     clipboard: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Text Size",
             description: "Changes the Text Size",
             identifier: "screen-zoom",
@@ -184,33 +184,33 @@ export const allButtons = {
     },
     cnbc: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "CNBC",
             color: "blue",
-            image_url: "logo_cnbc.svg",
+            image_url: "cnbc",
             url: "https://www.cnbc.com/",
             description: "Opens the CNBC home page."
         }
     },
     cnn: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "CNN",
             color: "blue",
-            image_url: "logo_cnn.svg",
+            image_url: "cnn",
             url: "https://www.cnn.com/",
             description: "Opens the CNN home page."
         }
     },
-    "color-vision": {
+    color_vision: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Color Vision",
             description: "Turns Color Vision filters On/Off",
             identifier: "color-vision",
@@ -226,21 +226,21 @@ export const allButtons = {
     },
     craigslist: {
         kind: "link",
+        subkind: "shopping",
         is_primary: true,
         configuration: {
-            category: "shopping",
             label: "Craiglist",
             color: "blue",
-            image_url: "logo_craigslist.svg",
+            image_url: "craigslist",
             url: "https://www.craigslist.org/",
             description: "Opens the Craigslist hoome page."
         }
     },
-    "dark-mode": {
+    dark_mode: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Dark Mode",
             description: "Turns Dark Mode On/Off",
             identifier: "dark-mode",
@@ -256,20 +256,20 @@ export const allButtons = {
     },
     deezer: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Deezer",
             color: "blue",
-            image_url: "logo_deezer.svg",
+            image_url: "deezer",
             url: "https://www.deezer.com/"
         }
     },
     default_mail_app: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "E-mail",
             color: "blue",
             url: "Default email app on computer",
@@ -278,152 +278,163 @@ export const allButtons = {
     },
     disney_plus: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Disney Plus",
             color: "blue",
-            image_url: "logo_disneyPlus.svg",
+            image_url: "disneyplus",
             url: "https://www.disneyplus.com/"
         }
     },
     dropbox: {
         kind: "link",
+        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
-            category: "onlineFileDrives",
             label: "Dropbox",
             color: "blue",
-            image_url: "logo_dropbox.svg",
+            image_url: "dropbox",
             url: "https://www.dropbox.com/h",
             description: "Opens the dropbox home page."
         }
     },
     drudge_report: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Drudge Report",
             color: "blue",
-            image_url: "logo_drudgeReport.svg",
+            image_url: "drudgereport",
             url: "https://www.drudgereport.com/",
             description: "Opens the Drudge Report home page."
         }
     },
     ebay: {
         kind: "link",
+        subkind: "shopping",
         is_primary: true,
         configuration: {
-            category: "shopping",
             label: "ebay",
             color: "blue",
-            image_url: "logo_ebay.png",
+            image_url: "ebay",
             url: "https://www.ebay.com/",
             description: "Opens the ebay home page."
         }
     },
     etsy: {
         kind: "link",
+        subkind: "shopping",
         is_primary: true,
         configuration: {
-            category: "shopping",
             label: "Etsy",
             color: "blue",
-            image_url: "logo_etsy.svg",
+            image_url: "etsy",
             url: "https://www.etsy.com/",
             description: "Opens the Esty home page."
         }
     },
     facebook: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: true,
         configuration: {
-            category: "socialMedia",
             label: "Facebook",
             color: "blue",
-            image_url: "facebook.svg",
+            image_url: "facebook",
             url: "https://www.facebook.com/",
             description: "Opens the Facebook home page for users if they are signed in."
         }
     },
     forbes: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Forbes",
             color: "blue",
-            image_url: "logo_forbes.svg",
+            image_url: "forbes",
             url: "https://www.forbes.com/",
             description: "Opens the Forbes home page."
         }
     },
     fox_news: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "Fox News",
             color: "blue",
-            image_url: "logo_foxNews.svg",
+            image_url: "foxnews",
             url: "https://www.foxnews.com/",
             description: "Opens the Fox News home page."
         }
     },
     gmail: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "Gmail",
             color: "blue",
-            image_url: "gmail.svg",
+            image_url: "gmail",
             url: "https://mail.google.com/mail/u/0/#inbox",
             description: "Opens the Gmail inbox in a browser."
         }
     },
     google_calendar: {
         kind: "link",
+        subkind: "calendar",
         is_primary: true,
         configuration: {
-            category: "calendar",
             label: "Google Calendar",
             color: "blue",
-            image_url: "logo_googleCalendar.svg",
+            image_url: "googlecalendar",
             url: "https://calendar.google.com/calendar/r",
             description: "Opens the Google Calendar for the user if they are signed in."
         }
     },
     google_drive: {
         kind: "link",
+        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
-            category: "onlineFileDrives",
             label: "Google Drive",
             color: "blue",
-            image_url: "logo_googleDrive.svg",
+            image_url: "googledrive",
             url: "https://drive.google.com/",
             description: "Opens the Google Drive home page."
         }
     },
     google_news: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "Google News",
             color: "blue",
-            image_url: "logo_googleNews.svg",
+            image_url: "googlenews",
             url: "https://news.google.com/",
             description: "Opens the Google News home page."
         }
     },
-    "high-contrast": {
-        kind: "action",
+    google_photos: {
+        kind: "link",
         is_primary: true,
         configuration: {
-            category: "action",
+            category: "photo",
+            label: "Google Photos",
+            color: "blue",
+            url: "https://photos.google.com",
+            description: "Opens Google Photos."
+        }
+    },
+    high_contrast: {
+        kind: "action",
+        subkind: "action",
+        is_primary: true,
+        configuration: {
             label: "Contrast",
             description: "Turns Contrast On/Off",
             identifier: "high-contrast",
@@ -439,55 +450,43 @@ export const allButtons = {
     },
     huffpost: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "HuffPost",
             color: "blue",
-            image_url: "logo_huffpost.svg",
+            image_url: "huffpost",
             url: "https://www.huffpost.com/",
             description: "Opens the HuffPost (Huffington Post) home page."
         }
     },
     hulu: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Hulu",
             color: "blue",
-            image_url: "logo_hulu.svg",
+            image_url: "hulu",
             url: "https://www.hulu.com/"
         }
     },
-    "icloud-calendar": {
+    icloud_calendar: {
         kind: "link",
+        subkind: "calendar",
         is_primary: true,
         configuration: {
-            category: "calendar",
             label: "iCloud-Calendar",
             color: "blue",
             url: "https://www.icloud.com/calendar/",
             description: "Opens the iCloud Calendar for the user if they are signed in."
         }
     },
-    icloud_calendar: {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            category: "calendar",
-            label: "iCloud Calendar",
-            color: "blue",
-            image_url: "",
-            url: "https://www.icloud.com/calendar/",
-            description: "Opens the iCloud Calendar for the user if they are signed in."
-        }
-    },
     icloud_drive: {
         kind: "link",
+        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
-            category: "onlineFileDrives",
             label: "iCloud Drive",
             color: "blue",
             url: "https://www.icloud.com/iclouddrive/",
@@ -496,32 +495,32 @@ export const allButtons = {
     },
     icloud_mail: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "iCloud Mail",
             color: "blue",
-            image_url: "logo_icloud.svg",
+            image_url: "icloud",
             url: "https://www.icloud.com/mail/",
             description: "Opens the iCloud inbox in a browser."
         }
     },
     iheart_radio: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "iHeart Radio",
             color: "blue",
-            image_url: "logo_iheartRadio.svg",
+            image_url: "iheartradio",
             url: "https://www.iheart.com/"
         }
     },
     imessage: {
         kind: "application",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Help via iMessage",
             description: "Opens iMessage to get remote help (Mac only)",
             default: "imessage",
@@ -530,33 +529,33 @@ export const allButtons = {
     },
     imgur: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: false,
         configuration: {
-            category: "socialMedia",
             label: "Imgur",
             color: "blue",
-            image_url: "logo_imgur.svg",
+            image_url: "imgur",
             url: "https://imgur.com/",
             description: "Opens the Imgur home page."
         }
     },
     instagram: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: false,
         configuration: {
-            category: "socialMedia",
             label: "Instagram",
             color: "blue",
-            image_url: "logo_instagram.svg",
+            image_url: "instagram",
             url: "https://www.instagram.com/",
             description: "Opens the Instagram home page for the user if they are signed in."
         }
     },
     jitsi: {
         kind: "link",
+        subkind: "meeting",
         is_primary: true,
         configuration: {
-            category: "meeting",
             label: "Jitsi",
             color: "blue",
             url: "https://meet.jit.si/",
@@ -565,33 +564,33 @@ export const allButtons = {
     },
     kohls: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Kohls",
             color: "blue",
-            image_url: "logo_kohls.svg",
+            image_url: "kohls",
             url: "https://www.kohls.com/",
             description: "Opens the Kohl's home page."
         }
     },
     linkedin: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: false,
         configuration: {
-            category: "socialMedia",
             label: "LinkedIn",
             color: "blue",
-            image_url: "logo_linkedIn.svg",
+            image_url: "linkedin",
             url: "https://www.linkedin.com/",
             description: "Opens the LinkedIn home page for the user if they are signed in."
         }
     },
-    "local-calendar": {
+    local_calendar: {
         kind: "application",
+        subkind: "local-calendar",
         is_primary: true,
         configuration: {
-            category: "local-calendar",
             label: "Calendar App",
             description: "Opens the local Calendar Application.",
             default: "calendar",
@@ -600,33 +599,33 @@ export const allButtons = {
     },
     los_angeles_times: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Los Angeles Times",
             color: "blue",
-            image_url: "logo_laTimes.svg",
+            image_url: "latimes",
             url: "https://www.latimes.com/",
             description: "Opens the Los Angeles Times home page."
         }
     },
     macys: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Macys",
             color: "blue",
-            image_url: "logo_macys.svg",
+            image_url: "macys",
             url: "https://www.macys.com/",
             description: "Opens the Macy's home page."
         }
     },
     magnifier: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Magnifier",
             description: "Turns Screen Magnifier On/Off",
             identifier: "magnify",
@@ -642,21 +641,20 @@ export const allButtons = {
     },
     mail_online_daily_mail: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Daily Mail",
             color: "blue",
-            image_url: "",
             url: "https://www.dailymail.co.uk/",
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
     national_weather_service: {
         kind: "link",
+        subkind: "weather",
         is_primary: true,
         configuration: {
-            category: "weather",
             label: "National Weather Service",
             color: "blue",
             url: "https://www.weather.gov/",
@@ -665,56 +663,55 @@ export const allButtons = {
     },
     nbc_news: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "NBC News",
             color: "blue",
-            image_url: "logo_nbcNews.svg",
+            image_url: "nbcnews",
             url: "https://www.nbcnews.com/",
             description: "Opens the NBC News home page."
         }
     },
     netflix: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: true,
         configuration: {
-            category: "multimedia",
             label: "Netflix",
             color: "blue",
-            image_url: "logo_netflix.svg",
+            image_url: "netflix",
             url: "https://www.netflix.com/"
         }
     },
     new_york_post: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "New York Post",
             color: "blue",
-            image_url: "",
             url: "https://nypost.com/",
             description: "Opens the New York Post home page."
         }
     },
     nextdoor: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: true,
         configuration: {
-            category: "socialMedia",
             label: "Nextdoor",
             color: "blue",
-            image_url: "logo_nextdoor.svg",
+            image_url: "nextdoor",
             url: "https://nextdoor.com/",
             description: "Opens the Nextdoor home page for users if they are signed in."
         }
     },
-    "night-mode": {
+    night_mode: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Night Mode",
             description: "Turns Night Mode On/Off",
             identifier: "night-mode",
@@ -730,128 +727,116 @@ export const allButtons = {
     },
     npr: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "NPR",
             color: "blue",
-            image_url: "logo_npr.svg",
+            image_url: "npr",
             url: "https://www.npr.org/",
             description: "Opens the NPR (National Public Radio) home page."
         }
     },
     onedrive: {
         kind: "link",
+        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
-            category: "onlineFileDrives",
             label: "OneDrive",
             color: "blue",
-            image_url: "logo_onedrive.svg",
+            image_url: "onedrive",
             url: "https://onedrive.live.com/",
             description: "Opens the OneDrive home page."
         }
     },
-    "open-app": {
+    open_app: {
         kind: "application",
+        subkind: "make",
         is_primary: true,
         configuration: {
-            category: "make",
             label: "Open App",
             description: "Allows you to create a button that opens an Application.",
             default: "$defaultApp",
             color: "blue",
-            image_url: "generic-app.svg",
+            image_url: "windowmaximize",
             catalogLabel: "To open an Application"
         }
     },
-    "open-link": {
+    open_link: {
         kind: "link",
+        subkind: "make",
         is_primary: true,
         configuration: {
-            category: "make",
             label: "Open Web Page",
             color: "blue",
-            image_url: "web-browser.svg",
+            image_url: "globe",
             url: "$url",
             description: "Allows you to create a button that opens a Web Page.",
             catalogLabel: "To open a Web Page"
         }
     },
-    "outlook-com-calendar": {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            category: "calendar",
-            label: "Outlook.com Calendar",
-            color: "blue",
-            url: "https://outlook.live.com/calendar/0/",
-            description: "Opens the Outlook.com Calendar page for the user if they are signed in."
-        }
-    },
     outlook_com_calendar: {
         kind: "link",
+        subkind: "calendar",
         is_primary: true,
         configuration: {
-            category: "calendar",
             label: "Outlook.com Calendar",
             color: "blue",
-            image_url: "",
             url: "https://outlook.live.com/calendar/0/",
             description: "Opens the Outlook.com Calendar page for the user if they are signed in."
         }
     },
     outlook_com_mail: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "Outlook.com Mail",
             color: "blue",
-            image_url: "outlook.svg",
+            image_url: "outlook",
             url: "https://outlook.live.com/mail/0/inbox",
             description: "Opens the Outlook.com inbox in a browser."
         }
     },
     pandora: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: true,
         configuration: {
-            category: "multimedia",
             label: "Pandora",
             color: "blue",
-            image_url: "logo_pandora.jpg",
+            image_url: "pandora",
             url: "https://www.pandora.com/station"
         }
     },
     pinterest: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: true,
         configuration: {
-            category: "socialMedia",
             label: "Pinterest",
             color: "blue",
-            image_url: "logo_pinterest.svg",
+            image_url: "pinterest",
             url: "https://www.pinterest.com/",
             description: "Opens the Pinterest home page for users if they are signed in."
         }
     },
-    "quick-assist": {
+    quick_assist: {
         kind: "application",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Quick Assist",
             description: "Opens Quick Assist to get remote help (MS Windows only).",
             default: "quick-assist",
             color: "blue"
         }
     },
-    "read-aloud": {
+    read_aloud: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Read Aloud",
             description: "A button that reads out the selected text.",
             identifier: "read-aloud",
@@ -867,152 +852,151 @@ export const allButtons = {
     },
     reddit: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: false,
         configuration: {
-            category: "socialMedia",
             label: "Reddit",
             color: "blue",
-            image_url: "reddit.svg",
+            image_url: "reddit",
             url: "https://www.reddit.com/",
             description: "Opens the Reddit home page."
         }
     },
     reuters: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "Reuters",
             color: "blue",
-            image_url: "logo_reuters.svg",
+            image_url: "reuters",
             url: "https://www.reuters.com/",
             description: "Opens the Reuters home page."
         }
     },
     sfgate: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "SFGate",
             color: "blue",
-            image_url: "",
             url: "https://www.sfgate.com/",
             description: "Opens the SFGate (San Francisco) home page."
         }
     },
     skype: {
         kind: "application",
+        subkind: "call",
         is_primary: true,
         configuration: {
-            category: "call",
             label: "Call Skype",
             description: "Allows you to create a button to skype-call a particular person.",
             default: "skype",
             color: "blue",
-            image_url: "skype.svg",
+            image_url: "skype",
             args: "$skypeId"
         }
     },
     soundcloud: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Soundcloud",
             color: "blue",
-            image_url: "logo_soundcloud.svg",
+            image_url: "soundcloud",
             url: "https://soundcloud.com/"
         }
     },
     spotify: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: true,
         configuration: {
-            category: "multimedia",
             label: "Spotify",
             color: "blue",
-            image_url: "logo_spotify.svg",
+            image_url: "spotify",
             url: "https://open.spotify.com/"
         }
     },
     target: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Target",
             color: "blue",
-            image_url: "logo_target.svg",
+            image_url: "target",
             url: "https://www.target.com/",
             description: "Opens the Target home page."
         }
     },
     the_guardian: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "The Guardian",
             color: "blue",
-            image_url: "logo_theGuardian.svg",
+            image_url: "theguardian",
             url: "https://www.theguardian.com/us",
             description: "Opens The Guardian home page."
         }
     },
     the_hill: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "The Hill",
             color: "blue",
-            image_url: "logo_theHill.jpeg",
+            image_url: "thehill",
             url: "https://thehill.com/",
             description: "Opens The Hill home page."
         }
     },
     the_new_york_times: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "The New York Times",
             color: "blue",
-            image_url: "logo_newYorkTimes.svg",
+            image_url: "newyorktimes",
             url: "https://www.nytimes.com/",
             description: "Opens The New York Times home page."
         }
     },
     the_wall_street_journal: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "The Wall Street Journal",
             color: "blue",
-            image_url: "logo_wsj.svg",
+            image_url: "wsj",
             url: "https://www.wsj.com/",
             description: "Opens The Wall Street Journal home page."
         }
     },
     the_washington_post: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "The Washington Post",
             color: "blue",
-            image_url: "logo_washingtonPost.svg",
+            image_url: "washingtonpost",
             url: "https://www.washingtonpost.com/",
             description: "Opens The Washington Post home page."
         }
     },
     the_weather_channel: {
         kind: "link",
+        subkind: "weather",
         is_primary: true,
         configuration: {
-            category: "weather",
             label: "The Weather Channel",
             color: "blue",
             url: "https://weather.com/",
@@ -1021,54 +1005,53 @@ export const allButtons = {
     },
     tidal: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Tidal",
             color: "blue",
-            image_url: "logo_tidal.png",
+            image_url: "tidal",
             url: "https://tidal.com/"
         }
     },
     top_15_news_sites: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "News",
             color: "blue",
-            image_url: "",
             url: "https://sites.google.com/raisingthefloor.org/quickfolders/news",
             description: "Opens a page with links to the 15 most popular news websites."
         }
     },
     tumblr: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: false,
         configuration: {
-            category: "socialMedia",
             label: "Tumblr",
             color: "blue",
-            image_url: "logo_tumblr.svg",
+            image_url: "tumblr",
             url: "https://www.tumblr.com/",
             description: "Opens the Tumblr home page for the user if they are signed in."
         }
     },
     tunein: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "TuneIn",
             color: "blue",
             url: "https://tunein.com/"
         }
     },
-    "turn-off": {
+    turn_off: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Log-off Computer",
             description: "Logs the user off the Computer",
             identifier: "log-off",
@@ -1081,56 +1064,55 @@ export const allButtons = {
     },
     twitter: {
         kind: "link",
+        subkind: "socialMedia",
         is_primary: true,
         configuration: {
-            category: "socialMedia",
             label: "Twitter",
             color: "blue",
-            image_url: "twitter.svg",
+            image_url: "twitter",
             url: "https://twitter.com/",
             description: "Opens the Twitter home page for the user if they are signed in."
         }
     },
     us_news: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "US News & World Report",
             color: "blue",
-            image_url: "",
             url: "https://www.usnews.com/",
             description: "Opens the US News & World Report home page."
         }
     },
     usa_today: {
         kind: "link",
+        subkind: "news",
         is_primary: false,
         configuration: {
-            category: "news",
             label: "USA Today",
             color: "blue",
-            image_url: "logo_usaToday.svg",
+            image_url: "usatoday",
             url: "https://www.usatoday.com/",
             description: "Opens the USA Today home page."
         }
     },
     vimeo: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Vimeo",
             color: "blue",
-            image_url: "logo_vimeo.svg",
+            image_url: "vimeo",
             url: "https://vimeo.com/"
         }
     },
     volume: {
         kind: "action",
+        subkind: "action",
         is_primary: true,
         configuration: {
-            category: "action",
             label: "Volume",
             description: "Changes the System Volume Up/Down.",
             identifier: "volume",
@@ -1146,125 +1128,112 @@ export const allButtons = {
     },
     walmart: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Walmart",
             color: "blue",
-            image_url: "logo_walmart.svg",
+            image_url: "walmart",
             url: "https://www.walmart.com/",
             description: "Opens the Walmart home page."
         }
     },
     wayfair: {
         kind: "link",
+        subkind: "shopping",
         is_primary: false,
         configuration: {
-            category: "shopping",
             label: "Wayfair",
             color: "blue",
-            image_url: "logo_wayfair.png",
+            image_url: "wayfair",
             url: "https://www.wayfair.com/",
             description: "Opens the Wayfair home page."
         }
     },
     weather_underground: {
         kind: "link",
+        subkind: "weather",
         is_primary: true,
         configuration: {
-            category: "weather",
             label: "Weather Underground",
             color: "blue",
-            image_url: "",
             url: "https://www.wunderground.com/",
             description: "Opens the local Weather Underground home page."
         }
     },
-    "yahoo-calendar": {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            category: "calendar",
-            label: "Yahoo! Calendar",
-            color: "blue",
-            url: "https://calendar.yahoo.com/",
-            description: "Opens the Yahoo! Calendar page for the user if they are signed in."
-        }
-    },
     yahoo_calendar: {
         kind: "link",
+        subkind: "calendar",
         is_primary: true,
         configuration: {
-            category: "calendar",
             label: "Yahoo! Calendar",
             color: "blue",
-            image_url: "logo_yahoo.svg",
             url: "https://calendar.yahoo.com/",
             description: "Opens the Yahoo! Calendar page for the user if they are signed in."
         }
     },
     yahoo_mail: {
         kind: "link",
+        subkind: "email",
         is_primary: true,
         configuration: {
-            category: "email",
             label: "Yahoo! Mail",
             color: "blue",
-            image_url: "yahoo-mail.svg",
+            image_url: "yahoomail",
             url: "https://mail.yahoo.com/",
             description: "Opens the Yahoo! Mail inbox in a browser."
         }
     },
     yahoo_news: {
         kind: "link",
+        subkind: "news",
         is_primary: true,
         configuration: {
-            category: "news",
             label: "Yahoo! News",
             color: "blue",
-            image_url: "logo_yahoo.svg",
+            image_url: "yahoo",
             url: "https://news.yahoo.com/",
             description: "Opens the Yahoo! News home page."
         }
     },
     youtube: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: true,
         configuration: {
-            category: "multimedia",
             label: "Youtube",
             color: "blue",
-            image_url: "youtube.svg",
+            image_url: "youtube",
             url: "https://www.youtube.com/"
         }
     },
     youtube_music: {
         kind: "link",
+        subkind: "multimedia",
         is_primary: false,
         configuration: {
-            category: "multimedia",
             label: "Youtube Music",
             color: "blue",
-            image_url: "logo_youtubeMusic.svg",
+            image_url: "youtubemusic",
             url: "https://music.youtube.com/"
         }
     },
     zoom: {
         kind: "link",
+        subkind: "meeting",
         is_primary: true,
         configuration: {
-            category: "meeting",
             label: "Zoom-Web",
             color: "blue",
             url: "https://zoom.us/",
             description: "Join a Zoom meeting with Web Browser"
         }
     },
-    "zoom-app": {
+    zoom_app: {
         kind: "application",
+        subkind: "meeting",
         is_primary: true,
         configuration: {
-            category: "meeting",
             label: "Zoom",
             description: "Join a Zoom meeting with Zoom Application",
             default: "zoom",
