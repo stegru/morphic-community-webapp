@@ -187,6 +187,33 @@ function getGroupItems(subkind) {
             result[key] = button;
         }
     }
+
+    /** @type {Array<BarItem>} */
+    const values = Object.values(result);
+
+    // If there aren't any primary buttons, make them all primary.
+    const noPrimary = values.every(button => !button.is_primary);
+    if (noPrimary) {
+        values.forEach(button => { button.is_primary = true; });
+    }
+
+    // If there are some non-primary buttons, add a place-holder which shows the selection dialog.
+    const hasSecondary = !noPrimary && values.some(button => !button.is_primary);
+    if (hasSecondary) {
+        /** @type {BarItem} */
+        const placeHolder = {
+            is_primary: true,
+            subkind: subkind,
+            isPlaceholder: true,
+            configuration: {
+                label: "Website",
+                catalogLabel: "More",
+                image_url: catalog[subkind].defaultIcon
+            }
+        };
+        result.more = placeHolder;
+    }
+
     return result;
 }
 
@@ -194,7 +221,8 @@ function getGroupItems(subkind) {
  * @type {Object<String,Object<String,BarItem>>} Button catalog.
  */
 export const buttonCatalog = {};
+export const groupedButtons = {};
 
 Object.keys(catalog).forEach(key => {
-    buttonCatalog[catalog[key].title] = getGroupItems(key);
+    groupedButtons[key] = (buttonCatalog[catalog[key].title] = getGroupItems(key));
 });

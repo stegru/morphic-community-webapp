@@ -188,7 +188,7 @@ function containsParameter(value) {
  * @return {Boolean} true if valid.
  */
 function validate(button) {
-    return Object.keys(button.configuration.parameters).every((paramKey) => {
+    return button.isPlaceholder || Object.keys(button.configuration.parameters).every((paramKey) => {
         return !getValidationError(button, paramKey);
     });
 }

@@ -207,43 +207,45 @@
               <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
-                  <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
-                    <!-- Render each button as draggable -->
-                    <drag :data="button" type="catalogButtonNoImage">
-                      <!-- Define looks when dragged -->
-                      <template v-slot:drag-image>
-                        <PreviewItem :item="button" :noImage="true" class="noImage" />
-                      </template>
-                      <!-- Define looks when selected (expanded) -->
-                      <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
-                        <div style="width: 100%; display: inline-flex; align-items: center;">
-                          <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
-                          <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
-                          <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
-                        </div>
-                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                        <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
-                        <div class="buttons">
-                          <drag :data="button" type="catalogButtonNoImage">
-                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
-                          </drag>
+                  <template v-for="(button, buttonId) in buttonGroup">
+                    <li v-if="button.is_primary" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
+                      <!-- Render each button as draggable -->
+                      <drag :data="button" type="catalogButtonNoImage">
+                        <!-- Define looks when dragged -->
+                        <template v-slot:drag-image>
+                          <PreviewItem :item="button" :noImage="true" class="noImage" />
+                        </template>
+                        <!-- Define looks when selected (expanded) -->
+                        <div v-if="buttonId === expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                          <div style="width: 100%; display: inline-flex; align-items: center;">
+                            <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                            <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
+                            <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
+                          </div>
+                          <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
+                          <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
+                          <div class="buttons">
+                            <drag :data="button" type="catalogButtonNoImage">
+                              <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
+                            </drag>
 
-                          <drag v-if="button.kind != 'action'" :data="button" type="catalogButtonWithImage">
-                            <template v-slot:drag-image>
-                              <PreviewItem :item="button" :noImage="false" class="noImage" />
-                            </template>
-                            <PreviewItem v-if="button.configuration.image_url" :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
-                          </drag>
+                            <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage">
+                              <template v-slot:drag-image>
+                                <PreviewItem :item="button" :noImage="false" class="noImage" />
+                              </template>
+                              <PreviewItem v-if="button.configuration.image_url" :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
+                            </drag>
+                          </div>
                         </div>
-                      </div>
-                      <!-- Define looks when not selected -->
-                      <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                        <div class="imageWrapper">
-                          <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
-                        </div>{{ button.configuration.catalogLabel || button.configuration.label }}
-                      </b-link>
-                    </drag>
-                  </li>
+                        <!-- Define looks when not selected -->
+                        <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                          <div class="imageWrapper">
+                            <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
+                          </div>{{ button.configuration.catalogLabel || button.configuration.label }}
+                        </b-link>
+                      </drag>
+                    </li>
+                  </template>
                 </ul>
               </li>
             </ul>
@@ -650,10 +652,18 @@ export default {
             this.expandedCatalogButtonId = undefined;
             this.setBarChanged();
 
-            params.setInitial(button);
+
+            var showEdit;
+            if (button.isPlaceholder) {
+                showEdit = true;
+                button.configuration.hasError = true;
+            } else {
+                params.setInitial(button);
+                showEdit = button.configuration.hasError;
+            }
 
             // Edit the button, if it has parameterised fields.
-            if (button.configuration.hasError) {
+            if (showEdit) {
                 this.showEditDialog(button);
             }
         },

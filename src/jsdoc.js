@@ -20,6 +20,7 @@
  * @property {String} buttonKey Key in the buttons object, where this item was taken from.
  * @property {String} kind The kind of item (url, application, action).
  * @property {String} subkind The item category (email, news).
+ * @property {Boolean} [isPlaceholder] true if this button is a place-holder, where the site has not been chosen.
  * @property {Boolean} is_primary
  * @property {BarItemConfiguration} configuration
  **/

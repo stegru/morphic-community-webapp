@@ -1,77 +1,105 @@
 <template>
   <b-modal id="modalEditGeneric"
-           @ok="closeDialog(true)" @cancel="closeDialog(false)"
+           @ok="okClicked" @cancel="closeDialog(false)"
            size="lg" scrollable centered
            footer-bg-variant="light"
-           ok-title="Update Button"
+           :ok-title="siteTabActive ? 'Next' : 'Update Button'"
+           :ok-disabled="button.isPlaceholder"
            title="Edit button">
     <div v-if="button">
       <b-form>
         <b-row>
           <b-col md="6">
-            <div v-for="(value, paramKey, index) in button.configuration.parameters"
-                 :key="paramKey"
-                 role="group" class="mb-3">
-              <b-form-group :label="allParameters[paramKey].label"
-                            :label-for="'barItem_' + paramKey"
-                            :invalid-feedback="editValidation(paramKey)">
-                <b-form-input :id="'barItem_' + paramKey"
-                              :name="paramKey"
-                              v-model="button.configuration.parameters[paramKey]"
-                              :state="!editValidation(paramKey)"
-                              :autofocus="!index"
-                              v-bind="allParameters[paramKey].attrs"
-                />
-              </b-form-group>
-            </div>
+          <b-tabs v-model="activeTab" small>
 
-            <div class="bg-silver rounded p-3">
-              <p v-if="showExtra" class="text-right small mb-0">
-                (<b-link @click="showExtra = false">Hide</b-link>)
-              </p>
-              <p v-else class="small">
-                Optional: <b-link @click="showExtra = true">Customize the button (color &amp; picture)</b-link>
-              </p>
-              <div v-if="showExtra">
-                <h6><b>Color for button</b></h6>
-                <div class="bg-white rounded p-3 mb-4">
-                  <div
-                          v-for="(hex, name) in colors"
-                          :key="name"
-                          @click="changeColor(hex)"
-                          :title="name"
-                          :class="{ active: (button.configuration.color || colors.blue) === hex }"
-                          class="colorBoxHolder"
-                  >
-                    <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
-                  </div>
-                </div>
-
-                <h6><b>Picture for button</b></h6>
-                <div class="bg-white rounded p-3 compactIconHolder">
-                  <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
-                    <div
-                            @click="changeIcon('')"
-                            :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                            class="iconBox"
+            <b-tab title="Web Site">
+              <ul class="catalogButtons">
+                <li v-for="(item, buttonKey) in catalogButtons"
+                    :key="buttonKey"
+                    :class="buttonKey === button.buttonKey && 'selected'"
                     >
-                      <p>No image</p>
+                  <b-link v-if="!item.isPlaceholder"
+                          :style="{
+                            color: (buttonKey === button.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
+                            'background-color': (buttonKey === button.buttonKey) ? (item.configuration.color || colors.blue) : ''
+                          }"
+                          class="buttonsCatalogEntry nonExpandedCatalogEntry"
+                          @click="setButton(item)">
+                    <div class="imageWrapper">
+                      <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
+                    </div>{{ item.configuration.catalogLabel || item.configuration.label }}
+                  </b-link>
+                </li>
+              </ul>
+            </b-tab>
+
+            <b-tab title="Button" :disabled="button.isPlaceholder">
+                <div v-for="(value, paramKey, index) in button.configuration.parameters"
+                     :key="paramKey"
+                     role="group" class="mb-3">
+                  <b-form-group :label="allParameters[paramKey].label"
+                                :label-for="'barItem_' + paramKey"
+                                :invalid-feedback="editValidation(paramKey)">
+                    <b-form-input :id="'barItem_' + paramKey"
+                                  :name="paramKey"
+                                  v-model="button.configuration.parameters[paramKey]"
+                                  :state="!editValidation(paramKey)"
+                                  :autofocus="!index"
+                                  v-bind="allParameters[paramKey].attrs"
+                    />
+                  </b-form-group>
+                </div>
+
+                <div class="bg-silver rounded p-3">
+                  <p v-if="showExtra" class="text-right small mb-0">
+                    (<b-link @click="showExtra = false">Hide</b-link>)
+                  </p>
+                  <p v-else class="small">
+                    Optional: <b-link @click="showExtra = true">Customize the button (color &amp; picture)</b-link>
+                  </p>
+                  <div v-if="showExtra">
+                    <h6><b>Color for button</b></h6>
+                    <div class="bg-white rounded p-3 mb-4">
+                      <div
+                              v-for="(hex, name) in colors"
+                              :key="name"
+                              @click="changeColor(hex)"
+                              :title="name"
+                              :class="{ active: (button.configuration.color || colors.blue) === hex }"
+                              class="colorBoxHolder"
+                      >
+                        <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div v-for="(filename, icon) in listedIcons"
-                       :key="icon"
-                       @click="changeIcon(icon)"
-                       :class="{ active: button.configuration.image_url === icon }"
-                       class="iconBoxHolder"
-                  >
-                    <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
+
+                    <h6><b>Picture for button</b></h6>
+                    <div class="bg-white rounded p-3 compactIconHolder">
+                      <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
+                        <div
+                                @click="changeIcon('')"
+                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
+                                class="iconBox"
+                        >
+                          <p>No image</p>
+                        </div>
+                      </div>
+                      <div v-for="(filename, icon) in listedIcons"
+                           :key="icon"
+                           @click="changeIcon(icon)"
+                           :class="{ active: button.configuration.image_url === icon }"
+                           class="iconBoxHolder"
+                      >
+                        <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
+                          <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </b-tab>
+            </b-tabs>
           </b-col>
+
           <b-col md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
               <p class="text-right small"><b-link @click="buttonToRemove(button)" class="text-danger">Remove Button</b-link></p>
@@ -90,9 +118,60 @@
 
 </template>
 
+<style lang="scss">
+
+ul.catalogButtons {
+  padding-left: 30px;
+  list-style: none;
+
+  li {
+
+    position: relative;
+    display: inline-block;
+    width: calc(50% - 30px);
+    margin-right: 30px;
+
+    &.selected a {
+      border-radius: 5px;
+    }
+
+    a {
+      width: auto !important;
+      display: inline-block !important;
+      padding: 3px;
+    }
+
+    .imageWrapper {
+      // Position the icon to the left, and remove it from the flow.
+      display: inline-block;
+      position: relative;
+      left: -25px;
+      width: 0;
+      overflow: visible;
+
+      img {
+        transition: all 0.2s ease-in-out;
+      }
+    }
+
+    a:hover {
+      .imageWrapper img {
+        transform: scale(1.5);
+      }
+    }
+
+    &.noImage {
+      img {
+        display: none;
+      }
+    }
+  }
+}
+</style>
+
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { colors, icons, defaultIcons, groupedIcons } from "@/utils/constants";
+import { colors, icons, defaultIcons, groupedIcons, groupedButtons } from "@/utils/constants";
 import * as params from "@/utils/params";
 
 export default {
@@ -120,13 +199,17 @@ export default {
 
             dialogClosed: null,
 
-            colors: colors
+            colors: colors,
+            groupedButtons: groupedButtons,
+
+            activeTab: 1
         };
     },
 
     computed: {
         /**
          * Gets the icons to be shown in the list.
+         * @return {Object<String,String>} The icons to list.
          */
         listedIcons: function () {
             const defaultIcon = defaultIcons[this.button.buttonKey];
@@ -155,6 +238,18 @@ export default {
             });
 
             return togo;
+        },
+
+        /**
+         * All buttons in the same category.
+         * @return {Object<String,BarItem>} The buttons to list
+         */
+        catalogButtons: function () {
+            return this.groupedButtons[this.button.subkind];
+        },
+
+        siteTabActive: function () {
+            return this.activeTab === 0;
         }
     },
 
@@ -172,6 +267,19 @@ export default {
         },
         changeIcon: function (icon) {
             this.button.configuration.image_url = icon;
+        },
+
+        /**
+         * Called when the OK button is clicked, to activate the button tab, or apply the changes.
+         * @param {Event} e The event object.
+         */
+        okClicked: function (e) {
+            if (this.siteTabActive) {
+                this.activeTab = 1;
+                e.preventDefault();
+            } else {
+                this.closeDialog(true);
+            }
         },
         /**
          * Closes the dialog.
@@ -193,10 +301,37 @@ export default {
         showDialog: function (selectedItem) {
             this.selectedItem = selectedItem;
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
+
+            this.activeTab = this.button.isPlaceholder ? 0 : 1;
+
             this.$bvModal.show("modalEditGeneric");
             return new Promise((resolve) => {
                 this.dialogClosed = resolve;
             });
+        },
+
+        /**
+         * When a button in the site tab is clicked, apply its content to the button being edited.
+         * @param {BarItem} button The button in the catalog.
+         */
+        setButton: function (button) {
+            this.button = JSON.parse(JSON.stringify(button));
+            this.button.id = this.generateId(button);
+            delete this.button.configuration.catalogItem;
+            delete this.button.configuration.catalogLabel;
+            delete this.button.is_primary;
+            params.setInitial(button);
+        },
+
+        generateId: function (item) {
+            let id = "";
+            if (item) {
+                id += Math.floor(Math.random() * Math.floor(99999999));
+                id += "-" + item.configuration.label.toLowerCase();
+                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
+            }
+            return id;
         }
     },
 
@@ -210,7 +345,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>
