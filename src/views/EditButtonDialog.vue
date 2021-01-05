@@ -4,7 +4,7 @@
            size="lg" scrollable centered
            footer-bg-variant="light"
            :ok-title="siteTabActive ? 'Next' : 'Update Button'"
-           :ok-disabled="button.isPlaceholder"
+           :ok-disabled="button && button.isPlaceholder"
            title="Edit button">
     <div v-if="button">
       <b-form>
@@ -74,6 +74,7 @@
 
                     <h6><b>Picture for button</b></h6>
                     <div class="bg-white rounded p-3 compactIconHolder">
+                      <!-- no image -->
                       <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
                         <div
                                 @click="changeIcon('')"
@@ -83,6 +84,18 @@
                           <p>No image</p>
                         </div>
                       </div>
+
+                      <!-- favicon -->
+                      <div class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
+                        <div
+                                @click="changeIcon('$favicon')"
+                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
+                                class="iconBox"
+                        >
+                          <b-img :src="buttonFavicon" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
+                        </div>
+                      </div>
+
                       <div v-for="(filename, icon) in listedIcons"
                            :key="icon"
                            @click="changeIcon(icon)"
@@ -202,7 +215,8 @@ export default {
             colors: colors,
             groupedButtons: groupedButtons,
 
-            activeTab: 1
+            activeTab: 1,
+            buttonFavicon: null
         };
     },
 
@@ -217,7 +231,7 @@ export default {
 
             // Get the icons of the same category.
             var group = groupedIcons[this.button.subkind];
-            if (!group && this.button.subkind.startsWith("local-")) {
+            if (!group && this.button.subkind && this.button.subkind.startsWith("local-")) {
                 group = groupedIcons[this.button.subkind.substr(6)];
             }
 
@@ -266,7 +280,13 @@ export default {
             this.button.configuration.color = hex;
         },
         changeIcon: function (icon) {
-            this.button.configuration.image_url = icon;
+            this.button.configuration.favicon = (icon === "$favicon");
+
+            if (this.button.configuration.favicon) {
+                this.button.configuration.image_url = this.getFavicon();
+            } else {
+                this.button.configuration.image_url = icon;
+            }
         },
 
         /**
@@ -287,9 +307,14 @@ export default {
          */
         closeDialog: function (applyChanges) {
             if (applyChanges) {
-                this.selectedItem.configuration = JSON.parse(JSON.stringify(this.button.configuration));
+                if (this.selectedItem.isPlaceholder && !this.button.isPlaceholder) {
+                    delete this.selectedItem.isPlaceholder;
+                    Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
+                } else {
+                    this.selectedItem.configuration = JSON.parse(JSON.stringify(this.button.configuration));
+                }
             }
-            this.selectedItem = null;
+
             this.$bvModal.hide("modalEditGeneric");
             this.dialogClosed(applyChanges);
         },
@@ -303,7 +328,7 @@ export default {
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
 
             this.activeTab = this.button.isPlaceholder ? 0 : 1;
-
+            this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
             return new Promise((resolve) => {
                 this.dialogClosed = resolve;
@@ -316,11 +341,11 @@ export default {
          */
         setButton: function (button) {
             this.button = JSON.parse(JSON.stringify(button));
-            this.button.id = this.generateId(button);
+            this.button.id = this.generateId(this.button);
             delete this.button.configuration.catalogItem;
             delete this.button.configuration.catalogLabel;
             delete this.button.is_primary;
-            params.setInitial(button);
+            params.setInitial(this.button);
         },
 
         generateId: function (item) {
@@ -332,13 +357,29 @@ export default {
                 id += "-" + Math.floor(Math.random() * Math.floor(99999999));
             }
             return id;
+        },
+
+        fixFavicon: function () {
+            this.buttonFavicon = this.getFavicon(this.button.configuration.url);
+            // fix the image url, if it's a favicon
+            if (this.button.configuration.favicon && this.button.configuration.url) {
+                this.button.configuration.image_url = this.buttonFavicon;
+            }
+        },
+
+        getFavicon: function (url) {
+            const getHost = /.*:\/\/([^/:]+)/;
+            var m = getHost.exec(url || this.button.configuration.url);
+            return m && `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
         }
     },
-
     watch: {
         "button.configuration": {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
+
+                this.faviconTimer && clearTimeout(this.faviconTimer);
+                this.faviconTimer = setTimeout(() => this.fixFavicon(), 2000);
             },
             deep: true
         }

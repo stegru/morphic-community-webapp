@@ -210,6 +210,11 @@ export default {
             const drawerItems = this.drawerItems.concat(this.drawerItemsSecond);
             data.items = this.primaryItems.concat(drawerItems);
 
+            // Set the image_path for the items, for images which the client does not have locally.
+            data.items.forEach(item => {
+                item.configuration.image_path = this.getIconUrl(item.configuration.image_url);
+            });
+
             updateCommunityBar(this.communityId, this.$route.query.barId, data)
                 .then((resp) => {
                     if (resp.status === 200) {

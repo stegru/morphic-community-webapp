@@ -1,6 +1,9 @@
 import { allButtons } from "@/utils/constants";
 
-// setting the base data
+/**
+ * Predefined bars.
+ * @type {Array<BarDetails>}
+ */
 export const predefinedBars = [
     {
         id: "predefined-1",

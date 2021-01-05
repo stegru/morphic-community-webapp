@@ -20,7 +20,7 @@
       <div v-else class="regular" :style="'background: '+colors.default_button">
         <div class="imageContainer" :style="'border-color: '+colors.default_button">
           <b-img :src="getIconUrl(item.configuration.image_url)"/>
-        </div>
+        </div>`
       </div>
     </template>
 

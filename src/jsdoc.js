@@ -40,6 +40,7 @@
  * @property {String} category Category in the catalog
  * @property {String} color Button color (html string)
  * @property {String} image_url Link to the image (relative or absolute)
+ * @property {String} image_path Path to the icon file on the webserver (used by the client if it doesn't have a local image for image_url).
  * @property {String} description More info.
  * @property {Boolean} [hasError] true if one of the parameter values has a validation error.
  * @property {ItemParameters} parameters Values of the named parameters used in fields.

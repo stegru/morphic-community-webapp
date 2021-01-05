@@ -134,9 +134,11 @@ export function setInitial(button) {
 export function applyParameters(button) {
     const params = button.configuration.parameters;
 
-    button.configuration.paramFields.forEach(key => {
-        button.configuration[key] = replaceParameters(params, button.configuration[`${origFieldPrefix}${key}`]);
-    });
+    if (button.configuration.paramFields) {
+        button.configuration.paramFields.forEach(key => {
+            button.configuration[key] = replaceParameters(params, button.configuration[`${origFieldPrefix}${key}`]);
+        });
+    }
 
     button.configuration.hasError = validate(button) ? undefined : true;
 }
