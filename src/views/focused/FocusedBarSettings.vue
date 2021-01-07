@@ -452,9 +452,9 @@ export default {
         },
         editSubKindIcons: function () {
             const data = {};
-            if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-                for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
+            if (this.buttonEditStorage.configuration.subkind && this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
+                for (let i = 0; i < this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
+                    data[this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
                 }
             }
             return data;

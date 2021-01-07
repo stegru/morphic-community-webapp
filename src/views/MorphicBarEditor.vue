@@ -204,10 +204,10 @@
               </b-input-group-append>
             </b-input-group> -->
             <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
-              <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
-                <h3>{{categoryName}}</h3>
+              <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="ButtonsCatalogHeader">
+                <h3>{{buttonGroup.title}}</h3>
                 <ul class="ButtonsCatalogEntries">
-                  <template v-for="(button, buttonId) in buttonGroup">
+                  <template v-for="(button, buttonId) in buttonGroup.items">
                     <li v-if="button.is_primary" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
                       <!-- Render each button as draggable -->
                       <drag :data="button" type="catalogButtonNoImage">
@@ -1006,24 +1006,6 @@ export default {
                     console.error(err);
                 });
         },
-        generateId: function (item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * Math.floor(99999999));
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
-            }
-            return id;
-        },
-        addIdsToCatalogButtons(buttonCatalog) {
-            for (const category in buttonCatalog) {
-                for (const button in buttonCatalog[category]) {
-                    buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
-                }
-            }
-            return buttonCatalog;
-        },
         updateAvailableBars() {
             this.availableBars = this.barsList.filter((bar) => {
                 return bar.is_shared;
@@ -1138,8 +1120,8 @@ export default {
             barsList: [],
             membersList: [],
 
-            /** @type {Object<String,Object<String,BarItem>>} Button catalog. */
-            buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
+            /** @type {ButtonCatalog} Button catalog. */
+            buttonCatalog: buttonCatalog,
             dragInProgress: false,
             expandedCatalogButtonId: null,
 

@@ -11,10 +11,10 @@
       <p />
       <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
         <!-- Button catalog headings -->
-        <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
-          <h3>{{categoryName}}</h3>
+        <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="buttonsCatalogHeader">
+          <h3>{{buttonGroup.title}}</h3>
           <ul class="ButtonsCatalogEntries">
-            <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
+            <li v-for="(button, buttonId) in buttonGroup.items" :key="buttonId" class="buttonsCatalogEntry">
               <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
                 <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
                 <b-icon v-else icon="bootstrap"></b-icon>

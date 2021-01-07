@@ -3,6 +3,23 @@
 /* eslint-disable jsdoc/require-property-description */
 
 /**
+ * The button catalog
+ * @typedef {Object<String,ButtonCatalogItem>} ButtonCatalog
+ */
+
+/**
+ * A category in the button catalog
+ * @typedef {Object} ButtonCatalogItem
+ * @property {String} title The title in the list.
+ * @property {String} defaultIcon The icon to use if a bar item doesn't specify it.
+ * @property {String} editTitle The title of the edit dialog, for this subkind.
+ * @property {String} kind The kind of all items (undefined if any differ)
+ * @property {Boolean} related True if the items are related (shows the group tab in the edit dialog)
+ * @property {BarItemConfiguration} more Configuration for the more item.
+ * @property {Object<String,BarItem>} items The buttons.
+ */
+
+/**
  * A bar
  * @typedef {Object} BarDetails
  * @property {String} id Bar ID.

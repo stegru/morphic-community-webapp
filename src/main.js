@@ -55,7 +55,7 @@ Vue.mixin({
         /**
          * Gets the url of an icon
          * @param {String} image The icon identified (from image_url)
-         * @return {string} The url.
+         * @return {String} The url.
          */
         getIconUrl(image) {
             var togo;
@@ -68,7 +68,23 @@ Vue.mixin({
                 togo = "/icons/" + togo;
             }
             return togo;
+        },
+        /**
+         * Generates an ID for a button.
+         * @param {BarItem} item The button.
+         * @return {String} The ID.
+         */
+        generateId(item) {
+            let id = "";
+            if (item) {
+                id += Math.floor(Math.random() * 10e10);
+                id += "-" + item.configuration.label.toLowerCase();
+                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+                id += "-" + Math.floor(Math.random() * 10e10);
+            }
+            return id;
         }
+
     }
 });
 

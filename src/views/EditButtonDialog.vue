@@ -5,16 +5,16 @@
            footer-bg-variant="light"
            :ok-title="siteTabActive ? 'Next' : 'Update Button'"
            :ok-disabled="button && button.isPlaceholder"
-           title="Edit button">
+           :title="dialogTitle">
     <div v-if="button">
       <b-form>
         <b-row>
           <b-col md="6">
           <b-tabs v-model="activeTab" small>
 
-            <b-tab title="Web Site">
-              <ul class="catalogButtons">
-                <li v-for="(item, buttonKey) in catalogButtons"
+            <b-tab v-if="buttonGroup && buttonGroup.related" :title="groupTabTitle">
+              <ul class="relatedButtons">
+                <li v-for="(item, buttonKey) in relatedButtons"
                     :key="buttonKey"
                     :class="buttonKey === button.buttonKey && 'selected'"
                     >
@@ -133,7 +133,7 @@
 
 <style lang="scss">
 
-ul.catalogButtons {
+ul.relatedButtons {
   padding-left: 30px;
   list-style: none;
 
@@ -184,7 +184,7 @@ ul.catalogButtons {
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { colors, icons, defaultIcons, groupedIcons, groupedButtons } from "@/utils/constants";
+import { colors, icons, defaultIcons, groupedIcons, groupedButtons, buttonCatalog } from "@/utils/constants";
 import * as params from "@/utils/params";
 
 export default {
@@ -214,6 +214,15 @@ export default {
 
             colors: colors,
             groupedButtons: groupedButtons,
+            /** @type {ButtonCatalog} Button catalog. */
+            buttonCatalog: buttonCatalog,
+            /** @type {ButtonCatalogItem} The group in the catalog for this button */
+            buttonGroup: undefined,
+
+            dialogTitle: "Edit button",
+            groupTabTitle: "Others",
+            showGroupTab: false,
+
 
             activeTab: 1,
             buttonFavicon: null
@@ -230,9 +239,9 @@ export default {
             const iconKeys = [];
 
             // Get the icons of the same category.
-            var group = groupedIcons[this.button.subkind];
-            if (!group && this.button.subkind && this.button.subkind.startsWith("local-")) {
-                group = groupedIcons[this.button.subkind.substr(6)];
+            var group = groupedIcons[this.button.configuration.subkind];
+            if (!group && this.button.configuration.subkind && this.button.configuration.subkind.startsWith("local-")) {
+                group = groupedIcons[this.button.configuration.subkind.substr(6)];
             }
 
             if (group) {
@@ -258,8 +267,8 @@ export default {
          * All buttons in the same category.
          * @return {Object<String,BarItem>} The buttons to list
          */
-        catalogButtons: function () {
-            return this.groupedButtons[this.button.subkind];
+        relatedButtons: function () {
+            return this.groupedButtons[this.button.configuration.subkind];
         },
 
         siteTabActive: function () {
@@ -326,6 +335,22 @@ export default {
         showDialog: function (selectedItem) {
             this.selectedItem = selectedItem;
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
+
+            this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
+            this.dialogTitle = this.buttonGroup.editTitle || this.buttonGroup.title;
+            this.showGroupTab = this.buttonGroup.items
+
+            switch (this.buttonGroup.kind) {
+            case "link":
+                this.groupTabTitle = "Web Site";
+                break;
+            case "application":
+                this.groupTabTitle = "Apps";
+                break;
+            default:
+                this.groupTabTitle = "Actions";
+                break;
+            }
 
             this.activeTab = this.button.isPlaceholder ? 0 : 1;
             this.fixFavicon();

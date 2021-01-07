@@ -112,78 +112,139 @@ Object.keys(allButtons).forEach((buttonKey) => {
     params.prepareBarItem(button);
 });
 
-var catalog = {
+/**
+ * @type {ButtonCatalog} The button catalog.
+ */
+export const buttonCatalog = {
     make: {
         title: "Make a button",
-        defaultIcon: undefined
+        editTitle: "Custom Button",
+        defaultIcon: undefined,
+        related: false
     },
     call: {
         title: "Call a Person",
+        editTitle: undefined,
         defaultIcon: undefined
     },
     meeting: {
         title: "Meeting Room",
+        editTitle: undefined,
         defaultIcon: "comments"
     },
     action: {
         title: "Action Buttons",
+        editTitle: "Action Button",
         defaultIcon: undefined
     },
     "local-calendar": {
         title: "Calendar - App on Computer",
+        editTitle: "Calendar App",
         defaultIcon: "calendar$calendar"
     },
     calendar: {
         title: "Calendar - Website",
-        defaultIcon: "calendar$calendar"
+        editTitle: "Calendar Website",
+        defaultIcon: "calendar$calendar",
+        more: {
+            description: "Create a button to open a calendar site"
+        }
     },
     socialMedia: {
         title: "Social Media Sites",
-        defaultIcon: undefined
+        editTitle: "Social Media Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a social media site"
+        }
     },
     "local-email": {
         title: "Email - App on Computer",
+        editTitle: "Email App",
         defaultIcon: undefined
     },
     email: {
         title: "Email - Websites",
-        defaultIcon: "email$envelope"
+        editTitle: "Email Website",
+        defaultIcon: "email$envelope",
+        more: {
+            description: "Create a button to open an email site"
+        }
     },
     photo: {
         title: "Photo Sharing",
-        defaultIcon: undefined
+        editTitle: "Photo Sharing Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a photo sharing site"
+        }
     },
     news: {
         title: "News",
-        defaultIcon: "newspaper"
+        editTitle: "News Site",
+        defaultIcon: "newspaper",
+        more: {
+            description: "Create a button to open a news web-site"
+        }
     },
     shopping: {
         title: "Shopping",
-        defaultIcon: undefined
+        editTitle: "Shopping Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a shopping site"
+        }
     },
     multimedia: {
         title: "Media",
-        defaultIcon: undefined
+        editTitle: "Media Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a media site"
+        }
     },
     onlineFileDrives: {
         title: "Online Drives",
-        defaultIcon: undefined
+        editTitle: "Online Drive",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open an online drive site"
+        }
     }
+};
+
+
+/**
+ * Generates an ID for a button.
+ * @param {BarItem} item The button.
+ * @return {String} The ID.
+ */
+function generateId(item) {
+    let id = "";
+    if (item) {
+        id += Math.floor(Math.random() * 10e10);
+        id += "-" + item.configuration.label.toLowerCase();
+        id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+        id += "-" + Math.floor(Math.random() * 10e10);
+    }
+    return id;
 };
 
 /**
  * Gets the items for the given subkind
  * @param {String} subkind The subkind id (button.configuration.subkind).
- * @return {Array<BarItem>} The items for the subkind.
+ * @return {Object<String,BarItem>} The items for the subkind.
  */
 function getGroupItems(subkind) {
     var result = {};
+    // Get the items with the given subkind.
     for (const [key, button] of Object.entries(allButtons)) {
-        if (button.subkind === subkind) {
+        if (button.configuration.subkind === subkind) {
             button.configuration.catalogItem = true;
             if (!button.configuration.image_url) {
-                button.configuration.image_url = catalog[subkind].defaultIcon;
+                button.configuration.image_url = buttonCatalog[subkind].defaultIcon;
             }
+            button.id = generateId(button);
             result[key] = button;
         }
     }
@@ -197,32 +258,47 @@ function getGroupItems(subkind) {
         values.forEach(button => { button.is_primary = true; });
     }
 
+
     // If there are some non-primary buttons, add a place-holder which shows the selection dialog.
     const hasSecondary = !noPrimary && values.some(button => !button.is_primary);
     if (hasSecondary) {
         /** @type {BarItem} */
         const placeHolder = {
             is_primary: true,
-            subkind: subkind,
             isPlaceholder: true,
             configuration: {
-                label: "Website",
+                subkind: subkind,
+                label: buttonCatalog[subkind].title,
                 catalogLabel: "More",
-                image_url: catalog[subkind].defaultIcon
+                image_url: buttonCatalog[subkind].defaultIcon
             }
         };
-        result.more = placeHolder;
+        buttonCatalog[subkind].more = Object.assign(placeHolder.configuration, buttonCatalog[subkind].more);
+        placeHolder.id = generateId(placeHolder);
+        result[`more-${subkind}`] = placeHolder;
     }
 
     return result;
 }
 
-/**
- * @type {Object<String,Object<String,BarItem>>} Button catalog.
- */
-export const buttonCatalog = {};
 export const groupedButtons = {};
 
-Object.keys(catalog).forEach(key => {
-    groupedButtons[key] = (buttonCatalog[catalog[key].title] = getGroupItems(key));
+Object.keys(buttonCatalog).forEach(key => {
+    const items = getGroupItems(key);
+    const group = buttonCatalog[key];
+    groupedButtons[key] = (group.items = items);
+
+    // Get the kind of all items, if they're the same
+    const values = Object.values(items);
+    if (values.length > 0) {
+        const kind = values[0].kind;
+        if (values.every(button => button.kind === kind)) {
+            group.kind = kind;
+        }
+    }
+
+    if (!group.related && group.related !== false) {
+        group.related = values.length > 1;
+    }
+
 });
