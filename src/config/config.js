@@ -1,4 +1,14 @@
-const ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toUpperCase() : "LOCAL";
+
+const href = new URL(location.href);
+
+var ENV;
+if (href.host !== "communitynew.morphic.dev") {
+    // Hack to force the dev site to always use the dev api server.
+    ENV = "DEVELOPMENT";
+} else {
+    ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toUpperCase() : "LOCAL";
+}
+
 
 const CONF = {
     LOCAL: {
