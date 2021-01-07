@@ -3,9 +3,6 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <b-alert variant="success" :show="successAlert">
-      {{ successMessage }}
-    </b-alert>
     <b-form-group
       label="Community:"
       label-for="community-name"
@@ -125,93 +122,89 @@
 </style>
 
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
-import { ERROR_MAP, MESSAGES } from '@/utils/constants'
+import { validationMixin } from "vuelidate";
+import { required, minLength, sameAs, email } from "vuelidate/lib/validators";
+import { ERROR_MAP, MESSAGES } from "@/utils/constants";
 
 export default {
-  mixins: [validationMixin],
-  data () {
-    return {
-      form: {
-        communityName: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        confirmPassword: ''
-        // subscriptionPlan: 'bronze',
-        // paymentOptions: 'stripe'
-      },
-      errorAlert: false,
-      successAlert: false,
-      errorMessage: null,
-      successMessage: MESSAGES.successfulRegistration
-    }
-  },
-  validations: {
-    form: {
-      communityName: {
-        required
-      },
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(6)
-      },
-      confirmPassword: {
-        required,
-        sameAsPassword: sameAs('password')
-      }
-      // subscriptionPlan: {
-      //   required
-      // },
-      // paymentOptions: {
-      //   required
-      // }
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v.form[name]
-      return $dirty ? !$error : null
+    mixins: [validationMixin],
+    data() {
+        return {
+            form: {
+                communityName: "",
+                email: "",
+                firstName: "",
+                lastName: "",
+                password: "",
+                confirmPassword: ""
+                // subscriptionPlan: 'bronze',
+                // paymentOptions: 'stripe'
+            },
+            errorAlert: false,
+            errorMessage: null
+        };
     },
-    async onSubmit () {
-      this.$v.form.$touch()
-      if (this.$v.form.$anyError) {
-        return
-      }
-      this.$store.dispatch('register', this.$v.form.$model)
-        .then(() => {
-          this.successAlert = true
-          this.$store.dispatch('login', this.$v.form.$model)
-            .then(() => {
-              setTimeout(() => {
-                this.$store.dispatch('newCommunity', this.$v.form.$model.communityName)
-                  .then(() => {
-                    this.$router.push('/dashboard')
-                  })
-              }, 1000)
-            })
-        })
-        .catch(err => {
-          if (err.response) {
-            if (err.response.data.error === 'existing_email') {
-              this.errorMessage = ERROR_MAP[2]
-            } else if (err.response.data.error === 'existing_username') {
-              this.errorMessage = ERROR_MAP[3]
-            } else {
-              this.errorMessage = ERROR_MAP[err.response.status] || 'Something went wrong'
+    validations: {
+        form: {
+            communityName: {
+                required
+            },
+            email: {
+                required,
+                email
+            },
+            password: {
+                required,
+                minLength: minLength(6)
+            },
+            confirmPassword: {
+                required,
+                sameAsPassword: sameAs("password")
             }
-          } else {
-            this.errorMessage = ERROR_MAP[500]
-          }
-          this.errorAlert = true
-        })
+            // subscriptionPlan: {
+            //   required
+            // },
+            // paymentOptions: {
+            //   required
+            // }
+        }
+    },
+    methods: {
+        validateState(name) {
+            const { $dirty, $error } = this.$v.form[name];
+            return $dirty ? !$error : null;
+        },
+        async onSubmit() {
+            this.$v.form.$touch();
+            if (this.$v.form.$anyError) {
+                return;
+            }
+            this.$store.dispatch("register", this.$v.form.$model)
+                .then(() => {
+                    this.showMessage(MESSAGES.successfulRegistration);
+                    this.$store.dispatch("login", this.$v.form.$model)
+                        .then(() => {
+                            this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
+                                .then(() => {
+                                    this.$router.push("/dashboard");
+                                });
+                        });
+                })
+                .catch(err => {
+                    if (err.response) {
+                        if (err.response.data.error === "existing_email") {
+                            this.errorMessage = ERROR_MAP[2];
+                        } else if (err.response.data.error === "existing_username") {
+                            this.errorMessage = ERROR_MAP[3];
+                        } else {
+                            this.errorMessage = ERROR_MAP[err.response.status] || "Something went wrong";
+                        }
+                    } else {
+                        this.errorMessage = ERROR_MAP[500];
+                    }
+                    this.errorAlert = true;
+                });
+        }
     }
-  }
-}
+};
 </script>

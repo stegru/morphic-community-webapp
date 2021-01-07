@@ -16,13 +16,13 @@
           <ul class="ButtonsCatalogEntries">
             <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
               <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
+                <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
                 <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
               </b-link>
               <div v-else class="active" style="max-width: 400px">
                 <div style="width: 100%; display: inline-flex; align-items: center;">
-                  <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                  <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
                   <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                   <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                 </div>
@@ -112,134 +112,131 @@
 
 <script>
 
-import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import BarExplainer from '@/components/dashboardV2/BarExplainer'
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, saveCommunityBar, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
-import draggable from 'vuedraggable'
+import PreviewItem from "@/components/dashboard/PreviewItem";
+import { saveCommunityBar, getCommunityBar, createCommunityBar, getCommunityMember, updateCommunityMember } from "@/services/communityService";
+import { buttonCatalog, colors, icons, subkindIcons } from "@/utils/constants";
+import { predefinedBars } from "@/utils/predefined";
+import * as params from "@/utils/params";
 
 export default {
-  name: 'MemberInvite',
-  components: {
-    CommunityManager,
-    BarExplainer,
-    PreviewItem,
-    draggable
-  },
-  methods: {
-    getPath(categoryName, buttonId) {
-      return `${categoryName}.${buttonId}`
+    name: "MemberInvite",
+    components: {
+        PreviewItem
     },
-    addButtonToBar: function (button, withImage) {
-      // copy button:
-      let toSave = {...button, configuration: {...button.configuration}};
-      // delete image if required
-      if (!withImage && toSave.configuration.image_url) {
-        delete toSave.configuration.image_url
-      }
+    methods: {
+        getPath(categoryName, buttonId) {
+            return `${categoryName}.${buttonId}`;
+        },
+        addButtonToBar: function (button, withImage) {
+            // copy button:
+            const toSave = { ...button, configuration: { ...button.configuration } };
 
-      // add to items:
-      this.barDetails.items.push(toSave);
-      this.checkBarTypeAndSave();
-    },
-    checkBarTypeAndSave() { // TODO duplicate of FocusedButtonEdit function
-      // if we're editing a member's bar and it was previously a community bar:
-      if (this.memberId && this.barDetails.is_shared) {
-        this.saveAsNewPersonalBar();
-      } else {
-        this.saveBar();
-      }
-    },
-    saveAsNewPersonalBar: function () { // TODO duplicate of FocusedButtonEdit function
-      this.barDetails.name = `${this.memberDetails.first_name} ${this.memberDetails.last_name}`.trim();
-      this.barDetails.is_shared = false;
-      delete this.barDetails.id;
-      createCommunityBar(this.communityId, this.barDetails).then((resp) => {
-        if (resp.status === 200) {
-          this.memberDetails.bar_id = resp.data.bar.id;
-          this.barDetails = resp.data.bar;
-          updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-            .then((resp) => {
-              if (resp.status === 200) {
-                this.editButton();
-              }
-            })
-            .catch(err => { // failed to update member
-              console.error(err)
-            })
+            // delete image if required
+            if (!withImage && toSave.configuration.image_url) {
+                delete toSave.configuration.image_url;
+            }
 
+            // initialise the parameters
+            params.setInitial(button);
+
+            // add to items:
+            this.barDetails.items.push(toSave);
+            this.checkBarTypeAndSave();
+        },
+        checkBarTypeAndSave() { // TODO duplicate of FocusedButtonEdit function
+            // if we're editing a member's bar and it was previously a community bar:
+            if (this.memberId && this.barDetails.is_shared) {
+                this.saveAsNewPersonalBar();
+            } else {
+                this.saveBar();
+            }
+        },
+        saveAsNewPersonalBar: function () { // TODO duplicate of FocusedButtonEdit function
+            this.barDetails.name = `${this.memberDetails.first_name} ${this.memberDetails.last_name}`.trim();
+            this.barDetails.is_shared = false;
+            delete this.barDetails.id;
+            createCommunityBar(this.communityId, this.barDetails).then((resp) => {
+                if (resp.status === 200) {
+                    this.memberDetails.bar_id = resp.data.bar.id;
+                    this.barDetails = resp.data.bar;
+                    updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                        .then((resp) => {
+                            if (resp.status === 200) {
+                                this.editButton();
+                            }
+                        })
+                        .catch(err => { // failed to update member
+                            console.error(err);
+                        });
+                }
+            }).catch(err => { // failed to create a community
+                console.error(err);
+            });
+        },
+        saveBar: function () { // TODO duplicate of FocusedButtonEdit function
+            saveCommunityBar(this.communityId, this.barId, this.barDetails)
+                .then(() => {
+                    this.editButton();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        editButton() {
+            this.$router.push({
+                path: "/focused/button-edit",
+                query: {
+                    barId: this.barDetails.id,
+                    buttonIndex: this.barDetails.items.length - 1,
+                    communityId: this.communityId,
+                    memberId: this.memberId
+                }
+            });
         }
-      }).catch(err => { // failed to create a community
-        console.error(err)
-      })
     },
-    saveBar: function () { // TODO duplicate of FocusedButtonEdit function
-      saveCommunityBar(this.communityId, this.barId, this.barDetails)
-        .then(() => {
-          this.editButton();
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; },
+        memberId: function () { return this.$route.query.memberId; },
+        barId: function () { return this.$route.query.barId; }
     },
-    editButton() {
-      this.$router.push({
-        path: "/focused/button-edit",
-        query: {
-          barId: this.barDetails.id,
-          buttonIndex: this.barDetails.items.length - 1,
-          communityId: this.communityId,
-          memberId: this.memberId
-        }
-      });
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    memberId: function () { return this.$route.query.memberId },
-    barId: function () { return this.$route.query.barId; }
-  },
-  mounted () {
-
+    mounted() {
     // load bar and content (incl. button)
-    getCommunityBar(this.communityId, this.barId).then(b => {
-      this.barDetails = b.data;
-    });
-    // load member if set:
-    if (this.memberId) {
-      getCommunityMember(this.communityId, this.memberId)
-        .then((resp) => {
-          this.memberDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-      }
-  },
-  watch: {
-    predefinedButtons: function (newValue, oldValue) {
-      if (!this.dragPredefinedButton) {
-        this.predefinedButtons = oldValue
-        this.dragPredefinedButton = true
-      }
+        getCommunityBar(this.communityId, this.barId).then(b => {
+            this.barDetails = b.data;
+        });
+        // load member if set:
+        if (this.memberId) {
+            getCommunityMember(this.communityId, this.memberId)
+                .then((resp) => {
+                    this.memberDetails = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    watch: {
+        predefinedButtons: function (newValue, oldValue) {
+            if (!this.dragPredefinedButton) {
+                this.predefinedButtons = oldValue;
+                this.dragPredefinedButton = true;
+            }
+        }
+    },
+    data() {
+        return {
+            // data for the community manager
+            community: {},
+            barsList: [],
+            membersList: [],
+            currentlyActiveButtonPath: undefined,
+            buttonCatalog: buttonCatalog,
+            barDetails: {},
+            predefinedBars: predefinedBars,
+            colors: colors,
+            icons: icons,
+            subkindIcons: subkindIcons
+        };
     }
-  },
-  data () {
-    return {
-      // data for the community manager
-      community: {},
-      barsList: [],
-      membersList: [],
-      currentlyActiveButtonPath: undefined,
-      buttonCatalog: buttonCatalog,
-      barDetails: {},
-      predefinedBars: predefinedBars,
-      colors: colors,
-      icons: icons,
-      subkindIcons: subkindIcons,
-    }
-  }
-}
+};
 </script>

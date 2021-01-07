@@ -7,9 +7,6 @@
       <p class="my-4">Are you sure you want to save changes?</p>
     </b-modal>
     <div class="bg-silver rounded p-3">
-      <b-alert variant="success" :show="successAlert">
-        {{ successMessage }}
-      </b-alert>
       <h4 class="mb-3">Member Details</h4>
       <h5>{{ member.first_name }} {{ member.last_name }}</h5>
       <b-link v-if="member.email" :href="'mailto:'+member.email">{{ member.email }}</b-link>
@@ -93,86 +90,84 @@
 
 <script>
 
-import RenderList from '@/components/dashboard/RenderList'
-import { getCommunityMember, updateCommunityMember, getCommunityBar } from '@/services/communityService'
-import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
-import { MESSAGES } from '@/utils/constants'
+import RenderList from "@/components/dashboard/RenderList";
+import { getCommunityMember, updateCommunityMember, getCommunityBar } from "@/services/communityService";
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { MESSAGES } from "@/utils/constants";
 
 export default {
-  name: 'MemberEditor',
-  mixins: [validationMixin],
-  components: {
-    RenderList
-  },
-  data () {
-    return {
-      // availableItems: availableItems,
-      currentMorphicBar: '',
-      memberId: '',
-      successAlert: false,
-      successMessage: MESSAGES.successfulSave,
-      member: {
-        first_name: '',
-        last_name: ''
-      }
-    }
-  },
-  validations: {
-    member: {
-      first_name: {
-        required
-      },
-      last_name: {
-        required
-      }
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v.member[name]
-      return $dirty ? !$error : null
+    name: "MemberEditor",
+    mixins: [validationMixin],
+    components: {
+        RenderList
     },
-    gotoEditor (bvModalEvt) {
-      this.$router.push('/dashboard/morphicbar-editor/' + this.currentMorphicBar)
+    data() {
+        return {
+            // availableItems: availableItems,
+            currentMorphicBar: "",
+            memberId: "",
+            member: {
+                first_name: "",
+                last_name: ""
+            }
+        };
     },
-    editMember () {
-      updateCommunityMember(this.communityId, this.member.id, this.member)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successAlert = true
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    validations: {
+        member: {
+            first_name: {
+                required
+            },
+            last_name: {
+                required
+            }
+        }
     },
-    getMemberBar () {
-      getCommunityBar(this.communityId, this.member.bar_id)
-        .then((resp) => {
-          this.currentMorphicBar = resp.data.id
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    if (this.$route.params) {
-      this.memberId = this.$route.params.memberId
+    methods: {
+        validateState(name) {
+            const { $dirty, $error } = this.$v.member[name];
+            return $dirty ? !$error : null;
+        },
+        gotoEditor(bvModalEvt) {
+            this.$router.push("/dashboard/morphicbar-editor/" + this.currentMorphicBar);
+        },
+        editMember() {
+            updateCommunityMember(this.communityId, this.member.id, this.member)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.successfulSave);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getMemberBar() {
+            getCommunityBar(this.communityId, this.member.bar_id)
+                .then((resp) => {
+                    this.currentMorphicBar = resp.data.id;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    mounted() {
+        if (this.$route.params) {
+            this.memberId = this.$route.params.memberId;
 
-      getCommunityMember(this.communityId, this.memberId)
-        .then((resp) => {
-          this.member = resp.data
-          this.getMemberBar()
-        })
-        .catch(err => {
-          console.error(err)
-        })
+            getCommunityMember(this.communityId, this.memberId)
+                .then((resp) => {
+                    this.member = resp.data;
+                    this.getMemberBar();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }
-  }
-}
+};
 </script>

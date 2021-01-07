@@ -31,51 +31,51 @@
 </style>
 
 <script>
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar } from '@/services/communityService'
+import PreviewItem from "@/components/dashboard/PreviewItem";
+import { getCommunityBar } from "@/services/communityService";
 
 export default {
-  name: 'BarPreview',
-  props: {
-    barId: String
-  },
-  components: {
-    PreviewItem
-  },
-  data () {
-    return {
-      bar: {},
-      // configurations
-      preview: {
-        drawer: {
-          w: 2,
-          h: 5
+    name: "BarPreview",
+    props: {
+        barId: String
+    },
+    components: {
+        PreviewItem
+    },
+    data() {
+        return {
+            bar: {},
+            // configurations
+            preview: {
+                drawer: {
+                    w: 2,
+                    h: 5
+                }
+            }
+        };
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; },
+        drawerItems: function () {
+            const data = [];
+            if (this.bar.items && this.bar.items.length > 0) {
+                for (let i = 0; i < this.bar.items.length; i++) {
+                    if (this.bar.items[i].is_primary === false) {
+                        data.push(this.bar.items[i]);
+                    }
+                }
+            }
+            return data;
         }
-      }
+    },
+    mounted() {
+        getCommunityBar(this.communityId, this.barId)
+            .then(resp => {
+                this.bar = resp.data;
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    drawerItems: function () {
-      const data = []
-      if (this.bar.items && this.bar.items.length > 0) {
-        for (let i = 0; i < this.bar.items.length; i++) {
-          if (this.bar.items[i].is_primary === false) {
-            data.push(this.bar.items[i])
-          }
-        }
-      }
-      return data
-    }
-  },
-  mounted () {
-    getCommunityBar(this.communityId, this.barId)
-      .then(resp => {
-        this.bar = resp.data
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
-}
+};
 </script>

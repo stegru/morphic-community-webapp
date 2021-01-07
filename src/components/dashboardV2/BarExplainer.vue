@@ -26,9 +26,9 @@
 <script>
 
 export default {
-  name: 'BarExplainer',
-  props: {
-    barDetails: Object
-  }
-}
+    name: "BarExplainer",
+    props: {
+        barDetails: Object
+    }
+};
 </script>

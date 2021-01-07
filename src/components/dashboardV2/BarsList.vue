@@ -39,19 +39,19 @@
 <script>
 
 export default {
-  name: 'BarsList',
-  props: {
-    bars: Array,
-    activeBarId: String
-  },
-  computed: {
-    orderedBars: function () {
-      const alphabetical = this.bars
-      alphabetical.sort((a, b) => (a.name < b.name) ? 1 : ((a.name > b.name) ? -1 : 0))
-      alphabetical.reverse()
-      alphabetical.sort((a, b) => a.name === 'Default' ? -1 : b.name === 'Default' ? 1 : 0)
-      return alphabetical
+    name: "BarsList",
+    props: {
+        bars: Array,
+        activeBarId: String
+    },
+    computed: {
+        orderedBars: function () {
+            const alphabetical = this.bars;
+            alphabetical.sort((a, b) => (a.name < b.name) ? 1 : ((a.name > b.name) ? -1 : 0));
+            alphabetical.reverse();
+            alphabetical.sort((a, b) => a.name === "Default" ? -1 : b.name === "Default" ? 1 : 0);
+            return alphabetical;
+        }
     }
-  }
-}
+};
 </script>

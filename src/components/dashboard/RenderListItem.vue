@@ -1,6 +1,6 @@
 <template>
   <span :style="'color: ' + (item.configuration.color || colors.blue) + ';'" class="listItem">
-    <b-img v-if="item.configuration.image_url && icons[item.configuration.image_url]" :src="'/icons/' + icons[item.configuration.image_url]" />
+    <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
     <b-icon v-else icon="bootstrap"></b-icon>
     {{ item.configuration.label }}
   </span>
@@ -17,18 +17,18 @@
 
 <script>
 
-import { colors, icons } from '@/utils/constants'
+import { colors, icons } from "@/utils/constants";
 
 export default {
-  name: 'RenderListItem',
-  props: {
-    item: Object
-  },
-  data () {
-    return {
-      colors: colors,
-      icons: icons
+    name: "RenderListItem",
+    props: {
+        item: Object
+    },
+    data() {
+        return {
+            colors: colors,
+            icons: icons
+        };
     }
-  }
-}
+};
 </script>

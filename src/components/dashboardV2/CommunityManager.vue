@@ -13,7 +13,7 @@
     <h5>
       <div>
         <b>Members ({{community.member_count}} of {{community.member_limit}})</b>
-        <b-link to="/dashboard/member-invite" class="icon-add"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon"></b-icon-plus-circle-fill></b-link>
+        <b-link to="/dashboard/member-invite" class="icon-add" id="AddNewMember"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon"></b-icon-plus-circle-fill></b-link>
       </div>
     </h5>
     <MembersList :members="members" :community="community" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" ref="MembersList"/>
@@ -44,21 +44,21 @@
 
 <script>
 
-import MembersList from '@/components/dashboardV2/MembersList'
-import BarsList from '@/components/dashboardV2/BarsList'
+import MembersList from "@/components/dashboardV2/MembersList";
+import BarsList from "@/components/dashboardV2/BarsList";
 
 export default {
-  name: 'CommunityManager',
-  components: {
-    MembersList,
-    BarsList
-  },
-  props: {
-    community: Object,
-    bars: Array,
-    members: Array,
-    activeBarId: String,
-    activeMemberId: String
-  }
-}
+    name: "CommunityManager",
+    components: {
+        MembersList,
+        BarsList
+    },
+    props: {
+        community: Object,
+        bars: Array,
+        members: Array,
+        activeBarId: String,
+        activeMemberId: String
+    }
+};
 </script>

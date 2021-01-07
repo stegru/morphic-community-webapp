@@ -41,50 +41,50 @@
 </style>
 
 <script>
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBar } from '@/services/communityService'
+import PreviewItem from "@/components/dashboard/PreviewItem";
+import { getCommunityBar } from "@/services/communityService";
 
 export default {
-  name: 'BarPreview',
-  data () {
-    return {
-      bar: {}
-    }
-  },
-  props: {
-    barData: Object,
-    barId: String
-  },
-  components: {
-    PreviewItem
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    primaryItems: function() {
-      const data = []
-      if (this.bar && this.bar.items && this.bar.items.length > 0) {
-        for (let i = 0; i < this.bar.items.length; i++) {
-          if (this.bar.items[i].is_primary === true) {
-            data.push(this.bar.items[i])
-          }
+    name: "BarPreview",
+    data() {
+        return {
+            bar: {}
+        };
+    },
+    props: {
+        barData: Object,
+        barId: String
+    },
+    components: {
+        PreviewItem
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; },
+        primaryItems: function () {
+            const data = [];
+            if (this.bar && this.bar.items && this.bar.items.length > 0) {
+                for (let i = 0; i < this.bar.items.length; i++) {
+                    if (this.bar.items[i].is_primary === true) {
+                        data.push(this.bar.items[i]);
+                    }
+                }
+            }
+            return data;
         }
-      }
-      return data
+    },
+    mounted() {
+        if (this.barId) {
+            getCommunityBar(this.communityId, this.barId)
+                .then(resp => {
+                    this.bar = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        } else {
+            // the data comes in the bar prop
+            this.bar = this.barData;
+        }
     }
-  },
-  mounted () {
-    if (this.barId) {
-      getCommunityBar(this.communityId, this.barId)
-        .then(resp => {
-          this.bar = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    } else {
-      // the data comes in the bar prop
-      this.bar = this.barData
-    }
-  }
-}
+};
 </script>

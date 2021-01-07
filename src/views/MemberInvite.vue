@@ -67,105 +67,96 @@
 
 <script>
 
-import RenderList from '@/components/dashboard/RenderList'
-import BarPreview from '@/components/dashboard/BarPreview'
-import DrawerPreview from '@/components/dashboard/DrawerPreview'
-import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from '@/services/communityService'
-import { validationMixin } from 'vuelidate'
-import { required, email } from 'vuelidate/lib/validators'
+import { addCommunityMember, getCommunityBars, inviteCommunityMember, updateCommunityMember } from "@/services/communityService";
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
 // import { availableItems } from '@/utils/constants'
 
 export default {
-  name: 'MemberInvite',
-  mixins: [validationMixin],
-  components: {
-    RenderList,
-    BarPreview,
-    DrawerPreview
-  },
-  data () {
-    return {
-      bars: {},
-      tabIndex: 0,
-      firstName: '',
-      lastName: '',
-      memberEmail: '',
-      selectedBar: null,
-      sendEmailCopy: 0,
-      // availableItems: availableItems,
-      chooseBar: false,
-      previewBar: ''
-    }
-  },
-  validations: {
-    firstName: {
-      required
-    }
-  },
-  methods: {
-    validateState (name) {
-      const { $dirty, $error } = this.$v[name]
-      return $dirty ? !$error : null
+    name: "MemberInvite",
+    mixins: [validationMixin],
+    components: {
     },
-    onSubmit () {
-      this.$v.$touch()
-      if (this.$v.$anyError) {
-        return
-      }
+    data() {
+        return {
+            bars: {},
+            tabIndex: 0,
+            firstName: "",
+            lastName: "",
+            memberEmail: "",
+            selectedBar: null,
+            sendEmailCopy: 0,
+            // availableItems: availableItems,
+            chooseBar: false,
+            previewBar: ""
+        };
     },
-    addMember (invite) {
-      let member = {
-        first_name: this.firstName,
-        last_name: this.lastName
-      }
-      addCommunityMember(this.communityId, member)
-        .then(resp => {
-          member = {
-            member_id: resp.data.member.id
-          }
-          if (resp.status === 200) {
-            if (invite) {
-              inviteCommunityMember(this.communityId, member_id)
-            }
-            setTimeout(() => {
-              this.attachBar(resp.data.member)
-            }, 500)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    validations: {
+        firstName: {
+            required
+        }
     },
-    attachBar (resp) {
-      const member = {
-        id: resp.id,
-        first_name: resp.first_name,
-        last_name: resp.last_name,
-        bar_id: this.selectedBar,
-        role: resp.role
-      }
-      updateCommunityMember(this.communityId, resp.id, member)
-        .then(resp => {
-          this.$router.push('/dashboard/morphicbar-editor?barId=' + member.bar_id + '&memberId=' + member.id)
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    methods: {
+        validateState(name) {
+            const { $dirty, $error } = this.$v[name];
+            return $dirty ? !$error : null;
+        },
+        onSubmit() {
+            this.$v.$touch();
+        },
+        addMember(invite) {
+            let member = {
+                first_name: this.firstName,
+                last_name: this.lastName
+            };
+            addCommunityMember(this.communityId, member)
+                .then(resp => {
+                    member = {
+                        member_id: resp.data.member.id
+                    };
+                    if (resp.status === 200) {
+                        if (invite) {
+                            inviteCommunityMember(this.communityId, member.member_id);
+                        }
+                        setTimeout(() => {
+                            this.attachBar(resp.data.member);
+                        }, 500);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        attachBar(resp) {
+            const member = {
+                id: resp.id,
+                first_name: resp.first_name,
+                last_name: resp.last_name,
+                bar_id: this.selectedBar,
+                role: resp.role
+            };
+            updateCommunityMember(this.communityId, resp.id, member)
+                .then(resp => {
+                    this.$router.push("/dashboard/morphicbar-editor?barId=" + member.bar_id + "&memberId=" + member.id);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    mounted() {
+        getCommunityBars(this.communityId)
+            .then(resp => {
+                this.bars = resp.data.bars;
+                // default selected bar
+                this.selectedBar = this.bars[0].id;
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    getCommunityBars(this.communityId)
-      .then(resp => {
-        this.bars = resp.data.bars
-        // default selected bar
-        this.selectedBar = this.bars[0].id
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
-}
+};
 </script>

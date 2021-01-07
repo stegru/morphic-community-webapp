@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container fluid id="PageContainer">
     <Header />
     <router-view />
     <Footer />
@@ -47,6 +47,10 @@
     border-radius: 1rem;
   }
 
+  #PageContainer {
+    padding: 0;
+  }
+
   .desktop {
     background: url(/img/background-editor.png);
     position: relative;
@@ -81,19 +85,18 @@
     }
   }
 
-
 </style>
 
 <script>
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default {
-  name: 'App',
+    name: "App",
 
-  components: {
-    Header,
-    Footer
-  }
-}
+    components: {
+        Header,
+        Footer
+    }
+};
 </script>

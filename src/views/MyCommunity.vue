@@ -57,44 +57,44 @@
 
 <script>
 
-import { getUserCommunities, deleteUserCommunity } from '@/services/communityService'
+import { getUserCommunities, deleteUserCommunity } from "@/services/communityService";
 
 export default {
-  data () {
-    return {
-      communities: [],
-      communityId: '',
-      host: `${window.location.hostname}.com`
-    }
-  },
-  computed: {
-    userId: function () { return this.$store.getters.userId }
-  },
-  mounted () {
-    getUserCommunities(this.userId)
-      .then(resp => {
-        this.communities = resp.data.communities
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  },
-  methods: {
-    setCommunityId: function (communityId) {
-      this.communityId = communityId
+    data() {
+        return {
+            communities: [],
+            communityId: "",
+            host: `${window.location.hostname}.com`
+        };
     },
-    deleteCommunity: function () {
-      deleteUserCommunity(this.communityId)
-        .then(resp => {
-          if (resp.status) {
-            const index = this.communities.map(item => item.id).indexOf(this.communityId)
-            this.communities.splice(index, 1)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
+    computed: {
+        userId: function () { return this.$store.getters.userId; }
+    },
+    mounted() {
+        getUserCommunities(this.userId)
+            .then(resp => {
+                this.communities = resp.data.communities;
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    },
+    methods: {
+        setCommunityId: function (communityId) {
+            this.communityId = communityId;
+        },
+        deleteCommunity: function () {
+            deleteUserCommunity(this.communityId)
+                .then(resp => {
+                    if (resp.status) {
+                        const index = this.communities.map(item => item.id).indexOf(this.communityId);
+                        this.communities.splice(index, 1);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }
-  }
-}
+};
 </script>

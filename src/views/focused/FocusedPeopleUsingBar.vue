@@ -21,115 +21,104 @@
 
 <script>
 
-import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import BarExplainer from '@/components/dashboardV2/BarExplainer'
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { availableItems, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
-import draggable from 'vuedraggable'
+import { getCommunityBars, getCommunity, getCommunityBar, getCommunityMembers, getCommunityMember } from "@/services/communityService";
 
 export default {
-  name: 'MemberInvite',
-  components: {
-    CommunityManager,
-    BarExplainer,
-    PreviewItem,
-    draggable
-  },
-  methods: {
-    loadBarMembers: function () {
-      getCommunityBars(this.communityId)
-        .then(resp => {
-          const barsData = resp.data.bars
-          getCommunityMembers(this.communityId)
-            .then((resp) => {
-              this.barsList = barsData
-              this.membersList = resp.data.members
-              if (resp.data.members.length > 0) {
-                for (let i = 0; i < resp.data.members.length; i++) {
-                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
-                    this.members.push(resp.data.members[i])
-                  }
-                }
-              }
+    name: "MemberInvite",
+    components: {
+    },
+    methods: {
+        loadBarMembers: function () {
+            getCommunityBars(this.communityId)
+                .then(resp => {
+                    const barsData = resp.data.bars;
+                    getCommunityMembers(this.communityId)
+                        .then((resp) => {
+                            this.barsList = barsData;
+                            this.membersList = resp.data.members;
+                            if (resp.data.members.length > 0) {
+                                for (let i = 0; i < resp.data.members.length; i++) {
+                                    if (this.$route.query.barId === resp.data.members[i].bar_id) {
+                                        this.members.push(resp.data.members[i]);
+                                    }
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        loadMemberData: function () {
+            getCommunityMember(this.communityId, this.$route.query.memberId)
+                .then((resp) => {
+                    this.memberDetails = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getCommunityData: function () {
+            getCommunity(this.communityId)
+                .then((community) => {
+                    this.community = community.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; }
+    },
+    mounted() {
+        getCommunityBar(this.communityId, this.$route.query.barId)
+            .then(resp => {
+                this.barDetails = resp.data;
             })
             .catch(err => {
-              console.error(err)
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    loadMemberData: function () {
-      getCommunityMember(this.communityId, this.$route.query.memberId)
-        .then((resp) => {
-          this.memberDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getCommunityData: function() {
-      getCommunity(this.communityId)
-        .then((community) => {
-          this.community = community.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId }
-  },
-  mounted () {
-    getCommunityBar(this.communityId, this.$route.query.barId)
-      .then(resp => {
-        this.barDetails = resp.data
-      })
-      .catch(err => {
-        console.error(err)
-      })
+                console.error(err);
+            });
 
-    if (this.$route.query.memberId) {
-      this.loadMemberData()
-    }
-    this.loadBarMembers()
-    this.getCommunityData()
-  },
-  watch: {
-    '$route.query': function () {
-      this.initialChangesPrimaryItems = false
-      this.initialChangesDrawerItems = false
-      if (this.$route.query.memberId) {
-        this.loadMemberData()
-      }
-      getCommunityBar(this.communityId, this.$route.query.barId)
-        .then(resp => {
-          this.barDetails = resp.data
-          this.members = []
-          this.loadBarMembers()
-          this.getCommunityData()
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-  },
-  data () {
-    return {
-      // data for the community manager
-      community: {},
-      barsList: [],
-      membersList: [],
+        if (this.$route.query.memberId) {
+            this.loadMemberData();
+        }
+        this.loadBarMembers();
+        this.getCommunityData();
+    },
+    watch: {
+        "$route.query": function () {
+            this.initialChangesPrimaryItems = false;
+            this.initialChangesDrawerItems = false;
+            if (this.$route.query.memberId) {
+                this.loadMemberData();
+            }
+            getCommunityBar(this.communityId, this.$route.query.barId)
+                .then(resp => {
+                    this.barDetails = resp.data;
+                    this.members = [];
+                    this.loadBarMembers();
+                    this.getCommunityData();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    },
+    data() {
+        return {
+            // data for the community manager
+            community: {},
+            barsList: [],
+            membersList: [],
 
-      barDetails: {},
-      members: [],
-      memberDetails: {},
+            barDetails: {},
+            members: [],
+            memberDetails: {}
+        };
     }
-  }
-}
+};
 </script>
-

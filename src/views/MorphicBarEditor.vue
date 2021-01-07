@@ -1,94 +1,8 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <b-modal id="modalEditGeneric" @ok="refreshButton(true)" @cancel="refreshButton(false)" scrollable centered footer-bg-variant="light" ok-title="Update Button" size="lg">
-      <div v-if="buttonEditStorage">
-        <b-row>
-          <b-col md="6">
-            <h5><b>{{ buttonEditStorage.configuration.label }}</b></h5>
-            <p>What text do you want on the button?</p>
-            <div role="group" class="mb-3">
-              <label for="modalEditGenericLabel">Text on the button</label>
-              <b-form-input id="modalEditGenericLabel" v-model="buttonEditStorage.configuration.label" placeholder="Button text" maxLength="35" />
-            </div>
-            <div class="bg-silver rounded p-3">
-              <p v-if="editDialogDetails" class="text-right small mb-0">
-                (<b-link @click="editDialogDetails = false">Hide</b-link>)
-              </p>
-              <p v-else class="small">
-                Optional: <b-link @click="editDialogDetails = true">Customize the button (color &amp; picture)</b-link>
-              </p>
-              <div v-if="editDialogDetails">
-                <h6><b>Color for button</b></h6>
-                <div class="bg-white rounded p-3 mb-4">
-                  <div
-                    v-for="(hex, name) in colors"
-                    :key="name"
-                    @click="editChangeColor(hex)"
-                    :title="name"
-                    :class="{ active: (buttonEditStorage.configuration.color || colors.blue) === hex }"
-                    class="colorBoxHolder"
-                    >
-                    <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
-                  </div>
-                </div>
+    <EditButtonDialog ref="editDialog" />
 
-                <h6><b>Picture for button</b></h6>
-                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="bg-white rounded p-3">
-                  <div
-                    v-for="(filename, icon) in editSubKindIcons"
-                    :key="icon"
-                    @click="editChangeIcon(icon)"
-                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
-                    class="iconBoxHolder"
-                    >
-                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
-                    </div>
-                  </div>
-                </div>
-                <div v-else class="bg-white rounded p-3 compactIconHolder">
-                  <div class="iconBoxHolder" :class="{ active: (!buttonEditStorage.configuration.image_url) }">
-                    <div
-                      @click="editChangeIcon('')"
-                      :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'"
-                      class="iconBox"
-                      >
-                      <p>No image</p>
-                    </div>
-                  </div>
-                  <div
-                    v-for="(filename, icon) in icons"
-                    :key="icon"
-                    @click="editChangeIcon(icon)"
-                    :class="{ active: buttonEditStorage.configuration.image_url === icon }"
-                    class="iconBoxHolder"
-                    >
-                    <div :style="'border-color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" class="iconBox">
-                      <b-img :src="'/icons/' + filename" :style="'color: ' + (buttonEditStorage.configuration.color || colors.blue) + ';'" />
-                    </div>
-                  </div>
-                </div>
-                <div v-if="buttonEditStorage.configuration.subkind && editSubKindIcons && editDialogSubkindIcons" class="text-center pt-2">
-                  <b-button @click="editDialogSubkindIcons = false" variant="outline-dark" size="sm">Pick from more pictures</b-button>
-                </div>
-              </div>
-            </div>
-          </b-col>
-          <b-col md="6">
-            <div class="max-height bg-silver rounded p-3 text-center">
-              <p class="text-right small"><b-link @click="buttonToRemove(buttonEditStorage)" class="text-danger">Remove Button</b-link></p>
-              <p class="">This is the button you are making</p>
-              <div class="barPreview rounded">
-                <div class="previewHolder">
-                  <PreviewItem :item="buttonEditStorage" />
-                </div>
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-      </div>
-    </b-modal>
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
     </b-modal>
@@ -107,15 +21,13 @@
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
-    <b-row>
+    <b-row no-gutters id="EditorContainer">
       <b-col md="2">
         <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
-          <b-alert variant="success" :show="successAlert">
-            <span>{{ successMessage }}</span>
-          </b-alert>
+
           <!-- Topmost area above desktop image -->
           <div id="bar-info">
             <div class="bar-name">
@@ -198,7 +110,6 @@
                 <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
                 <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
 
-
               </ul>
             </div>
             <div v-else-if="getMembersCount() === 0">
@@ -236,7 +147,7 @@
             </p>
             <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
           </div>
-          <div id="preview-holder" class="desktop fill-height mt-3">
+          <div id="preview-holder" class="desktop mt-3">
             <drop mode="cut" class="dragToDelete desktop-portion">
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
@@ -244,6 +155,7 @@
               <div class="desktop-portion">
               </div>
             </drop>
+
             <!-- Buttons Bar -->
             <div id="preview-bar">
               <div class="barPreviewEditor" ref="myref">
@@ -252,7 +164,7 @@
                     <drag :key="item.id"
                       @dragstart="setDragInProgress(true)"
                       @dragend="setDragInProgress(false)"
-                      @click="buttonToEdit(item, $event)"
+                      @click="showEditDialog(item, $event)"
                       @cut="removeButton(item, barDetails.items)"
                       class="buttonDragger">
                       <div :key="item.id" class="previewHolder">
@@ -277,6 +189,7 @@
           </div>
         </div>
       </b-col>
+
       <!-- Button Catalogue -->
       <b-col md="2">
         <drop class="cut" mode="cut">
@@ -294,43 +207,45 @@
               <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="ButtonsCatalogHeader">
                 <h3>{{categoryName}}</h3>
                 <ul class="ButtonsCatalogEntries">
-                  <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
-                    <!-- Render each button as draggable -->
-                    <drag :data="button" type="catalogButtonNoImage">
-                      <!-- Define looks when dragged -->
-                      <template v-slot:drag-image>
-                        <PreviewItem :item="button" :noImage="true" class="noImage" />
-                      </template>
-                      <!-- Define looks when selected (expanded) -->
-                      <div v-if="buttonId == expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
-                        <div style="width: 100%; display: inline-flex; align-items: center;">
-                          <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
-                          <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
-                          <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
-                        </div>
-                        <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                        <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
-                        <div class="buttons">
-                          <drag :data="button" type="catalogButtonNoImage">
-                            <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
-                          </drag>
+                  <template v-for="(button, buttonId) in buttonGroup">
+                    <li v-if="button.is_primary" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
+                      <!-- Render each button as draggable -->
+                      <drag :data="button" type="catalogButtonNoImage">
+                        <!-- Define looks when dragged -->
+                        <template v-slot:drag-image>
+                          <PreviewItem :item="button" :noImage="true" class="noImage" />
+                        </template>
+                        <!-- Define looks when selected (expanded) -->
+                        <div v-if="buttonId === expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                          <div style="width: 100%; display: inline-flex; align-items: center;">
+                            <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
+                            <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
+                            <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
+                          </div>
+                          <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
+                          <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
+                          <div class="buttons">
+                            <drag :data="button" type="catalogButtonNoImage">
+                              <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
+                            </drag>
 
-                          <drag v-if="button.kind != 'action'" :data="button" type="catalogButtonWithImage">
-                            <template v-slot:drag-image>
-                              <PreviewItem :item="button" :noImage="false" class="noImage" />
-                            </template>
-                            <PreviewItem :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
-                          </drag>
+                            <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage">
+                              <template v-slot:drag-image>
+                                <PreviewItem :item="button" :noImage="false" class="noImage" />
+                              </template>
+                              <PreviewItem v-if="button.configuration.image_url" :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
+                            </drag>
+                          </div>
                         </div>
-                      </div>
-                      <!-- Define looks when not selected -->
-                      <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                        <b-img v-if="button.configuration.image_url && icons[button.configuration.image_url]" :src="'/icons/' + icons[button.configuration.image_url]" />
-                        <b-icon v-else icon="bootstrap"></b-icon>
-                        {{ button.configuration.label }}
-                      </b-link>
-                    </drag>
-                  </li>
+                        <!-- Define looks when not selected -->
+                        <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                          <div class="imageWrapper">
+                            <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
+                          </div>{{ button.configuration.catalogLabel || button.configuration.label }}
+                        </b-link>
+                      </drag>
+                    </li>
+                  </template>
                 </ul>
               </li>
             </ul>
@@ -345,7 +260,13 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  #EditorContainer {
+
+  }
+
   #barEditor {
+    padding-left: 15px;
+    padding-right: 15px;
     #bar-info {
       display: flex;
 
@@ -400,123 +321,87 @@
       }
     }
   }
-  #preview-holder {
-    border: 1px solid #002957;
+
+  #preview-holder.desktop {
+    width: 100%;
+    height: 600px;
+    display: flex;
 
     .desktop-portion {
+      display: inline-block;
       flex-grow: 1;
     }
 
-    #preview-bar, #preview-drawer {
-      padding-top: 10px;
-      padding-bottom: 5px;
-      display: flex;
-      min-height: 600px;
-      flex-direction: column;
+    #preview-bar {
+      border: 1px solid #002957;
       background: white;
       border-left: 1px solid #002957;
-      min-width: 120px;
-
       // vertical line separating bar from drawer
       background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
       background-repeat: no-repeat;
-      background-position: right 120px bottom 0px;
+      background-position: right 122px bottom 0px;
 
-      .minWidth1px {
-        min-width: 1px;
-      }
+      display: flex;
+      justify-content: center;
+      align-content: center;
 
-      .button-feedback, .feedback {
-        background-color: #e5f4ed;
-        border: 2px dashed rgb(16 141 74);
-        height: 50px;
-        margin-left: 10px;
-        margin-right: 10px;
-        border-radius: 10px;
-        margin-top: 10px;
+      // flex columns don't expand the container, so rotate the text flow here, and make the buttonList flex-direction to row
+      writing-mode: vertical-rl;
 
-        &.clickDropSpot {
-          margin-top: 0px;
+      .barPreviewEditor {
+        min-width: 120px;
+        flex-grow: 1;
+
+        .buttonsList {
+          height: 100%;
+
+          display: inline-flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-content: flex-start;
+
+          max-width: 400px;
+          // Hide the drawer by limiting the width
+          &:not(.showDrawer) {
+            width: 120px !important;
+            overflow: hidden;
+          }
+
+          & > div {
+            min-width: 50px;
+          }
+
+          // Place-holder for dropping a new button.
+          .button-feedback, .feedback {
+            display: block;
+            background-color: #e5f4ed;
+            border: 2px dashed rgb(16 141 74);
+            height: 50px;
+            min-width: 95px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+
+            &.clickDropSpot {
+              margin-top: 0px;
+            }
+          }
+        }
+
+        .buttonDragger {
+          writing-mode: horizontal-tb;
+          margin: 10px 10px 0 10px;
         }
       }
 
       .logoHolder {
-        width: 100%;
-        text-align: right;
-        padding-right: 32px;
-      }
-
-      .barPreviewEditor { // WAS ALSO: , .barPreview
-        // width: 120px;
-        // display: flex;
-        // flex-direction: column;
-        // flex-grow: 1;
-        // height: 500px;
-
-        .buttonDragger {
-          writing-mode: horizontal-tb;
-          margin-top: 10px;
-          margin-bottom: 0px;
-          margin-left: 10px;
-          margin-right: 10px;
-        }
-
-        .buttonsList {
-
-          // display: block;
-          overflow: hidden;
-          height: 500px;
-          min-width: 120px;
-          display: inline-flex;
-          writing-mode: vertical-rl;
-          flex-wrap: wrap;
-
-          // &.showDrawer {
-          //   flex-wrap: wrap;
-          // }
-
-          &:not(.showDrawer) {
-            // flex-wrap: wrap;
-            width: 120px !important;
-          }
-
-          button {
-            padding: 0px;
-          }
-
-
-
-          .draggable-area {
-            // min-width: 500px;
-            flex-grow: 1;
-            list-style: none;
-
-
-            .previewHolder {
-              width: 120px;
-              padding: 10px;
-              padding-top: 5px;
-              padding-bottom: 5px;
-              position: relative;
-
-              .overlay {
-                position: absolute;
-                top: 10px;
-                color: $primary-color !important;
-                background: rgba(255,255,255,0.7) !important;
-                font-size: 1.5rem;
-                cursor: pointer;
-                &:hover {
-                  background: white !important;
-                }
-                &:active, &:focus {
-                  color: #d60000 !important;
-                }
-              }
-            }
-          }
-        }
+        writing-mode: initial;
+        text-align: center;
+        width: 120px;
+        padding: 15px 0 15px 0;
       }
     }
   }
@@ -531,11 +416,41 @@
         font-weight: bold;
       }
     }
-
+img:before {
+  content:  " ";
+}
     .ButtonsCatalogEntries {
-      padding-inline-start: 17px;
+      padding-left: 30px;
       list-style: none;
+
       .buttonsCatalogEntry {
+
+        position: relative;
+
+        .imageWrapper {
+          // Position the icon to the left, and remove it from the flow.
+          display: inline-block;
+          position: relative;
+          left: -23px;
+          width: 0;
+          overflow: visible;
+
+          img {
+            transition: all 0.2s ease-in-out;
+          }
+        }
+
+        a:hover {
+          .imageWrapper img {
+            transform: scale(1.5);
+          }
+        }
+
+        &.noImage {
+          img {
+            display: none;
+          }
+        }
 
         .active {
           background-color: #e0f1d7;
@@ -667,13 +582,11 @@
   #preview-bar, #preview-drawer {
     .buttonsCatalogEntry {
       .active {
-        background-color: none;
-        border: 0px;
-        width: default;
+        background-color: transparent;
+        border: 0;
+        width: initial;
 
         .buttons {
-          display: inherit !important;
-
           button.withImage {
             display: none;
           }
@@ -694,582 +607,593 @@
 
 <script>
 
-import CommunityManager from '@/components/dashboardV2/CommunityManager'
-import PreviewItem from '@/components/dashboard/PreviewItem'
-import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from '@/services/communityService'
-import { buttonCatalog, colors, icons, subkindIcons, MESSAGES } from '@/utils/constants'
-import { predefinedBars } from '@/utils/predefined'
-import draggable from 'vuedraggable'
-import { Drag, Drop, DropList, DropMask } from "vue-easy-dnd";
+import CommunityManager from "@/components/dashboardV2/CommunityManager";
+import PreviewItem from "@/components/dashboard/PreviewItem";
+import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
+import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
+import { predefinedBars } from "@/utils/predefined";
+import { Drag, Drop, DropList } from "vue-easy-dnd";
+import * as params from "@/utils/params";
+import EditButtonDialog from "@/views/EditButtonDialog";
 
 export default {
-  name: 'MorphicBarEditor',
-  components: {
-    CommunityManager,
-    PreviewItem,
-    draggable,
-    Drag,
-    Drop,
-    DropList,
-    DropMask
-  },
-  methods: {
-    dropToBar: function (event) {
-      event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
-      event.data.id = this.generateId(event.data)
-
-      if (event.type == "catalogButtonNoImage") {
-        event.data.configuration.image_url = "";
-      }
-      // insert in new position (default to 0)
-      this.barDetails.items.splice(event.index || 0, 0, event.data);
-      // close any expanded button
-      this.expandedCatalogButtonId = undefined;
-      this.setBarChanged();
-      return true;
+    name: "MorphicBarEditor",
+    components: {
+        EditButtonDialog,
+        CommunityManager,
+        PreviewItem,
+        Drag,
+        Drop,
+        DropList
     },
-
-    setBarChanged: function () {
-      this.isChanged = true;
-      this.barSelectedInDropdown = 'customized';
-    },
-
-    revertBar: function () {
-      if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
-        this.isChanged = false;
-        this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
-        this.barSelectedInDropdown = this.barDetails.id;
-      }
-    },
-    dropOnClickToAdd: function (event) {
-      this.dropToBar(event);
-    },
-    changeUserBarToCommunityBar: function () {
-      if (this.isChanged || this.barDetails.is_shared == false) {
-        if (false == confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
-          return;
-        }
-      }
-
-      // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
-      updateCommunityMember(this.community.id, this.memberDetails.id, {
-        first_name: this.memberDetails.first_name,
-        last_name: this.memberDetails.last_name,
-        bar_id: this.barSelectedInDropdown,
-        role: this.memberDetails.role
-      }).then(r => {
-        getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
-          this.barDetails = newBarDetails.data;
-          this.isChanged = false;
-          this.newBar = false;
-          this.memberDetails.bar_id = this.barSelectedInDropdown;
-          this.updateOriginalBarDetails();
-        });
-      });
-    },
-    // used to avoid bug where a "click" event is triggered at end of drag
-    setDragInProgress: function (newValue) {
-      this.dragInProgress = newValue;
-    },
-
-    removeButton: function (item, itemList) {
-      let compareObjects = function (x, y) {
-        for (let key in x) {
-          if (x[key] != y[key]) {
-            return false;
-          } else {
-            if (x[key] instanceof Object && y[key] instanceof Object) {
-              if (compareObjects(x[key], y[key]) == false) {
-                return false;
-              }
+    methods: {
+        dropToBar: function (event) {
+            event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
+            if (event.type === "catalogButtonNoImage") {
+                event.data.configuration.image_url = "";
             }
-          }
-        }
-        return true;
-      };
-      let index = itemList.findIndex(x => compareObjects(x, item));
-      itemList.splice(index, 1);
-    },
+            this.addBarItem(event.data, event.index);
+            return true;
+        },
 
-    getEmailAndSendInvite() {
-      this.invitationEmail = "";
-      this.$bvModal.show('sendEmailInvitationModal');
-    },
-    sendInvite() {
-      if (this.invitationEmail) {
-        let communityId = this.$store.getters.communityId;
-        inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
-        this.memberDetails.state = 'invited';
-      }
-    },
+        /**
+         * Add an item to the bar.
+         * @param {BarItem} button The new button
+         * @param {Number} [insertAt] The index of the new button.
+         */
+        addBarItem: function (button, insertAt) {
+            button.id = this.generateId(button);
+            delete button.configuration.catalogItem;
+            delete button.configuration.catalogLabel;
 
-    loadAllData: function () {
-      this.loadBarData()
-      this.loadBarMembers()
-      this.getCommunityData()
+            // insert in new position (default to 0)
+            this.barDetails.items.splice(insertAt || 0, 0, button);
+            // close any expanded button
+            this.expandedCatalogButtonId = undefined;
+            this.setBarChanged();
 
-      if (this.activeMemberId) {
-        this.loadMemberData()
-      }
-    },
 
-    loadBarData: function () {
-      if (this.$route.query.barId === 'new') {
-        this.newBar = true
-        this.barDetails = this.newBarDetails
-      } else if (this.$route.query.barId.indexOf('predefined') !== -1) {
-        for (let i = 0; i < this.predefinedBars.length; i++) {
-          if (this.predefinedBars[i].id === this.$route.query.barId) {
-            this.newBar = true
-            this.barDetails = this.newBarDetails
-            this.barDetails.items = this.predefinedBars[i].items;
-          }
-        }
-      } else {
-        getCommunityBar(this.communityId, this.$route.query.barId)
-          .then(resp => {
-            this.barDetails = resp.data
-            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      }
-    },
-    addIds: function (items) {
-      return items.map(item => item.id = this.generateId(item));
-    },
-    // hack to refresh css rendering due to bars being fucked up in their CSS
-    refreshBar() {
-      this.$refs.myref.classList.contains("minWidth1px") ?
-        this.$refs.myref.classList.remove("minWidth1px") :
-        this.$refs.myref.classList.add("minWidth1px");
-    }
-    ,
-    distributeItems: function (items) {
-      // add id's
-      this.addIds(items);
-      // items.map(item => item.id = this.generateId(item));
-    },
-    deleteMember: function () {
-      deleteCommunityMember(this.communityId, this.memberDetails.id)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulMemberDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    changeMemberRole: function () {
-      if (this.memberDetails.role === 'member') {
-        this.memberDetails.role = 'manager'
-      } else {
-        this.memberDetails.role = 'member'
-      }
-      updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulRoleChange
-            this.successAlert = true
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    updateOriginalBarDetails: function () {
-      this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-    },
-    addPersonalBar: function () {
-      if (this.barDetails.is_shared) {
-        this.onSave = true
+            var showEdit;
+            if (button.isPlaceholder) {
+                showEdit = true;
+                button.configuration.hasError = true;
+            } else {
+                params.setInitial(button);
+                showEdit = button.configuration.hasError;
+            }
 
-        this.barDetails.name = this.memberDetails.first_name
-        this.barDetails.is_shared = false
+            // Edit the button, if it has parameterised fields.
+            if (showEdit) {
+                this.showEditDialog(button);
+            }
+        },
 
-        const data = this.barDetails
-        // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-        // data.items = this.primaryItems.concat(drawerItems)
+        setBarChanged: function () {
+            this.isChanged = true;
+            this.barSelectedInDropdown = "customized";
+        },
 
-        createCommunityBar(this.communityId, data)
-          .then((resp) => {
-            if (resp.status === 200) {
-              this.memberDetails.bar_id = resp.data.bar.id
-              updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                .then((resp) => {
-                  if (resp.status === 200) {
-                    this.successMessage = MESSAGES.barUpdated
-                    this.successAlert = true
-                    this.isChanged = false
+        revertBar: function () {
+            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
+                this.isChanged = false;
+                this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
+                this.barSelectedInDropdown = this.barDetails.id;
+            }
+        },
+        dropOnClickToAdd: function (event) {
+            this.dropToBar(event);
+        },
+        changeUserBarToCommunityBar: function () {
+            if (this.isChanged || !this.barDetails.is_shared) {
+                if (!confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
+                    return;
+                }
+            }
+
+            // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
+            updateCommunityMember(this.community.id, this.memberDetails.id, {
+                first_name: this.memberDetails.first_name,
+                last_name: this.memberDetails.last_name,
+                bar_id: this.barSelectedInDropdown,
+                role: this.memberDetails.role
+            }).then(r => {
+                getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
+                    this.barDetails = newBarDetails.data;
+                    this.isChanged = false;
+                    this.newBar = false;
+                    this.memberDetails.bar_id = this.barSelectedInDropdown;
                     this.updateOriginalBarDetails();
-                    setTimeout(() => {
-                      this.successAlert = false
-                    }, 3000)
-                  }
+                });
+            });
+        },
+        // used to avoid bug where a "click" event is triggered at end of drag
+        setDragInProgress: function (newValue) {
+            this.dragInProgress = newValue;
+        },
+
+        removeButton: function (item, itemList) {
+            const compareObjects = function (x, y) {
+                for (const key in x) {
+                    if (x[key] !== y[key]) {
+                        return false;
+                    } else {
+                        if (x[key] instanceof Object && y[key] instanceof Object) {
+                            if (compareObjects(x[key], y[key]) === false) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            };
+            const index = itemList.findIndex(x => compareObjects(x, item));
+            itemList.splice(index, 1);
+        },
+
+        getEmailAndSendInvite() {
+            this.invitationEmail = "";
+            this.$bvModal.show("sendEmailInvitationModal");
+        },
+        sendInvite() {
+            if (this.invitationEmail) {
+                const communityId = this.$store.getters.communityId;
+                inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
+                this.memberDetails.state = "invited";
+            }
+        },
+
+        loadAllData: function () {
+            this.loadBarData();
+            this.loadBarMembers();
+            this.getCommunityData();
+
+            if (this.activeMemberId) {
+                this.loadMemberData();
+            }
+        },
+
+        /** Loads the initial bar data */
+        loadBarData: function () {
+            var barId = this.$route.query.barId;
+
+            if (barId === "new") {
+                // Create a new empty bar.
+                this.newBar = true;
+                this.barDetails = this.newBarDetails;
+            } else if (barId.indexOf("predefined") !== -1) {
+                // Create a bar from the predefined collection.
+                var bar = this.predefinedBars.find(function (predefined) {
+                    return predefined.id === barId;
+                });
+
+                if (bar) {
+                    this.newBar = true;
+                    this.barDetails = this.newBarDetails;
+                    this.barDetails.items = bar.items;
+                    this.addBar();
+                }
+            } else {
+                const unsavedBar = this.$store.getters.unsavedBar;
+                if (unsavedBar && unsavedBar.id === barId) {
+                    this.barDetails = unsavedBar;
+                } else {
+                    // Load a saved bar.
+                    getCommunityBar(this.communityId, barId)
+                        .then(resp => {
+                            this.barDetails = resp.data;
+                            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                }
+            }
+        },
+        addIds: function (items) {
+            items.forEach(item => { item.id = this.generateId(item); });
+        },
+        // hack to refresh css rendering due to bars being fucked up in their CSS
+        refreshBar() {
+            this.$refs.myref.classList.contains("minWidth1px")
+                ? this.$refs.myref.classList.remove("minWidth1px")
+                : this.$refs.myref.classList.add("minWidth1px");
+        },
+        distributeItems: function (items) {
+            // add id's
+            this.addIds(items);
+            // items.map(item => item.id = this.generateId(item));
+        },
+        deleteMember: function () {
+            deleteCommunityMember(this.communityId, this.memberDetails.id)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.successfulMemberDelete);
+                        this.$router.push("/dashboard");
+                    }
                 })
                 .catch(err => {
-                  console.error(err)
-                })
-            }
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      } else {
-        this.saveBar()
-      }
-    },
-    addBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      data.is_shared = true
-      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      // data.items = this.primaryItems.concat(drawerItems)
-
-      createCommunityBar(this.communityId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barAdded
-            this.successAlert = true
-            this.isChanged = false
-            this.updateOriginalBarDetails();
-
-            setTimeout(() => {
-              this.successAlert = false
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    saveBar: function () {
-      this.onSave = true
-      const data = this.barDetails
-      // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-      // data.items = this.primaryItems.concat(drawerItems)
-
-      updateCommunityBar(this.communityId, this.$route.query.barId, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.barUpdated
-            this.successAlert = true
-            this.isChanged = false
-            this.updateOriginalBarDetails();
-
-            setTimeout(() => {
-              this.successAlert = false
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    deleteBar: function () {
-      deleteCommunityBar(this.communityId, this.$route.query.barId)
-        .then((resp) => {
-          if (resp.status === 200) {
-            this.successMessage = MESSAGES.successfulBarDelete
-            this.successAlert = true
-            setTimeout(() => {
-              this.$router.push('/dashboard')
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    expandCatalogButton: function (button, buttonId) {
-      this.expandedCatalogButtonId = buttonId;
-      this.expandedCatalogButton = button;
-    },
-    buttonToRemove: function (item) {
-      // remove from items list
-      // bar and drawer lists are automatically updated from watcher
-      this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
-      this.$bvModal.hide('modalEditGeneric')
-      this.setBarChanged();
-    },
-    buttonToEdit: function (item, evt) {
-      if (this.dragInProgress) {
-        return;
-      }
-      this.buttonEditStorage = item;
-      this.$bvModal.show('modalEditGeneric')
-    },
-    refreshButton: function (updated) {
-      // updating the data in a button (on edit)
-      this.editDialogDetails = false
-      this.editDialogSubkindIcons = true
-      if (updated) {
-        this.setBarChanged();
-      }
-    },
-    editChangeColor: function (hex) {
-      this.buttonEditStorage.configuration.color = hex
-    },
-    editChangeIcon: function (icon) {
-      this.buttonEditStorage.configuration.image_url = icon
-    },
-    getMembersCount: function () {
-      if (this.members && this.members.length > 0) {
-        return this.members.length
-      }
-      return 0
-    },
-    loadBarMembers: function () {
-      getCommunityBars(this.communityId)
-        .then(resp => {
-          const barsData = resp.data.bars
-          getCommunityMembers(this.communityId)
-            .then((resp) => {
-              this.barsList = barsData
-              this.membersList = resp.data.members;
-              this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id })});
-
-              if (resp.data.members.length > 0) {
-                for (let i = 0; i < resp.data.members.length; i++) {
-                  if (this.$route.query.barId === resp.data.members[i].bar_id) {
-                    this.members.push(resp.data.members[i])
-                  }
-                }
-              }
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getBarRemoveValidity: function () {
-      if (this.barDetails.name !== 'Default' && this.getMembersCount() === 0) {
-        return true
-      }
-      return false
-    },
-    loadMemberData: function () {
-      getCommunityMember(this.communityId, this.activeMemberId)
-        .then((resp) => {
-          this.memberDetails = resp.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    getCommunityData: function () {
-      getCommunity(this.communityId)
-        .then((community) => {
-          this.community = community.data
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
-    generateId: function (item) {
-      let id = ''
-      if (item) {
-        id += Math.floor(Math.random() * Math.floor(99999999))
-        id += '-' + item.configuration.label.toLowerCase()
-        id += '-' + (item.configuration.subkind ? 'sub-' + item.configuration.subkind.toLowerCase() : 'generic-kind')
-        id += '-' + Math.floor(Math.random() * Math.floor(99999999))
-      }
-      return id
-    },
-    addIdsToCatalogButtons(buttonCatalog) {
-      for (let category in buttonCatalog) {
-        for (let button in buttonCatalog[category]) {
-          buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
-        }
-      }
-      return buttonCatalog;
-    },
-    updateAvailableBars() {
-      this.availableBars = this.barsList.filter((bar) => {
-        return bar.is_shared;
-      });
-    }
-  },
-  computed: {
-    communityId: function () { return this.$store.getters.communityId },
-    editSubKindIcons: function () {
-      const data = {}
-      if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-        for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-          data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = icons[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]]
-        }
-      }
-      return data
-    },
-    activeMemberId: function () { return this.$route.query.memberId },
-  },
-  mounted () {
-    this.loadAllData()
-  },
-  watch: {
-    'barDetails.items': function (newValue, oldValue) {
-      this.distributeItems(newValue)
-    },
-    'memberDetails.id': function (newValue, oldValue) {
-      this.updateAvailableBars();
-      this.barSelectedInDropdown = this.memberDetails.bar_id;
-
-    },
-    barsList: function (newValue) {
-      this.updateAvailableBars();
-    },
-    makeAButtons: function (newValue, oldValue) {
-      if (!this.dragMakeAButton) {
-        this.makeAButtons = oldValue
-        this.dragMakeAButton = true
-      }
-    },
-    predefinedButtons: function (newValue, oldValue) {
-      if (!this.dragPredefinedButton) {
-        this.predefinedButtons = oldValue
-        this.dragPredefinedButton = true
-      }
-    },
-    drawerItemsSecond: function (newValue, oldValue) {
-      if (oldValue.length !== newValue.length) {
-        this.isChanged = true
-      }
-      let item = {}
-      if (newValue && newValue.length > 0) {
-        for (let i = 0; i < newValue.length; i++) {
-          if (newValue[i].is_primary === true) {
-            item = newValue[i]
-            item.is_primary = false
-          }
-        }
-      }
-    },
-    isChanged: function () {
-      this.$store.dispatch('unsavedChanges', this.isChanged)
-    },
-    '$route.query': function () {
-      this.members = []
-      this.initialChangesPrimaryItems = false
-      this.initialChangesDrawerItems = false
-      this.loadAllData()
-    }
-  },
-  beforeRouteUpdate (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        this.isChanged = false
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (this.isChanged) {
-      const confirm = window.confirm(this.leavePageMessage)
-      if (confirm) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
-      next()
-    }
-  },
-  beforeUpdate() {
-    this.refreshBar();
-  },
-  data () {
-    return {
-      // messages
-      leavePageMessage: MESSAGES.leavePageAlert,
-      successMessage: '',
-      availableBars: [],
-      barSelectedInDropdown: '',
-      // flags
-      addToBar: false,
-      addToDrawer: false,
-      newBar: false,
-      openDrawer: false,
-      successAlert: false,
-      editDialogDetails: false,
-      editDialogSubkindIcons: true,
-      tab: 0,
-      dragFromEditor: false,
-      isChanged: false,
-      editBarName: false,
-      onSave: false,
-      initialChangesPrimaryItems: false,
-      initialChangesDrawerItems: false,
-      // data for the community manager
-      community: {},
-      barsList: [],
-      membersList: [],
-
-      buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
-      dragInProgress: false,
-      expandedCatalogButtonId: null,
-
-      // storage
-      buttonStorage: {},
-      buttonEditStorage: {
-        configuration: {
-          label: '',
-          color: '',
-          image_url: ''
-        }
-      },
-      invitationEmail: '',
-      barDetails: {},
-      originalBarDetails: {},
-      members: [],
-      memberDetails: {},
-      // drawerItems: [],
-      // drawerItemsSecond: [],
-      // primaryItems: [],
-      // makeAButtons: this.getMakeAButtons(),
-      // predefinedButtons: this.getPredefinedButtons(),
-
-      // configurations
-      preview: {
-        drawer: {
-          w: 2,
-          h: 6
+                    console.error(err);
+                });
         },
-        bar: {
-          h: 100
+        changeMemberRole: function () {
+            if (this.memberDetails.role === "member") {
+                this.memberDetails.role = "manager";
+            } else {
+                this.memberDetails.role = "member";
+            }
+            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.successfulRoleChange);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        updateOriginalBarDetails: function () {
+            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+        },
+        addPersonalBar: function () {
+            if (this.barDetails.is_shared) {
+                this.onSave = true;
+
+                this.barDetails.name = this.memberDetails.first_name;
+                this.barDetails.is_shared = false;
+
+                const data = this.barDetails;
+                // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+                // data.items = this.primaryItems.concat(drawerItems)
+
+                createCommunityBar(this.communityId, data)
+                    .then((resp) => {
+                        if (resp.status === 200) {
+                            this.memberDetails.bar_id = resp.data.bar.id;
+                            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
+                                .then((resp) => {
+                                    if (resp.status === 200) {
+                                        this.showMessage(MESSAGES.barUpdated);
+                                        this.isChanged = false;
+                                        this.updateOriginalBarDetails();
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            } else {
+                this.saveBar();
+            }
+        },
+        addBar: function () {
+            this.onSave = true;
+            const data = this.barDetails;
+            data.is_shared = true;
+            // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+            // data.items = this.primaryItems.concat(drawerItems)
+
+            createCommunityBar(this.communityId, data)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.barAdded);
+                        this.isChanged = false;
+                        this.updateOriginalBarDetails();
+
+                        this.$router.push("/dashboard");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        saveBar: function () {
+            this.onSave = true;
+            const data = this.barDetails;
+            // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
+            // data.items = this.primaryItems.concat(drawerItems)
+
+            // Set the image_path for the items, for images which the client does not have locally.
+            data.items.forEach(item => {
+                item.configuration.image_path = this.getIconUrl(item.configuration.image_url);
+            });
+
+            updateCommunityBar(this.communityId, this.$route.query.barId, data)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.barUpdated);
+                        this.isChanged = false;
+                        this.updateOriginalBarDetails();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        deleteBar: function () {
+            deleteCommunityBar(this.communityId, this.$route.query.barId)
+                .then((resp) => {
+                    if (resp.status === 200) {
+                        this.showMessage(MESSAGES.successfulBarDelete);
+                        this.$router.push("/dashboard");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        expandCatalogButton: function (button, buttonId) {
+            this.expandedCatalogButtonId = buttonId;
+            this.expandedCatalogButton = button;
+        },
+        buttonToRemove: function (item) {
+            // remove from items list
+            // bar and drawer lists are automatically updated from watcher
+            this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
+            this.setBarChanged();
+        },
+
+        /**
+         * Shows the edit button dialog.
+         * @param {BarItem} [item] The item to edit.
+         */
+        showEditDialog: function (item) {
+            if (!this.dragInProgress) {
+                this.selectedItem = item;
+                this.editDialog.showDialog(item).then(changed => {
+                    if (changed) {
+                        this.setBarChanged();
+                    }
+                });
+            }
+        },
+        getMembersCount: function () {
+            if (this.members && this.members.length > 0) {
+                return this.members.length;
+            }
+            return 0;
+        },
+        loadBarMembers: function () {
+            getCommunityBars(this.communityId)
+                .then(resp => {
+                    const barsData = resp.data.bars;
+                    getCommunityMembers(this.communityId)
+                        .then((resp) => {
+                            this.barsList = barsData;
+                            this.membersList = resp.data.members;
+                            this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id }); });
+
+                            if (resp.data.members.length > 0) {
+                                for (let i = 0; i < resp.data.members.length; i++) {
+                                    if (this.$route.query.barId === resp.data.members[i].bar_id) {
+                                        this.members.push(resp.data.members[i]);
+                                    }
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getBarRemoveValidity: function () {
+            if (this.barDetails.name !== "Default" && this.getMembersCount() === 0) {
+                return true;
+            }
+            return false;
+        },
+        loadMemberData: function () {
+            getCommunityMember(this.communityId, this.activeMemberId)
+                .then((resp) => {
+                    this.memberDetails = resp.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        getCommunityData: function () {
+            getCommunity(this.communityId)
+                .then((community) => {
+                    this.community = community.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        generateId: function (item) {
+            let id = "";
+            if (item) {
+                id += Math.floor(Math.random() * Math.floor(99999999));
+                id += "-" + item.configuration.label.toLowerCase();
+                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
+            }
+            return id;
+        },
+        addIdsToCatalogButtons(buttonCatalog) {
+            for (const category in buttonCatalog) {
+                for (const button in buttonCatalog[category]) {
+                    buttonCatalog[category][button].id = this.generateId(buttonCatalog[category][button]);
+                }
+            }
+            return buttonCatalog;
+        },
+        updateAvailableBars() {
+            this.availableBars = this.barsList.filter((bar) => {
+                return bar.is_shared;
+            });
         }
-      },
-      newBarDetails: {
-        name: 'New Bar',
-        is_shared: false,
-        items: []
-      },
-      bar: {
-        settings: {
-          barOnRight: true,
-          cannotClose: false,
-          startsOpen: false
+    },
+    computed: {
+        communityId: function () { return this.$store.getters.communityId; },
+        activeMemberId: function () { return this.$route.query.memberId; },
+        editDialog: function () { return this.$refs.editDialog; }
+    },
+    mounted() {
+        this.loadAllData();
+    },
+    watch: {
+        "barDetails.items": function (newValue, oldValue) {
+            this.distributeItems(newValue);
+        },
+        "memberDetails.id": function (newValue, oldValue) {
+            this.updateAvailableBars();
+            this.barSelectedInDropdown = this.memberDetails.bar_id;
+        },
+        barsList: function (newValue) {
+            this.updateAvailableBars();
+        },
+        makeAButtons: function (newValue, oldValue) {
+            if (!this.dragMakeAButton) {
+                this.makeAButtons = oldValue;
+                this.dragMakeAButton = true;
+            }
+        },
+        predefinedButtons: function (newValue, oldValue) {
+            if (!this.dragPredefinedButton) {
+                this.predefinedButtons = oldValue;
+                this.dragPredefinedButton = true;
+            }
+        },
+        drawerItemsSecond: function (newValue, oldValue) {
+            if (oldValue.length !== newValue.length) {
+                this.isChanged = true;
+            }
+            let item = {};
+            if (newValue && newValue.length > 0) {
+                for (let i = 0; i < newValue.length; i++) {
+                    if (newValue[i].is_primary === true) {
+                        item = newValue[i];
+                        item.is_primary = false;
+                    }
+                }
+            }
+        },
+        isChanged: function () {
+            this.$store.dispatch("unsavedChanges", this.isChanged);
+            this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
+        },
+        "$route.query": function () {
+            this.members = [];
+            this.initialChangesPrimaryItems = false;
+            this.initialChangesDrawerItems = false;
+            this.loadAllData();
         }
-      },
-      predefinedBars: predefinedBars,
-      colors: colors,
-      icons: icons,
-      subkindIcons: subkindIcons
+    },
+    beforeRouteUpdate(to, from, next) {
+        if (this.isChanged) {
+            const confirm = window.confirm(this.leavePageMessage);
+            if (confirm) {
+                this.isChanged = false;
+                next();
+            } else {
+                next(false);
+            }
+        } else {
+            next();
+        }
+    },
+    beforeRouteLeave(to, from, next) {
+        if (this.isChanged) {
+            const confirm = window.confirm(this.leavePageMessage);
+            if (confirm) {
+                next();
+            } else {
+                next(false);
+            }
+        } else {
+            next();
+        }
+    },
+    beforeUpdate() {
+        this.refreshBar();
+    },
+    data() {
+        return {
+            // messages
+            leavePageMessage: MESSAGES.leavePageAlert,
+            availableBars: [],
+            barSelectedInDropdown: "",
+            // flags
+            addToBar: false,
+            addToDrawer: false,
+            newBar: false,
+            openDrawer: true,
+            editDialogShown: false,
+            tab: 0,
+            dragFromEditor: false,
+            isChanged: false,
+            editBarName: false,
+            onSave: false,
+            initialChangesPrimaryItems: false,
+            initialChangesDrawerItems: false,
+            // data for the community manager
+            community: {},
+            barsList: [],
+            membersList: [],
+
+            /** @type {Object<String,Object<String,BarItem>>} Button catalog. */
+            buttonCatalog: this.addIdsToCatalogButtons(buttonCatalog),
+            dragInProgress: false,
+            expandedCatalogButtonId: null,
+
+            // storage
+            buttonStorage: {},
+            /**
+             * The selected item.
+             * @type {BarItem}
+             */
+            selectedItem: {
+                /** @type {BarItemConfiguration} */
+                configuration: {
+                    label: "hi",
+                    color: "",
+                    image_url: ""
+                }
+            },
+            invitationEmail: "",
+            /** @type {BarDetails} */
+            barDetails: {},
+            originalBarDetails: {},
+            members: [],
+            memberDetails: {},
+            // drawerItems: [],
+            // drawerItemsSecond: [],
+            // primaryItems: [],
+            // makeAButtons: this.getMakeAButtons(),
+            // predefinedButtons: this.getPredefinedButtons(),
+
+            // configurations
+            preview: {
+                drawer: {
+                    w: 2,
+                    h: 6
+                },
+                bar: {
+                    h: 100
+                }
+            },
+            newBarDetails: {
+                name: "New Bar",
+                is_shared: false,
+                items: []
+            },
+            bar: {
+                settings: {
+                    barOnRight: true,
+                    cannotClose: false,
+                    startsOpen: false
+                }
+            },
+            predefinedBars: predefinedBars,
+            colors: colors
+        };
     }
-  }
-}
+};
 </script>
