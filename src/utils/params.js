@@ -10,7 +10,7 @@ These are then used to create input fields in the editor dialog.
 
 /**
  * The parameters of a bar item.
- * @typedef {Array<ItemParameter>|Object<String,String>} ItemParameters
+ * @typedef {Array<ParameterInfo>|Object<String,ParameterInfo>} ItemParameters
  */
 
 /**

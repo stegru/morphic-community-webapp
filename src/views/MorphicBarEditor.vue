@@ -561,7 +561,7 @@ img:before {
     }
   }
 
-  .nonExpandedCatalogEntry {
+  .nonExpandedCatalogEntry, .editRelatedItem {
     width: 100%;
     display: block;
 

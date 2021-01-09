@@ -268,8 +268,8 @@ function getGroupItems(subkind) {
             isPlaceholder: true,
             configuration: {
                 subkind: subkind,
-                label: buttonCatalog[subkind].title,
-                catalogLabel: "More",
+                label: buttonCatalog[subkind].editTitle || buttonCatalog[subkind].title,
+                catalogLabel: "Other",
                 image_url: buttonCatalog[subkind].defaultIcon
             }
         };
@@ -292,7 +292,7 @@ Object.keys(buttonCatalog).forEach(key => {
     const values = Object.values(items);
     if (values.length > 0) {
         const kind = values[0].kind;
-        if (values.every(button => button.kind === kind)) {
+        if (values.every(button => button.kind === kind || button.isPlaceholder)) {
             group.kind = kind;
         }
     }

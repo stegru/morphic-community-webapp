@@ -13,6 +13,7 @@
           <b-tabs v-model="activeTab" small>
 
             <b-tab v-if="buttonGroup && buttonGroup.related" :title="groupTabTitle">
+              <br/>
               <ul class="relatedButtons">
                 <li v-for="(item, buttonKey) in relatedButtons"
                     :key="buttonKey"
@@ -23,7 +24,7 @@
                             color: (buttonKey === button.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
                             'background-color': (buttonKey === button.buttonKey) ? (item.configuration.color || colors.blue) : ''
                           }"
-                          class="buttonsCatalogEntry nonExpandedCatalogEntry"
+                          class="buttonsCatalogEntry editRelatedItem"
                           @click="setButton(item)">
                     <div class="imageWrapper">
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
@@ -34,6 +35,26 @@
             </b-tab>
 
             <b-tab title="Button" :disabled="button.isPlaceholder">
+              <br/>
+
+              <b-form-group v-if="relatedButtons[button.buttonKey]"
+                            :label="groupTabTitle"
+                            label-for="barItem_selectOther"
+                            >
+                <ul class="relatedButtons">
+                  <li>
+                    <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
+                      <div class="imageWrapper">
+                        <b-img v-if="relatedButtons[button.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.buttonKey].configuration.image_url)" />
+                      </div>{{
+                        relatedButtons[button.buttonKey].configuration.catalogLabel || relatedButtons[button.buttonKey].configuration.label
+                      }}
+                    </b-link>
+                  </li>
+                </ul>
+
+              </b-form-group>
+
                 <div v-for="(value, paramKey, index) in button.configuration.parameters"
                      :key="paramKey"
                      role="group" class="mb-3">
@@ -122,6 +143,7 @@
                   <PreviewItem :item="button" />
                 </div>
               </div>
+              <p class="" style="margin-top: 4em">{{ button.configuration.description }}</p>
             </div>
           </b-col>
         </b-row>
@@ -223,9 +245,11 @@ export default {
             groupTabTitle: "Others",
             showGroupTab: false,
 
-
+            // Index of the active tab
             activeTab: 1,
-            buttonFavicon: null
+            buttonFavicon: null,
+            // true to select the "Button" tab after a button is selected on the first tab.
+            returnToButtonTab: false
         };
     },
 
@@ -338,17 +362,16 @@ export default {
 
             this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
             this.dialogTitle = this.buttonGroup.editTitle || this.buttonGroup.title;
-            this.showGroupTab = this.buttonGroup.items
 
             switch (this.buttonGroup.kind) {
             case "link":
                 this.groupTabTitle = "Web Site";
                 break;
             case "application":
-                this.groupTabTitle = "Apps";
+                this.groupTabTitle = "App";
                 break;
             default:
-                this.groupTabTitle = "Actions";
+                this.groupTabTitle = "Action";
                 break;
             }
 
@@ -371,6 +394,10 @@ export default {
             delete this.button.configuration.catalogLabel;
             delete this.button.is_primary;
             params.setInitial(this.button);
+            if (this.returnToButtonTab) {
+                this.returnToButtonTab = false;
+                this.activeTab = 1;
+            }
         },
 
         generateId: function (item) {
