@@ -76,5 +76,6 @@
  *
  * @typedef {BarItemConfigurationBase} BarItemConfiguration_Application
  * @property {String} default
+ * @property {String} exe
  * @property {String} description
  **/

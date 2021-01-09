@@ -37,6 +37,25 @@ export const colors = {
 };
 
 
+export const defaultApps = {
+    calendar: {
+        title: "Calendar App"
+    },
+    email: {
+        title: "Email App"
+    },
+    "quick-assist": {
+        title: "Quick Assist"
+    }
+};
+
+for (const [key, app] of Object.entries(defaultApps)) {
+    params.allParameters.defaultApp.selectOptions.push({
+        value: key,
+        text: app.title
+    });
+};
+
 /**
  * All icons. Map of iconKey => file
  * @type {Object<String,String>}
@@ -120,7 +139,7 @@ export const buttonCatalog = {
         title: "Make a button",
         editTitle: "Custom Button",
         defaultIcon: undefined,
-        related: false
+        xrelated: false
     },
     call: {
         title: "Call a Person",

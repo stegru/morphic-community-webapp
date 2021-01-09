@@ -65,7 +65,7 @@ export function getCommunityBars(communityId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function createCommunityBar(communityId, data) {
-    return HTTP.post(`/v1/communities/${communityId}/bars`, data);
+    return HTTP.post(`/v1/communities/${communityId}/bars`, fixBar(data));
 }
 
 /**
@@ -88,7 +88,7 @@ export function getCommunityBar(communityId, barId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function saveCommunityBar(communityId, barId, barDetails) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, barDetails);
+    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, fixBar(barDetails));
 }
 
 /**
@@ -101,7 +101,7 @@ export function saveCommunityBar(communityId, barId, barDetails) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function updateCommunityBar(communityId, barId, bar) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, bar);
+    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, fixBar(bar));
 }
 
 /**
@@ -137,4 +137,23 @@ export function deleteCommunityMember(communityId, memberId) {
 
 export function inviteCommunityMember(communityId, memberId, email) {
     return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email });
+}
+
+/**
+ * Performs some tweaks to the bar before it gets stored.
+ * @param {BarDetails} bar The bar.
+ * @return {BarDetails} The bar.
+ */
+function fixBar(bar) {
+    bar.items.forEach(item => {
+        if (item.kind === "application") {
+            // For application items, remove the exe or default - only 1 is needed.
+            if (item.configuration.default) {
+                delete item.configuration.exe;
+            } else {
+                delete item.configuration.default;
+            }
+        }
+    });
+    return bar;
 }

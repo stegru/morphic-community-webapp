@@ -34,7 +34,8 @@
               </ul>
             </b-tab>
 
-            <b-tab title="Button" :disabled="button.isPlaceholder">
+            <b-tab title="Button" :disabled="button.isPlaceholder"
+                   >
               <br/>
 
               <b-form-group v-if="relatedButtons[button.buttonKey]"
@@ -55,21 +56,26 @@
 
               </b-form-group>
 
-                <div v-for="(value, paramKey, index) in button.configuration.parameters"
-                     :key="paramKey"
-                     role="group" class="mb-3">
-                  <b-form-group :label="allParameters[paramKey].label"
-                                :label-for="'barItem_' + paramKey"
-                                :invalid-feedback="editValidation(paramKey)">
-                    <b-form-input :id="'barItem_' + paramKey"
-                                  :name="paramKey"
-                                  v-model="button.configuration.parameters[paramKey]"
-                                  :state="!editValidation(paramKey)"
-                                  :autofocus="!index"
-                                  v-bind="allParameters[paramKey].attrs"
-                    />
-                  </b-form-group>
-                </div>
+                <template v-for="(value, paramKey, index) in button.configuration.parameters">
+                  <div v-if="!allParameters[paramKey].isApplicable || allParameters[paramKey].isApplicable(button)"
+                       :key="paramKey"
+                       role="group" class="mb-3">
+                    <b-form-group :label="allParameters[paramKey].label"
+                                  :label-for="'barItem_' + paramKey"
+                                  :invalid-feedback="editValidation(paramKey)">
+
+                      <component :is="getFieldTag(allParameters[paramKey])"
+                                 :id="'barItem_' + paramKey"
+                                 :name="paramKey"
+                                 v-model="button.configuration.parameters[paramKey]"
+                                 :options="allParameters[paramKey].selectOptions"
+                                 :state="!editValidation(paramKey)"
+                                 :autofocus="!index"
+                                 v-bind="allParameters[paramKey].attrs"
+                      />
+                    </b-form-group>
+                  </div>
+                </template>
 
                 <div class="bg-silver rounded p-3">
                   <p v-if="showExtra" class="text-right small mb-0">
@@ -249,7 +255,8 @@ export default {
             activeTab: 1,
             buttonFavicon: null,
             // true to select the "Button" tab after a button is selected on the first tab.
-            returnToButtonTab: false
+            returnToButtonTab: false,
+            fieldChanged: 0
         };
     },
 
@@ -308,6 +315,14 @@ export default {
          */
         editValidation: function (paramKey) {
             return params.getValidationError(this.button, paramKey);
+        },
+        /**
+         * Gets the tag name for a field.
+         * @param {ParameterInfo} paramInfo The parameter
+         * @return {String} The HTML tag name.
+         */
+        getFieldTag: function (paramInfo) {
+            return paramInfo.selectOptions ? "b-form-select" : "b-form-input";
         },
         changeColor: function (hex) {
             this.button.configuration.color = hex;
@@ -429,6 +444,8 @@ export default {
         "button.configuration": {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
+                //this.$forceUpdate();
+                this.fieldChanged = Math.random();
 
                 this.faviconTimer && clearTimeout(this.faviconTimer);
                 this.faviconTimer = setTimeout(() => this.fixFavicon(), 2000);

@@ -16,10 +16,12 @@ These are then used to create input fields in the editor dialog.
 /**
  * A parameter.
  * @typedef {Object} ParameterInfo
- * @property {*} initial The initial value.
+ * @property {Any} initial The initial value.
  * @property {String} label Text displayed with the input field.
+ * @property {Array<Object>} [selectOptions] A list of items for a select field.
  * @property {String} attrs The HTML attributes for the input element.
- * @property {Object<string,Object>} validation The validation rules.
+ * @property {Function} [isApplicable] A function, returning true if the field should be shown.
+ * @property {Object<String,Object>} validation The validation rules.
  */
 
 /**
@@ -49,6 +51,22 @@ export const allParameters = {
         validation: {
             required: "SkypeId is required"
         }
+    },
+    defaultApp: {
+        label: "App",
+        selectOptions: [
+            { value: undefined, text: "Custom application"}
+        ],
+        validation: {
+            defaultAppRequired: "An App needs to be chosen"
+        }
+    },
+    exe: {
+        label: "Executable",
+        isApplicable: (button) => !button.configuration.parameters.defaultApp && button.configuration.parameters.defaultApp !== "",
+        validation: {
+            required: "The executable file is required."
+        }
     }
 };
 
@@ -56,8 +74,21 @@ export const allParameters = {
  * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
  */
 const validators = {
+    /**
+     * Checks if a field has a value.
+     * @param {Any} value The field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
     required(value) {
         return value && value !== "";
+    },
+    /**
+     * Checks if the defaultApp field has a value.
+     * @param {Any} value The defaultApp field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
+    defaultAppRequired(value) {
+        return value !== "";
     }
 };
 
@@ -207,13 +238,15 @@ export function getValidationError(button, paramKey) {
 
     var errorMessage;
 
-    if (paramInfo.validation) {
+    const applicable = !paramInfo.isApplicable || paramInfo.isApplicable(button);
+
+    if (applicable && paramInfo.validation) {
         Object.keys(paramInfo.validation).every(key => {
             const validator = validators[key];
             var ok = false;
             if (validator) {
                 if (typeof(validator) === "function") {
-                    ok = validator(value);
+                    ok = validator(value, button);
                 } else if (validator instanceof RegExp) {
                     ok = validator.test(value);
                 }

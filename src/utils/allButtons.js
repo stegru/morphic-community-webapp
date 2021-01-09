@@ -757,6 +757,7 @@ export const allButtons = {
             label: "Open App",
             description: "Allows you to create a button that opens an Application.",
             default: "$defaultApp",
+            exe: "$exe",
             color: "blue",
             image_url: "windowmaximize",
             catalogLabel: "To open an Application"
