@@ -39,13 +39,27 @@ export const colors = {
 
 export const defaultApps = {
     calendar: {
-        title: "Calendar App"
+        title: "Default Calendar App",
+        configuration: {
+            label: "Calendar",
+            default: "calendar"
+        }
     },
     email: {
-        title: "Email App"
+        title: "Default Email Client",
+        configuration: {
+            label: "Email",
+            default: "email"
+        }
     },
-    "quick-assist": {
-        title: "Quick Assist"
+    browser: {
+        title: "Default Browser",
+        configuration: {
+            image_url: "globe",
+            label: "Web Browser",
+            default: "browser",
+            exe$win: "http:"
+        }
     }
 };
 
@@ -107,29 +121,11 @@ export const defaultIcons = {
 
 };
 
-/** Gets the host part of a URL */
-const getHost = /.*:\/\/([^/:]+)/;
-
-Object.keys(allButtons).forEach((buttonKey) => {
-    const button = allButtons[buttonKey];
-
-    // Fix the color
-    if (!button.configuration.color || typeof(button.configuration.color) === "string") {
-        button.configuration.color = colors[button.configuration.color || "blue"];
-    }
-
-    // Use the site's favicon if there's no local image.
-    if (!button.configuration.image_url && button.configuration.url) {
-        var m = getHost.exec(button.configuration.url);
-        if (m) {
-            button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
-        }
-    }
-
-    defaultIcons[buttonKey] = button.configuration.image_url;
-    button.buttonKey = buttonKey;
-    params.prepareBarItem(button);
-});
+/**
+ * Buttons grouped by their subkind.
+ * @type {Object<String,Array<BarItem>>}
+ */
+export const groupedButtons = {};
 
 /**
  * @type {ButtonCatalog} The button catalog.
@@ -139,7 +135,7 @@ export const buttonCatalog = {
         title: "Make a button",
         editTitle: "Custom Button",
         defaultIcon: undefined,
-        xrelated: false
+        related: false
     },
     call: {
         title: "Call a Person",
@@ -229,8 +225,74 @@ export const buttonCatalog = {
         more: {
             description: "Create a button to open an online drive site"
         }
+    },
+    app: {
+        title: "Local Apps",
+        hidden: true,
+        editTitle: "Custom Button"
     }
 };
+
+// Create some buttons for the default apps.
+Object.keys(defaultApps).forEach((appKey) => {
+    const app = defaultApps[appKey];
+
+    /** @type {BarItem} */
+    const button = {
+        kind: "application",
+        configuration: {
+            subkind: "app",
+            label: app.title,
+            catalogLabel: app.title,
+            description: `Starts the ${app.title}`
+        }
+    };
+
+    Object.assign(button.configuration, app.configuration);
+
+    if (!button.configuration.image_url) {
+        const group = button.configuration.group || appKey || button.configuration.subkind;
+        button.configuration.image_url = buttonCatalog[group] && buttonCatalog[group].defaultIcon;
+    }
+
+    allButtons[`default-${appKey}`] = button;
+});
+
+/** Gets the host part of a URL */
+const getHost = /.*:\/\/([^/:]+)/;
+
+Object.keys(allButtons).forEach((buttonKey) => {
+    const button = allButtons[buttonKey];
+
+    button.id = generateId(button);
+
+    // Fix the color
+    if (!button.configuration.color || typeof(button.configuration.color) === "string") {
+        button.configuration.color = colors[button.configuration.color || "blue"];
+    }
+
+    // Use the site's favicon if there's no local image.
+    if (!button.configuration.image_url && button.configuration.url) {
+        var m = getHost.exec(button.configuration.url);
+        if (m) {
+            button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
+        }
+    }
+
+    if (!button.configuration.image_url) {
+        button.configuration.image_url = buttonCatalog[button.configuration.subkind] && buttonCatalog[button.configuration.subkind].defaultIcon;
+    }
+
+    if (groupedButtons[button.configuration.subkind]) {
+        groupedButtons[button.configuration.subkind].push(button);
+    } else {
+        groupedButtons[button.configuration.subkind] = [button];
+    }
+
+    defaultIcons[buttonKey] = button.configuration.image_url;
+    button.configuration.buttonKey = buttonKey;
+    params.prepareBarItem(button);
+});
 
 
 /**
@@ -256,20 +318,21 @@ function generateId(item) {
  */
 function getGroupItems(subkind) {
     var result = {};
-    // Get the items with the given subkind.
-    for (const [key, button] of Object.entries(allButtons)) {
-        if (button.configuration.subkind === subkind) {
-            button.configuration.catalogItem = true;
-            if (!button.configuration.image_url) {
-                button.configuration.image_url = buttonCatalog[subkind].defaultIcon;
-            }
-            button.id = generateId(button);
-            result[key] = button;
-        }
-    }
 
+    // Get the items with the given subkind.
     /** @type {Array<BarItem>} */
-    const values = Object.values(result);
+    const values = groupedButtons[subkind] || [];
+
+    // Also add the buttons that state this catalog.
+    const catalogItems = Object.values(allButtons).filter(b => b.configuration.catalog === subkind);
+
+    values.push(...catalogItems);
+
+
+    values.forEach(b => {
+        b.configuration.catalogItem = true;
+        result[b.configuration.buttonKey] = b;
+    });
 
     // If there aren't any primary buttons, make them all primary.
     const noPrimary = values.every(button => !button.is_primary);
@@ -300,13 +363,10 @@ function getGroupItems(subkind) {
     return result;
 }
 
-export const groupedButtons = {};
-
 Object.keys(buttonCatalog).forEach(key => {
-    const items = getGroupItems(key);
     const group = buttonCatalog[key];
-    groupedButtons[key] = (group.items = items);
-
+    const items = getGroupItems(group.subkind || key);
+    group.items = items;
     // Get the kind of all items, if they're the same
     const values = Object.values(items);
     if (values.length > 0) {
@@ -319,5 +379,5 @@ Object.keys(buttonCatalog).forEach(key => {
     if (!group.related && group.related !== false) {
         group.related = values.length > 1;
     }
-
 });
+

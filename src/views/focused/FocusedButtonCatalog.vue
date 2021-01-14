@@ -12,14 +12,14 @@
       <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
         <!-- Button catalog headings -->
         <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="buttonsCatalogHeader">
-          <h3>{{buttonGroup.title}}</h3>
+          <h3 :class="'header_' + subkind">{{buttonGroup.title}}</h3>
           <ul class="ButtonsCatalogEntries">
-            <li v-for="(button, buttonId) in buttonGroup.items" :key="buttonId" class="buttonsCatalogEntry">
-              <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
+            <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonsCatalogEntry">
+              <b-link v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
                 <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
-                <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
               </b-link>
+
               <div v-else class="active" style="max-width: 400px">
                 <div style="width: 100%; display: inline-flex; align-items: center;">
                   <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
@@ -124,8 +124,15 @@ export default {
         PreviewItem
     },
     methods: {
-        getPath(categoryName, buttonId) {
-            return `${categoryName}.${buttonId}`;
+        buttonActivated: function (buttonId, button) {
+            if (button.focusedLink) {
+                const target = this.$el.getElementsByClassName("header_" + button.focusedLink)[0];
+                if (target) {
+                    target.scrollIntoView();
+                }
+            } else {
+                this.currentlyActiveButton = buttonId;
+            }
         },
         addButtonToBar: function (button, withImage) {
             // copy button:
@@ -229,7 +236,7 @@ export default {
             community: {},
             barsList: [],
             membersList: [],
-            currentlyActiveButtonPath: undefined,
+            currentlyActiveButton: undefined,
             buttonCatalog: buttonCatalog,
             barDetails: {},
             predefinedBars: predefinedBars,

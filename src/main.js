@@ -59,13 +59,15 @@ Vue.mixin({
          */
         getIconUrl(image) {
             var togo;
-            if (image.includes("/")) {
-                togo = image;
-            } else {
-                if (!image.includes(".")) {
-                    togo = icons[image];
+            if (image) {
+                if (image.includes("/")) {
+                    togo = image;
+                } else {
+                    if (!image.includes(".")) {
+                        togo = icons[image];
+                    }
+                    togo = "/icons/" + togo;
                 }
-                togo = "/icons/" + togo;
             }
             return togo;
         },

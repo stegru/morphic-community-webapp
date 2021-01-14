@@ -54,6 +54,7 @@ export const allParameters = {
     },
     defaultApp: {
         label: "App",
+        initial: null,
         selectOptions: [
             { value: undefined, text: "Custom application"}
         ],
@@ -109,7 +110,7 @@ export function prepareBarItem(button) {
 
     Object.keys(button.configuration).forEach(key => {
         const value = button.configuration[key];
-        if (containsParameter(value)) {
+        if (key !== "image_url" && containsParameter(value)) {
             // Create an original copy of the field (the field will be over-written by the expanded string)
             button.configuration[`${origFieldPrefix}${key}`] = value;
 

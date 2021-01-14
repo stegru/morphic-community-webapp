@@ -17,12 +17,12 @@
               <ul class="relatedButtons">
                 <li v-for="(item, buttonKey) in relatedButtons"
                     :key="buttonKey"
-                    :class="buttonKey === button.buttonKey && 'selected'"
+                    :class="buttonKey === button.configuration.buttonKey && 'selected'"
                     >
                   <b-link v-if="!item.isPlaceholder"
                           :style="{
-                            color: (buttonKey === button.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
-                            'background-color': (buttonKey === button.buttonKey) ? (item.configuration.color || colors.blue) : ''
+                            color: (buttonKey === button.configuration.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
+                            'background-color': (buttonKey === button.configuration.buttonKey) ? (item.configuration.color || colors.blue) : ''
                           }"
                           class="buttonsCatalogEntry editRelatedItem"
                           @click="setButton(item)">
@@ -37,22 +37,19 @@
             <b-tab title="Button" :disabled="button.isPlaceholder"
                    >
               <br/>
-
-              <b-form-group v-if="relatedButtons[button.buttonKey]"
+              <b-form-group v-if="relatedButtons[button.configuration.buttonKey]"
                             :label="groupTabTitle"
                             label-for="barItem_selectOther"
                             >
-                <ul class="relatedButtons">
-                  <li>
-                    <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
-                      <div class="imageWrapper">
-                        <b-img v-if="relatedButtons[button.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.buttonKey].configuration.image_url)" />
-                      </div>{{
-                        relatedButtons[button.buttonKey].configuration.catalogLabel || relatedButtons[button.buttonKey].configuration.label
-                      }}
-                    </b-link>
-                  </li>
-                </ul>
+              <div class="relatedLink">
+                <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
+                  <div class="imageWrapper">
+                    <b-img v-if="relatedButtons[button.configuration.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.configuration.buttonKey].configuration.image_url)" />
+                  </div>{{
+                    relatedButtons[button.configuration.buttonKey].configuration.catalogLabel || relatedButtons[button.configuration.buttonKey].configuration.label
+                  }}
+                </b-link>
+              </div>
 
               </b-form-group>
 
@@ -161,51 +158,57 @@
 
 <style lang="scss">
 
+.relatedLink, ul.relatedButtons > li {
+  position: relative;
+  display: inline-block;
+  margin-left: 30px;
+
+  &.selected a {
+    border-radius: 5px;
+  }
+
+  a {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 3px;
+  }
+
+  .imageWrapper {
+    // Position the icon to the left, and remove it from the flow.
+    display: inline-block;
+    position: relative;
+    left: -25px;
+    width: 0;
+    overflow: visible;
+
+    img {
+      transition: all 0.2s ease-in-out;
+      max-width: 20px;
+      width: 20px;
+    }
+  }
+
+  a:hover {
+    .imageWrapper img {
+      transform: scale(1.5);
+    }
+  }
+
+  &.noImage {
+    img {
+      display: none;
+    }
+  }
+}
+
 ul.relatedButtons {
   padding-left: 30px;
   list-style: none;
 
   li {
-
-    position: relative;
-    display: inline-block;
     width: calc(50% - 30px);
+    margin-left: 0;
     margin-right: 30px;
-
-    &.selected a {
-      border-radius: 5px;
-    }
-
-    a {
-      width: auto !important;
-      display: inline-block !important;
-      padding: 3px;
-    }
-
-    .imageWrapper {
-      // Position the icon to the left, and remove it from the flow.
-      display: inline-block;
-      position: relative;
-      left: -25px;
-      width: 0;
-      overflow: visible;
-
-      img {
-        transition: all 0.2s ease-in-out;
-      }
-    }
-
-    a:hover {
-      .imageWrapper img {
-        transform: scale(1.5);
-      }
-    }
-
-    &.noImage {
-      img {
-        display: none;
-      }
-    }
   }
 }
 </style>
@@ -266,13 +269,14 @@ export default {
          * @return {Object<String,String>} The icons to list.
          */
         listedIcons: function () {
-            const defaultIcon = defaultIcons[this.button.buttonKey];
+            const defaultIcon = defaultIcons[this.button.configuration.buttonKey];
             const iconKeys = [];
 
             // Get the icons of the same category.
-            var group = groupedIcons[this.button.configuration.subkind];
-            if (!group && this.button.configuration.subkind && this.button.configuration.subkind.startsWith("local-")) {
-                group = groupedIcons[this.button.configuration.subkind.substr(6)];
+            const subkind = this.button.configuration.relatedSubkind || this.button.configuration.subkind;
+            var group = subkind && groupedIcons[subkind];
+            if (!group && this.button.configuration.subkind.startsWith("local-")) {
+                group = groupedIcons[group.substr(6)];
             }
 
             if (group) {
@@ -299,7 +303,7 @@ export default {
          * @return {Object<String,BarItem>} The buttons to list
          */
         relatedButtons: function () {
-            return this.groupedButtons[this.button.configuration.subkind];
+            return this.buttonCatalog[this.button.configuration.subkind].items;
         },
 
         siteTabActive: function () {
@@ -355,11 +359,9 @@ export default {
          */
         closeDialog: function (applyChanges) {
             if (applyChanges) {
+                Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
                 if (this.selectedItem.isPlaceholder && !this.button.isPlaceholder) {
                     delete this.selectedItem.isPlaceholder;
-                    Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
-                } else {
-                    this.selectedItem.configuration = JSON.parse(JSON.stringify(this.button.configuration));
                 }
             }
 
@@ -444,7 +446,7 @@ export default {
         "button.configuration": {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
-                //this.$forceUpdate();
+
                 this.fieldChanged = Math.random();
 
                 this.faviconTimer && clearTimeout(this.faviconTimer);
