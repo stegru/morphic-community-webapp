@@ -146,6 +146,7 @@ export function inviteCommunityMember(communityId, memberId, email) {
  */
 function fixBar(bar) {
     bar.items.forEach(item => {
+        item.is_primary = !!item.is_primary;
         if (item.kind === "application") {
             // For application items, remove the exe or default - only 1 is needed.
             if (item.configuration.default) {
