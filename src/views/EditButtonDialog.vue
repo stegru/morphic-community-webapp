@@ -3,7 +3,7 @@
            @ok="okClicked" @cancel="closeDialog(false)"
            size="lg" scrollable centered
            footer-bg-variant="light"
-           :ok-title="siteTabActive ? 'Next' : 'Update Button'"
+           :ok-title="nextButton ? 'Next' : 'Update Button'"
            :ok-disabled="button && button.isPlaceholder"
            :title="dialogTitle">
     <div v-if="button">
@@ -12,7 +12,7 @@
           <b-col md="6">
           <b-tabs v-model="activeTab" small>
 
-            <b-tab v-if="buttonGroup && buttonGroup.related" :title="groupTabTitle">
+            <b-tab v-if="showRelatedTab" :title="groupTabTitle">
               <br/>
               <ul class="relatedButtons">
                 <li v-for="(item, buttonKey) in relatedButtons"
@@ -306,8 +306,11 @@ export default {
             return this.buttonCatalog[this.button.configuration.subkind].items;
         },
 
-        siteTabActive: function () {
-            return this.activeTab === 0;
+        nextButton: function () {
+            return this.activeTab === 0 && this.showRelatedTab;
+        },
+        showRelatedTab: function () {
+            return this.buttonGroup && this.buttonGroup.related;
         }
     },
 
@@ -346,7 +349,7 @@ export default {
          * @param {Event} e The event object.
          */
         okClicked: function (e) {
-            if (this.siteTabActive) {
+            if (this.siteTabActive || this.nextButton) {
                 this.activeTab = 1;
                 e.preventDefault();
             } else {

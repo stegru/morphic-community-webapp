@@ -27,6 +27,17 @@
  * @property {Boolean} is_shared Whether the bar is shown in the list of preconfigured bars that can be shared across
  *   multiple users.
  * @property {Array<BarItem>} items The bar items
+ * @property {Array<BarError>} errors
+ */
+
+/**
+ * Bar error
+ * @typedef {Object} BarError
+ * @property {BarItem|Array<BarItem>} item The problematic bar item.
+ * @property {String} type "duplicate" | "validation"
+ * @property {String} level "warn" | "error" (default)
+ * @property {String} message The error message.
+ * @property {Array<BarItem>} duplicates The duplicated items.
  */
 
 /**

@@ -230,36 +230,44 @@ function validate(button) {
 /**
  * Validate a parameter field in the button edit dialog.
  * @param {BarItem} button The button.
- * @param {String} paramKey The parameter key.
+ * @param {String} [paramKey] The parameter key, or omit to check all parameters until the first failure.
  * @return {String} The validation error message (or null if valid)
  */
 export function getValidationError(button, paramKey) {
-    const paramInfo = allParameters[paramKey];
-    const value = button.configuration.parameters[paramKey];
+    let errorMessage;
 
-    var errorMessage;
-
-    const applicable = !paramInfo.isApplicable || paramInfo.isApplicable(button);
-
-    if (applicable && paramInfo.validation) {
-        Object.keys(paramInfo.validation).every(key => {
-            const validator = validators[key];
-            var ok = false;
-            if (validator) {
-                if (typeof(validator) === "function") {
-                    ok = validator(value, button);
-                } else if (validator instanceof RegExp) {
-                    ok = validator.test(value);
-                }
-            }
-
-            if (!ok) {
-                var v = paramInfo.validation[key];
-                errorMessage = (typeof(v) === "string") ? v : v.message || "error";
-            }
-            return ok;
+    if (button.isPlaceholder) {
+        errorMessage = "An action for this item has not been set.";
+    } else if (paramKey === undefined) {
+        Object.keys(button.configuration.parameters).every((paramKey) => {
+            errorMessage = getValidationError(button, paramKey);
+            return !errorMessage;
         });
-    }
+    } else {
+        const paramInfo = allParameters[paramKey];
+        const value = button.configuration.parameters[paramKey];
 
+        const applicable = !paramInfo.isApplicable || paramInfo.isApplicable(button);
+
+        if (applicable && paramInfo.validation) {
+            Object.keys(paramInfo.validation).every(key => {
+                const validator = validators[key];
+                var ok = false;
+                if (validator) {
+                    if (typeof(validator) === "function") {
+                        ok = validator(value, button);
+                    } else if (validator instanceof RegExp) {
+                        ok = validator.test(value);
+                    }
+                }
+
+                if (!ok) {
+                    var v = paramInfo.validation[key];
+                    errorMessage = (typeof(v) === "string") ? v : v.message || "error";
+                }
+                return ok;
+            });
+        }
+    }
     return errorMessage;
 }

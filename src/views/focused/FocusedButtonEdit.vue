@@ -143,6 +143,7 @@ export default {
     mounted() {
         this.barId = this.$route.query.barId;
         this.buttonIndex = this.$route.query.buttonIndex;
+        this.buttonId = this.$route.query.buttonId;
         this.newButtonIndex = this.buttonIndex;
         this.communityId = this.$route.query.communityId;
         this.memberId = this.$route.query.memberId;
@@ -151,7 +152,11 @@ export default {
         const loaded = (barDetails) => {
             this.barDetails = barDetails;
             // find button:
+            if (this.buttonId) {
+                this.buttonIndex = this.barDetails.items.findIndex(item => item.id === this.buttonId);
+            }
             this.button = this.barDetails.items[this.buttonIndex];
+            this.buttonId = this.button.id;
             this.setAvailablePositions();
         };
 
@@ -184,14 +189,17 @@ export default {
     },
     data() {
         return {
+            /** @type {BarDetails} */
             barDetails: {},
             barId: undefined,
             buttonIndex: undefined,
+            buttonId: undefined,
             communityId: undefined,
             memberId: undefined,
             memberDetails: undefined,
             originalButton: undefined,
             newButtonIndex: undefined,
+            /** @type {BarItem} */
             button: {
                 configuration: {}
             },

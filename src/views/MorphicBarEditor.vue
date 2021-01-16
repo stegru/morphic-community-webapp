@@ -152,7 +152,51 @@
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
               </template>
-              <div class="desktop-portion">
+              <div class="desktop-alerts" :key="barDetails.errorKey">
+                <b-alert v-for="(error, id) in barDetails.errors"
+                         :key="id"
+                         show
+                         variant="warning"
+                >
+                  <div @mouseenter="highlight(true, error.item, error.duplicates)"
+                       @mouseleave="highlight(false, error.item, error.duplicates)"
+                       @click="showEditDialog(error.item)"
+                  >
+
+                    <b-icon-exclamation-triangle-fill v-if="!error.level || error.level === 'error'" variant="danger"/>
+                    <b-icon-info-circle-fill v-if="error.level === 'warn'" variant="info"/>
+                    &nbsp;
+
+                    <template v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
+                      <b-link :style="{ color: error.item.configuration.color }"
+                              @click="showEditDialog(error.item)"
+                              @mouseover="highlight(false, error.item)"
+                              @mouseleave="highlight(true, error.item)"
+                      >{{ error.item.configuration.label }}</b-link> is duplicated.
+                    </template>
+                    <template v-else-if="error.type === 'duplicate'">
+                      <b-link :style="{ color: error.item.configuration.color }"
+                              @click="showEditDialog(error.item)"
+                              @mouseover="highlight(false, error.item)"
+                              @mouseleave="highlight(true, error.item)"
+                      >{{ error.item.configuration.label }}</b-link>
+
+                      performs the same action as
+                      <b-link :style="{ color: error.item.configuration.color }"
+                              @click="showEditDialog(error.duplicates[0])"
+                              @mouseenter="highlight(false, error.duplicates)"
+                              @mouseleave="highlight(true, error.duplicates)"
+                      >{{ error.duplicates[0].configuration.label }}</b-link>
+                    </template>
+
+                    <template v-else>
+                      <b-link :style="{ color: error.item.configuration.color }"
+                              @click="showEditDialog(error.item)">{{ error.item.configuration.label }}</b-link>:
+                      {{ error.message }}
+                    </template>
+
+                  </div>
+                </b-alert>
               </div>
             </drop>
 
@@ -167,10 +211,10 @@
                       @click="showEditDialog(item, $event)"
                       @cut="removeButton(item, barDetails.items)"
                       class="buttonDragger">
-                      <div :key="item.id" class="previewHolder">
+                      <div :key="item.id" class="previewHolder" :ref="buttonRef(item)">
                         <PreviewItem :item="item" />
                       </div>
-                    </drag>
+                    </drag>o
                   </template>
                   <template v-slot:feedback="{data}">
                     <div class="item feedback button-feedback" :key="data.id"></div>
@@ -332,6 +376,36 @@
     .desktop-portion {
       display: inline-block;
       flex-grow: 1;
+    }
+
+    .desktop-alerts {
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
+      .alert {
+        width: fit-content;
+        padding: 0;
+        & > div {
+          padding: 5px;
+        }
+        margin: 0 5px 10px 5px;
+
+        transition: box-shadow 0.2s ease;
+        cursor: pointer;
+
+        &:hover {
+          box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        svg {
+          margin: 0 0.2em;
+        }
+
+        a {
+          font-weight: bold;
+        }
+      }
     }
 
     #preview-bar {
@@ -611,11 +685,24 @@ img:before {
 
 import CommunityManager from "@/components/dashboardV2/CommunityManager";
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { getCommunityBars, deleteCommunityBar, getCommunity, inviteCommunityMember, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember, deleteCommunityMember } from "@/services/communityService";
+import {
+    createCommunityBar,
+    deleteCommunityBar,
+    deleteCommunityMember,
+    getCommunity,
+    getCommunityBar,
+    getCommunityBars,
+    getCommunityMember,
+    getCommunityMembers,
+    inviteCommunityMember,
+    updateCommunityBar,
+    updateCommunityMember
+} from "@/services/communityService";
 import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as params from "@/utils/params";
+import * as bar from "@/utils/bar";
 import EditButtonDialog from "@/views/EditButtonDialog";
 
 export default {
@@ -629,6 +716,9 @@ export default {
         DropList
     },
     methods: {
+        buttonRef: function (button) {
+            return "button_" + button.id;
+        },
         dropToBar: function (event) {
             event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
             if (event.type === "catalogButtonNoImage") {
@@ -673,6 +763,7 @@ export default {
         setBarChanged: function () {
             this.isChanged = true;
             this.barSelectedInDropdown = "customized";
+            bar.checkBar(this.barDetails);
         },
 
         revertBar: function () {
@@ -764,7 +855,7 @@ export default {
                 this.barDetails = this.newBarDetails;
             } else if (barId.indexOf("predefined") !== -1) {
                 // Create a bar from the predefined collection.
-                var bar = this.predefinedBars.find(function (predefined) {
+                const bar = this.predefinedBars.find(function (predefined) {
                     return predefined.id === barId;
                 });
 
@@ -1012,6 +1103,16 @@ export default {
             this.availableBars = this.barsList.filter((bar) => {
                 return bar.is_shared;
             });
+        },
+        highlight(value, buttons) {
+            for (let a = 1; a < arguments.length; a++) {
+                this.makeArray(arguments[a]).forEach(button => {
+                    const preview = this.$refs[this.buttonRef(button)];
+                    if (preview) {
+                        preview.classList.toggle("highlight", !!value);
+                    }
+                });
+            }
         }
     },
     computed: {
@@ -1068,6 +1169,12 @@ export default {
             this.initialChangesPrimaryItems = false;
             this.initialChangesDrawerItems = false;
             this.loadAllData();
+        },
+        barDetails: {
+            handler: function (newValue, oldValue) {
+                bar.checkBar(this.barDetails);
+            },
+            deep: true
         }
     },
     beforeRouteUpdate(to, from, next) {

@@ -103,6 +103,14 @@
     }
   }
 
+  .previewHolder {
+    b, button {
+      transition: box-shadow 0.5s ease;
+    }
+    &.highlight button > b, &.highlight .buttons button  {
+      box-shadow: 0 0 5px 5px red;
+    }
+  }
   .previewItem {
     position: relative;
     width: 100px;
@@ -176,17 +184,20 @@
 
     .errorIcon { display: none; }
   }
-  #preview-bar .previewItem.broken {
-    .errorIcon {
-      width: 35px;
-      height: 35px;
-      display: inline-block;
-      position: absolute;
-      bottom: -10px;
-      right: -10px;
-    }
 
-    opacity: 0.8;
+  #preview-bar .previewItem {
+    &.broken {
+      .errorIcon {
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        position: absolute;
+        bottom: -10px;
+        right: -10px;
+      }
+
+      opacity: 0.8;
+    }
   }
 </style>
 
@@ -222,7 +233,7 @@ export default {
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.configuration.hasError && !item.configuration.catalogItem;
+            return item.configuration.hasError;// && !item.configuration.catalogItem;
         },
         /**
          * Determines how the item is displayed.

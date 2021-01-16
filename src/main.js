@@ -35,6 +35,16 @@ var toastSheet;
 
 Vue.mixin({
     methods: {
+        /**
+         * Makes an array from value, if it's not an array.
+         * @param {Array|Object} value The value.
+         * @return {Array} The value if it's an array, otherwise an array containing the value.
+         */
+        makeArray(value) {
+            return (value === null || value === undefined)
+                ? []
+                : (Array.isArray(value) ? value : [value]);
+        },
         showMessage(message, title, options) {
 
             if (!toastSheet) {
@@ -80,11 +90,11 @@ Vue.mixin({
             let id = "";
             if (item) {
                 id += Math.floor(Math.random() * 10e10);
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
+                id += "-" + item.configuration.label;
+                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind : "generic-kind");
                 id += "-" + Math.floor(Math.random() * 10e10);
             }
-            return id;
+            return id.toLowerCase().replace(/\s/g, "_");
         }
 
     }
