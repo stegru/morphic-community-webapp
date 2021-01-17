@@ -6,12 +6,12 @@
 
     <!-- Simplified button (no text and small size) -->
     <template v-if="buttonClass === 'simplified'">
-      <div v-if="item.configuration.visual && item.configuration.visual.type === 'multiButton'" class="multiButton">
+      <div v-if="item.data.visual && item.data.visual.type === 'multiButton'" class="multiButton">
         <div class="buttons" style="margin-top: 5px;">
-          <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+          <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                   class="rounded multiButton"
                   :style="'background: '+colors.default_button"
-                  v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+                  v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
           </button>
         </div>
       </div>
@@ -28,9 +28,9 @@
     <template v-else-if="buttonClass === 'multiButton'">
       <label>{{ item.configuration.label }}</label>
       <div class="buttons">
-        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+        <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                 :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
-                v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+                v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
           {{ button }}
         </button>
       </div>
@@ -233,7 +233,7 @@ export default {
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.configuration.hasError;// && !item.configuration.catalogItem;
+            return item.data.hasError;// && !item.data.catalogItem;
         },
         /**
          * Determines how the item is displayed.
@@ -245,7 +245,7 @@ export default {
 
             if (this.simplified) {
                 return "simplified";
-            } else if (item.configuration.visual && item.configuration.visual.type === "multiButton") {
+            } else if (item.data.visual && item.data.visual.type === "multiButton") {
                 return "multiButton";
             } else {
                 return "standardButton";

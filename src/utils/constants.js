@@ -243,15 +243,17 @@ Object.keys(defaultApps).forEach((appKey) => {
         configuration: {
             subkind: "app",
             label: app.title,
-            catalogLabel: app.title,
             description: `Starts the ${app.title}`
+        },
+        data: {
+            catalogLabel: app.title
         }
     };
 
     Object.assign(button.configuration, app.configuration);
 
     if (!button.configuration.image_url) {
-        const group = button.configuration.group || appKey || button.configuration.subkind;
+        const group = button.data.group || appKey || button.configuration.subkind;
         button.configuration.image_url = buttonCatalog[group] && buttonCatalog[group].defaultIcon;
     }
 
@@ -265,6 +267,9 @@ Object.keys(allButtons).forEach((buttonKey) => {
     const button = allButtons[buttonKey];
 
     button.id = generateId(button);
+    if (!button.data) {
+        button.data = {};
+    }
 
     // Fix the color
     if (!button.configuration.color || typeof(button.configuration.color) === "string") {
@@ -290,7 +295,7 @@ Object.keys(allButtons).forEach((buttonKey) => {
     }
 
     defaultIcons[buttonKey] = button.configuration.image_url;
-    button.configuration.buttonKey = buttonKey;
+    button.data.buttonKey = buttonKey;
     params.prepareBarItem(button);
 });
 
@@ -324,14 +329,14 @@ function getGroupItems(subkind) {
     const values = groupedButtons[subkind] || [];
 
     // Also add the buttons that state this catalog.
-    const catalogItems = Object.values(allButtons).filter(b => b.configuration.catalog === subkind);
+    const catalogItems = Object.values(allButtons).filter(b => b.data.catalog === subkind);
 
     values.push(...catalogItems);
 
 
     values.forEach(b => {
-        b.configuration.catalogItem = true;
-        result[b.configuration.buttonKey] = b;
+        b.data.catalogItem = true;
+        result[b.data.buttonKey] = b;
     });
 
     // If there aren't any primary buttons, make them all primary.
@@ -347,12 +352,14 @@ function getGroupItems(subkind) {
         /** @type {BarItem} */
         const placeHolder = {
             is_primary: true,
-            isPlaceholder: true,
             configuration: {
                 subkind: subkind,
                 label: buttonCatalog[subkind].editTitle || buttonCatalog[subkind].title,
-                catalogLabel: "Other",
                 image_url: buttonCatalog[subkind].defaultIcon
+            },
+            data: {
+                isPlaceholder: true,
+                catalogLabel: "Other"
             }
         };
         buttonCatalog[subkind].more = Object.assign(placeHolder.configuration, buttonCatalog[subkind].more);
@@ -371,7 +378,7 @@ Object.keys(buttonCatalog).forEach(key => {
     const values = Object.values(items);
     if (values.length > 0) {
         const kind = values[0].kind;
-        if (values.every(button => button.kind === kind || button.isPlaceholder)) {
+        if (values.every(button => button.kind === kind || button.data.isPlaceholder)) {
             group.kind = kind;
         }
     }

@@ -125,8 +125,8 @@ export default {
     },
     methods: {
         buttonActivated: function (buttonId, button) {
-            if (button.focusedLink) {
-                const target = this.$el.getElementsByClassName("header_" + button.focusedLink)[0];
+            if (button.data.focusedLink) {
+                const target = this.$el.getElementsByClassName("header_" + button.data.focusedLink)[0];
                 if (target) {
                     target.scrollIntoView();
                 }
@@ -136,7 +136,7 @@ export default {
         },
         addButtonToBar: function (button, withImage) {
             // copy button:
-            const toSave = { ...button, configuration: { ...button.configuration } };
+            const toSave = { ...button, configuration: { ...button.configuration }, data: { ...button.data } };
 
             // delete image if required
             if (!withImage && toSave.configuration.image_url) {

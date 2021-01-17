@@ -643,7 +643,8 @@ export default {
                     label: "",
                     color: "",
                     image_url: ""
-                }
+                },
+                data: {}
             },
             /** @type {BarDetails} */
             barDetails: {},

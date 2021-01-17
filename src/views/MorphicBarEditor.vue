@@ -152,9 +152,9 @@
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
               </template>
-              <div class="desktop-alerts" :key="barDetails.errorKey">
-                <b-alert v-for="(error, id) in barDetails.errors"
-                         :key="id"
+              <div class="desktop-alerts" >
+                <b-alert v-for="(error) in barDetails.errors"
+                         :key="error.key"
                          show
                          variant="warning"
                 >
@@ -286,7 +286,7 @@
                           <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
                             <div class="imageWrapper">
                               <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
-                            </div>{{ button.configuration.catalogLabel || button.configuration.label }}
+                            </div>{{ button.data.catalogLabel || button.configuration.label }}
                           </b-link>
                         </drag>
                       </li>
@@ -735,8 +735,8 @@ export default {
          */
         addBarItem: function (button, insertAt) {
             button.id = this.generateId(button);
-            delete button.configuration.catalogItem;
-            delete button.configuration.catalogLabel;
+            delete button.data.catalogItem;
+            delete button.data.catalogLabel;
 
             // insert in new position (default to 0)
             this.barDetails.items.splice(insertAt || 0, 0, button);
@@ -746,12 +746,12 @@ export default {
 
 
             var showEdit;
-            if (button.isPlaceholder) {
+            if (button.data.isPlaceholder) {
                 showEdit = true;
-                button.configuration.hasError = true;
+                button.data.hasError = true;
             } else {
                 params.setInitial(button);
-                showEdit = button.configuration.hasError;
+                showEdit = button.data.hasError;
             }
 
             // Edit the button, if it has parameterised fields.
@@ -1037,9 +1037,11 @@ export default {
             if (!this.dragInProgress) {
                 this.selectedItem = item;
                 this.editDialog.showDialog(item).then(changed => {
+                    bar.checkBar(this.barDetails);
                     if (changed) {
                         this.setBarChanged();
                     }
+                    this.$forceUpdate();
                 });
             }
         },
@@ -1246,7 +1248,8 @@ export default {
                     label: "hi",
                     color: "",
                     image_url: ""
-                }
+                },
+                data: {}
             },
             invitationEmail: "",
             /** @type {BarDetails} */
@@ -1283,7 +1286,8 @@ export default {
                 }
             },
             predefinedBars: predefinedBars,
-            colors: colors
+            colors: colors,
+            checkBarTimer: null
         };
     }
 };

@@ -29,14 +29,11 @@ export function checkBar(bar) {
     });
 
 
-    var keys;
     errors.forEach(err => {
         err.key = `${err.item.id}-${err.type}-${err.message}`;
-        keys += err.key;
     });
 
     bar.errors = errors;
-    bar.errors.errorKey = keys;
     return errors.length === 0;
 }
 

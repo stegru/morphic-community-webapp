@@ -64,7 +64,7 @@ export const allParameters = {
     },
     exe: {
         label: "Executable",
-        isApplicable: (button) => !button.configuration.parameters.defaultApp && button.configuration.parameters.defaultApp !== "",
+        isApplicable: (button) => !button.data.parameters.defaultApp && button.data.parameters.defaultApp !== "",
         validation: {
             required: "The executable file is required."
         }
@@ -136,8 +136,8 @@ export function prepareBarItem(button) {
         params.label = initialLabel;
     }
 
-    button.configuration.paramFields = paramFields;
-    button.configuration.parameters = params;
+    button.data.paramFields = paramFields;
+    button.data.parameters = params;
 
     setInitial(button);
 }
@@ -148,10 +148,10 @@ export function prepareBarItem(button) {
  * @param {BarItem} button The button.
  */
 export function setInitial(button) {
-    Object.keys(button.configuration.parameters).forEach(paramKey => {
+    Object.keys(button.data.parameters).forEach(paramKey => {
         const initialValue = allParameters[paramKey].initial;
         if (initialValue !== undefined) {
-            button.configuration.parameters[paramKey] = initialValue;
+            button.data.parameters[paramKey] = initialValue;
         }
     });
 
@@ -164,15 +164,15 @@ export function setInitial(button) {
  * @param {BarItem} button The bar item.
  */
 export function applyParameters(button) {
-    const params = button.configuration.parameters;
+    const params = button.data.parameters;
 
-    if (button.configuration.paramFields) {
-        button.configuration.paramFields.forEach(key => {
+    if (button.data.paramFields) {
+        button.data.paramFields.forEach(key => {
             button.configuration[key] = replaceParameters(params, button.configuration[`${origFieldPrefix}${key}`]);
         });
     }
 
-    button.configuration.hasError = validate(button) ? undefined : true;
+    button.data.hasError = validate(button) ? undefined : true;
 }
 
 // Matches all `${name1}` or `$name2` in a string.
@@ -222,7 +222,7 @@ function containsParameter(value) {
  * @return {Boolean} true if valid.
  */
 function validate(button) {
-    return button.isPlaceholder || Object.keys(button.configuration.parameters).every((paramKey) => {
+    return button.data.isPlaceholder || Object.keys(button.data.parameters).every((paramKey) => {
         return !getValidationError(button, paramKey);
     });
 }
@@ -236,16 +236,16 @@ function validate(button) {
 export function getValidationError(button, paramKey) {
     let errorMessage;
 
-    if (button.isPlaceholder) {
+    if (button.data.isPlaceholder) {
         errorMessage = "An action for this item has not been set.";
     } else if (paramKey === undefined) {
-        Object.keys(button.configuration.parameters).every((paramKey) => {
+        Object.keys(button.data.parameters).every((paramKey) => {
             errorMessage = getValidationError(button, paramKey);
             return !errorMessage;
         });
     } else {
         const paramInfo = allParameters[paramKey];
-        const value = button.configuration.parameters[paramKey];
+        const value = button.data.parameters[paramKey];
 
         const applicable = !paramInfo.isApplicable || paramInfo.isApplicable(button);
 

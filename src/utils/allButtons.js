@@ -245,7 +245,9 @@ export const allButtons = {
             label: "Text Size",
             description: "Changes the Text Size",
             identifier: "screen-zoom",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -287,7 +289,9 @@ export const allButtons = {
             label: "Color Vision",
             description: "Turns Color Vision filters On/Off",
             identifier: "color-vision",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -340,7 +344,9 @@ export const allButtons = {
             label: "Dark Mode",
             description: "Turns Dark Mode On/Off",
             identifier: "dark-mode",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -619,7 +625,9 @@ export const allButtons = {
             label: "Contrast",
             description: "Turns Contrast On/Off",
             identifier: "high-contrast",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -868,7 +876,9 @@ export const allButtons = {
             label: "Magnifier",
             description: "Turns Screen Magnifier On/Off",
             identifier: "magnify",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -1163,7 +1173,9 @@ export const allButtons = {
             label: "Night Mode",
             description: "Turns Night Mode On/Off",
             identifier: "night-mode",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -1229,12 +1241,14 @@ export const allButtons = {
             description: "Allows you to create a button that opens an Application.",
             default: "\"\"",
             color: "blue",
-            image_url: "windowmaximize",
+            image_url: "windowmaximize"
+        },
+        data: {
+            focusedLink: "app",
+            isPlaceholder: true,
             catalog: "make",
             catalogLabel: "To open an Application"
-        },
-        isPlaceholder: true,
-        focusedLink: "app"
+        }
     },
     open_link: {
         kind: "link",
@@ -1245,7 +1259,9 @@ export const allButtons = {
             color: "blue",
             image_url: "globe",
             url: "$url",
-            description: "Allows you to create a button that opens a Web Page.",
+            description: "Allows you to create a button that opens a Web Page."
+        },
+        data: {
             catalogLabel: "To open a Web Page"
         }
     },
@@ -1396,7 +1412,9 @@ export const allButtons = {
             label: "Read Aloud",
             description: "A button that reads out the selected text.",
             identifier: "read-aloud",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -1745,7 +1763,9 @@ export const allButtons = {
             label: "Log-off Computer",
             description: "Logs the user off the Computer",
             identifier: "log-off",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "",
                 buttons: ""
@@ -1855,7 +1875,9 @@ export const allButtons = {
             label: "Volume",
             description: "Changes the System Volume Up/Down.",
             identifier: "volume",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [

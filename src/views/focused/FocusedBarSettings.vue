@@ -628,7 +628,8 @@ export default {
                     label: "",
                     color: "",
                     image_url: ""
-                }
+                },
+                data: {}
             },
             barDetails: {},
             members: [],

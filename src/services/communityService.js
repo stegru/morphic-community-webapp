@@ -65,7 +65,7 @@ export function getCommunityBars(communityId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function createCommunityBar(communityId, data) {
-    return HTTP.post(`/v1/communities/${communityId}/bars`, fixBar(data));
+    return HTTP.post(`/v1/communities/${communityId}/bars`, storeBar(data));
 }
 
 /**
@@ -73,10 +73,28 @@ export function createCommunityBar(communityId, data) {
  * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiescidbarsid
  * @param {GUID} communityId The community ID.
  * @param {GUID} barId The bar ID.
- * @return {Promise<AxiosResponse<Any>>} Response
+ * @return {Promise<AxiosResponse<BarDetails>>} Response
  */
 export function getCommunityBar(communityId, barId) {
-    return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`);
+    return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`).then(resp => {
+        /** @type {BarDetails} */
+        const bar = resp && resp.data;
+        bar && bar.items && bar.items.forEach(item => {
+            item.data = item.configuration._webapp || {};
+            delete item.configuration._webapp;
+
+            // Migrate some old data
+            ["catalog", "catalogItem", "catalogLabel", "parameters", "paramFields", "visual", "buttonKey"].forEach((key) => {
+                if (item.configuration[key] !== undefined) {
+                    if (!item.data[key]) {
+                        item.data[key] = item.configuration[key];
+                    }
+                    delete item.configuration[key];
+                }
+            });
+        });
+        return resp;
+    });
 }
 
 /**
@@ -88,7 +106,7 @@ export function getCommunityBar(communityId, barId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function saveCommunityBar(communityId, barId, barDetails) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, fixBar(barDetails));
+    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(barDetails));
 }
 
 /**
@@ -101,7 +119,7 @@ export function saveCommunityBar(communityId, barId, barDetails) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function updateCommunityBar(communityId, barId, bar) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, fixBar(bar));
+    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(bar));
 }
 
 /**
@@ -144,8 +162,9 @@ export function inviteCommunityMember(communityId, memberId, email) {
  * @param {BarDetails} bar The bar.
  * @return {BarDetails} The bar.
  */
-function fixBar(bar) {
-    bar.items.forEach(item => {
+function storeBar(bar) {
+    const togo = JSON.parse(JSON.stringify(bar));
+    togo.items.forEach(item => {
         item.is_primary = !!item.is_primary;
         if (item.kind === "application") {
             // For application items, remove the exe or default - only 1 is needed.
@@ -155,6 +174,10 @@ function fixBar(bar) {
                 delete item.configuration.default;
             }
         }
+
+        item.configuration._webapp = item.data;
+        delete item.data;
     });
-    return bar;
+
+    return togo;
 }

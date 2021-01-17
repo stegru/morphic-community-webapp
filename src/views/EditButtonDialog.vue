@@ -4,7 +4,7 @@
            size="lg" scrollable centered
            footer-bg-variant="light"
            :ok-title="nextButton ? 'Next' : 'Update Button'"
-           :ok-disabled="button && button.isPlaceholder"
+           :ok-disabled="button && button.data.isPlaceholder"
            :title="dialogTitle">
     <div v-if="button">
       <b-form>
@@ -17,43 +17,43 @@
               <ul class="relatedButtons">
                 <li v-for="(item, buttonKey) in relatedButtons"
                     :key="buttonKey"
-                    :class="buttonKey === button.configuration.buttonKey && 'selected'"
+                    :class="buttonKey === button.data.buttonKey && 'selected'"
                     >
-                  <b-link v-if="!item.isPlaceholder"
+                  <b-link v-if="!item.data.isPlaceholder"
                           :style="{
-                            color: (buttonKey === button.configuration.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
-                            'background-color': (buttonKey === button.configuration.buttonKey) ? (item.configuration.color || colors.blue) : ''
+                            color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
+                            'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
                           }"
                           class="buttonsCatalogEntry editRelatedItem"
                           @click="setButton(item)">
                     <div class="imageWrapper">
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
-                    </div>{{ item.configuration.catalogLabel || item.configuration.label }}
+                    </div>{{ item.data.catalogLabel || item.configuration.label }}
                   </b-link>
                 </li>
               </ul>
             </b-tab>
 
-            <b-tab title="Button" :disabled="button.isPlaceholder"
+            <b-tab title="Button" :disabled="button.data.isPlaceholder"
                    >
               <br/>
-              <b-form-group v-if="relatedButtons[button.configuration.buttonKey]"
+              <b-form-group v-if="relatedButtons[button.data.buttonKey]"
                             :label="groupTabTitle"
                             label-for="barItem_selectOther"
                             >
               <div class="relatedLink">
                 <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
                   <div class="imageWrapper">
-                    <b-img v-if="relatedButtons[button.configuration.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.configuration.buttonKey].configuration.image_url)" />
+                    <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" />
                   </div>{{
-                    relatedButtons[button.configuration.buttonKey].configuration.catalogLabel || relatedButtons[button.configuration.buttonKey].configuration.label
+                    relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                   }}
                 </b-link>
               </div>
 
               </b-form-group>
 
-                <template v-for="(value, paramKey, index) in button.configuration.parameters">
+                <template v-for="(value, paramKey, index) in button.data.parameters">
                   <div v-if="!allParameters[paramKey].isApplicable || allParameters[paramKey].isApplicable(button)"
                        :key="paramKey"
                        role="group" class="mb-3">
@@ -64,7 +64,7 @@
                       <component :is="getFieldTag(allParameters[paramKey])"
                                  :id="'barItem_' + paramKey"
                                  :name="paramKey"
-                                 v-model="button.configuration.parameters[paramKey]"
+                                 v-model="button.data.parameters[paramKey]"
                                  :options="allParameters[paramKey].selectOptions"
                                  :state="!editValidation(paramKey)"
                                  :autofocus="!index"
@@ -269,7 +269,7 @@ export default {
          * @return {Object<String,String>} The icons to list.
          */
         listedIcons: function () {
-            const defaultIcon = defaultIcons[this.button.configuration.buttonKey];
+            const defaultIcon = defaultIcons[this.button.data.buttonKey];
             const iconKeys = [];
 
             // Get the icons of the same category.
@@ -363,8 +363,8 @@ export default {
         closeDialog: function (applyChanges) {
             if (applyChanges) {
                 Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
-                if (this.selectedItem.isPlaceholder && !this.button.isPlaceholder) {
-                    delete this.selectedItem.isPlaceholder;
+                if (this.selectedItem.data.isPlaceholder && !this.button.data.isPlaceholder) {
+                    delete this.selectedItem.data.isPlaceholder;
                 }
             }
 
@@ -395,7 +395,7 @@ export default {
                 break;
             }
 
-            this.activeTab = this.button.isPlaceholder ? 0 : 1;
+            this.activeTab = this.button.data.isPlaceholder ? 0 : 1;
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
             return new Promise((resolve) => {
@@ -410,8 +410,8 @@ export default {
         setButton: function (button) {
             this.button = JSON.parse(JSON.stringify(button));
             this.button.id = this.generateId(this.button);
-            delete this.button.configuration.catalogItem;
-            delete this.button.configuration.catalogLabel;
+            delete this.button.data.catalogItem;
+            delete this.button.data.catalogLabel;
             delete this.button.is_primary;
             params.setInitial(this.button);
             if (this.returnToButtonTab) {

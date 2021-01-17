@@ -3,7 +3,7 @@
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
      <button @click="deleteButton" class="text-danger">Remove Button</button>
      <b-form>
-       <div v-for="(value, paramKey, index) in button.configuration.parameters"
+       <div v-for="(value, paramKey, index) in button.data.parameters"
             :key="paramKey"
             role="group" class="mb-3">
          <b-form-group :label="allParameters[paramKey].label"
@@ -11,7 +11,7 @@
                        :invalid-feedback="editValidation(paramKey)">
            <b-form-input :id="'barItem_' + paramKey"
                          :name="paramKey"
-                         v-model="button.configuration.parameters[paramKey]"
+                         v-model="button.data.parameters[paramKey]"
                          :state="!editValidation(paramKey)"
                          :autofocus="!index"
                          v-bind="allParameters[paramKey].attrs"
@@ -201,7 +201,8 @@ export default {
             newButtonIndex: undefined,
             /** @type {BarItem} */
             button: {
-                configuration: {}
+                configuration: {},
+                data: {}
             },
             colors: colors,
             availablePositions: {},

@@ -45,13 +45,25 @@
  *
  * @typedef {Object} BarItem
  * @property {String} id Unique identifier.
- * @property {String} buttonKey Key in the buttons object, where this item was taken from.
  * @property {String} kind The kind of item (url, application, action).
  * @property {String} subkind The item category (email, news).
- * @property {Boolean} [isPlaceholder] true if this button is a place-holder, where the site has not been chosen.
  * @property {Boolean} is_primary
- * @property {BarItemConfiguration} configuration
+ * @property {BarItemData} data Web-app data.
+ * @property {BarItemConfiguration} configuration Bar item options
  **/
+
+/**
+ * BarItem data for the web-app
+ * @typedef {Object} BarItemData
+ * @property {String} buttonKey Key in the buttons object, where this item was taken from.
+ * @property {Boolean} [isPlaceholder] true if this button is a place-holder, where the site has not been chosen.
+ * @property {Boolean} catalogItem true if this instance is in the catalog (not added to the bar)
+ * @property {String} catalogLabel Label in the catalog (if different to `label`).
+ * @property {String} category Category in the catalog
+ * @property {Boolean} [hasError] true if one of the parameter values has a validation error.
+ * @property {ItemParameters} parameters Values of the named parameters used in fields.
+ * @property {Array<String>} paramFields The field names of this object which are parameterised.
+ */
 
 /**
  * Configuration options of a BarItem
@@ -63,16 +75,10 @@
  *
  * @typedef {Object} BarItemConfigurationBase
  * @property {String} label Button text
- * @property {Boolean} catalogItem true if this instance is in the catalog (not added to the bar)
- * @property {String} catalogLabel Label in the catalog (if different to `label`).
- * @property {String} category Category in the catalog
  * @property {String} color Button color (html string)
  * @property {String} image_url Link to the image (relative or absolute)
  * @property {String} image_path Path to the icon file on the webserver (used by the client if it doesn't have a local image for image_url).
  * @property {String} description More info.
- * @property {Boolean} [hasError] true if one of the parameter values has a validation error.
- * @property {ItemParameters} parameters Values of the named parameters used in fields.
- * @property {Array<String>} paramFields The field names of this object which are parameterised.
  */
 
 /**
@@ -88,5 +94,4 @@
  * @typedef {BarItemConfigurationBase} BarItemConfiguration_Application
  * @property {String} default
  * @property {String} exe
- * @property {String} description
  **/
