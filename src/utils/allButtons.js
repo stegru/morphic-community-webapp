@@ -25,7 +25,7 @@ export const allButtons = {
             description: "Opens the local AccuWeather home page."
         }
     },
-    adobe_acrobat_reader_dc: {
+    adobe_acrobat_reader_dc_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -37,7 +37,7 @@ export const allButtons = {
             image_url: "adobeacrobatreaderdc"
         }
     },
-    adobe_acrobat_reader_pro: {
+    adobe_acrobat_reader_pro_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -96,7 +96,7 @@ export const allButtons = {
             description: "Opens the AOL Mail inbox in a browser."
         }
     },
-    app_store: {
+    app_store_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -155,7 +155,7 @@ export const allButtons = {
             description: "Opens the Bloomberg home page."
         }
     },
-    books: {
+    books_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -179,7 +179,7 @@ export const allButtons = {
             description: "Opens the Box home page."
         }
     },
-    calculator: {
+    calculator_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -191,7 +191,7 @@ export const allButtons = {
             image_url: "calculator"
         }
     },
-    calendar: {
+    calendar_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -301,7 +301,7 @@ export const allButtons = {
             }
         }
     },
-    contacts: {
+    contacts_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -438,7 +438,7 @@ export const allButtons = {
             description: "Opens the Esty home page."
         }
     },
-    evernote: {
+    evernote_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -462,7 +462,7 @@ export const allButtons = {
             description: "Opens the Facebook home page for users if they are signed in."
         }
     },
-    facetime: {
+    facetime_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -474,7 +474,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    find_my: {
+    find_my_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -485,7 +485,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    finder: {
+    finder_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -497,7 +497,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    firefox: {
+    firefox_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -557,7 +557,7 @@ export const allButtons = {
             description: "Opens the Google Calendar for the user if they are signed in."
         }
     },
-    google_chrome: {
+    google_chrome_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -604,7 +604,7 @@ export const allButtons = {
             description: "Opens Google Photos."
         }
     },
-    groove_music: {
+    groove_music_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -637,7 +637,7 @@ export const allButtons = {
             }
         }
     },
-    home: {
+    home_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -716,7 +716,7 @@ export const allButtons = {
             url: "https://www.iheart.com/"
         }
     },
-    iina: {
+    iina_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -728,7 +728,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    imessage: {
+    imessage_app: {
         kind: "application",
         is_primary: true,
         configuration: {
@@ -763,7 +763,7 @@ export const allButtons = {
             description: "Opens the Instagram home page for the user if they are signed in."
         }
     },
-    itunes: {
+    itunes_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -786,7 +786,7 @@ export const allButtons = {
             description: "Join a meeting room in Jitsi."
         }
     },
-    keynote: {
+    keynote_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -797,7 +797,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    kindle: {
+    kindle_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -833,11 +833,11 @@ export const allButtons = {
             description: "Opens the LinkedIn home page for the user if they are signed in."
         }
     },
-    local_calendar: {
+    local_calendar_app: {
         kind: "application",
         is_primary: true,
         configuration: {
-            subkind: "local-calendar",
+            subkind: "calendar",
             label: "Calendar App",
             description: "Opens the local Calendar Application.",
             default: "calendar",
@@ -888,7 +888,7 @@ export const allButtons = {
             }
         }
     },
-    mail: {
+    mail_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -911,7 +911,7 @@ export const allButtons = {
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
-    maps: {
+    maps_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -923,7 +923,7 @@ export const allButtons = {
             image_url: "maps"
         }
     },
-    messages: {
+    messages_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -935,7 +935,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    messenger: {
+    messenger_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -948,7 +948,7 @@ export const allButtons = {
             appx: true
         }
     },
-    microsoft_access: {
+    microsoft_access_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -960,7 +960,7 @@ export const allButtons = {
             image_url: "msaccess"
         }
     },
-    microsoft_edge: {
+    microsoft_edge_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -972,7 +972,7 @@ export const allButtons = {
             image_url: "msedge"
         }
     },
-    microsoft_excel: {
+    microsoft_excel_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -984,7 +984,7 @@ export const allButtons = {
             image_url: "msexcel"
         }
     },
-    microsoft_onenote: {
+    microsoft_onenote_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -997,7 +997,7 @@ export const allButtons = {
             appx: true
         }
     },
-    microsoft_outlook: {
+    microsoft_outlook_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1009,7 +1009,7 @@ export const allButtons = {
             image_url: "msoutlook"
         }
     },
-    microsoft_powerpoint: {
+    microsoft_powerpoint_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1021,7 +1021,7 @@ export const allButtons = {
             image_url: "mspowerpoint"
         }
     },
-    microsoft_teams: {
+    microsoft_teams_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1033,7 +1033,7 @@ export const allButtons = {
             image_url: "msteams"
         }
     },
-    microsoft_to_do: {
+    microsoft_to_do_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1045,7 +1045,7 @@ export const allButtons = {
             image_url: "mstodo"
         }
     },
-    microsoft_word: {
+    microsoft_word_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1057,7 +1057,7 @@ export const allButtons = {
             image_url: "msword"
         }
     },
-    movies_tv: {
+    movies_tv_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1093,7 +1093,7 @@ export const allButtons = {
             description: "Opens the NBC News home page."
         }
     },
-    neat_office: {
+    neat_office_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1107,6 +1107,17 @@ export const allButtons = {
         }
     },
     netflix: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            subkind: "multimedia",
+            label: "Netflix",
+            color: "blue",
+            image_url: "netflix",
+            url: "https://www.netflix.com/"
+        }
+    },
+    netflix_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1119,7 +1130,7 @@ export const allButtons = {
             appx: true
         }
     },
-    new: {
+    new_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1141,7 +1152,7 @@ export const allButtons = {
             description: "Opens the New York Post home page."
         }
     },
-    newton_mail: {
+    newton_mail_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1185,7 +1196,7 @@ export const allButtons = {
             }
         }
     },
-    notes: {
+    notes_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1209,7 +1220,7 @@ export const allButtons = {
             description: "Opens the NPR (National Public Radio) home page."
         }
     },
-    numbers: {
+    numbers_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1265,7 +1276,7 @@ export const allButtons = {
             catalogLabel: "To open a Web Page"
         }
     },
-    opera: {
+    opera_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1300,7 +1311,7 @@ export const allButtons = {
             description: "Opens the Outlook.com inbox in a browser."
         }
     },
-    pages: {
+    pages_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1311,7 +1322,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    paint_3d: {
+    paint_3d_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1324,6 +1335,17 @@ export const allButtons = {
         }
     },
     pandora: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            subkind: "multimedia",
+            label: "Pandora",
+            color: "blue",
+            image_url: "pandora",
+            url: "https://www.pandora.com/station"
+        }
+    },
+    pandora_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1336,7 +1358,7 @@ export const allButtons = {
             appx: true
         }
     },
-    photo_booth: {
+    photo_booth_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1347,7 +1369,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    photos: {
+    photos_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1370,7 +1392,7 @@ export const allButtons = {
             description: "Opens the Pinterest home page for users if they are signed in."
         }
     },
-    podcasts: {
+    podcasts_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1382,7 +1404,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    preview: {
+    preview_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1393,7 +1415,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    quick_assist: {
+    quick_assist_app: {
         kind: "application",
         is_primary: true,
         configuration: {
@@ -1436,7 +1458,7 @@ export const allButtons = {
             description: "Opens the Reddit home page."
         }
     },
-    reminders: {
+    reminders_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1460,7 +1482,7 @@ export const allButtons = {
             description: "Opens the Reuters home page."
         }
     },
-    safari: {
+    safari_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1482,7 +1504,7 @@ export const allButtons = {
             description: "Opens the SFGate (San Francisco) home page."
         }
     },
-    sketchbook: {
+    sketchbook_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1494,20 +1516,24 @@ export const allButtons = {
             appx: true
         }
     },
-    skype: {
-        kind: "application",
+    skype_app: {
+        kind: "link",
         is_primary: null,
         configuration: {
             subkind: "app",
             label: "Skype",
-            exe: "open -a Skype",
-            exe$win: "appx:Microsoft.SkypeApp_kzf8qxf38zg5c!App",
+            exe: "skype:$skypeId?$skypeAction",
             color: "blue",
             image_url: "skype",
-            appx: true
-        }
+            groups: [
+                "call"
+            ],
+            url: "skype:$skypeId?$skypeAction",
+            shell: true
+        },
+        kind$win: "application"
     },
-    slack: {
+    slack_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1520,7 +1546,7 @@ export const allButtons = {
             appx: true
         }
     },
-    snip_sketch: {
+    snip_sketch_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1544,6 +1570,17 @@ export const allButtons = {
         }
     },
     spotify: {
+        kind: "link",
+        is_primary: true,
+        configuration: {
+            subkind: "multimedia",
+            label: "Spotify",
+            color: "blue",
+            image_url: "spotify",
+            url: "https://open.spotify.com/"
+        }
+    },
+    spotify_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1555,7 +1592,7 @@ export const allButtons = {
             image_url: "spotify"
         }
     },
-    sticky_notes: {
+    sticky_notes_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1568,7 +1605,7 @@ export const allButtons = {
             appx: true
         }
     },
-    stocks_finance: {
+    stocks_finance_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1591,7 +1628,7 @@ export const allButtons = {
             description: "Opens the Target home page."
         }
     },
-    telegram: {
+    telegram_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1604,7 +1641,7 @@ export const allButtons = {
             appx: true
         }
     },
-    textedit: {
+    textedit_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1687,7 +1724,7 @@ export const allButtons = {
             description: "Opens the local Weather Channel home page."
         }
     },
-    thunderbird: {
+    thunderbird_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1710,7 +1747,7 @@ export const allButtons = {
             url: "https://tidal.com/"
         }
     },
-    todoist: {
+    todoist_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1772,7 +1809,7 @@ export const allButtons = {
             }
         }
     },
-    tv: {
+    tv_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1830,7 +1867,7 @@ export const allButtons = {
             url: "https://vimeo.com/"
         }
     },
-    vlc: {
+    vlc_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1843,7 +1880,7 @@ export const allButtons = {
             appx: true
         }
     },
-    voice_memos: {
+    voice_memos_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1854,7 +1891,7 @@ export const allButtons = {
             os: "mac"
         }
     },
-    voice_recorder: {
+    voice_recorder_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1911,7 +1948,7 @@ export const allButtons = {
             description: "Opens the Wayfair home page."
         }
     },
-    weather: {
+    weather_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1934,7 +1971,7 @@ export const allButtons = {
             description: "Opens the local Weather Underground home page."
         }
     },
-    whatsapp: {
+    whatsapp_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1947,7 +1984,7 @@ export const allButtons = {
             appx: true
         }
     },
-    windows_store: {
+    windows_store_app: {
         kind: "application",
         is_primary: null,
         configuration: {
@@ -1960,7 +1997,7 @@ export const allButtons = {
             os: "win"
         }
     },
-    wps_office: {
+    wps_office_app: {
         kind: "application",
         is_primary: null,
         configuration: {

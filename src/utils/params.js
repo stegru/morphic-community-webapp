@@ -47,10 +47,17 @@ export const allParameters = {
         }
     },
     skypeId: {
-        label: "Skype ID of who to call.",
-        validation: {
-            required: "SkypeId is required"
-        }
+        label: "Skype ID of who to call"
+    },
+    skypeAction: {
+        label: "Type of call",
+        initial: "call",
+        isApplicable: (button) => !!button.data.parameters.skypeId,
+        selectOptions: [
+            { value: "call", text: "Voice" },
+            { value: "call&video=true", text: "Video" },
+            { value: "chat", text: "Chat" }
+        ]
     },
     defaultApp: {
         label: "App",

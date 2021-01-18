@@ -140,7 +140,8 @@ export const buttonCatalog = {
     call: {
         title: "Call a Person",
         editTitle: undefined,
-        defaultIcon: undefined
+        defaultIcon: undefined,
+        items: ["skype_app"]
     },
     meeting: {
         title: "Meeting Room",
@@ -288,10 +289,19 @@ Object.keys(allButtons).forEach((buttonKey) => {
         button.configuration.image_url = buttonCatalog[button.configuration.subkind] && buttonCatalog[button.configuration.subkind].defaultIcon;
     }
 
-    if (groupedButtons[button.configuration.subkind]) {
-        groupedButtons[button.configuration.subkind].push(button);
-    } else {
-        groupedButtons[button.configuration.subkind] = [button];
+    function toGroup(groupId) {
+        if (groupedButtons[groupId]) {
+            groupedButtons[groupId].push(button);
+        } else {
+            groupedButtons[groupId] = [button];
+        }
+    }
+
+    toGroup(button.configuration.subkind);
+
+    if (button.configuration.groups) {
+        button.configuration.groups.forEach(toGroup);
+        delete button.configuration.groups;
     }
 
     defaultIcons[buttonKey] = button.configuration.image_url;

@@ -180,7 +180,7 @@ export default {
         }
     },
     watch: {
-        "button.configuration": {
+        button: {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
             },
