@@ -247,47 +247,68 @@
                 <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
               </b-input-group-append>
             </b-input-group> -->
+
             <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
               <template v-for="(buttonGroup, subkind) in buttonCatalog">
                 <li v-if="!buttonGroup.hidden" :key="subkind" class="ButtonsCatalogHeader">
                   <h3>{{buttonGroup.title}}</h3>
                   <ul class="ButtonsCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
-                      <li v-if="button.is_primary" :key="buttonId" :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry">
+                      <li v-if="button.is_primary"
+                          :key="buttonId"
+                          :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry"
+                          :ref="'catalog_' + buttonId"
+                          tabindex="-1"
+                          @keypress="onCatalogItemKeyPress($event, button)"
+                      >
                         <!-- Render each button as draggable -->
                         <drag :data="button" type="catalogButtonNoImage">
                           <!-- Define looks when dragged -->
                           <template v-slot:drag-image>
                             <PreviewItem :item="button" :noImage="true" class="noImage" />
                           </template>
+                          <!-- Define looks when not selected -->
+                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                            <div class="imageWrapper">
+                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
+                            </div>{{ button.data.catalogLabel || button.configuration.label }}
+                          </b-link>
                           <!-- Define looks when selected (expanded) -->
-                          <div v-if="buttonId === expandedCatalogButtonId" class="active" @click="expandedCatalogButtonId = undefined">
+                          <div v-else class="active" @click="expandedCatalogButtonId = undefined"
+                          >
                             <div style="width: 100%; display: inline-flex; align-items: center;">
                               <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
                               <b-img v-else :src="'/icons/bootstrap.svg'" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
                               <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">{{button.configuration.label}}</h3>
                             </div>
                             <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}</div>
-                            <div class="help">To add this button, press ENTER, or drag button below onto the bar</div>
-                            <div class="buttons">
+                            <div class="help">To add this button, press ENTER, RETURN, or drag button below onto the bar</div>
+                            <div class="buttons"
+                                 @click="$event.stopPropagation()"
+                            >
                               <drag :data="button" type="catalogButtonNoImage">
-                                <PreviewItem :item="button" :simplified="true" :noImage="true" class="noImage" @addToBarFromPreview="dropToBar($event)" />
+                                <PreviewItem :item="button"
+                                             :simplified="true" :noImage="true"
+                                             class="noImage"
+                                             @addToBarFromPreview="dropToBar($event)"
+                                             @click="dropToBar($event, true)"
+                                />
                               </drag>
 
                               <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage">
                                 <template v-slot:drag-image>
-                                  <PreviewItem :item="button" :noImage="false" class="noImage" />
+                                  <PreviewItem :item="button" :noImage="false" class="noImage"
+                                               @click="dropToBar($event, true)"
+                                  />
                                 </template>
-                                <PreviewItem v-if="button.configuration.image_url" :item="button" :simplified="true" class="withImage" @addToBarFromPreview="dropToBar($event)" />
+                                <PreviewItem v-if="button.configuration.image_url"
+                                             :item="button" :simplified="true" class="withImage"
+                                             @addToBarFromPreview="dropToBar($event)"
+                                             @click="dropToBar($event)"
+                                />
                               </drag>
                             </div>
                           </div>
-                          <!-- Define looks when not selected -->
-                          <b-link v-else @click="expandCatalogButton(button, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                            <div class="imageWrapper">
-                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
-                            </div>{{ button.data.catalogLabel || button.configuration.label }}
-                          </b-link>
                         </drag>
                       </li>
                     </template>
@@ -719,9 +740,9 @@ export default {
         buttonRef: function (button) {
             return "button_" + button.id;
         },
-        dropToBar: function (event) {
+        dropToBar: function (event, buttonNoImage) {
             event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
-            if (event.type === "catalogButtonNoImage") {
+            if (buttonNoImage || event.type === "catalogButtonNoImage") {
                 event.data.configuration.image_url = "";
             }
             this.addBarItem(event.data, event.index);
@@ -738,8 +759,12 @@ export default {
             delete button.data.catalogItem;
             delete button.data.catalogLabel;
 
-            // insert in new position (default to 0)
-            this.barDetails.items.splice(insertAt || 0, 0, button);
+            // insert in new position
+            if (insertAt === undefined) {
+                this.barDetails.items.push(button);
+            } else {
+                this.barDetails.items.splice(insertAt, 0, button);
+            }
             // close any expanded button
             this.expandedCatalogButtonId = undefined;
             this.setBarChanged();
@@ -887,9 +912,10 @@ export default {
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
         refreshBar() {
-            this.$refs.myref.classList.contains("minWidth1px")
-                ? this.$refs.myref.classList.remove("minWidth1px")
-                : this.$refs.myref.classList.add("minWidth1px");
+            const myref = this.$refs.myref;
+            if (myref) {
+                myref.classList.toggle("minWidth1px");
+            }
         },
         distributeItems: function (items) {
             // add id's
@@ -1018,9 +1044,21 @@ export default {
                     console.error(err);
                 });
         },
-        expandCatalogButton: function (button, buttonId) {
+        /**
+         * A key is pressed, while a catalog item is focused.
+         * @param {KeyboardEvent} $event The event.
+         * @param {BarItem} button The button.
+         */
+        onCatalogItemKeyPress: function ($event, button) {
+            if ($event.key === "Enter") {
+                this.dropToBar({data: button});
+            }
+        },
+        expandCatalogButton: function (button, buttonId, e) {
             this.expandedCatalogButtonId = buttonId;
             this.expandedCatalogButton = button;
+            this.$refs["catalog_" + buttonId][0].focus();
+
         },
         buttonToRemove: function (item) {
             // remove from items list

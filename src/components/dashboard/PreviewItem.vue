@@ -2,7 +2,9 @@
 
   <button class="previewItem" id="previewItemButton"
           :class="[buttonClass, {broken: hasError}]"
-          v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}">
+          v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}"
+          @click="$emit('click', {data: item})"
+  >
 
     <!-- Simplified button (no text and small size) -->
     <template v-if="buttonClass === 'simplified'">
