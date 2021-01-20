@@ -28,9 +28,12 @@
     <h2>Buttons on the Bar</h2>
     <ol>
       <li v-for="(item, index) in barDetails.items" :key="index">
+        <bar-item-link :bar-details="barDetails" :bar-item="item"/>
+        <!--
         <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
         </b-link>
+        -->
       </li>
     </ol>
 
@@ -60,14 +63,16 @@
 
 <script>
 
+import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
-import * as bar from "@/utils/bar";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "MemberInvite",
     components: {
+        BarItemLink
     },
     methods: {
         getMakeAButtons: function () {
@@ -412,16 +417,6 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
-        },
-        generateId: function (item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * Math.floor(99999999));
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
-            }
-            return id;
         }
     },
     computed: {
@@ -494,7 +489,7 @@ export default {
                 this.getDrawerItems(newValue);
                 this.getPrimaryItems(newValue);
             }
-            bar.checkBar(this.barDetails);
+            Bar.checkBar(this.barDetails);
         },
         makeAButtons: function (newValue, oldValue) {
             if (!this.dragMakeAButton) {

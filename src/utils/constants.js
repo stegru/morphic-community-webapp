@@ -2,6 +2,7 @@ import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
 import { allIcons as allIconsSrc } from "./allIcons.js";
 import * as params from "./params.js";
+import * as Bar from "./bar.js";
 
 export const API_URL = CONFIG.API_URL;
 export const ERROR_MAP = {
@@ -267,10 +268,11 @@ const getHost = /.*:\/\/([^/:]+)/;
 Object.keys(allButtons).forEach((buttonKey) => {
     const button = allButtons[buttonKey];
 
-    button.id = generateId(button);
     if (!button.data) {
         button.data = {};
     }
+    button.data.buttonKey = buttonKey;
+    button.id = "catalog_" + Bar.generateId(button);
 
     // Fix the color
     if (!button.configuration.color || typeof(button.configuration.color) === "string") {
@@ -305,26 +307,9 @@ Object.keys(allButtons).forEach((buttonKey) => {
     }
 
     defaultIcons[buttonKey] = button.configuration.image_url;
-    button.data.buttonKey = buttonKey;
     params.prepareBarItem(button);
 });
 
-
-/**
- * Generates an ID for a button.
- * @param {BarItem} item The button.
- * @return {String} The ID.
- */
-function generateId(item) {
-    let id = "";
-    if (item) {
-        id += Math.floor(Math.random() * 10e10);
-        id += "-" + item.configuration.label.toLowerCase();
-        id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-        id += "-" + Math.floor(Math.random() * 10e10);
-    }
-    return id;
-};
 
 /**
  * Gets the items for the given subkind
@@ -373,7 +358,7 @@ function getGroupItems(subkind) {
             }
         };
         buttonCatalog[subkind].more = Object.assign(placeHolder.configuration, buttonCatalog[subkind].more);
-        placeHolder.id = generateId(placeHolder);
+        placeHolder.id = Bar.generateId(placeHolder);
         result[`more-${subkind}`] = placeHolder;
     }
 

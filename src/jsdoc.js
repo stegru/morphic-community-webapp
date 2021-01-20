@@ -44,6 +44,7 @@
  * Item of a bar.
  *
  * @typedef {Object} BarItem
+ * @property {GUID} barId The bar this item belongs to.
  * @property {String} id Unique identifier.
  * @property {String} kind The kind of item (url, application, action).
  * @property {String} subkind The item category (email, news).

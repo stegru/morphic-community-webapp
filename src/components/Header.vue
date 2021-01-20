@@ -67,9 +67,6 @@ export default {
         disableLogout: function () {
             return this.$store.getters.unsavedChanges;
         },
-        focusMode: function () {
-            return this.$route.path.includes("/focused/");
-        },
         focusedUrl: function () {
             return this.getUrl(true).href;
         },

@@ -1,5 +1,80 @@
 import * as params from "./params.js";
 
+/** @type {Object<GUID, BarDetails>} */
+const bars = {};
+
+/**
+ * Gets the bar that a given item belongs to.
+ * @param {BarItem} barItem The bar item.
+ * @return {BarDetails} The bar which the item belongs to.
+ */
+export function getItemBar(barItem) {
+    return bars[barItem.barId];
+}
+
+/**
+ * Gets the index of a bar item in a bar.
+ * @param {BarItem} barItem The item to add (either from the catalog, or the service.
+ * @param {BarDetails} [bar] The bar.
+ * @return {Number} The index of the bar item.
+ */
+export function getItemIndex(barItem, bar) {
+    return (bar || getItemBar(barItem)).items.findIndex(item => item.id === barItem.id);
+}
+
+/**
+ * Generates an ID for a button.
+ * @param {BarItem} item The button.
+ * @return {String} The ID.
+ */
+export function generateId(item) {
+    let id = "";
+    if (item) {
+        id += item.barId ? item.barId.substr(0, 8) : "";
+        id += "-" + item.data.buttonKey;
+        id += "-" + item.configuration.label;
+        id += "-" + Math.floor(Math.random() * 10e10);
+    }
+    return id.toLowerCase().replace(/[^a-z0-9_-]/gi, "");
+};
+
+/**
+ * Add an item to a bar.
+ *
+ * @param {BarDetails} bar The bar.
+ * @param {BarItem} sourceItem The item to add (either from the catalog, or the service.
+ * @param {Number} [index] The position to insert the item. [default: at the end]
+ * @return {BarItem} The new item added (a modified copy of `barItem`).
+ */
+export function addItem(bar, sourceItem, index) {
+    /** @type {BarItem} */
+    const barItem = JSON.parse(JSON.stringify(sourceItem));
+
+    // The item refers to the bar by id, to avoid circular references in the object.
+    bars[bar.id] = bar;
+    barItem.barId = bar.id;
+
+    if (!barItem.id || barItem.id.startsWith("catalog_")) {
+        barItem.id = generateId(barItem);
+    }
+    delete barItem.data.catalogItem;
+    delete barItem.data.catalogLabel;
+
+
+    if (index === undefined) {
+        bar.items.push(barItem);
+    } else if (index >= 0) {
+        bar.items.splice(index, 0, barItem);
+    }
+
+    if (!barItem.data.parameters) {
+        params.prepareBarItem(barItem);
+        params.setInitial(barItem);
+    }
+
+    return barItem;
+}
+
 /**
  * Checks a bar for problems.
  * @param {BarDetails} bar The bar.

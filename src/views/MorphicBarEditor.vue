@@ -168,30 +168,31 @@
                     &nbsp;
 
                     <template v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
-                      <b-link :style="{ color: error.item.configuration.color }"
-                              @click="showEditDialog(error.item)"
-                              @mouseover="highlight(false, error.item)"
-                              @mouseleave="highlight(true, error.item)"
-                      >{{ error.item.configuration.label }}</b-link> is duplicated.
+                      <BarItemLink :bar-item="error.item"
+                                   @click="showEditDialog(error.item)"
+                                   @mouseover="highlight(false, error.item)"
+                                   @mouseleave="highlight(true, error.item)"
+                      /> is duplicated.
                     </template>
                     <template v-else-if="error.type === 'duplicate'">
-                      <b-link :style="{ color: error.item.configuration.color }"
+                      <BarItemLink :bar-item="error.item"
                               @click="showEditDialog(error.item)"
                               @mouseover="highlight(false, error.item)"
                               @mouseleave="highlight(true, error.item)"
-                      >{{ error.item.configuration.label }}</b-link>
+                      />
 
                       performs the same action as
-                      <b-link :style="{ color: error.item.configuration.color }"
+                      <BarItemLink :bar-item="error.duplicates[0]"
                               @click="showEditDialog(error.duplicates[0])"
                               @mouseenter="highlight(false, error.duplicates)"
                               @mouseleave="highlight(true, error.duplicates)"
-                      >{{ error.duplicates[0].configuration.label }}</b-link>
+                      />
                     </template>
 
                     <template v-else>
-                      <b-link :style="{ color: error.item.configuration.color }"
-                              @click="showEditDialog(error.item)">{{ error.item.configuration.label }}</b-link>:
+                      <BarItemLink :bar-item="error.item"
+                              @click="showEditDialog(error.item)"
+                        />:
                       {{ error.message }}
                     </template>
 
@@ -423,9 +424,6 @@
           margin: 0 0.2em;
         }
 
-        a {
-          font-weight: bold;
-        }
       }
     }
 
@@ -722,13 +720,14 @@ import {
 import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
-import * as params from "@/utils/params";
-import * as bar from "@/utils/bar";
+import * as Bar from "@/utils/bar";
 import EditButtonDialog from "@/views/EditButtonDialog";
+import BarItemLink from "@/components/dashboardV2/BarItemLink";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        BarItemLink,
         EditButtonDialog,
         CommunityManager,
         PreviewItem,
@@ -741,7 +740,6 @@ export default {
             return "button_" + button.id;
         },
         dropToBar: function (event, buttonNoImage) {
-            event.data = JSON.parse(JSON.stringify(event.data)); // ensure copy
             if (buttonNoImage || event.type === "catalogButtonNoImage") {
                 event.data.configuration.image_url = "";
             }
@@ -751,44 +749,35 @@ export default {
 
         /**
          * Add an item to the bar.
-         * @param {BarItem} button The new button
+         * @param {BarItem} catalogButton The new button, from the catalog.
          * @param {Number} [insertAt] The index of the new button.
          */
-        addBarItem: function (button, insertAt) {
-            button.id = this.generateId(button);
-            delete button.data.catalogItem;
-            delete button.data.catalogLabel;
+        addBarItem: function (catalogButton, insertAt) {
+            /** @type {BarItem} */
+            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
 
-            // insert in new position
-            if (insertAt === undefined) {
-                this.barDetails.items.push(button);
-            } else {
-                this.barDetails.items.splice(insertAt, 0, button);
-            }
             // close any expanded button
             this.expandedCatalogButtonId = undefined;
             this.setBarChanged();
 
 
             var showEdit;
-            if (button.data.isPlaceholder) {
+            if (barItem.data.isPlaceholder) {
                 showEdit = true;
-                button.data.hasError = true;
             } else {
-                params.setInitial(button);
-                showEdit = button.data.hasError;
+                showEdit = barItem.data.hasError;
             }
 
             // Edit the button, if it has parameterised fields.
             if (showEdit) {
-                this.showEditDialog(button);
+                this.showEditDialog(barItem);
             }
         },
 
         setBarChanged: function () {
             this.isChanged = true;
             this.barSelectedInDropdown = "customized";
-            bar.checkBar(this.barDetails);
+            Bar.checkBar(this.barDetails);
         },
 
         revertBar: function () {
@@ -1075,7 +1064,7 @@ export default {
             if (!this.dragInProgress) {
                 this.selectedItem = item;
                 this.editDialog.showDialog(item).then(changed => {
-                    bar.checkBar(this.barDetails);
+                    Bar.checkBar(this.barDetails);
                     if (changed) {
                         this.setBarChanged();
                     }
@@ -1212,7 +1201,7 @@ export default {
         },
         barDetails: {
             handler: function (newValue, oldValue) {
-                bar.checkBar(this.barDetails);
+                Bar.checkBar(this.barDetails);
             },
             deep: true
         }

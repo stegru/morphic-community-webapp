@@ -1,4 +1,5 @@
 import { HTTP } from "@/services/index";
+import * as Bar from "@/utils/bar";
 
 /**
  * @typedef {String} GUID
@@ -79,20 +80,28 @@ export function getCommunityBar(communityId, barId) {
     return HTTP.get(`/v1/communities/${communityId}/bars/${barId}`).then(resp => {
         /** @type {BarDetails} */
         const bar = resp && resp.data;
-        bar && bar.items && bar.items.forEach(item => {
-            item.data = item.configuration._webapp || {};
-            delete item.configuration._webapp;
+        if (bar) {
+            const items = bar.items || [];
+            bar.items = [];
 
-            // Migrate some old data
-            ["catalog", "catalogItem", "catalogLabel", "parameters", "paramFields", "visual", "buttonKey"].forEach((key) => {
-                if (item.configuration[key] !== undefined) {
-                    if (!item.data[key]) {
-                        item.data[key] = item.configuration[key];
+            items.forEach(item => {
+                item.data = item.configuration._webapp || {};
+                delete item.configuration._webapp;
+
+                // Migrate some old data
+                ["catalog", "catalogItem", "catalogLabel", "parameters", "paramFields", "visual", "buttonKey"].forEach((key) => {
+                    if (item.configuration[key] !== undefined) {
+                        if (!item.data[key]) {
+                            item.data[key] = item.configuration[key];
+                        }
+                        delete item.configuration[key];
                     }
-                    delete item.configuration[key];
-                }
+                });
+
+                // Initialise it
+                Bar.addItem(bar, item);
             });
-        });
+        }
         return resp;
     });
 }

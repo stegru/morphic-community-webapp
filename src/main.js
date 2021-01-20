@@ -7,6 +7,7 @@ import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
+import * as Bar from "@/utils/bar";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -87,16 +88,18 @@ Vue.mixin({
          * @return {String} The ID.
          */
         generateId(item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * 10e10);
-                id += "-" + item.configuration.label;
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind : "generic-kind");
-                id += "-" + Math.floor(Math.random() * 10e10);
-            }
-            return id.toLowerCase().replace(/\s/g, "_");
+            return Bar.generateId(item);
         }
 
+    },
+    computed: {
+        /**
+         * Determines if the page is currently in focused mode.
+         * @return {Boolean} true if in focus mode.
+         */
+        focusMode: function () {
+            return this.$route.path.includes("/focused/");
+        }
     }
 });
 
