@@ -1145,7 +1145,6 @@ export default {
         }
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         activeMemberId: function () { return this.$route.query.memberId; },
         editDialog: function () { return this.$refs.editDialog; }
     },

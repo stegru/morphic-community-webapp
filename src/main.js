@@ -99,7 +99,8 @@ Vue.mixin({
          */
         focusMode: function () {
             return this.$route.path.includes("/focused/");
-        }
+        },
+        communityId: function () { return this.$store.getters.communityId; }
     }
 });
 

@@ -26,9 +26,9 @@
       <br/>
 
     <h2>Buttons on the Bar</h2>
-    <ol>
+    <ol class="barList">
       <li v-for="(item, index) in barDetails.items" :key="index">
-        <bar-item-link :bar-details="barDetails" :bar-item="item"/>
+        <bar-item-link show-button :bar-item="item"/>
         <!--
         <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
@@ -50,8 +50,8 @@
       <strong>This bar has the following issues:</strong>
       <ul>
         <li v-for="(error, id) in barDetails.errors" :key="id">
-          <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: getButtonIndex(error.item), communityId: communityId, memberId: memberId } }"
-          >{{error.item.configuration.label}}</b-link>: {{ error.message }}
+          <bar-item-link :bar-item="error.item"/>:
+          {{ error.message }}
         </li>
       </ul>
     </div>
@@ -59,6 +59,12 @@
 </template>
 
 <style lang="scss">
+.barList {
+  li {
+    vertical-align: middle;
+    margin: 1em 0;
+  }
+}
 </style>
 
 <script>
@@ -426,7 +432,6 @@ export default {
             // uppercase first letter and return
             return name.charAt(0).toUpperCase() + name.slice(1);
         },
-        communityId: function () { return this.$store.getters.communityId; },
         activeButtons: function () {
             let activeButtons = [];
             activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond);

@@ -55,7 +55,6 @@ export default {
         };
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         drawerItems: function () {
             const data = [];
             if (this.bar.items && this.bar.items.length > 0) {

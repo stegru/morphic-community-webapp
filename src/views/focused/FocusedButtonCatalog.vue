@@ -197,7 +197,6 @@ export default {
         }
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         memberId: function () { return this.$route.query.memberId; },
         barId: function () { return this.$route.query.barId; }
     },

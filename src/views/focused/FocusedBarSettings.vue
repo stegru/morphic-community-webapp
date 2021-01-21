@@ -427,7 +427,6 @@ export default {
         }
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         activeButtons: function () {
             let activeButtons = [];
             activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond);

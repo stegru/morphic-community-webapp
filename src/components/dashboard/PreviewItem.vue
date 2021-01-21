@@ -1,8 +1,8 @@
 <template>
-
-  <button class="previewItem" id="previewItemButton"
+  <b-link class="previewItem" id="previewItemButton"
           :class="[buttonClass, {broken: hasError}]"
           v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}"
+           :to="linkTo"
           @click="$emit('click', {data: item})"
   >
 
@@ -51,8 +51,7 @@
 
     <img v-if="hasError" id="warningIcon" class="errorIcon" src="/img/warning.svg" alt="This item has a problem." />
 
-  </button>
-
+  </b-link>
 </template>
 
 <style lang="scss">
@@ -114,14 +113,23 @@
     }
   }
   .previewItem {
+    display: inline-block;
+    text-align: center;
     position: relative;
     width: 100px;
     background: none;
     border: none;
     color: white;
-    padding: 0px;
+    padding: 0;
     font-size: 14px;
-    width: 100px;
+
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+      color: white;
+    }
+
 
     &.standardButton {
       b {
@@ -213,7 +221,8 @@ export default {
         /** @type {BarItem} */
         item: Object,
         simplified: Boolean,
-        noImage: Boolean
+        noImage: Boolean,
+        to: Object
     },
     data() {
         return {
@@ -232,6 +241,9 @@ export default {
         }
     },
     computed: {
+        linkTo: function () {
+            return this.to || undefined;
+        },
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
