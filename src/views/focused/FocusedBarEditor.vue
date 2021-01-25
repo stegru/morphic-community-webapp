@@ -28,7 +28,7 @@
     <h2>Buttons on the Bar</h2>
     <ol class="barList">
       <li v-for="(item, index) in barDetails.items" :key="index">
-        <bar-item-link show-button :bar-item="item"/>
+        <bar-item-link show-button :bar-item="item" :ref="`button_${index}`" />
         <!--
         <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
@@ -64,6 +64,10 @@
     vertical-align: middle;
     margin: 1em 0;
   }
+}
+.previewItem:focus {
+  outline: black dotted 2px;
+  box-shadow: 0 0 0 5px lawngreen;
 }
 </style>
 
@@ -495,6 +499,14 @@ export default {
                 this.getPrimaryItems(newValue);
             }
             Bar.checkBar(this.barDetails);
+
+            // Focus the first button when it's rendered.
+            setTimeout(() => {
+                var firstButton = this.$refs.button_0;
+                if (firstButton && firstButton.length) {
+                    firstButton[0].$el.focus();
+                }
+            }, 500);
         },
         makeAButtons: function (newValue, oldValue) {
             if (!this.dragMakeAButton) {
