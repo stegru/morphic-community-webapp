@@ -318,7 +318,7 @@ export const allButtons = {
         is_primary: true,
         configuration: {
             subkind: "shopping",
-            label: "Craiglist",
+            label: "Craigslist",
             color: "blue",
             image_url: "craigslist",
             url: "https://www.craigslist.org/",
