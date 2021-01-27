@@ -108,7 +108,7 @@
     b, button {
       transition: box-shadow 0.5s ease;
     }
-    &.highlight button > b, &.highlight .buttons button  {
+    &.highlight .previewItem > b, &.highlight .buttons button  {
       box-shadow: 0 0 5px 5px red;
     }
   }
