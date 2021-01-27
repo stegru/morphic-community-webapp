@@ -32,7 +32,8 @@
       <div class="buttons">
         <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                 :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
-                v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
+                v-bind:class="{ 'extraBig': item.data.visual.extraBig}"
+              tabindex="-1">
           {{ button }}
         </button>
       </div>

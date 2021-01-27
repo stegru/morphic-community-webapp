@@ -65,7 +65,7 @@
     margin: 1em 0;
   }
 }
-.previewItem:focus {
+.focusMode .previewItem:focus {
   outline: black dotted 2px;
   box-shadow: 0 0 0 5px lawngreen;
 }
