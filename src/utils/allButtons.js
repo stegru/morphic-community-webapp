@@ -322,7 +322,7 @@ export const allButtons = {
             color: "blue",
             image_url: "craigslist",
             url: "https://www.craigslist.org/",
-            description: "Opens the Craigslist hoome page."
+            description: "Opens the Craigslist home page."
         }
     },
     "custom-app": {
