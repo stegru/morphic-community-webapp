@@ -37,8 +37,10 @@
             <b-tab title="Button" :disabled="button.data.isPlaceholder"
                    >
               <br/>
+
+              <!-- The item field, linking to the first tab -->
               <b-form-group v-if="relatedButtons[button.data.buttonKey]"
-                            :label="groupTabTitle"
+                            :label="buttonGroup.editItemField"
                             label-for="barItem_selectOther"
                             >
               <div class="relatedLink">
@@ -215,7 +217,7 @@ ul.relatedButtons {
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { colors, icons, defaultIcons, groupedIcons, groupedButtons, buttonCatalog } from "@/utils/constants";
+import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
 import * as params from "@/utils/params";
 
 export default {
@@ -381,19 +383,8 @@ export default {
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
 
             this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
-            this.dialogTitle = this.buttonGroup.editTitle || this.buttonGroup.title;
-
-            switch (this.buttonGroup.kind) {
-            case "link":
-                this.groupTabTitle = "Web Site";
-                break;
-            case "application":
-                this.groupTabTitle = "App";
-                break;
-            default:
-                this.groupTabTitle = "Action";
-                break;
-            }
+            this.dialogTitle = this.buttonGroup.editTitle;
+            this.groupTabTitle = this.buttonGroup.editGroupTab;
 
             this.activeTab = this.button.data.isPlaceholder ? 0 : 1;
             this.fixFavicon();

@@ -1520,14 +1520,11 @@ export const allButtons = {
         kind: "link",
         is_primary: null,
         configuration: {
-            subkind: "app",
+            subkind: "call",
             label: "Skype",
             exe: "skype:$skypeId?$skypeAction",
             color: "blue",
             image_url: "skype",
-            groups: [
-                "call"
-            ],
             url: "skype:$skypeId?$skypeAction",
             shell: true
         },

@@ -141,12 +141,14 @@ export const buttonCatalog = {
     call: {
         title: "Call a Person",
         editTitle: undefined,
+        editGroupTab: "Call Apps",
+        editItemField: "Call via",
         defaultIcon: undefined,
         items: ["skype_app"]
     },
     meeting: {
         title: "Meeting Room",
-        editTitle: undefined,
+        editTitle: "Meeting App",
         defaultIcon: "comments"
     },
     action: {
@@ -231,7 +233,9 @@ export const buttonCatalog = {
     app: {
         title: "Local Apps",
         hidden: true,
-        editTitle: "Custom Button"
+        editTitle: "Start an Application",
+        editItemField: "App",
+        editGroupTab: "Apps",
     }
 };
 
@@ -369,6 +373,17 @@ Object.keys(buttonCatalog).forEach(key => {
     const group = buttonCatalog[key];
     const items = getGroupItems(group.subkind || key);
     group.items = items;
+
+    if (!group.editTitle) {
+        group.editTitle = group.title;
+    }
+    if (!group.editItemField) {
+        group.editItemField = group.editTitle;
+    }
+    if (!group.editGroupTab) {
+        group.editGroupTab = (group.editItemField || group.editTitle) + "s";
+    }
+
     // Get the kind of all items, if they're the same
     const values = Object.values(items);
     if (values.length > 0) {
