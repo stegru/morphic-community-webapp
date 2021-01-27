@@ -56,7 +56,7 @@
               </b-form-group>
 
                 <template v-for="(value, paramKey, index) in button.data.parameters">
-                  <div v-if="!allParameters[paramKey].isApplicable || allParameters[paramKey].isApplicable(button)"
+                  <div v-if="allParameters[paramKey].isApplicable(button)"
                        :key="paramKey"
                        role="group" class="mb-3">
                     <b-form-group :label="allParameters[paramKey].label"
@@ -68,8 +68,9 @@
                                  :name="paramKey"
                                  v-model="button.data.parameters[paramKey]"
                                  :options="allParameters[paramKey].selectOptions"
-                                 :state="!editValidation(paramKey)"
+                                 :state="getValidationState(paramKey)"
                                  :autofocus="!index"
+                                 :disabled="!allParameters[paramKey].isEnabled(button)"
                                  v-bind="allParameters[paramKey].attrs"
                       />
                     </b-form-group>
@@ -325,6 +326,28 @@ export default {
         editValidation: function (paramKey) {
             return params.getValidationError(this.button, paramKey);
         },
+        /**
+         * Gets the validation state appearance of the component. `true` for valid, `false` for invalid, or `null` for
+         * no validation state.
+         * @param {String} paramKey The parameter key.
+         * @return {Boolean?} The validation state
+         */
+        getValidationState: function (paramKey) {
+            return this.validationRequired(paramKey)
+                ? !this.editValidation(paramKey)
+                : null;
+        },
+
+        /**
+         * Determines if validation is required for the given parameter.
+         * @param {String} paramKey The parameter key.
+         * @return {Boolean} true if the field should be validated.
+         */
+        validationRequired: function (paramKey) {
+            return this.allParameters[paramKey].isEnabled(this.button) &&
+                this.allParameters[paramKey].isApplicable(this.button);
+        },
+
         /**
          * Gets the tag name for a field.
          * @param {ParameterInfo} paramInfo The parameter

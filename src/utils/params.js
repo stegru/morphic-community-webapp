@@ -21,6 +21,7 @@ These are then used to create input fields in the editor dialog.
  * @property {Array<Object>} [selectOptions] A list of items for a select field.
  * @property {String} attrs The HTML attributes for the input element.
  * @property {Function} [isApplicable] A function, returning true if the field should be shown.
+ * @property {Function} [isEnabled] A function, returning true if the field should be enabled.
  * @property {Object<String,Object>} validation The validation rules.
  */
 
@@ -52,7 +53,7 @@ export const allParameters = {
     skypeAction: {
         label: "Type of call",
         initial: "call",
-        isApplicable: (button) => !!button.data.parameters.skypeId,
+        isEnabled: (button) => !!button.data.parameters.skypeId,
         selectOptions: [
             { value: "call", text: "Voice" },
             { value: "call&video=true", text: "Video" },
@@ -77,6 +78,31 @@ export const allParameters = {
         }
     }
 };
+
+/**
+ * Returns a function which will return the given constant value.
+ * @param {Any} result The constant value.
+ * @return {Function} A function which returns `result`.
+ */
+function constantFunction(result) {
+    return function () {
+        return result;
+    };
+}
+
+Object.values(allParameters).forEach(
+    /**
+     * Fix the parameter details so the isApplicable and isEnabled functions exist.
+     * @param {ParameterInfo} paramInfo The parameter.
+     */
+    (paramInfo) => {
+        if (typeof(paramInfo.isApplicable) !== "function") {
+            paramInfo.isApplicable = constantFunction(paramInfo.isApplicable === undefined ? true : paramInfo.isApplicable);
+        }
+        if (typeof(paramInfo.isEnabled) !== "function") {
+            paramInfo.isEnabled = constantFunction(paramInfo.isEnabled === undefined ? true : paramInfo.isEnabled);
+        }
+    });
 
 /**
  * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
@@ -254,9 +280,9 @@ export function getValidationError(button, paramKey) {
         const paramInfo = allParameters[paramKey];
         const value = button.data.parameters[paramKey];
 
-        const applicable = !paramInfo.isApplicable || paramInfo.isApplicable(button);
+        const validate = paramInfo.isApplicable(button) && paramInfo.isEnabled(button);
 
-        if (applicable && paramInfo.validation) {
+        if (validate && paramInfo.validation) {
             Object.keys(paramInfo.validation).every(key => {
                 const validator = validators[key];
                 var ok = false;
