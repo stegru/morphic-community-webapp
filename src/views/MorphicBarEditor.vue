@@ -739,11 +739,8 @@ export default {
         buttonRef: function (button) {
             return "button_" + button.id;
         },
-        dropToBar: function (event, buttonNoImage) {
-            if (buttonNoImage || event.type === "catalogButtonNoImage") {
-                event.data.configuration.image_url = "";
-            }
-            this.addBarItem(event.data, event.index);
+        dropToBar: function (event, noImage) {
+            this.addBarItem(event.data, event.index, noImage || event.type === "catalogButtonNoImage");
             return true;
         },
 
@@ -751,10 +748,14 @@ export default {
          * Add an item to the bar.
          * @param {BarItem} catalogButton The new button, from the catalog.
          * @param {Number} [insertAt] The index of the new button.
+         * @param {Boolean} [noImage] True if the button shall have no image.
          */
-        addBarItem: function (catalogButton, insertAt) {
+        addBarItem: function (catalogButton, insertAt, noImage) {
             /** @type {BarItem} */
             const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
+            if (noImage) {
+                barItem.configuration.image_url = "";
+            }
 
             // close any expanded button
             this.expandedCatalogButtonId = undefined;
