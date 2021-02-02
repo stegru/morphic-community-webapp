@@ -10,72 +10,51 @@
       <b-form>
         <b-row>
           <b-col md="6">
-          <b-tabs v-model="activeTab" small>
+            <b-tabs v-model="activeTab" small>
 
-            <b-tab v-if="showRelatedTab" :title="groupTabTitle">
-              <br/>
-              <ul class="relatedButtons">
-                <li v-for="(item, buttonKey) in relatedButtons"
-                    :key="buttonKey"
-                    :class="buttonKey === button.data.buttonKey && 'selected'"
-                    >
-                  <b-link v-if="!item.data.isPlaceholder"
-                          :style="{
-                            color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
-                            'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
-                          }"
-                          class="buttonsCatalogEntry editRelatedItem"
-                          @click="setButton(item)">
+              <b-tab v-if="showRelatedTab" :title="groupTabTitle">
+                <br/>
+                <ul class="relatedButtons">
+                  <li v-for="(item, buttonKey) in relatedButtons"
+                      :key="buttonKey"
+                      :class="buttonKey === button.data.buttonKey && 'selected'"
+                      >
+                    <b-link v-if="!item.data.isPlaceholder"
+                            :style="{
+                              color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
+                              'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
+                            }"
+                            class="buttonsCatalogEntry editRelatedItem"
+                            @click="setButton(item)">
+                      <div class="imageWrapper">
+                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
+                      </div>{{ item.data.catalogLabel || item.configuration.label }}
+                    </b-link>
+                  </li>
+                </ul>
+              </b-tab>
+
+              <b-tab title="Button" :disabled="button.data.isPlaceholder">
+                <br/>
+
+                <!-- The item field, linking to the first tab -->
+                <b-form-group v-if="relatedButtons[button.data.buttonKey]"
+                              :label="buttonGroup.editItemField"
+                              label-for="barItem_selectOther"
+                              >
+                <div class="relatedLink">
+                  <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
                     <div class="imageWrapper">
-                      <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
-                    </div>{{ item.data.catalogLabel || item.configuration.label }}
+                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" />
+                    </div>{{
+                      relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
+                    }}
                   </b-link>
-                </li>
-              </ul>
-            </b-tab>
+                </div>
 
-            <b-tab title="Button" :disabled="button.data.isPlaceholder"
-                   >
-              <br/>
+                </b-form-group>
 
-              <!-- The item field, linking to the first tab -->
-              <b-form-group v-if="relatedButtons[button.data.buttonKey]"
-                            :label="buttonGroup.editItemField"
-                            label-for="barItem_selectOther"
-                            >
-              <div class="relatedLink">
-                <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
-                  <div class="imageWrapper">
-                    <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" />
-                  </div>{{
-                    relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
-                  }}
-                </b-link>
-              </div>
-
-              </b-form-group>
-
-                <template v-for="(value, paramKey, index) in button.data.parameters">
-                  <div v-if="allParameters[paramKey].isApplicable(button)"
-                       :key="paramKey"
-                       role="group" class="mb-3">
-                    <b-form-group :label="allParameters[paramKey].label"
-                                  :label-for="'barItem_' + paramKey"
-                                  :invalid-feedback="editValidation(paramKey)">
-
-                      <component :is="getFieldTag(allParameters[paramKey])"
-                                 :id="'barItem_' + paramKey"
-                                 :name="paramKey"
-                                 v-model="button.data.parameters[paramKey]"
-                                 :options="allParameters[paramKey].selectOptions"
-                                 :state="getValidationState(paramKey)"
-                                 :autofocus="!index"
-                                 :disabled="!allParameters[paramKey].isEnabled(button)"
-                                 v-bind="allParameters[paramKey].attrs"
-                      />
-                    </b-form-group>
-                  </div>
-                </template>
+                <BarItemFields v-if="!!button" :bar-item="button"/>
 
                 <div class="bg-silver rounded p-3">
                   <p v-if="showExtra" class="text-right small mb-0">
@@ -220,12 +199,14 @@ ul.relatedButtons {
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
 import * as params from "@/utils/params";
+import BarItemFields from "@/components/dashboardV2/BarItemFields";
 
 export default {
     name: "EditButtonDialog",
     props: [],
 
     components: {
+        BarItemFields,
         PreviewItem
     },
 
@@ -241,7 +222,6 @@ export default {
              * @type {BarItem}
              */
             button: null,
-            allParameters: params.allParameters,
             showExtra: false,
 
             dialogClosed: null,
@@ -318,44 +298,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Validate a parameter field in the button edit dialog.
-         * @param {String} paramKey The parameter key.
-         * @return {String} The validation error message (or null if valid)
-         */
-        editValidation: function (paramKey) {
-            return params.getValidationError(this.button, paramKey);
-        },
-        /**
-         * Gets the validation state appearance of the component. `true` for valid, `false` for invalid, or `null` for
-         * no validation state.
-         * @param {String} paramKey The parameter key.
-         * @return {Boolean?} The validation state
-         */
-        getValidationState: function (paramKey) {
-            return this.validationRequired(paramKey)
-                ? !this.editValidation(paramKey)
-                : null;
-        },
-
-        /**
-         * Determines if validation is required for the given parameter.
-         * @param {String} paramKey The parameter key.
-         * @return {Boolean} true if the field should be validated.
-         */
-        validationRequired: function (paramKey) {
-            return this.allParameters[paramKey].isEnabled(this.button) &&
-                this.allParameters[paramKey].isApplicable(this.button);
-        },
-
-        /**
-         * Gets the tag name for a field.
-         * @param {ParameterInfo} paramInfo The parameter
-         * @return {String} The HTML tag name.
-         */
-        getFieldTag: function (paramInfo) {
-            return paramInfo.selectOptions ? "b-form-select" : "b-form-input";
-        },
         changeColor: function (hex) {
             this.button.configuration.color = hex;
         },

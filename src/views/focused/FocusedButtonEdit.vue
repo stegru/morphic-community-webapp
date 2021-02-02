@@ -1,8 +1,13 @@
 <template>
   <div>
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
-     <button @click="deleteButton" class="text-danger">Remove Button</button>
+    <button @click="deleteButton" class="text-danger">Remove Button</button>
+    <b-col lg="5">
      <b-form>
+
+       <BarItemFields v-if="!!button" :bar-item="button"/>
+
+       <!--
        <div v-for="(value, paramKey, index) in button.data.parameters"
             :key="paramKey"
             role="group" class="mb-3">
@@ -18,7 +23,7 @@
            />
          </b-form-group>
        </div>
-
+-->
         <!-- TODO CHANGE ICONS -->
 
         <b-form-group id="color" label="Color for button" label-for="button-color-input">
@@ -34,6 +39,7 @@
         </b-form-group>
 
      </b-form>
+    </b-col>
 
     <b-link :to="{ path: '/focused/bar-editor', query: { barId: barId } }">
       Cancel
@@ -50,10 +56,12 @@
 import { getCommunityBar, saveCommunityBar, getCommunityMember, createCommunityBar, updateCommunityMember } from "@/services/communityService";
 import { colors } from "@/utils/constants";
 import * as params from "@/utils/params";
+import BarItemFields from "@/components/dashboardV2/BarItemFields";
 
 export default {
     name: "MemberInvite",
     components: {
+        BarItemFields
     },
     methods: {
         setAvailablePositions: function () {
