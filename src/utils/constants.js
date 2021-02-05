@@ -235,7 +235,7 @@ export const buttonCatalog = {
         hidden: true,
         editTitle: "Start an Application",
         editItemField: "App",
-        editGroupTab: "Apps",
+        editGroupTab: "Apps"
     }
 };
 
