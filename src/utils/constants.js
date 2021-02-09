@@ -2,6 +2,7 @@ import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
 import { allIcons as allIconsSrc } from "./allIcons.js";
 import * as params from "./params.js";
+import * as Bar from "./bar.js";
 
 export const API_URL = CONFIG.API_URL;
 export const ERROR_MAP = {
@@ -36,6 +37,39 @@ export const colors = {
     default_button: "rgb(0, 47, 87)"
 };
 
+
+export const defaultApps = {
+    calendar: {
+        title: "Default Calendar App",
+        configuration: {
+            label: "Calendar",
+            default: "calendar"
+        }
+    },
+    email: {
+        title: "Default Email Client",
+        configuration: {
+            label: "Email",
+            default: "email"
+        }
+    },
+    browser: {
+        title: "Default Browser",
+        configuration: {
+            image_url: "globe",
+            label: "Web Browser",
+            default: "browser",
+            exe$win: "http:"
+        }
+    }
+};
+
+for (const [key, app] of Object.entries(defaultApps)) {
+    params.allParameters.defaultApp.selectOptions.push({
+        value: key,
+        text: app.title
+    });
+};
 
 /**
  * All icons. Map of iconKey => file
@@ -88,11 +122,161 @@ export const defaultIcons = {
 
 };
 
+/**
+ * Buttons grouped by their subkind.
+ * @type {Object<String,Array<BarItem>>}
+ */
+export const groupedButtons = {};
+
+/**
+ * @type {ButtonCatalog} The button catalog.
+ */
+export const buttonCatalog = {
+    make: {
+        title: "Make a button",
+        editTitle: "Custom Button",
+        defaultIcon: undefined,
+        related: false
+    },
+    call: {
+        title: "Call a Person",
+        editTitle: undefined,
+        editGroupTab: "Call Apps",
+        editItemField: "Call via",
+        defaultIcon: undefined,
+        items: ["skype_app"]
+    },
+    meeting: {
+        title: "Meeting Room",
+        editTitle: "Meeting App",
+        defaultIcon: "comments"
+    },
+    action: {
+        title: "Action Buttons",
+        editTitle: "Action Button",
+        defaultIcon: undefined
+    },
+    "local-calendar": {
+        title: "Calendar - App on Computer",
+        editTitle: "Calendar App",
+        defaultIcon: "calendar$calendar"
+    },
+    calendar: {
+        title: "Calendar - Website",
+        editTitle: "Calendar Website",
+        defaultIcon: "calendar$calendar",
+        more: {
+            description: "Create a button to open a calendar site"
+        }
+    },
+    socialMedia: {
+        title: "Social Media Sites",
+        editTitle: "Social Media Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a social media site"
+        }
+    },
+    "local-email": {
+        title: "Email - App on Computer",
+        editTitle: "Email App",
+        defaultIcon: undefined
+    },
+    email: {
+        title: "Email - Websites",
+        editTitle: "Email Website",
+        defaultIcon: "email$envelope",
+        more: {
+            description: "Create a button to open an email site"
+        }
+    },
+    photo: {
+        title: "Photo Sharing",
+        editTitle: "Photo Sharing Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a photo sharing site"
+        }
+    },
+    news: {
+        title: "News",
+        editTitle: "News Site",
+        defaultIcon: "newspaper",
+        more: {
+            description: "Create a button to open a news web-site"
+        }
+    },
+    shopping: {
+        title: "Shopping",
+        editTitle: "Shopping Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a shopping site"
+        }
+    },
+    multimedia: {
+        title: "Media",
+        editTitle: "Media Site",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open a media site"
+        }
+    },
+    onlineFileDrives: {
+        title: "Online Drives",
+        editTitle: "Online Drive",
+        defaultIcon: undefined,
+        more: {
+            description: "Create a button to open an online drive site"
+        }
+    },
+    app: {
+        title: "Local Apps",
+        hidden: true,
+        editTitle: "Start an Application",
+        editItemField: "App",
+        editGroupTab: "Apps"
+    }
+};
+
+// Create some buttons for the default apps.
+Object.keys(defaultApps).forEach((appKey) => {
+    const app = defaultApps[appKey];
+
+    /** @type {BarItem} */
+    const button = {
+        kind: "application",
+        configuration: {
+            subkind: "app",
+            label: app.title,
+            description: `Starts the ${app.title}`
+        },
+        data: {
+            catalogLabel: app.title
+        }
+    };
+
+    Object.assign(button.configuration, app.configuration);
+
+    if (!button.configuration.image_url) {
+        const group = button.data.group || appKey || button.configuration.subkind;
+        button.configuration.image_url = buttonCatalog[group] && buttonCatalog[group].defaultIcon;
+    }
+
+    allButtons[`default-${appKey}`] = button;
+});
+
 /** Gets the host part of a URL */
 const getHost = /.*:\/\/([^/:]+)/;
 
 Object.keys(allButtons).forEach((buttonKey) => {
     const button = allButtons[buttonKey];
+
+    if (!button.data) {
+        button.data = {};
+    }
+    button.data.buttonKey = buttonKey;
+    button.id = "catalog_" + Bar.generateId(button);
 
     // Fix the color
     if (!button.configuration.color || typeof(button.configuration.color) === "string") {
@@ -107,89 +291,52 @@ Object.keys(allButtons).forEach((buttonKey) => {
         }
     }
 
+    if (!button.configuration.image_url) {
+        button.configuration.image_url = buttonCatalog[button.configuration.subkind] && buttonCatalog[button.configuration.subkind].defaultIcon;
+    }
+
+    function toGroup(groupId) {
+        if (groupedButtons[groupId]) {
+            groupedButtons[groupId].push(button);
+        } else {
+            groupedButtons[groupId] = [button];
+        }
+    }
+
+    toGroup(button.configuration.subkind);
+
+    if (button.configuration.groups) {
+        button.configuration.groups.forEach(toGroup);
+        delete button.configuration.groups;
+    }
+
     defaultIcons[buttonKey] = button.configuration.image_url;
-    button.buttonKey = buttonKey;
     params.prepareBarItem(button);
 });
 
-var catalog = {
-    make: {
-        title: "Make a button",
-        defaultIcon: undefined
-    },
-    call: {
-        title: "Call a Person",
-        defaultIcon: undefined
-    },
-    meeting: {
-        title: "Meeting Room",
-        defaultIcon: "comments"
-    },
-    action: {
-        title: "Action Buttons",
-        defaultIcon: undefined
-    },
-    "local-calendar": {
-        title: "Calendar - App on Computer",
-        defaultIcon: "calendar$calendar"
-    },
-    calendar: {
-        title: "Calendar - Website",
-        defaultIcon: "calendar$calendar"
-    },
-    socialMedia: {
-        title: "Social Media Sites",
-        defaultIcon: undefined
-    },
-    "local-email": {
-        title: "Email - App on Computer",
-        defaultIcon: undefined
-    },
-    email: {
-        title: "Email - Websites",
-        defaultIcon: "email$envelope"
-    },
-    photo: {
-        title: "Photo Sharing",
-        defaultIcon: undefined
-    },
-    news: {
-        title: "News",
-        defaultIcon: "newspaper"
-    },
-    shopping: {
-        title: "Shopping",
-        defaultIcon: undefined
-    },
-    multimedia: {
-        title: "Media",
-        defaultIcon: undefined
-    },
-    onlineFileDrives: {
-        title: "Online Drives",
-        defaultIcon: undefined
-    }
-};
 
 /**
  * Gets the items for the given subkind
  * @param {String} subkind The subkind id (button.configuration.subkind).
- * @return {Array<BarItem>} The items for the subkind.
+ * @return {Object<String,BarItem>} The items for the subkind.
  */
 function getGroupItems(subkind) {
     var result = {};
-    for (const [key, button] of Object.entries(allButtons)) {
-        if (button.subkind === subkind) {
-            button.configuration.catalogItem = true;
-            if (!button.configuration.image_url) {
-                button.configuration.image_url = catalog[subkind].defaultIcon;
-            }
-            result[key] = button;
-        }
-    }
 
+    // Get the items with the given subkind.
     /** @type {Array<BarItem>} */
-    const values = Object.values(result);
+    const values = groupedButtons[subkind] || [];
+
+    // Also add the buttons that state this catalog.
+    const catalogItems = Object.values(allButtons).filter(b => b.data.catalog === subkind);
+
+    values.push(...catalogItems);
+
+
+    values.forEach(b => {
+        b.data.catalogItem = true;
+        result[b.data.buttonKey] = b;
+    });
 
     // If there aren't any primary buttons, make them all primary.
     const noPrimary = values.every(button => !button.is_primary);
@@ -197,32 +344,57 @@ function getGroupItems(subkind) {
         values.forEach(button => { button.is_primary = true; });
     }
 
+
     // If there are some non-primary buttons, add a place-holder which shows the selection dialog.
     const hasSecondary = !noPrimary && values.some(button => !button.is_primary);
     if (hasSecondary) {
         /** @type {BarItem} */
         const placeHolder = {
             is_primary: true,
-            subkind: subkind,
-            isPlaceholder: true,
             configuration: {
-                label: "Website",
-                catalogLabel: "More",
-                image_url: catalog[subkind].defaultIcon
+                subkind: subkind,
+                label: buttonCatalog[subkind].editTitle || buttonCatalog[subkind].title,
+                image_url: buttonCatalog[subkind].defaultIcon
+            },
+            data: {
+                isPlaceholder: true,
+                catalogLabel: "Other"
             }
         };
-        result.more = placeHolder;
+        buttonCatalog[subkind].more = Object.assign(placeHolder.configuration, buttonCatalog[subkind].more);
+        placeHolder.id = Bar.generateId(placeHolder);
+        result[`more-${subkind}`] = placeHolder;
     }
 
     return result;
 }
 
-/**
- * @type {Object<String,Object<String,BarItem>>} Button catalog.
- */
-export const buttonCatalog = {};
-export const groupedButtons = {};
+Object.keys(buttonCatalog).forEach(key => {
+    const group = buttonCatalog[key];
+    const items = getGroupItems(group.subkind || key);
+    group.items = items;
 
-Object.keys(catalog).forEach(key => {
-    groupedButtons[key] = (buttonCatalog[catalog[key].title] = getGroupItems(key));
+    if (!group.editTitle) {
+        group.editTitle = group.title;
+    }
+    if (!group.editItemField) {
+        group.editItemField = group.editTitle;
+    }
+    if (!group.editGroupTab) {
+        group.editGroupTab = (group.editItemField || group.editTitle) + "s";
+    }
+
+    // Get the kind of all items, if they're the same
+    const values = Object.values(items);
+    if (values.length > 0) {
+        const kind = values[0].kind;
+        if (values.every(button => button.kind === kind || button.data.isPlaceholder)) {
+            group.kind = kind;
+        }
+    }
+
+    if (!group.related && group.related !== false) {
+        group.related = values.length > 1;
+    }
 });
+

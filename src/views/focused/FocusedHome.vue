@@ -77,7 +77,6 @@ export default {
     },
     computed: {
         userId: function () { return this.$store.getters.userId; },
-        communityId: function () { return this.$store.getters.communityId; },
         membersNotInvited: function () {
             const list = [];
             for (let i = 0; i < this.members.length; i++) {

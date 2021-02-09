@@ -11,15 +11,15 @@
       <p />
       <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
         <!-- Button catalog headings -->
-        <li v-for="(buttonGroup, categoryName) in buttonCatalog" :key="categoryName" class="buttonsCatalogHeader">
-          <h3>{{categoryName}}</h3>
+        <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="buttonsCatalogHeader">
+          <h3 :class="'header_' + subkind">{{buttonGroup.title}}</h3>
           <ul class="ButtonsCatalogEntries">
-            <li v-for="(button, buttonId) in buttonGroup" :key="buttonId" class="buttonsCatalogEntry">
-              <b-link v-if="currentlyActiveButtonPath != getPath(categoryName, buttonId)" @click="currentlyActiveButtonPath = getPath(categoryName, buttonId)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
+            <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonsCatalogEntry">
+              <b-link v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
                 <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
-                <b-icon v-else icon="bootstrap"></b-icon>
                   {{ button.configuration.label }}
               </b-link>
+
               <div v-else class="active" style="max-width: 400px">
                 <div style="width: 100%; display: inline-flex; align-items: center;">
                   <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
@@ -116,7 +116,7 @@ import PreviewItem from "@/components/dashboard/PreviewItem";
 import { saveCommunityBar, getCommunityBar, createCommunityBar, getCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { buttonCatalog, colors, icons, subkindIcons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
-import * as params from "@/utils/params";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "MemberInvite",
@@ -124,23 +124,25 @@ export default {
         PreviewItem
     },
     methods: {
-        getPath(categoryName, buttonId) {
-            return `${categoryName}.${buttonId}`;
+        buttonActivated: function (buttonId, button) {
+            if (button.data.focusedLink) {
+                const target = this.$el.getElementsByClassName("header_" + button.data.focusedLink)[0];
+                if (target) {
+                    target.scrollIntoView();
+                }
+            } else {
+                this.currentlyActiveButton = buttonId;
+            }
         },
         addButtonToBar: function (button, withImage) {
-            // copy button:
-            const toSave = { ...button, configuration: { ...button.configuration } };
+            /** @type {BarItem} */
+            const barItem = Bar.addItem(this.barDetails, button);
 
             // delete image if required
-            if (!withImage && toSave.configuration.image_url) {
-                delete toSave.configuration.image_url;
+            if (!withImage && barItem.configuration.image_url) {
+                delete barItem.configuration.image_url;
             }
 
-            // initialise the parameters
-            params.setInitial(button);
-
-            // add to items:
-            this.barDetails.items.push(toSave);
             this.checkBarTypeAndSave();
         },
         checkBarTypeAndSave() { // TODO duplicate of FocusedButtonEdit function
@@ -195,7 +197,6 @@ export default {
         }
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         memberId: function () { return this.$route.query.memberId; },
         barId: function () { return this.$route.query.barId; }
     },
@@ -229,7 +230,7 @@ export default {
             community: {},
             barsList: [],
             membersList: [],
-            currentlyActiveButtonPath: undefined,
+            currentlyActiveButton: undefined,
             buttonCatalog: buttonCatalog,
             barDetails: {},
             predefinedBars: predefinedBars,

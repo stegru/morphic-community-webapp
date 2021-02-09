@@ -424,20 +424,9 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
-        },
-        generateId: function (item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * Math.floor(99999999));
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
-            }
-            return id;
         }
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         activeButtons: function () {
             let activeButtons = [];
             activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond);
@@ -452,9 +441,9 @@ export default {
         },
         editSubKindIcons: function () {
             const data = {};
-            if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-                for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
+            if (this.buttonEditStorage.configuration.subkind && this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
+                for (let i = 0; i < this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
+                    data[this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
                 }
             }
             return data;
@@ -638,7 +627,8 @@ export default {
                     label: "",
                     color: "",
                     image_url: ""
-                }
+                },
+                data: {}
             },
             barDetails: {},
             members: [],

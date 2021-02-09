@@ -3,52 +3,58 @@
            @ok="okClicked" @cancel="closeDialog(false)"
            size="lg" scrollable centered
            footer-bg-variant="light"
-           :ok-title="siteTabActive ? 'Next' : 'Update Button'"
-           :ok-disabled="button && button.isPlaceholder"
-           title="Edit button">
+           :ok-title="nextButton ? 'Next' : 'Update Button'"
+           :ok-disabled="button && button.data.isPlaceholder"
+           :title="dialogTitle">
     <div v-if="button">
       <b-form>
         <b-row>
           <b-col md="6">
-          <b-tabs v-model="activeTab" small>
+            <b-tabs v-model="activeTab" small>
 
-            <b-tab title="Web Site">
-              <ul class="catalogButtons">
-                <li v-for="(item, buttonKey) in catalogButtons"
-                    :key="buttonKey"
-                    :class="buttonKey === button.buttonKey && 'selected'"
-                    >
-                  <b-link v-if="!item.isPlaceholder"
-                          :style="{
-                            color: (buttonKey === button.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
-                            'background-color': (buttonKey === button.buttonKey) ? (item.configuration.color || colors.blue) : ''
-                          }"
-                          class="buttonsCatalogEntry nonExpandedCatalogEntry"
-                          @click="setButton(item)">
+              <b-tab v-if="showRelatedTab" :title="groupTabTitle">
+                <br/>
+                <ul class="relatedButtons">
+                  <li v-for="(item, buttonKey) in relatedButtons"
+                      :key="buttonKey"
+                      :class="buttonKey === button.data.buttonKey && 'selected'"
+                      >
+                    <b-link v-if="!item.data.isPlaceholder"
+                            :style="{
+                              color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
+                              'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
+                            }"
+                            class="buttonsCatalogEntry editRelatedItem"
+                            @click="setButton(item)">
+                      <div class="imageWrapper">
+                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
+                      </div>{{ item.data.catalogLabel || item.configuration.label }}
+                    </b-link>
+                  </li>
+                </ul>
+              </b-tab>
+
+              <b-tab title="Button" :disabled="button.data.isPlaceholder">
+                <br/>
+
+                <!-- The item field, linking to the first tab -->
+                <b-form-group v-if="relatedButtons[button.data.buttonKey]"
+                              :label="buttonGroup.editItemField"
+                              label-for="barItem_selectOther"
+                              >
+                <div class="relatedLink">
+                  <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
                     <div class="imageWrapper">
-                      <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
-                    </div>{{ item.configuration.catalogLabel || item.configuration.label }}
+                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" />
+                    </div>{{
+                      relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
+                    }}
                   </b-link>
-                </li>
-              </ul>
-            </b-tab>
-
-            <b-tab title="Button" :disabled="button.isPlaceholder">
-                <div v-for="(value, paramKey, index) in button.configuration.parameters"
-                     :key="paramKey"
-                     role="group" class="mb-3">
-                  <b-form-group :label="allParameters[paramKey].label"
-                                :label-for="'barItem_' + paramKey"
-                                :invalid-feedback="editValidation(paramKey)">
-                    <b-form-input :id="'barItem_' + paramKey"
-                                  :name="paramKey"
-                                  v-model="button.configuration.parameters[paramKey]"
-                                  :state="!editValidation(paramKey)"
-                                  :autofocus="!index"
-                                  v-bind="allParameters[paramKey].attrs"
-                    />
-                  </b-form-group>
                 </div>
+
+                </b-form-group>
+
+                <BarItemFields v-if="!!button" :bar-item="button"/>
 
                 <div class="bg-silver rounded p-3">
                   <p v-if="showExtra" class="text-right small mb-0">
@@ -122,6 +128,7 @@
                   <PreviewItem :item="button" />
                 </div>
               </div>
+              <p class="" style="margin-top: 4em">{{ button.configuration.description }}</p>
             </div>
           </b-col>
         </b-row>
@@ -133,65 +140,73 @@
 
 <style lang="scss">
 
-ul.catalogButtons {
+.relatedLink, ul.relatedButtons > li {
+  position: relative;
+  display: inline-block;
+  margin-left: 30px;
+
+  &.selected a {
+    border-radius: 5px;
+  }
+
+  a {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 3px;
+  }
+
+  .imageWrapper {
+    // Position the icon to the left, and remove it from the flow.
+    display: inline-block;
+    position: relative;
+    left: -25px;
+    width: 0;
+    overflow: visible;
+
+    img {
+      transition: all 0.2s ease-in-out;
+      max-width: 20px;
+      width: 20px;
+    }
+  }
+
+  a:hover {
+    .imageWrapper img {
+      transform: scale(1.5);
+    }
+  }
+
+  &.noImage {
+    img {
+      display: none;
+    }
+  }
+}
+
+ul.relatedButtons {
   padding-left: 30px;
   list-style: none;
 
   li {
-
-    position: relative;
-    display: inline-block;
     width: calc(50% - 30px);
+    margin-left: 0;
     margin-right: 30px;
-
-    &.selected a {
-      border-radius: 5px;
-    }
-
-    a {
-      width: auto !important;
-      display: inline-block !important;
-      padding: 3px;
-    }
-
-    .imageWrapper {
-      // Position the icon to the left, and remove it from the flow.
-      display: inline-block;
-      position: relative;
-      left: -25px;
-      width: 0;
-      overflow: visible;
-
-      img {
-        transition: all 0.2s ease-in-out;
-      }
-    }
-
-    a:hover {
-      .imageWrapper img {
-        transform: scale(1.5);
-      }
-    }
-
-    &.noImage {
-      img {
-        display: none;
-      }
-    }
   }
 }
 </style>
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { colors, icons, defaultIcons, groupedIcons, groupedButtons } from "@/utils/constants";
+import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
 import * as params from "@/utils/params";
+import BarItemFields from "@/components/dashboardV2/BarItemFields";
 
 export default {
     name: "EditButtonDialog",
     props: [],
 
     components: {
+        BarItemFields,
         PreviewItem
     },
 
@@ -207,16 +222,27 @@ export default {
              * @type {BarItem}
              */
             button: null,
-            allParameters: params.allParameters,
             showExtra: false,
 
             dialogClosed: null,
 
             colors: colors,
             groupedButtons: groupedButtons,
+            /** @type {ButtonCatalog} Button catalog. */
+            buttonCatalog: buttonCatalog,
+            /** @type {ButtonCatalogItem} The group in the catalog for this button */
+            buttonGroup: undefined,
 
+            dialogTitle: "Edit button",
+            groupTabTitle: "Others",
+            showGroupTab: false,
+
+            // Index of the active tab
             activeTab: 1,
-            buttonFavicon: null
+            buttonFavicon: null,
+            // true to select the "Button" tab after a button is selected on the first tab.
+            returnToButtonTab: false,
+            fieldChanged: 0
         };
     },
 
@@ -226,13 +252,14 @@ export default {
          * @return {Object<String,String>} The icons to list.
          */
         listedIcons: function () {
-            const defaultIcon = defaultIcons[this.button.buttonKey];
+            const defaultIcon = defaultIcons[this.button.data.buttonKey];
             const iconKeys = [];
 
             // Get the icons of the same category.
-            var group = groupedIcons[this.button.subkind];
-            if (!group && this.button.subkind && this.button.subkind.startsWith("local-")) {
-                group = groupedIcons[this.button.subkind.substr(6)];
+            const subkind = this.button.configuration.relatedSubkind || this.button.configuration.subkind;
+            var group = subkind && groupedIcons[subkind];
+            if (!group && this.button.configuration.subkind.startsWith("local-")) {
+                group = groupedIcons[group.substr(6)];
             }
 
             if (group) {
@@ -258,24 +285,19 @@ export default {
          * All buttons in the same category.
          * @return {Object<String,BarItem>} The buttons to list
          */
-        catalogButtons: function () {
-            return this.groupedButtons[this.button.subkind];
+        relatedButtons: function () {
+            return this.buttonCatalog[this.button.configuration.subkind].items;
         },
 
-        siteTabActive: function () {
-            return this.activeTab === 0;
+        nextButton: function () {
+            return this.activeTab === 0 && this.showRelatedTab;
+        },
+        showRelatedTab: function () {
+            return this.buttonGroup && this.buttonGroup.related;
         }
     },
 
     methods: {
-        /**
-         * Validate a parameter field in the button edit dialog.
-         * @param {String} paramKey The parameter key.
-         * @return {String} The validation error message (or null if valid)
-         */
-        editValidation: function (paramKey) {
-            return params.getValidationError(this.button, paramKey);
-        },
         changeColor: function (hex) {
             this.button.configuration.color = hex;
         },
@@ -294,7 +316,7 @@ export default {
          * @param {Event} e The event object.
          */
         okClicked: function (e) {
-            if (this.siteTabActive) {
+            if (this.siteTabActive || this.nextButton) {
                 this.activeTab = 1;
                 e.preventDefault();
             } else {
@@ -307,11 +329,9 @@ export default {
          */
         closeDialog: function (applyChanges) {
             if (applyChanges) {
-                if (this.selectedItem.isPlaceholder && !this.button.isPlaceholder) {
-                    delete this.selectedItem.isPlaceholder;
-                    Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
-                } else {
-                    this.selectedItem.configuration = JSON.parse(JSON.stringify(this.button.configuration));
+                Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
+                if (this.selectedItem.data.isPlaceholder && !this.button.data.isPlaceholder) {
+                    delete this.selectedItem.data.isPlaceholder;
                 }
             }
 
@@ -327,7 +347,11 @@ export default {
             this.selectedItem = selectedItem;
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
 
-            this.activeTab = this.button.isPlaceholder ? 0 : 1;
+            this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
+            this.dialogTitle = this.buttonGroup.editTitle;
+            this.groupTabTitle = this.buttonGroup.editGroupTab;
+
+            this.activeTab = this.button.data.isPlaceholder ? 0 : 1;
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
             return new Promise((resolve) => {
@@ -342,21 +366,14 @@ export default {
         setButton: function (button) {
             this.button = JSON.parse(JSON.stringify(button));
             this.button.id = this.generateId(this.button);
-            delete this.button.configuration.catalogItem;
-            delete this.button.configuration.catalogLabel;
+            delete this.button.data.catalogItem;
+            delete this.button.data.catalogLabel;
             delete this.button.is_primary;
             params.setInitial(this.button);
-        },
-
-        generateId: function (item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * Math.floor(99999999));
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
+            if (this.returnToButtonTab) {
+                this.returnToButtonTab = false;
+                this.activeTab = 1;
             }
-            return id;
         },
 
         fixFavicon: function () {
@@ -374,9 +391,11 @@ export default {
         }
     },
     watch: {
-        "button.configuration": {
+        button: {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
+
+                this.fieldChanged = Math.random();
 
                 this.faviconTimer && clearTimeout(this.faviconTimer);
                 this.faviconTimer = setTimeout(() => this.fixFavicon(), 2000);

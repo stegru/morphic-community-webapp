@@ -7,6 +7,7 @@ import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
+import * as Bar from "@/utils/bar";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -35,6 +36,16 @@ var toastSheet;
 
 Vue.mixin({
     methods: {
+        /**
+         * Makes an array from value, if it's not an array.
+         * @param {Array|Object} value The value.
+         * @return {Array} The value if it's an array, otherwise an array containing the value.
+         */
+        makeArray(value) {
+            return (value === null || value === undefined)
+                ? []
+                : (Array.isArray(value) ? value : [value]);
+        },
         showMessage(message, title, options) {
 
             if (!toastSheet) {
@@ -55,20 +66,41 @@ Vue.mixin({
         /**
          * Gets the url of an icon
          * @param {String} image The icon identified (from image_url)
-         * @return {string} The url.
+         * @return {String} The url.
          */
         getIconUrl(image) {
             var togo;
-            if (image.includes("/")) {
-                togo = image;
-            } else {
-                if (!image.includes(".")) {
-                    togo = icons[image];
+            if (image) {
+                if (image.includes("/")) {
+                    togo = image;
+                } else {
+                    if (!image.includes(".")) {
+                        togo = icons[image];
+                    }
+                    togo = "/icons/" + togo;
                 }
-                togo = "/icons/" + togo;
             }
             return togo;
+        },
+        /**
+         * Generates an ID for a button.
+         * @param {BarItem} item The button.
+         * @return {String} The ID.
+         */
+        generateId(item) {
+            return Bar.generateId(item);
         }
+
+    },
+    computed: {
+        /**
+         * Determines if the page is currently in focused mode.
+         * @return {Boolean} true if in focus mode.
+         */
+        focusMode: function () {
+            return this.$route.path.includes("/focused/");
+        },
+        communityId: function () { return this.$store.getters.communityId; }
     }
 });
 

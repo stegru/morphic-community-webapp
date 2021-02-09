@@ -1,17 +1,19 @@
 <template>
-
-  <button class="previewItem" id="previewItemButton"
+  <b-link class="previewItem" id="previewItemButton"
           :class="[buttonClass, {broken: hasError}]"
-          v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}">
+          v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}"
+           :to="linkTo"
+          @click="$emit('click', {data: item})"
+  >
 
     <!-- Simplified button (no text and small size) -->
     <template v-if="buttonClass === 'simplified'">
-      <div v-if="item.configuration.visual && item.configuration.visual.type === 'multiButton'" class="multiButton">
+      <div v-if="item.data.visual && item.data.visual.type === 'multiButton'" class="multiButton">
         <div class="buttons" style="margin-top: 5px;">
-          <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+          <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                   class="rounded multiButton"
                   :style="'background: '+colors.default_button"
-                  v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+                  v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
           </button>
         </div>
       </div>
@@ -28,9 +30,10 @@
     <template v-else-if="buttonClass === 'multiButton'">
       <label>{{ item.configuration.label }}</label>
       <div class="buttons">
-        <button v-for="(button, index) in item.configuration.visual.buttons" v-bind:key="index"
+        <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                 :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
-                v-bind:class="{ 'extraBig': item.configuration.visual.extraBig}">
+                v-bind:class="{ 'extraBig': item.data.visual.extraBig}"
+              tabindex="-1">
           {{ button }}
         </button>
       </div>
@@ -49,8 +52,7 @@
 
     <img v-if="hasError" id="warningIcon" class="errorIcon" src="/img/warning.svg" alt="This item has a problem." />
 
-  </button>
-
+  </b-link>
 </template>
 
 <style lang="scss">
@@ -103,15 +105,32 @@
     }
   }
 
+  .previewHolder {
+    b, button {
+      transition: box-shadow 0.5s ease;
+    }
+    &.highlight .previewItem > b, &.highlight .buttons button  {
+      box-shadow: 0 0 5px 5px red;
+    }
+  }
   .previewItem {
+    display: inline-block;
+    text-align: center;
     position: relative;
     width: 100px;
     background: none;
     border: none;
     color: white;
-    padding: 0px;
+    padding: 0;
     font-size: 14px;
-    width: 100px;
+
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+      color: white;
+    }
+
 
     &.standardButton {
       b {
@@ -176,17 +195,20 @@
 
     .errorIcon { display: none; }
   }
-  #preview-bar .previewItem.broken {
-    .errorIcon {
-      width: 35px;
-      height: 35px;
-      display: inline-block;
-      position: absolute;
-      bottom: -10px;
-      right: -10px;
-    }
 
-    opacity: 0.8;
+  #preview-bar .previewItem {
+    &.broken {
+      .errorIcon {
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        position: absolute;
+        bottom: -10px;
+        right: -10px;
+      }
+
+      opacity: 0.8;
+    }
   }
 </style>
 
@@ -200,7 +222,8 @@ export default {
         /** @type {BarItem} */
         item: Object,
         simplified: Boolean,
-        noImage: Boolean
+        noImage: Boolean,
+        to: Object
     },
     data() {
         return {
@@ -219,10 +242,13 @@ export default {
         }
     },
     computed: {
+        linkTo: function () {
+            return this.to || undefined;
+        },
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.configuration.hasError && !item.configuration.catalogItem;
+            return item.data.hasError;// && !item.data.catalogItem;
         },
         /**
          * Determines how the item is displayed.
@@ -234,7 +260,7 @@ export default {
 
             if (this.simplified) {
                 return "simplified";
-            } else if (item.configuration.visual && item.configuration.visual.type === "multiButton") {
+            } else if (item.data.visual && item.data.visual.type === "multiButton") {
                 return "multiButton";
             } else {
                 return "standardButton";

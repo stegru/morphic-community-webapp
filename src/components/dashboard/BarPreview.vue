@@ -59,7 +59,6 @@ export default {
         PreviewItem
     },
     computed: {
-        communityId: function () { return this.$store.getters.communityId; },
         primaryItems: function () {
             const data = [];
             if (this.bar && this.bar.items && this.bar.items.length > 0) {

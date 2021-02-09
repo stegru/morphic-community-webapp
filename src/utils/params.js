@@ -10,16 +10,19 @@ These are then used to create input fields in the editor dialog.
 
 /**
  * The parameters of a bar item.
- * @typedef {Array<ItemParameter>|Object<String,String>} ItemParameters
+ * @typedef {Array<ParameterInfo>|Object<String,ParameterInfo>} ItemParameters
  */
 
 /**
  * A parameter.
  * @typedef {Object} ParameterInfo
- * @property {*} initial The initial value.
+ * @property {Any} initial The initial value.
  * @property {String} label Text displayed with the input field.
+ * @property {Array<Object>} [selectOptions] A list of items for a select field.
  * @property {String} attrs The HTML attributes for the input element.
- * @property {Object<string,Object>} validation The validation rules.
+ * @property {Function} [isApplicable] A function, returning true if the field should be shown.
+ * @property {Function} [isEnabled] A function, returning true if the field should be enabled.
+ * @property {Object<String,Object>} validation The validation rules.
  */
 
 /**
@@ -45,19 +48,81 @@ export const allParameters = {
         }
     },
     skypeId: {
-        label: "Skype ID of who to call.",
+        label: "Skype ID of who to call"
+    },
+    skypeAction: {
+        label: "Type of call",
+        initial: "call",
+        isEnabled: (button) => !!button.data.parameters.skypeId,
+        selectOptions: [
+            { value: "call", text: "Voice" },
+            { value: "call&video=true", text: "Video" },
+            { value: "chat", text: "Chat" }
+        ]
+    },
+    defaultApp: {
+        label: "App",
+        initial: null,
+        selectOptions: [
+            { value: undefined, text: "Custom application"}
+        ],
         validation: {
-            required: "SkypeId is required"
+            defaultAppRequired: "An App needs to be chosen"
+        }
+    },
+    exe: {
+        label: "Executable",
+        isApplicable: (button) => !button.data.parameters.defaultApp && button.data.parameters.defaultApp !== "",
+        validation: {
+            required: "The executable file is required."
         }
     }
 };
 
 /**
+ * Returns a function which will return the given constant value.
+ * @param {Any} result The constant value.
+ * @return {Function} A function which returns `result`.
+ */
+function constantFunction(result) {
+    return function () {
+        return result;
+    };
+}
+
+Object.values(allParameters).forEach(
+    /**
+     * Fix the parameter details so the isApplicable and isEnabled functions exist.
+     * @param {ParameterInfo} paramInfo The parameter.
+     */
+    (paramInfo) => {
+        if (typeof(paramInfo.isApplicable) !== "function") {
+            paramInfo.isApplicable = constantFunction(paramInfo.isApplicable === undefined ? true : paramInfo.isApplicable);
+        }
+        if (typeof(paramInfo.isEnabled) !== "function") {
+            paramInfo.isEnabled = constantFunction(paramInfo.isEnabled === undefined ? true : paramInfo.isEnabled);
+        }
+    });
+
+/**
  * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
  */
 const validators = {
+    /**
+     * Checks if a field has a value.
+     * @param {Any} value The field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
     required(value) {
         return value && value !== "";
+    },
+    /**
+     * Checks if the defaultApp field has a value.
+     * @param {Any} value The defaultApp field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
+    defaultAppRequired(value) {
+        return value !== "";
     }
 };
 
@@ -78,7 +143,7 @@ export function prepareBarItem(button) {
 
     Object.keys(button.configuration).forEach(key => {
         const value = button.configuration[key];
-        if (containsParameter(value)) {
+        if (key !== "image_url" && containsParameter(value)) {
             // Create an original copy of the field (the field will be over-written by the expanded string)
             button.configuration[`${origFieldPrefix}${key}`] = value;
 
@@ -104,8 +169,8 @@ export function prepareBarItem(button) {
         params.label = initialLabel;
     }
 
-    button.configuration.paramFields = paramFields;
-    button.configuration.parameters = params;
+    button.data.paramFields = paramFields;
+    button.data.parameters = params;
 
     setInitial(button);
 }
@@ -116,10 +181,10 @@ export function prepareBarItem(button) {
  * @param {BarItem} button The button.
  */
 export function setInitial(button) {
-    Object.keys(button.configuration.parameters).forEach(paramKey => {
+    Object.keys(button.data.parameters).forEach(paramKey => {
         const initialValue = allParameters[paramKey].initial;
         if (initialValue !== undefined) {
-            button.configuration.parameters[paramKey] = initialValue;
+            button.data.parameters[paramKey] = initialValue;
         }
     });
 
@@ -132,15 +197,15 @@ export function setInitial(button) {
  * @param {BarItem} button The bar item.
  */
 export function applyParameters(button) {
-    const params = button.configuration.parameters;
+    const params = button.data.parameters;
 
-    if (button.configuration.paramFields) {
-        button.configuration.paramFields.forEach(key => {
+    if (button.data.paramFields) {
+        button.data.paramFields.forEach(key => {
             button.configuration[key] = replaceParameters(params, button.configuration[`${origFieldPrefix}${key}`]);
         });
     }
 
-    button.configuration.hasError = validate(button) ? undefined : true;
+    button.data.hasError = validate(button) ? undefined : true;
 }
 
 // Matches all `${name1}` or `$name2` in a string.
@@ -190,7 +255,7 @@ function containsParameter(value) {
  * @return {Boolean} true if valid.
  */
 function validate(button) {
-    return button.isPlaceholder || Object.keys(button.configuration.parameters).every((paramKey) => {
+    return button.data.isPlaceholder || Object.keys(button.data.parameters).every((paramKey) => {
         return !getValidationError(button, paramKey);
     });
 }
@@ -198,34 +263,44 @@ function validate(button) {
 /**
  * Validate a parameter field in the button edit dialog.
  * @param {BarItem} button The button.
- * @param {String} paramKey The parameter key.
+ * @param {String} [paramKey] The parameter key, or omit to check all parameters until the first failure.
  * @return {String} The validation error message (or null if valid)
  */
 export function getValidationError(button, paramKey) {
-    const paramInfo = allParameters[paramKey];
-    const value = button.configuration.parameters[paramKey];
+    let errorMessage;
 
-    var errorMessage;
-
-    if (paramInfo.validation) {
-        Object.keys(paramInfo.validation).every(key => {
-            const validator = validators[key];
-            var ok = false;
-            if (validator) {
-                if (typeof(validator) === "function") {
-                    ok = validator(value);
-                } else if (validator instanceof RegExp) {
-                    ok = validator.test(value);
-                }
-            }
-
-            if (!ok) {
-                var v = paramInfo.validation[key];
-                errorMessage = (typeof(v) === "string") ? v : v.message || "error";
-            }
-            return ok;
+    if (button.data.isPlaceholder) {
+        errorMessage = "An action for this item has not been set.";
+    } else if (paramKey === undefined) {
+        Object.keys(button.data.parameters).every((paramKey) => {
+            errorMessage = getValidationError(button, paramKey);
+            return !errorMessage;
         });
-    }
+    } else {
+        const paramInfo = allParameters[paramKey];
+        const value = button.data.parameters[paramKey];
 
+        const validate = paramInfo.isApplicable(button) && paramInfo.isEnabled(button);
+
+        if (validate && paramInfo.validation) {
+            Object.keys(paramInfo.validation).every(key => {
+                const validator = validators[key];
+                var ok = false;
+                if (validator) {
+                    if (typeof(validator) === "function") {
+                        ok = validator(value, button);
+                    } else if (validator instanceof RegExp) {
+                        ok = validator.test(value);
+                    }
+                }
+
+                if (!ok) {
+                    var v = paramInfo.validation[key];
+                    errorMessage = (typeof(v) === "string") ? v : v.message || "error";
+                }
+                return ok;
+            });
+        }
+    }
     return errorMessage;
 }

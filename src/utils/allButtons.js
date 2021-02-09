@@ -3,9 +3,9 @@
 export const allButtons = {
     abc_news: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "ABC News",
             color: "blue",
             image_url: "abcnews",
@@ -15,20 +15,45 @@ export const allButtons = {
     },
     accuweather: {
         kind: "link",
-        subkind: "weather",
         is_primary: true,
         configuration: {
+            subkind: "weather",
             label: "AccuWeather",
             color: "blue",
+            image_url: "accuweather",
             url: "https://www.accuweather.com/",
             description: "Opens the local AccuWeather home page."
         }
     },
+    adobe_acrobat_reader_dc_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Adobe Acrobat Reader DC",
+            exe: "open -a Adobe\\ Acrobat\\ Reader\\ DC",
+            exe$win: "AcroRd32",
+            color: "blue",
+            image_url: "adobeacrobatreaderdc"
+        }
+    },
+    adobe_acrobat_reader_pro_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Adobe Acrobat Reader Pro",
+            exe: "open -a Adobe\\ Acrobat",
+            exe$win: "Acrobat",
+            color: "blue",
+            image_url: "adobeacrobatreaderdc"
+        }
+    },
     al_jazeera: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Al Jazeera",
             color: "blue",
             image_url: "aljazeera",
@@ -38,9 +63,9 @@ export const allButtons = {
     },
     amazon: {
         kind: "link",
-        subkind: "shopping",
         is_primary: true,
         configuration: {
+            subkind: "shopping",
             label: "Amazon",
             color: "blue",
             image_url: "amazon",
@@ -50,9 +75,9 @@ export const allButtons = {
     },
     amazon_music: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Amazon Music",
             color: "blue",
             image_url: "amazonmusic",
@@ -61,9 +86,9 @@ export const allButtons = {
     },
     aol_mail: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "AOL Mail",
             color: "blue",
             image_url: "aolold",
@@ -71,11 +96,23 @@ export const allButtons = {
             description: "Opens the AOL Mail inbox in a browser."
         }
     },
+    app_store_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "App Store",
+            exe: "open -a App\\ Store",
+            color: "blue",
+            image_url: "appstoremac",
+            os: "mac"
+        }
+    },
     apple_music: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Apple Music",
             color: "blue",
             image_url: "itunes",
@@ -84,9 +121,9 @@ export const allButtons = {
     },
     bbc_news: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "BBC News",
             color: "blue",
             image_url: "bbc",
@@ -96,9 +133,9 @@ export const allButtons = {
     },
     best_buy: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Best Buy",
             color: "blue",
             image_url: "bestbuy",
@@ -108,9 +145,9 @@ export const allButtons = {
     },
     bloomberg: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Bloomberg",
             color: "blue",
             image_url: "bloomberg",
@@ -118,11 +155,23 @@ export const allButtons = {
             description: "Opens the Bloomberg home page."
         }
     },
+    books_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Books",
+            exe: "open -a Books",
+            color: "blue",
+            image_url: "booksmac",
+            os: "mac"
+        }
+    },
     box: {
         kind: "link",
-        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
+            subkind: "onlineFileDrives",
             label: "Box",
             color: "blue",
             image_url: "box",
@@ -130,11 +179,35 @@ export const allButtons = {
             description: "Opens the Box home page."
         }
     },
+    calculator_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Calculator",
+            exe: "open -a Calculator",
+            exe$win: "calculator:",
+            color: "blue",
+            image_url: "calculator"
+        }
+    },
+    calendar_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Calendar",
+            exe: "open -a Calendar",
+            exe$win: "outlookcal:",
+            color: "blue",
+            image_url: "calendar"
+        }
+    },
     calendar_website: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Google Calendar",
             color: "blue",
             url: "https://calendar.google.com/calendar/r",
@@ -143,9 +216,9 @@ export const allButtons = {
     },
     calendly: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Calendly",
             color: "blue",
             url: "https://calendly.com/",
@@ -154,9 +227,9 @@ export const allButtons = {
     },
     cbs_news: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "CBS News",
             color: "blue",
             image_url: "cbsnews",
@@ -166,13 +239,15 @@ export const allButtons = {
     },
     clipboard: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Text Size",
             description: "Changes the Text Size",
             identifier: "screen-zoom",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -184,9 +259,9 @@ export const allButtons = {
     },
     cnbc: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "CNBC",
             color: "blue",
             image_url: "cnbc",
@@ -196,9 +271,9 @@ export const allButtons = {
     },
     cnn: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "CNN",
             color: "blue",
             image_url: "cnn",
@@ -208,13 +283,15 @@ export const allButtons = {
     },
     color_vision: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Color Vision",
             description: "Turns Color Vision filters On/Off",
             identifier: "color-vision",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -224,27 +301,52 @@ export const allButtons = {
             }
         }
     },
+    contacts_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Contacts",
+            exe: "open -a Contacts",
+            exe$win: "ms-people:",
+            color: "blue",
+            image_url: "contacts"
+        }
+    },
     craigslist: {
         kind: "link",
-        subkind: "shopping",
         is_primary: true,
         configuration: {
-            label: "Craiglist",
+            subkind: "shopping",
+            label: "Craigslist",
             color: "blue",
             image_url: "craigslist",
             url: "https://www.craigslist.org/",
-            description: "Opens the Craigslist hoome page."
+            description: "Opens the Craigslist home page."
+        }
+    },
+    "custom-app": {
+        kind: "application",
+        configuration: {
+            subkind: "app",
+            label: "Custom Application",
+            image_url: "windowmaximize",
+            default: "$defaultApp",
+            exe: "$exe",
+            os: "mac"
         }
     },
     dark_mode: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Dark Mode",
             description: "Turns Dark Mode On/Off",
             identifier: "dark-mode",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -256,9 +358,9 @@ export const allButtons = {
     },
     deezer: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Deezer",
             color: "blue",
             image_url: "deezer",
@@ -267,20 +369,21 @@ export const allButtons = {
     },
     default_mail_app: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "E-mail",
             color: "blue",
+            image_url: "mail",
             url: "Default email app on computer",
             description: "Opens the default email app on the computer."
         }
     },
     disney_plus: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Disney Plus",
             color: "blue",
             image_url: "disneyplus",
@@ -289,9 +392,9 @@ export const allButtons = {
     },
     dropbox: {
         kind: "link",
-        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
+            subkind: "onlineFileDrives",
             label: "Dropbox",
             color: "blue",
             image_url: "dropbox",
@@ -301,9 +404,9 @@ export const allButtons = {
     },
     drudge_report: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Drudge Report",
             color: "blue",
             image_url: "drudgereport",
@@ -313,9 +416,9 @@ export const allButtons = {
     },
     ebay: {
         kind: "link",
-        subkind: "shopping",
         is_primary: true,
         configuration: {
+            subkind: "shopping",
             label: "ebay",
             color: "blue",
             image_url: "ebay",
@@ -325,9 +428,9 @@ export const allButtons = {
     },
     etsy: {
         kind: "link",
-        subkind: "shopping",
         is_primary: true,
         configuration: {
+            subkind: "shopping",
             label: "Etsy",
             color: "blue",
             image_url: "etsy",
@@ -335,11 +438,23 @@ export const allButtons = {
             description: "Opens the Esty home page."
         }
     },
+    evernote_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Evernote",
+            exe: "open -a Evernote",
+            exe$win: "evernote:",
+            color: "blue",
+            image_url: "evernote"
+        }
+    },
     facebook: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: true,
         configuration: {
+            subkind: "socialMedia",
             label: "Facebook",
             color: "blue",
             image_url: "facebook",
@@ -347,11 +462,58 @@ export const allButtons = {
             description: "Opens the Facebook home page for users if they are signed in."
         }
     },
+    facetime_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "FaceTime",
+            exe: "open -a FaceTime",
+            color: "blue",
+            image_url: "facetimemac",
+            os: "mac"
+        }
+    },
+    find_my_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Find My",
+            exe: "open -a Find\\ My",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    finder_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Finder",
+            exe: "open -a Finder",
+            color: "blue",
+            image_url: "findermac",
+            os: "mac"
+        }
+    },
+    firefox_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Firefox",
+            exe: "open -a Firefox",
+            exe$win: "firefox",
+            color: "blue",
+            image_url: "firefox"
+        }
+    },
     forbes: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Forbes",
             color: "blue",
             image_url: "forbes",
@@ -361,9 +523,9 @@ export const allButtons = {
     },
     fox_news: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "Fox News",
             color: "blue",
             image_url: "foxnews",
@@ -373,9 +535,9 @@ export const allButtons = {
     },
     gmail: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "Gmail",
             color: "blue",
             image_url: "gmail",
@@ -385,9 +547,9 @@ export const allButtons = {
     },
     google_calendar: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Google Calendar",
             color: "blue",
             image_url: "googlecalendar",
@@ -395,11 +557,23 @@ export const allButtons = {
             description: "Opens the Google Calendar for the user if they are signed in."
         }
     },
+    google_chrome_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Google Chrome",
+            exe: "open -a Google\\ Chrome",
+            exe$win: "chrome",
+            color: "blue",
+            image_url: "chrome"
+        }
+    },
     google_drive: {
         kind: "link",
-        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
+            subkind: "onlineFileDrives",
             label: "Google Drive",
             color: "blue",
             image_url: "googledrive",
@@ -409,9 +583,9 @@ export const allButtons = {
     },
     google_news: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "Google News",
             color: "blue",
             image_url: "googlenews",
@@ -430,15 +604,30 @@ export const allButtons = {
             description: "Opens Google Photos."
         }
     },
+    groove_music_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Groove Music",
+            exe: "",
+            exe$win: "mswindowsmusic:",
+            color: "blue",
+            image_url: "groovemusic",
+            os: "win"
+        }
+    },
     high_contrast: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Contrast",
             description: "Turns Contrast On/Off",
             identifier: "high-contrast",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -448,11 +637,22 @@ export const allButtons = {
             }
         }
     },
+    home_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Home",
+            exe: "open -a Home",
+            color: "blue",
+            os: "mac"
+        }
+    },
     huffpost: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "HuffPost",
             color: "blue",
             image_url: "huffpost",
@@ -462,9 +662,9 @@ export const allButtons = {
     },
     hulu: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Hulu",
             color: "blue",
             image_url: "hulu",
@@ -473,9 +673,9 @@ export const allButtons = {
     },
     icloud_calendar: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "iCloud-Calendar",
             color: "blue",
             url: "https://www.icloud.com/calendar/",
@@ -484,9 +684,9 @@ export const allButtons = {
     },
     icloud_drive: {
         kind: "link",
-        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
+            subkind: "onlineFileDrives",
             label: "iCloud Drive",
             color: "blue",
             url: "https://www.icloud.com/iclouddrive/",
@@ -495,9 +695,9 @@ export const allButtons = {
     },
     icloud_mail: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "iCloud Mail",
             color: "blue",
             image_url: "icloud",
@@ -507,20 +707,32 @@ export const allButtons = {
     },
     iheart_radio: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "iHeart Radio",
             color: "blue",
             image_url: "iheartradio",
             url: "https://www.iheart.com/"
         }
     },
-    imessage: {
+    iina_app: {
         kind: "application",
-        subkind: "action",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "IINA",
+            exe: "open -a IINA",
+            color: "blue",
+            image_url: "iinamac",
+            os: "mac"
+        }
+    },
+    imessage_app: {
+        kind: "application",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Help via iMessage",
             description: "Opens iMessage to get remote help (Mac only)",
             default: "imessage",
@@ -529,9 +741,9 @@ export const allButtons = {
     },
     imgur: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: false,
         configuration: {
+            subkind: "socialMedia",
             label: "Imgur",
             color: "blue",
             image_url: "imgur",
@@ -541,9 +753,9 @@ export const allButtons = {
     },
     instagram: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: false,
         configuration: {
+            subkind: "socialMedia",
             label: "Instagram",
             color: "blue",
             image_url: "instagram",
@@ -551,22 +763,57 @@ export const allButtons = {
             description: "Opens the Instagram home page for the user if they are signed in."
         }
     },
+    itunes_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "iTunes",
+            exe: "open -a Music",
+            exe$win: "itunes",
+            color: "blue",
+            image_url: "itunes"
+        }
+    },
     jitsi: {
         kind: "link",
-        subkind: "meeting",
         is_primary: true,
         configuration: {
+            subkind: "meeting",
             label: "Jitsi",
             color: "blue",
             url: "https://meet.jit.si/",
             description: "Join a meeting room in Jitsi."
         }
     },
+    keynote_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Keynote",
+            exe: "open -a Keynote",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    kindle_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Kindle",
+            exe: "open -a Kindle",
+            exe$win: "kindle:",
+            color: "blue",
+            image_url: "kindle"
+        }
+    },
     kohls: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Kohls",
             color: "blue",
             image_url: "kohls",
@@ -576,9 +823,9 @@ export const allButtons = {
     },
     linkedin: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: false,
         configuration: {
+            subkind: "socialMedia",
             label: "LinkedIn",
             color: "blue",
             image_url: "linkedin",
@@ -586,11 +833,11 @@ export const allButtons = {
             description: "Opens the LinkedIn home page for the user if they are signed in."
         }
     },
-    local_calendar: {
+    local_calendar_app: {
         kind: "application",
-        subkind: "local-calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Calendar App",
             description: "Opens the local Calendar Application.",
             default: "calendar",
@@ -599,9 +846,9 @@ export const allButtons = {
     },
     los_angeles_times: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Los Angeles Times",
             color: "blue",
             image_url: "latimes",
@@ -611,9 +858,9 @@ export const allButtons = {
     },
     macys: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Macys",
             color: "blue",
             image_url: "macys",
@@ -623,13 +870,15 @@ export const allButtons = {
     },
     magnifier: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Magnifier",
             description: "Turns Screen Magnifier On/Off",
             identifier: "magnify",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -639,33 +888,204 @@ export const allButtons = {
             }
         }
     },
+    mail_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Mail",
+            exe: "open -a Mail",
+            exe$win: "outlookmail:",
+            color: "blue",
+            image_url: "mail"
+        }
+    },
     mail_online_daily_mail: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Daily Mail",
             color: "blue",
             url: "https://www.dailymail.co.uk/",
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
+    maps_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Maps",
+            exe: "open -a Maps",
+            exe$win: "bingmaps:",
+            color: "blue",
+            image_url: "maps"
+        }
+    },
+    messages_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Messages",
+            exe: "open -a Messages",
+            color: "blue",
+            image_url: "messagesmac",
+            os: "mac"
+        }
+    },
+    messenger_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Messenger",
+            exe: "open -a Messenger",
+            exe$win: "appx:FACEBOOK.317180B0BB486_8xx8rvfyw5nnt!App",
+            color: "blue",
+            image_url: "facebookmessenger",
+            appx: true
+        }
+    },
+    microsoft_access_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Access",
+            exe: "open -a Microsoft\\ Access",
+            exe$win: "msaccess",
+            color: "blue",
+            image_url: "msaccess"
+        }
+    },
+    microsoft_edge_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Edge",
+            exe: "open -a Microsoft\\ Edge",
+            exe$win: "msedge",
+            color: "blue",
+            image_url: "msedge"
+        }
+    },
+    microsoft_excel_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Excel",
+            exe: "open -a Microsoft\\ Excel",
+            exe$win: "excel",
+            color: "blue",
+            image_url: "msexcel"
+        }
+    },
+    microsoft_onenote_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft OneNote",
+            exe: "open -a Microsoft\\ OneNote",
+            exe$win: "appx:Microsoft.Office.OneNote_8wekyb3d8bbwe!microsoft.onenoteim",
+            color: "blue",
+            image_url: "msonenote",
+            appx: true
+        }
+    },
+    microsoft_outlook_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Outlook",
+            exe: "open -a Microsoft\\ Outlook",
+            exe$win: "outlook",
+            color: "blue",
+            image_url: "msoutlook"
+        }
+    },
+    microsoft_powerpoint_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Powerpoint",
+            exe: "open -a Microsoft\\ Powerpoint",
+            exe$win: "powerpnt",
+            color: "blue",
+            image_url: "mspowerpoint"
+        }
+    },
+    microsoft_teams_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Teams",
+            exe: "open -a Microsoft\\ Teams",
+            exe$win: "\"%LocalAppData%\\Microsoft\\Teams\\current\\Teams.exe\"",
+            color: "blue",
+            image_url: "msteams"
+        }
+    },
+    microsoft_to_do_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft To Do",
+            exe: "open -a Microsoft\\ To\\ Do",
+            exe$win: "ms-todo:",
+            color: "blue",
+            image_url: "mstodo"
+        }
+    },
+    microsoft_word_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Word",
+            exe: "open -a Microsoft\\ Word",
+            exe$win: "winword",
+            color: "blue",
+            image_url: "msword"
+        }
+    },
+    movies_tv_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Movies & TV",
+            exe: "",
+            exe$win: "mswindowsvideo:",
+            color: "blue",
+            os: "win"
+        }
+    },
     national_weather_service: {
         kind: "link",
-        subkind: "weather",
         is_primary: true,
         configuration: {
+            subkind: "weather",
             label: "National Weather Service",
             color: "blue",
+            image_url: "nationalweatherservice",
             url: "https://www.weather.gov/",
             description: "Opens the National Weather Service home page."
         }
     },
     nbc_news: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "NBC News",
             color: "blue",
             image_url: "nbcnews",
@@ -673,33 +1093,82 @@ export const allButtons = {
             description: "Opens the NBC News home page."
         }
     },
+    neat_office_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Neat Office",
+            exe: "",
+            exe$win: "appx:15191PeakPlayer.NeatOffice_y5c4dfz5b21fm!App",
+            color: "blue",
+            os: "win",
+            appx: true
+        }
+    },
     netflix: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: true,
         configuration: {
+            subkind: "multimedia",
             label: "Netflix",
             color: "blue",
             image_url: "netflix",
             url: "https://www.netflix.com/"
         }
     },
+    netflix_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Netflix",
+            exe: "open - a Netflix",
+            exe$win: "appx:4DF9E0F8.Netflix_mcm4njqhnhss8!Netflix.App",
+            color: "blue",
+            image_url: "netflix",
+            appx: true
+        }
+    },
+    new_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "New",
+            exe: "open -a News",
+            exe$win: "bingnews:",
+            color: "blue"
+        }
+    },
     new_york_post: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "New York Post",
             color: "blue",
             url: "https://nypost.com/",
             description: "Opens the New York Post home page."
         }
     },
+    newton_mail_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Newton Mail",
+            exe: "open -a Newton\\ Mail",
+            exe$win: "appx:EFEBDD6F.NewtonMail_t7msb53f6zxbm!EFEBDD6F.NewtonMail",
+            color: "blue",
+            appx: true
+        }
+    },
     nextdoor: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: true,
         configuration: {
+            subkind: "socialMedia",
             label: "Nextdoor",
             color: "blue",
             image_url: "nextdoor",
@@ -709,13 +1178,15 @@ export const allButtons = {
     },
     night_mode: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Night Mode",
             description: "Turns Night Mode On/Off",
             identifier: "night-mode",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -725,11 +1196,23 @@ export const allButtons = {
             }
         }
     },
+    notes_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Notes",
+            exe: "open -a Notes",
+            color: "blue",
+            image_url: "notesmac",
+            os: "mac"
+        }
+    },
     npr: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "NPR",
             color: "blue",
             image_url: "npr",
@@ -737,11 +1220,22 @@ export const allButtons = {
             description: "Opens the NPR (National Public Radio) home page."
         }
     },
+    numbers_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Numbers",
+            exe: "open -a Numbers",
+            color: "blue",
+            os: "mac"
+        }
+    },
     onedrive: {
         kind: "link",
-        subkind: "onlineFileDrives",
         is_primary: true,
         configuration: {
+            subkind: "onlineFileDrives",
             label: "OneDrive",
             color: "blue",
             image_url: "onedrive",
@@ -751,35 +1245,54 @@ export const allButtons = {
     },
     open_app: {
         kind: "application",
-        subkind: "make",
         is_primary: true,
         configuration: {
+            subkind: "app",
             label: "Open App",
             description: "Allows you to create a button that opens an Application.",
-            default: "$defaultApp",
+            default: "\"\"",
             color: "blue",
-            image_url: "windowmaximize",
+            image_url: "windowmaximize"
+        },
+        data: {
+            focusedLink: "app",
+            isPlaceholder: true,
+            catalog: "make",
             catalogLabel: "To open an Application"
         }
     },
     open_link: {
         kind: "link",
-        subkind: "make",
         is_primary: true,
         configuration: {
+            subkind: "make",
             label: "Open Web Page",
             color: "blue",
             image_url: "globe",
             url: "$url",
-            description: "Allows you to create a button that opens a Web Page.",
+            description: "Allows you to create a button that opens a Web Page."
+        },
+        data: {
             catalogLabel: "To open a Web Page"
+        }
+    },
+    opera_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Opera",
+            exe: "open -a Opera",
+            exe$win: "opera",
+            color: "blue",
+            image_url: "opera"
         }
     },
     outlook_com_calendar: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Outlook.com Calendar",
             color: "blue",
             url: "https://outlook.live.com/calendar/0/",
@@ -788,9 +1301,9 @@ export const allButtons = {
     },
     outlook_com_mail: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "Outlook.com Mail",
             color: "blue",
             image_url: "outlook",
@@ -798,22 +1311,80 @@ export const allButtons = {
             description: "Opens the Outlook.com inbox in a browser."
         }
     },
+    pages_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Pages",
+            exe: "open -a Pages",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    paint_3d_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Paint 3D",
+            exe: "",
+            exe$win: "ms-paint:",
+            color: "blue",
+            os: "win"
+        }
+    },
     pandora: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: true,
         configuration: {
+            subkind: "multimedia",
             label: "Pandora",
             color: "blue",
             image_url: "pandora",
             url: "https://www.pandora.com/station"
         }
     },
+    pandora_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Pandora",
+            exe: "open -a Pandora",
+            exe$win: "appx:PandoraMediaInc.29680B314EFC2_n619g4d5j0fnw!App",
+            color: "blue",
+            image_url: "pandora",
+            appx: true
+        }
+    },
+    photo_booth_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Photo Booth",
+            exe: "open -a Photo\\ Booth",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    photos_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Photos",
+            exe: "open -a Photos",
+            exe$win: "ms-photos:",
+            color: "blue"
+        }
+    },
     pinterest: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: true,
         configuration: {
+            subkind: "socialMedia",
             label: "Pinterest",
             color: "blue",
             image_url: "pinterest",
@@ -821,11 +1392,34 @@ export const allButtons = {
             description: "Opens the Pinterest home page for users if they are signed in."
         }
     },
-    quick_assist: {
+    podcasts_app: {
         kind: "application",
-        subkind: "action",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Podcasts",
+            exe: "open -a Podcasts",
+            color: "blue",
+            image_url: "podcastsmac",
+            os: "mac"
+        }
+    },
+    preview_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Preview",
+            exe: "open -a Preview",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    quick_assist_app: {
+        kind: "application",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Quick Assist",
             description: "Opens Quick Assist to get remote help (MS Windows only).",
             default: "quick-assist",
@@ -834,13 +1428,15 @@ export const allButtons = {
     },
     read_aloud: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Read Aloud",
             description: "A button that reads out the selected text.",
             identifier: "read-aloud",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -852,9 +1448,9 @@ export const allButtons = {
     },
     reddit: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: false,
         configuration: {
+            subkind: "socialMedia",
             label: "Reddit",
             color: "blue",
             image_url: "reddit",
@@ -862,11 +1458,23 @@ export const allButtons = {
             description: "Opens the Reddit home page."
         }
     },
+    reminders_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Reminders",
+            exe: "open -a Reminders",
+            color: "blue",
+            image_url: "remindersmac",
+            os: "mac"
+        }
+    },
     reuters: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "Reuters",
             color: "blue",
             image_url: "reuters",
@@ -874,35 +1482,84 @@ export const allButtons = {
             description: "Opens the Reuters home page."
         }
     },
+    safari_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Safari",
+            exe: "open -a Safari",
+            color: "blue",
+            os: "mac"
+        }
+    },
     sfgate: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "SFGate",
             color: "blue",
             url: "https://www.sfgate.com/",
             description: "Opens the SFGate (San Francisco) home page."
         }
     },
-    skype: {
+    sketchbook_app: {
         kind: "application",
-        subkind: "call",
-        is_primary: true,
+        is_primary: null,
         configuration: {
-            label: "Call Skype",
-            description: "Allows you to create a button to skype-call a particular person.",
-            default: "skype",
+            subkind: "app",
+            label: "SketchBook",
+            exe: "open -a SketchBook",
+            exe$win: "appx:89006A2E.AutodeskSketchBook_tf1gferkr813w!App",
+            color: "blue",
+            appx: true
+        }
+    },
+    skype_app: {
+        kind: "link",
+        is_primary: null,
+        configuration: {
+            subkind: "call",
+            label: "Skype",
+            exe: "skype:$skypeId?$skypeAction",
             color: "blue",
             image_url: "skype",
-            args: "$skypeId"
+            url: "skype:$skypeId?$skypeAction",
+            shell: true
+        },
+        kind$win: "application"
+    },
+    slack_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Slack",
+            exe: "open -a Slack",
+            exe$win: "appx:91750D7E.Slack_8she8kybcnzg4!Slack",
+            color: "blue",
+            image_url: "slack",
+            appx: true
+        }
+    },
+    snip_sketch_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Snip & Sketch",
+            exe: "",
+            exe$win: "ms-screensketch:",
+            color: "blue",
+            os: "win"
         }
     },
     soundcloud: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Soundcloud",
             color: "blue",
             image_url: "soundcloud",
@@ -911,20 +1568,56 @@ export const allButtons = {
     },
     spotify: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: true,
         configuration: {
+            subkind: "multimedia",
             label: "Spotify",
             color: "blue",
             image_url: "spotify",
             url: "https://open.spotify.com/"
         }
     },
+    spotify_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Spotify",
+            exe: "open -a Spotify",
+            exe$win: "spotify:",
+            color: "blue",
+            image_url: "spotify"
+        }
+    },
+    sticky_notes_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Sticky Notes",
+            exe: "open -a Stickies",
+            exe$win: "appx:Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App",
+            color: "blue",
+            image_url: "stickynotes",
+            appx: true
+        }
+    },
+    stocks_finance_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Stocks & Finance",
+            exe: "open -a Stocks",
+            exe$win: "bingfinance:",
+            color: "blue"
+        }
+    },
     target: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Target",
             color: "blue",
             image_url: "target",
@@ -932,11 +1625,35 @@ export const allButtons = {
             description: "Opens the Target home page."
         }
     },
+    telegram_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Telegram",
+            exe: "open -a Telegram",
+            exe$win: "appx:TelegramMessengerLLP.TelegramDesktop_t4vj0pshhgkwm!Telegram.TelegramDesktop.Store",
+            color: "blue",
+            image_url: "telegram",
+            appx: true
+        }
+    },
+    textedit_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "TextEdit",
+            exe: "open -a TextEdit",
+            color: "blue",
+            os: "mac"
+        }
+    },
     the_guardian: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "The Guardian",
             color: "blue",
             image_url: "theguardian",
@@ -946,9 +1663,9 @@ export const allButtons = {
     },
     the_hill: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "The Hill",
             color: "blue",
             image_url: "thehill",
@@ -958,9 +1675,9 @@ export const allButtons = {
     },
     the_new_york_times: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "The New York Times",
             color: "blue",
             image_url: "newyorktimes",
@@ -970,9 +1687,9 @@ export const allButtons = {
     },
     the_wall_street_journal: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "The Wall Street Journal",
             color: "blue",
             image_url: "wsj",
@@ -982,9 +1699,9 @@ export const allButtons = {
     },
     the_washington_post: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "The Washington Post",
             color: "blue",
             image_url: "washingtonpost",
@@ -994,31 +1711,56 @@ export const allButtons = {
     },
     the_weather_channel: {
         kind: "link",
-        subkind: "weather",
         is_primary: true,
         configuration: {
+            subkind: "weather",
             label: "The Weather Channel",
             color: "blue",
+            image_url: "weatherchannel",
             url: "https://weather.com/",
             description: "Opens the local Weather Channel home page."
         }
     },
+    thunderbird_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Thunderbird",
+            exe: "open -a Thunderbird",
+            exe$win: "thunderbird",
+            color: "blue",
+            image_url: "thunderbird"
+        }
+    },
     tidal: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Tidal",
             color: "blue",
             image_url: "tidal",
             url: "https://tidal.com/"
         }
     },
+    todoist_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Todoist",
+            exe: "open -a Todoist",
+            exe$win: "todoist:",
+            color: "blue",
+            image_url: "todoist"
+        }
+    },
     top_15_news_sites: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "News",
             color: "blue",
             url: "https://sites.google.com/raisingthefloor.org/quickfolders/news",
@@ -1027,9 +1769,9 @@ export const allButtons = {
     },
     tumblr: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: false,
         configuration: {
+            subkind: "socialMedia",
             label: "Tumblr",
             color: "blue",
             image_url: "tumblr",
@@ -1039,9 +1781,9 @@ export const allButtons = {
     },
     tunein: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "TuneIn",
             color: "blue",
             url: "https://tunein.com/"
@@ -1049,24 +1791,38 @@ export const allButtons = {
     },
     turn_off: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Log-off Computer",
             description: "Logs the user off the Computer",
             identifier: "log-off",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "",
                 buttons: ""
             }
         }
     },
+    tv_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "TV",
+            exe: "open -a TV",
+            color: "blue",
+            image_url: "tvmac",
+            os: "mac"
+        }
+    },
     twitter: {
         kind: "link",
-        subkind: "socialMedia",
         is_primary: true,
         configuration: {
+            subkind: "socialMedia",
             label: "Twitter",
             color: "blue",
             image_url: "twitter",
@@ -1076,9 +1832,9 @@ export const allButtons = {
     },
     us_news: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "US News & World Report",
             color: "blue",
             url: "https://www.usnews.com/",
@@ -1087,9 +1843,9 @@ export const allButtons = {
     },
     usa_today: {
         kind: "link",
-        subkind: "news",
         is_primary: false,
         configuration: {
+            subkind: "news",
             label: "USA Today",
             color: "blue",
             image_url: "usatoday",
@@ -1099,24 +1855,63 @@ export const allButtons = {
     },
     vimeo: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Vimeo",
             color: "blue",
             image_url: "vimeo",
             url: "https://vimeo.com/"
         }
     },
+    vlc_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "VLC",
+            exe: "open -a VLC",
+            exe$win: "appx:VideoLAN.VLC_paz6r1rewnh0a!App",
+            color: "blue",
+            image_url: "vlc",
+            appx: true
+        }
+    },
+    voice_memos_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Voice Memos",
+            exe: "open -a Voice\\ Memos",
+            color: "blue",
+            os: "mac"
+        }
+    },
+    voice_recorder_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Voice Recorder",
+            exe: "",
+            exe$win: "appx:Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe!App",
+            color: "blue",
+            os: "win",
+            appx: true
+        }
+    },
     volume: {
         kind: "action",
-        subkind: "action",
         is_primary: true,
         configuration: {
+            subkind: "action",
             label: "Volume",
             description: "Changes the System Volume Up/Down.",
             identifier: "volume",
-            color: "blue",
+            color: "blue"
+        },
+        data: {
             visual: {
                 type: "multiButton",
                 buttons: [
@@ -1128,9 +1923,9 @@ export const allButtons = {
     },
     walmart: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Walmart",
             color: "blue",
             image_url: "walmart",
@@ -1140,9 +1935,9 @@ export const allButtons = {
     },
     wayfair: {
         kind: "link",
-        subkind: "shopping",
         is_primary: false,
         configuration: {
+            subkind: "shopping",
             label: "Wayfair",
             color: "blue",
             image_url: "wayfair",
@@ -1150,22 +1945,73 @@ export const allButtons = {
             description: "Opens the Wayfair home page."
         }
     },
+    weather_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Weather",
+            exe: "",
+            exe$win: "bingweather:",
+            color: "blue",
+            os: "win"
+        }
+    },
     weather_underground: {
         kind: "link",
-        subkind: "weather",
         is_primary: true,
         configuration: {
+            subkind: "weather",
             label: "Weather Underground",
             color: "blue",
             url: "https://www.wunderground.com/",
             description: "Opens the local Weather Underground home page."
         }
     },
+    whatsapp_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Whatsapp",
+            exe: "open -a Whatsapp",
+            exe$win: "appx:5319275A.WhatsAppDesktop_cv1g1gvanyjgm!WhatsAppDesktop",
+            color: "blue",
+            image_url: "whatsapp",
+            appx: true
+        }
+    },
+    windows_store_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Windows Store",
+            exe: "",
+            exe$win: "ms-windows-store:",
+            color: "blue",
+            image_url: "msstore",
+            os: "win"
+        }
+    },
+    wps_office_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "WPS Office",
+            exe: "open -a wpsoffice",
+            exe$win: "appx:ZhuhaiKingsoftOfficeSoftw.WPSOffice2019_924xes6e8q1tw!WPSOffice2019",
+            color: "blue",
+            image_url: "wpsoffice",
+            appx: true
+        }
+    },
     yahoo_calendar: {
         kind: "link",
-        subkind: "calendar",
         is_primary: true,
         configuration: {
+            subkind: "calendar",
             label: "Yahoo! Calendar",
             color: "blue",
             url: "https://calendar.yahoo.com/",
@@ -1174,9 +2020,9 @@ export const allButtons = {
     },
     yahoo_mail: {
         kind: "link",
-        subkind: "email",
         is_primary: true,
         configuration: {
+            subkind: "email",
             label: "Yahoo! Mail",
             color: "blue",
             image_url: "yahoomail",
@@ -1186,9 +2032,9 @@ export const allButtons = {
     },
     yahoo_news: {
         kind: "link",
-        subkind: "news",
         is_primary: true,
         configuration: {
+            subkind: "news",
             label: "Yahoo! News",
             color: "blue",
             image_url: "yahoo",
@@ -1198,9 +2044,9 @@ export const allButtons = {
     },
     youtube: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: true,
         configuration: {
+            subkind: "multimedia",
             label: "Youtube",
             color: "blue",
             image_url: "youtube",
@@ -1209,9 +2055,9 @@ export const allButtons = {
     },
     youtube_music: {
         kind: "link",
-        subkind: "multimedia",
         is_primary: false,
         configuration: {
+            subkind: "multimedia",
             label: "Youtube Music",
             color: "blue",
             image_url: "youtubemusic",
@@ -1220,9 +2066,9 @@ export const allButtons = {
     },
     zoom: {
         kind: "link",
-        subkind: "meeting",
         is_primary: true,
         configuration: {
+            subkind: "meeting",
             label: "Zoom-Web",
             color: "blue",
             url: "https://zoom.us/",
@@ -1231,9 +2077,9 @@ export const allButtons = {
     },
     zoom_app: {
         kind: "application",
-        subkind: "meeting",
         is_primary: true,
         configuration: {
+            subkind: "meeting",
             label: "Zoom",
             description: "Join a Zoom meeting with Zoom Application",
             default: "zoom",

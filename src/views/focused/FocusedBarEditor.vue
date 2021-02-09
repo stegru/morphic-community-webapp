@@ -26,11 +26,14 @@
       <br/>
 
     <h2>Buttons on the Bar</h2>
-    <ol>
+    <ol class="barList">
       <li v-for="(item, index) in barDetails.items" :key="index">
+        <bar-item-link show-button :bar-item="item" :ref="`button_${index}`" />
+        <!--
         <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
         </b-link>
+        -->
       </li>
     </ol>
 
@@ -42,21 +45,44 @@
       View the catalog of buttons available for the Morphic Bar
     </b-link> -->
 
+    <div v-if="barDetails.errors && barDetails.errors.length > 0">
+      <br/>
+      <strong>This bar has the following issues:</strong>
+      <ul>
+        <li v-for="(error, id) in barDetails.errors" :key="id">
+          <bar-item-link :bar-item="error.item"/>:
+          {{ error.message }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
+.barList {
+  li {
+    vertical-align: middle;
+    margin: 1em 0;
+  }
+}
+.focusMode .previewItem:focus {
+  outline: black dotted 2px;
+  box-shadow: 0 0 0 5px lawngreen;
+}
 </style>
 
 <script>
 
+import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { availableItems, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "MemberInvite",
     components: {
+        BarItemLink
     },
     methods: {
         getMakeAButtons: function () {
@@ -266,6 +292,9 @@ export default {
             this.addToBar = false;
             this.addToDrawer = false;
         },
+        getButtonIndex: function (item) {
+            return this.barDetails.items.findIndex(i => i.id === item.id);
+        },
         findButtonByLabel: function (item) {
             const data = {
                 index: -1,
@@ -398,16 +427,6 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
-        },
-        generateId: function (item) {
-            let id = "";
-            if (item) {
-                id += Math.floor(Math.random() * Math.floor(99999999));
-                id += "-" + item.configuration.label.toLowerCase();
-                id += "-" + (item.configuration.subkind ? "sub-" + item.configuration.subkind.toLowerCase() : "generic-kind");
-                id += "-" + Math.floor(Math.random() * Math.floor(99999999));
-            }
-            return id;
         }
     },
     computed: {
@@ -417,7 +436,6 @@ export default {
             // uppercase first letter and return
             return name.charAt(0).toUpperCase() + name.slice(1);
         },
-        communityId: function () { return this.$store.getters.communityId; },
         activeButtons: function () {
             let activeButtons = [];
             activeButtons = this.primaryItems.concat(this.drawerItems, this.drawerItemsSecond);
@@ -432,9 +450,9 @@ export default {
         },
         editSubKindIcons: function () {
             const data = {};
-            if (this.buttonEditStorage.configuration.subkind && this.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-                for (let i = 0; i < this.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
+            if (this.buttonEditStorage.configuration.subkind && this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
+                for (let i = 0; i < this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
+                    data[this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
                 }
             }
             return data;
@@ -480,6 +498,15 @@ export default {
                 this.getDrawerItems(newValue);
                 this.getPrimaryItems(newValue);
             }
+            Bar.checkBar(this.barDetails);
+
+            // Focus the first button when it's rendered.
+            setTimeout(() => {
+                var firstButton = this.$refs.button_0;
+                if (firstButton && firstButton.length) {
+                    firstButton[0].$el.focus();
+                }
+            }, 500);
         },
         makeAButtons: function (newValue, oldValue) {
             if (!this.dragMakeAButton) {
@@ -628,8 +655,10 @@ export default {
                     label: "",
                     color: "",
                     image_url: ""
-                }
+                },
+                data: {}
             },
+            /** @type {BarDetails} */
             barDetails: {},
             members: [],
             memberDetails: {},

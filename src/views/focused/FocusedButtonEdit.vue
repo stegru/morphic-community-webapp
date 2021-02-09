@@ -1,9 +1,14 @@
 <template>
   <div>
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
-     <button @click="deleteButton" class="text-danger">Remove Button</button>
+    <button @click="deleteButton" class="text-danger">Remove Button</button>
+    <b-col lg="5">
      <b-form>
-       <div v-for="(value, paramKey, index) in button.configuration.parameters"
+
+       <BarItemFields v-if="!!button" :bar-item="button"/>
+
+       <!--
+       <div v-for="(value, paramKey, index) in button.data.parameters"
             :key="paramKey"
             role="group" class="mb-3">
          <b-form-group :label="allParameters[paramKey].label"
@@ -11,14 +16,14 @@
                        :invalid-feedback="editValidation(paramKey)">
            <b-form-input :id="'barItem_' + paramKey"
                          :name="paramKey"
-                         v-model="button.configuration.parameters[paramKey]"
+                         v-model="button.data.parameters[paramKey]"
                          :state="!editValidation(paramKey)"
                          :autofocus="!index"
                          v-bind="allParameters[paramKey].attrs"
            />
          </b-form-group>
        </div>
-
+-->
         <!-- TODO CHANGE ICONS -->
 
         <b-form-group id="color" label="Color for button" label-for="button-color-input">
@@ -34,6 +39,7 @@
         </b-form-group>
 
      </b-form>
+    </b-col>
 
     <b-link :to="{ path: '/focused/bar-editor', query: { barId: barId } }">
       Cancel
@@ -50,10 +56,12 @@
 import { getCommunityBar, saveCommunityBar, getCommunityMember, createCommunityBar, updateCommunityMember } from "@/services/communityService";
 import { colors } from "@/utils/constants";
 import * as params from "@/utils/params";
+import BarItemFields from "@/components/dashboardV2/BarItemFields";
 
 export default {
     name: "MemberInvite",
     components: {
+        BarItemFields
     },
     methods: {
         setAvailablePositions: function () {
@@ -143,6 +151,7 @@ export default {
     mounted() {
         this.barId = this.$route.query.barId;
         this.buttonIndex = this.$route.query.buttonIndex;
+        this.buttonId = this.$route.query.buttonId;
         this.newButtonIndex = this.buttonIndex;
         this.communityId = this.$route.query.communityId;
         this.memberId = this.$route.query.memberId;
@@ -151,7 +160,11 @@ export default {
         const loaded = (barDetails) => {
             this.barDetails = barDetails;
             // find button:
+            if (this.buttonId) {
+                this.buttonIndex = this.barDetails.items.findIndex(item => item.id === this.buttonId);
+            }
             this.button = this.barDetails.items[this.buttonIndex];
+            this.buttonId = this.button.id;
             this.setAvailablePositions();
         };
 
@@ -175,7 +188,7 @@ export default {
         }
     },
     watch: {
-        "button.configuration": {
+        button: {
             handler: function (newValue, oldValue) {
                 params.applyParameters(this.button);
             },
@@ -184,16 +197,20 @@ export default {
     },
     data() {
         return {
+            /** @type {BarDetails} */
             barDetails: {},
             barId: undefined,
             buttonIndex: undefined,
+            buttonId: undefined,
             communityId: undefined,
             memberId: undefined,
             memberDetails: undefined,
             originalButton: undefined,
             newButtonIndex: undefined,
+            /** @type {BarItem} */
             button: {
-                configuration: {}
+                configuration: {},
+                data: {}
             },
             colors: colors,
             availablePositions: {},

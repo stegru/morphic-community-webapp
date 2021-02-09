@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid id="PageContainer">
+  <b-container fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
     <router-view />
     <Footer />
