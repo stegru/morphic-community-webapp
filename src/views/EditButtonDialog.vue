@@ -1,11 +1,18 @@
 <template>
   <b-modal id="modalEditGeneric"
-           @ok="okClicked" @cancel="closeDialog(false)"
+           @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
            size="lg" scrollable centered
            footer-bg-variant="light"
            :ok-title="nextButton ? 'Next' : 'Update Button'"
            :ok-disabled="button && button.data.isPlaceholder"
            :title="dialogTitle">
+
+    <template #modal-footer="{ok, cancel, hide}">
+      <b-button @click="hide('remove')" variant="outline-danger" style="margin-right: 1em"><b-icon icon="trash" /> Remove button</b-button>
+      <b-button @click="cancel()" variant="secondary">Cancel</b-button>
+      <b-button @click="ok()" variant="primary">Update Button</b-button>
+    </template>
+
     <div v-if="button">
       <b-form>
         <b-row>
@@ -121,7 +128,6 @@
 
           <b-col md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
-              <p class="text-right small"><b-link @click="buttonToRemove(button)" class="text-danger">Remove Button</b-link></p>
               <p class="">This is the button you are making</p>
               <div class="barPreview rounded">
                 <div class="previewHolder">
@@ -199,6 +205,7 @@ ul.relatedButtons {
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
 import * as params from "@/utils/params";
+import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/dashboardV2/BarItemFields";
 
 export default {
@@ -323,6 +330,19 @@ export default {
                 this.closeDialog(true);
             }
         },
+
+        /**
+         * The dialog hide event.
+         * @param {Event} e The event object.
+         */
+        onHide: function (e) {
+            if (e.trigger === "remove") {
+                // The "Remove button" button was clicked.
+                this.removeButton();
+                // removeButton() will close the dialog, if required.
+                e.preventDefault();
+            }
+        },
         /**
          * Closes the dialog.
          * @param {Boolean} applyChanges true to apply the changes.
@@ -374,6 +394,19 @@ export default {
                 this.returnToButtonTab = false;
                 this.activeTab = 1;
             }
+        },
+
+        /**
+         * Removes this button from the bar.
+         */
+        removeButton: function () {
+            this.showConfirm("Do you want to remove this item from the bar?").then(result => {
+                if (result) {
+                    Bar.removeItem(this.button);
+                    this.closeDialog(false);
+                    this.showMessage("Button removed");
+                }
+            });
         },
 
         fixFavicon: function () {
