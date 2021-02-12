@@ -76,6 +76,18 @@ export function addItem(bar, sourceItem, index) {
 }
 
 /**
+ * Removes an item from its bar.
+ * @param {BarItem} barItem The bar item to remove.
+ * @param {BarDetails} [bar] The bar.
+ */
+export function removeItem(barItem, bar) {
+    if (!bar) {
+        bar = getItemBar(barItem);
+    }
+    bar.items = bar.items.filter(x => x.id !== barItem.id);
+}
+
+/**
  * Checks a bar for problems.
  * @param {BarDetails} bar The bar.
  * @return {Boolean} true if the bar has no problems.
