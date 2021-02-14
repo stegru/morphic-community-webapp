@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node_modules/.bin/eslint src/ && NODE_ENV=local vue-cli-service serve",
+    "dev": "NODE_ENV=local vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build --mode development --dest dev",

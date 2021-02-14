@@ -32,10 +32,25 @@ export function createNewCommunity(name) {
  * Gets a community details.
  * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiesid
  * @param {GUID} communityId The community ID.
- * @return {Promise<AxiosResponse<Any>>} Response
+ * @return {Promise<AxiosResponse<Community>>} Response
  */
 export function getCommunity(communityId) {
     return HTTP.get(`/v1/communities/${communityId}`);
+}
+
+/**
+ * Update a community (only the name and default bar).
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiesid
+ * @param {Community} communityId The community.
+ * @param {Community} name The new community name.
+ * @param {Community} defaultBarId The new default bar for the community.
+ * @return {Promise<AxiosResponse<Community>>} Response
+ */
+export function updateCommunity(communityId, name, defaultBarId) {
+    return HTTP.put(`/v1/communities/${communityId}`, {
+        name: name,
+        default_bar_id: defaultBarId
+    });
 }
 
 /**
@@ -142,18 +157,51 @@ export function deleteCommunityBar(communityId, barId) {
     return HTTP.delete(`/v1/communities/${communityId}/bars/${barId}`);
 }
 
+/**
+ * @typedef {Object} CommunityMembersResult
+ * @property {Array<CommunityMember>} members The members.
+ */
+
+/**
+ * Gets the list of community members.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#endpoint-community-member
+ * @param {GUID} communityId The community ID.
+ * @return {Promise<AxiosResponse<{CommunityMembersResult}>>} Response.
+ */
 export function getCommunityMembers(communityId) {
     return HTTP.get(`/v1/communities/${communityId}/members`);
 }
 
+/**
+ * Add a new community member.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#endpoint-community-member
+ * @param {GUID} communityId The community ID.
+ * @param {CommunityMember} member The new member.
+ * @return {Promise<AxiosResponse<CommunityMember>>} Result
+ */
 export function addCommunityMember(communityId, member) {
     return HTTP.post(`/v1/communities/${communityId}/members`, member);
 }
 
+/**
+ * Gets a community member's details.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#endpoint-community-member
+ * @param {GUID} communityId The community ID.
+ * @param {GUID} memberId The member ID.
+ * @return {Promise<AxiosResponse<CommunityMember>>} Response.
+ */
 export function getCommunityMember(communityId, memberId) {
     return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`);
 }
 
+/**
+ * Updates a community member's details.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#endpoint-community-member
+ * @param {GUID} communityId The community ID.
+ * @param {GUID} memberId The member ID.
+ * @param {CommunityMember} member The member details.
+ * @return {Promise<AxiosResponse<Any>>} Response.
+ */
 export function updateCommunityMember(communityId, memberId, member) {
     return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member);
 }

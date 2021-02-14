@@ -6,6 +6,10 @@ import store from "@/store";
 import Home from "@/views/Home.vue";
 import Terms from "@/views/Terms.vue";
 
+import MyCommunity from "@/views/MyCommunity.vue";
+import MyCommunities from "@/views/MyCommunities.vue";
+
+
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
 import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
@@ -61,15 +65,24 @@ const routes = [
     //     locked: true
     //   }
     // },
-    // {
-    //   path: '/my-community',
-    //   name: 'My Community',
-    //   component: MyCommunity,
-    //   meta: {
-    //     title: 'My Community :: Morphic Community',
-    //     authRoute: true
-    //   }
-    // },
+    {
+        path: "/my-community",
+        name: "MyCommunity",
+        component: MyCommunity,
+        meta: {
+            title: "My Community :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/my-communities",
+        name: "MyCommunities",
+        component: MyCommunities,
+        meta: {
+            title: "My Communities :: Morphic Community",
+            authRoute: true
+        }
+    },
     // {
     //   path: '/reset-password',
     //   name: 'Reset Password',

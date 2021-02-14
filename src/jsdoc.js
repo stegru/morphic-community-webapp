@@ -98,3 +98,30 @@
  * @property {String} default
  * @property {String} exe
  **/
+
+
+/**
+ * Community
+ * @typedef {Object} Community
+ * @property {String} id The community id.
+ * @property {String} name The new community name.
+ * @property {String} default_bar_id The default bar for this community.
+ * @property {Number} member_count The number of members in the community that count towards the plan maximum.
+ * @property {Number} member_limit The maximum number of members allowed according to the plan.
+ * @property {Boolean} is_locked Indicates the community is locked because of payment issues.
+ */
+
+/**
+ * Community member
+ * @typedef {Object} CommunityMember
+ * @property {String} id The member's unique id.
+ * @property {String} first_name The member's first name.
+ * @property {String} last_name The member's last name.
+ * @property {String} fullName The member's full name (auto-generated).
+ * @property {String} role The member's role ("manager" or "member").
+ * @property {State} state The member's state.
+ * @property {String} bar_id The member's bar_id (null means use community default_bar_id).
+ * @property {String} userId The member's userId.
+ * @property {Boolean} isThisUser true if this member is the current user accessing the site.
+ */
+
