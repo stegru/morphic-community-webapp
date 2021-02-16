@@ -223,12 +223,12 @@
                 </drop-list>
               </div>
               <div class="logoHolder">
-                <b-img src="/img/logo-color.svg" />
+                <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
               </div>
               <div class="openDrawerIconHolder">
-                <b-link @click="openDrawer = !openDrawer">
+                <b-botton @click="openDrawer = !openDrawer">
                   <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                </b-link>
+                </b-botton>
               </div>
             </div>
           </div>
@@ -271,7 +271,7 @@
                           <!-- Define looks when not selected -->
                           <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
                             <div class="imageWrapper">
-                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
+                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
                             </div>{{ button.data.catalogLabel || button.configuration.label }}
                           </b-link>
                           <!-- Define looks when selected (expanded) -->

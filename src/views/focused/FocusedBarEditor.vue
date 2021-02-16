@@ -1,8 +1,8 @@
 <template>
 
-  <div>
+  <div class="focusBarEditor">
     <h1>{{memberDetails.id ? "Bar for " + memberName : "Community bar: " + barDetails.name}}</h1>
-    <b-link to="/focused/home">Go back to community home</b-link>
+    <b-link to="/focused/home" >Go back to community home</b-link>
     <br />
       <b-link v-if="$route.query.memberId" :to="{ path: '/focused/person', query: { memberId: memberId } }">
         <b-icon-person-circle></b-icon-person-circle>
@@ -28,7 +28,7 @@
     <h2>Buttons on the Bar</h2>
     <ol class="barList">
       <li v-for="(item, index) in barDetails.items" :key="index">
-        <bar-item-link show-button :bar-item="item" :ref="`button_${index}`" />
+        <bar-item-link show-button :bar-item="item" :ref="`button_${index}`"  />
         <!--
         <b-link :to="{ path: '/focused/button-edit', query: { barId: barDetails.id, buttonIndex: index, communityId: communityId, memberId: memberId } }">
           {{item.configuration.label}}
@@ -37,7 +37,7 @@
       </li>
     </ol>
 
-    <b-link :to="{ name: 'Focused: Button Catalog', query: { barId: barDetails.id, communityId: communityId, memberId: memberId } }">
+    <b-link :to="{ name: 'Focused: Button Catalog', query: { barId: barDetails.id, communityId: communityId, memberId: memberId } }" target="_self">
       Add a Button
     </b-link>
     <br>
@@ -59,16 +59,27 @@
 </template>
 
 <style lang="scss">
+.focusBarEditor {
+    a {
+        color: #005BDF;
+    }
+}
 .barList {
   li {
     vertical-align: middle;
     margin: 1em 0;
+      a {
+          color: #dddddd;
+      }
   }
 }
+
 .focusMode .previewItem:focus {
   outline: black dotted 2px;
   box-shadow: 0 0 0 5px lawngreen;
 }
+
+
 </style>
 
 <script>

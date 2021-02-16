@@ -11,7 +11,7 @@
       </p>
     </div>
     <div class="logoHolder text-center">
-      <b-img src="/img/logo-color.svg" />
+      <b-img src="/img/logo-color.svg" alt="Logo" />
     </div>
   </div>
 </template>
