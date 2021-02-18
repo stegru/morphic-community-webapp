@@ -226,9 +226,9 @@
                 <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
               </div>
               <div class="openDrawerIconHolder">
-                <b-botton @click="openDrawer = !openDrawer">
+                <b-button @click="openDrawer = !openDrawer">
                   <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                </b-botton>
+                </b-button>
               </div>
             </div>
           </div>
