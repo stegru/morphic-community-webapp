@@ -29,7 +29,7 @@
             <b-list-group-item>
               <p>Plan renews on November 5, 2021</p>
 
-              <b-button href="#" variant="primary">Billing Information</b-button>
+              <b-button :to="{ name: 'BillingDetails' }" variant="primary">Billing Information</b-button>
             </b-list-group-item>
           </b-list-group>
         </b-card>
