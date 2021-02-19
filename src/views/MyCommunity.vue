@@ -23,7 +23,7 @@
             <b-list-group-item>
               <p>Current membership: {{community.member_count}}</p>
 
-              <b-button href="#" variant="primary">Change Plan</b-button>
+              <b-button :to="{ name: 'Plans' }" variant="primary">Change Plan</b-button>
             </b-list-group-item>
 
             <b-list-group-item>
@@ -85,7 +85,6 @@ h1.communityName {
 }
 
 @import "~bootstrap/scss/bootstrap";
-//@import "~bootstrap-vue/src/index.scss";
 
 .memberList {
 

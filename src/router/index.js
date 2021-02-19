@@ -9,6 +9,8 @@ import Terms from "@/views/Terms.vue";
 import MyCommunity from "@/views/MyCommunity.vue";
 import MyCommunities from "@/views/MyCommunities.vue";
 
+import Plans from "@/views/billing/Plans.vue";
+import BillingDetails from "@/views/billing/BillingDetails.vue";
 
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
@@ -80,6 +82,24 @@ const routes = [
         component: MyCommunities,
         meta: {
             title: "My Communities :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/billing/plans",
+        name: "Plans",
+        component: Plans,
+        meta: {
+            title: "Plans :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/billing/details",
+        name: "BillingDetails",
+        component: BillingDetails,
+        meta: {
+            title: "Billing :: Morphic Community",
             authRoute: true
         }
     },
