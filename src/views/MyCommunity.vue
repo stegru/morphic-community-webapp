@@ -220,12 +220,6 @@ export default {
         loadMembers: function () {
             return communityService.getCommunityMembers(this.communityId).then((memberResponse) => {
                 var members = memberResponse.data.members;
-                for (let i = 0; i < 10; i++) {
-                    const c = JSON.parse(JSON.stringify(members[0]));
-                    c.id += "_" + i;
-                    c.userId += "_" + i;
-                    members.push(c);
-                }
 
                 this.members = {};
 
@@ -315,7 +309,6 @@ export default {
                     }
                 });
             }
-
         }
     }
 };
