@@ -248,7 +248,7 @@ export default {
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.data.hasError;// && !item.data.catalogItem;
+            return item.data.hasError && !item.data.catalogItem;
         },
         /**
          * Determines how the item is displayed.
