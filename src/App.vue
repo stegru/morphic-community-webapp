@@ -87,7 +87,9 @@
     }
   }
 
-
+  button.btn.btn-link {
+    padding: 0;
+  }
 
 </style>
 

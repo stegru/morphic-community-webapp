@@ -50,7 +50,7 @@
                               label-for="barItem_selectOther"
                               >
                 <div class="relatedLink">
-                  <b-button @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
+                  <b-button variant="link" @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
                     <div class="imageWrapper">
                       <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
                     </div>{{
