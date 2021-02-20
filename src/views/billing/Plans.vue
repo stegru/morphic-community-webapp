@@ -72,11 +72,9 @@ export default {
          * @return {Promise} Resolves when complete.
          */
         loadBilling: function () {
-            return Promise.all([
-                billingService.getBillingInfo(this.communityId).then((r) => {
-                    this.billingInfo = r.data;
-                }),
-            ]);
+            return billingService.getBillingInfo(this.communityId).then((r) => {
+                this.billingInfo = r.data;
+            });
         }
     }
 };
