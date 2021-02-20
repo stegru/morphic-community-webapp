@@ -10,11 +10,11 @@
     "lint": "node_modules/.bin/eslint src/**/*.{js,vue}"
   },
   "dependencies": {
+    "@popperjs/core": "2.5.4",
     "arrow-line": "^0.7.4",
     "axios": "^0.19.2",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
-    "@popperjs/core": "2.5.4",
     "vue": "^2.6.11",
     "vue-easy-dnd": "^1.8.4",
     "vue-router": "^3.2.0",
