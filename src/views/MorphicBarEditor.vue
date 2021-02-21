@@ -588,7 +588,7 @@ img:before {
   }
 
   .compactIconHolder {
-    height: 22rem;
+    height: 10rem;
     overflow-y: auto;
     .iconBoxHolder {
       margin-left: .5rem !important;

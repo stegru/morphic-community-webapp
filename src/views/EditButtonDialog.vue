@@ -66,52 +66,57 @@
                   <div v-if="showExtra">
                     <h6><b>Color for button</b></h6>
                     <div class="bg-white rounded p-3 mb-4">
-                      <div
-                              v-for="(hex, name) in colors"
-                              :key="name"
-                              @click="changeColor(hex)"
-                              :title="name"
-                              :class="{ active: (button.configuration.color || colors.blue) === hex }"
-                              class="colorBoxHolder"
-                      >
-                        <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
-                      </div>
+                        <b-form-select v-model="button.configuration.color" :options="colors"></b-form-select>
+<!--                      <div-->
+<!--                              v-for="(hex, name) in colors"-->
+<!--                              :key="name"-->
+<!--                              @click="changeColor(hex)"-->
+<!--                              :title="name"-->
+<!--                              :class="{ active: (button.configuration.color || colors.blue) === hex }"-->
+<!--                              class="colorBoxHolder"-->
+<!--                      >-->
+<!--                        <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>-->
+<!--                      </div>-->
                     </div>
 
                     <h6><b>Picture for button</b></h6>
-                    <div class="bg-white rounded p-3 compactIconHolder">
+                    <div class="bg-white rounded p-3 ">
+                        <b-form-select v-model="button.configuration.image_url" >
+                            <b-form-select-option value="">No image</b-form-select-option>
+                            <b-form-select-option v-for="(filename, icon) in listedIcons" :key="icon"  :value="icon">{{icon}}</b-form-select-option>
+                        </b-form-select>
                       <!-- no image -->
-                      <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
-                        <div
-                                @click="changeIcon('')"
-                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                                class="iconBox"
-                        >
-                          <p>No image</p>
-                        </div>
-                      </div>
+<!--                      <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">-->
+<!--                        <div-->
+<!--                                @click="changeIcon('')"-->
+<!--                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"-->
+<!--                                class="iconBox"-->
+<!--                        >-->
+<!--                          <p>No image</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
 
-                      <!-- favicon -->
-                      <div class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
-                        <div
-                                @click="changeIcon('$favicon')"
-                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                                class="iconBox"
-                        >
-                          <b-img :src="buttonFavicon" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                        </div>
-                      </div>
+<!--                       favicon -->
+<!--                      <div class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">-->
+<!--                        <div-->
+<!--                                @click="changeIcon('$favicon')"-->
+<!--                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"-->
+<!--                                class="iconBox"-->
+<!--                        >-->
+<!--                          <b-img :src="button.configuration.image_url" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>-->
+<!--                        </div>-->
+<!--                      </div>-->
 
-                      <div v-for="(filename, icon) in listedIcons"
-                           :key="icon"
-                           @click="changeIcon(icon)"
-                           :class="{ active: button.configuration.image_url === icon }"
-                           class="iconBoxHolder"
-                      >
-                        <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                          <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                        </div>
-                      </div>
+<!--                      <div v-for="(filename, icon) in listedIcons"-->
+<!--                           :key="icon"-->
+<!--                           @click="changeIcon(icon)"-->
+<!--                           :class="{ active: button.configuration.image_url === icon }"-->
+<!--                           class="iconBoxHolder"-->
+<!--                      >-->
+<!--                        <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">-->
+<!--                          <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </div>
                 </div>

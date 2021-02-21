@@ -27,15 +27,25 @@ export const MESSAGES = {
     successfulBarDelete: "Bar successfully deleted."
 };
 
-export const colors = {
-    teal: "#006770",
-    blue: "#002957",
-    purple: "#662261",
-    red: "#8c191b",
-    green: "#46622d",
-    orange: "#a33e1f",
-    default_button: "rgb(0, 47, 87)"
-};
+// export const colors = {
+//     teal: "#006770",
+//     blue: "#002957",
+//     purple: "#662261",
+//     red: "#8c191b",
+//     green: "#46622d",
+//     orange: "#a33e1f",
+//     default_button: "rgb(0, 47, 87)"
+// };
+
+export const colors = [
+    { value: "#006770", text: "teal" },
+    { value: "#002957", text: "blue" },
+    { value: "#662261", text: "purple" },
+    { value: "#8c191b", text: "red" },
+    { value: "#46622d", text: "green" },
+    { value: "#a33e1f", text: "orange" },
+    { value: "rgb(0, 47, 87)", text: "default_button" }
+];
 
 
 export const defaultApps = {
