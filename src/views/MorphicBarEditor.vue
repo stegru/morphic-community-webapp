@@ -32,27 +32,20 @@
           <div id="bar-info">
             <div class="bar-name">
               <!-- Bar selection -->
-              <b-dropdown id="barDropdown" :text="getBarName(barDetails, true)" size="lg" variant="outline-primary">
-                <b-dropdown-group v-for="(bars, group) in { 'Community Bars': sharedBars, 'User Bars': userBars }"
-                                 :key="group"
-                                 :header="group">
-                    <b-dropdown-item v-for="(bar) in bars"
-                                     :key="bar.id"
-                                     :to="getBarEditRoute(bar)"
-                    >{{getBarName(bar)}}</b-dropdown-item>
-                </b-dropdown-group>
-              </b-dropdown>
+              <h2>
+                {{barName}}
 
-              <!-- rename bar -->
-              <span v-if="!activeMemberId && barDetails.name !== 'Default'">
-                <TextInputDialog id="barNameDialog"
-                                 title="Rename Bar"
-                                 prompt="Enter the new name for the bar"
-                                 v-model="barDetails.name"
-                                 @ok="renameBar"
-                                 />
-                &nbsp;<small>(<b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button>)</small>
-              </span>
+                <!-- rename bar -->
+                <span v-if="!activeMemberId && barDetails.name !== 'Default'">
+                  <TextInputDialog id="barNameDialog"
+                                   title="Rename Bar"
+                                   prompt="Enter the new name for the bar"
+                                   v-model="barDetails.name"
+                                   @ok="renameBar"
+                                   />
+                  &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
+                </span>
+              </h2>
 
             </div>
 
@@ -1208,22 +1201,6 @@ export default {
             });
         },
         /**
-         * @param {BarDetails} bar The bar
-         * @param {Boolean} [full] Return a descriptive name, suitable for a title.
-         * @return {String} The bar title.
-         */
-        getBarName: function (bar, full) {
-            let name;
-            if (full) {
-                if (bar.name === "Default") {
-                    name = "Default Bar";
-                } else if (!bar.is_shared) {
-                    name = `Bar for ${bar.name}`;
-                }
-            }
-            return name || bar.name;
-        },
-        /**
          * OK button on the bar name dialog clicked.
          * @param {TextInputOKEvent} event The event object.
          */
@@ -1270,7 +1247,22 @@ export default {
     },
     computed: {
         activeMemberId: function () { return this.$route.query.memberId; },
-        editDialog: function () { return this.$refs.editDialog; }
+        editDialog: function () { return this.$refs.editDialog; },
+        /**
+         * @return {String} The bar title.
+         */
+        barName: function () {
+            var name;
+            if (this.barDetails.name === "Default") {
+                name = "Default Bar";
+            } else if (this.barDetails.is_shared) {
+                name = this.barDetails.name;
+            } else {
+                name = `Bar for ${this.barDetails.name}`;
+            }
+            return name;
+        }
+
     },
     mounted() {
         this.loadAllData();
