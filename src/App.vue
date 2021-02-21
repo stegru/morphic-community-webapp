@@ -12,12 +12,14 @@
 
   body {
     font-family: 'Open Sans', sans-serif !important;
+      a {
+          color: #005BDF
+      }
   }
 
   .fill-height {
     min-height: 100%;
   }
-
   .btn-primary {
     background-color: $primary-color !important;
     border-color: $primary-color !important;
@@ -84,6 +86,8 @@
       height: 3rem;
     }
   }
+
+
 
 </style>
 
