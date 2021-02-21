@@ -63,6 +63,7 @@
     }
 
     .openDrawerIconHolder {
+      cursor: pointer;
       .b-icon {
         // margin-left: -19px;
         right: 104px;
