@@ -308,11 +308,15 @@
                             <PreviewItem :item="button" :noImage="true" class="noImage" />
                           </template>
                           <!-- Define looks when not selected -->
-                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                          <b-button v-if="buttonId !== expandedCatalogButtonId"
+                                    variant="link"
+                                    @click="expandCatalogButton(button, buttonId, $event)"
+                                    :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
+                                    class="buttonsCatalogLink nonExpandedCatalogEntry">
                             <div class="imageWrapper">
                               <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
                             </div>{{ button.data.catalogLabel || button.configuration.label }}
-                          </b-link>
+                          </b-button>
                           <!-- Define looks when selected (expanded) -->
                           <div v-else class="active" @click="expandedCatalogButtonId = undefined"
                           >
@@ -594,9 +598,12 @@ img:before {
           }
         }
 
-        a:hover {
-          .imageWrapper img {
-            transform: scale(1.5);
+        .buttonsCatalogLink {
+          text-align: left;
+          &:hover {
+            .imageWrapper img {
+              transform: scale(1.5);
+            }
           }
         }
 
