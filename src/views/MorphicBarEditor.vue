@@ -31,21 +31,30 @@
           <!-- Topmost area above desktop image -->
           <div id="bar-info">
             <div class="bar-name">
-              <h3 v-if="activeMemberId" class="mb-0">
-                <b>Bar for {{ memberDetails.first_name }} {{memberDetails.last_name}}</b>&nbsp;
-              </h3>
-              <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
-                <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
-              </b-form-group>
-              <h3 v-else class="mb-0">
-                <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
-                <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
-              </h3>
-              <b-form-group v-if="!activeMemberId && editBarName" label-for="barName">
-                <br/>
-                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
-              </b-form-group>
+              <!-- Bar selection -->
+              <b-dropdown id="barDropdown" :text="getBarName(barDetails, true)" size="lg" variant="outline-primary">
+                <b-dropdown-group v-for="(bars, group) in { 'Community Bars': sharedBars, 'User Bars': userBars }"
+                                 :key="group"
+                                 :header="group">
+                    <b-dropdown-item v-for="(bar) in bars"
+                                     :key="bar.id"
+                                     :to="getBarEditRoute(bar)"
+                    >{{getBarName(bar)}}</b-dropdown-item>
+                </b-dropdown-group>
+              </b-dropdown>
+
+              <span v-if="!activeMemberId && barDetails.name !== 'Default'">
+                <TextInputDialog id="barNameDialog"
+                                 title="Rename Bar"
+                                 prompt="Enter the new name for the bar"
+                                 v-model="barDetails.name"
+                                 @ok="renameBar"
+                                 />
+                &nbsp;<small>(<b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button>)</small>
+              </span>
+
             </div>
+
             <div class="save-button-area">
               <b-button v-if="isChanged && !newBar" @click="revertBar" variant='warning' class="revertButton" size="sm">Revert to last saved</b-button>
               <b-button v-if="activeMemberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
@@ -55,9 +64,9 @@
           </div>
 
           <!-- Secondary area above desktop image -->
-          <div id="secondary-bar-info">
+          <div id="secondary-bar-infoX">
             <b-nav id="editorNav" tabs class="small">
-              <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
+              <b-nav-item id="tab1" :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
                 <span v-if="activeMemberId">
                   Member Details
                 </span>
@@ -77,7 +86,7 @@
               <div v-if="activeMemberId">
                 <b-form-select v-model="barSelectedInDropdown">
                   <b-form-select-option value="customized" v-if="isChanged || barDetails.is_shared == false">Customized</b-form-select-option>
-                  <b-form-select-option v-for="bar in availableBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
+                  <b-form-select-option v-for="bar in sharedBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
                 </b-form-select>
                 <b-button class="changeButton" variant="success" :disabled="memberDetails.bar_id == barSelectedInDropdown || barSelectedInDropdown == 'customized'" @click="changeUserBarToCommunityBar">Change</b-button>
 
@@ -99,7 +108,9 @@
             </div>
           </div>
 
-          <div v-if="tab === 1" class="bg-light p-3">
+
+
+          <div v-if="tab === 1" class="bg-light p-3" style="height: 0">
             <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
             <div v-if="activeMemberId">
               <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
@@ -713,7 +724,7 @@ import {
     getCommunityBars,
     getCommunityMember,
     getCommunityMembers,
-    inviteCommunityMember,
+    inviteCommunityMember, saveCommunityBar,
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
@@ -723,10 +734,12 @@ import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
+import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        TextInputDialog,
         BarItemLink,
         EditButtonDialog,
         CommunityManager,
@@ -1129,10 +1142,67 @@ export default {
                     console.error(err);
                 });
         },
-        updateAvailableBars() {
-            this.availableBars = this.barsList.filter((bar) => {
-                return bar.is_shared;
+        /**
+         * Update the filtered arrays of bars.
+         */
+        updateBarLists() {
+            this.sharedBars = [];
+            this.userBars = [];
+            this.barsList.forEach(bar => {
+                const list = bar.is_shared
+                    ? this.sharedBars
+                    : this.userBars;
+                list.push(bar);
             });
+        },
+        /**
+         * @param {BarDetails} bar The bar
+         * @param {Boolean} [full] Return a descriptive name, suitable for a title.
+         * @return {String} The bar title.
+         */
+        getBarName: function (bar, full) {
+            let name;
+            if (full) {
+                if (bar.name === "Default") {
+                    name = "Default Bar";
+                } else if (!bar.is_shared) {
+                    name = `Bar for ${bar.name}`;
+                }
+            }
+            return name || bar.name;
+        },
+        /**
+         * OK button on the bar name dialog clicked.
+         * @param {TextInputOKEvent} event The event object.
+         */
+        renameBar: function (event) {
+            // only saving the name - so, get the currently stored bar and change that.
+            event.promise = getCommunityBar(this.communityId, this.barDetails.id).then(resp => {
+                /** @type {BarDetails} */
+                const bar = resp.data;
+                bar.name = event.newValue;
+                return updateCommunityBar(this.communityId, this.barDetails.id, bar).then(() => {
+                    // Update the item in the full list, to reload it in the community manager component.
+                    const listed = this.barsList.find(b => b.id === this.barDetails.id);
+                    if (listed) {
+                        listed.name = bar.name;
+                    }
+                    return true;
+                });
+            });
+        },
+        /**
+         * Gets the edit route for a bar.
+         * @param {BarDetails} bar The bar.
+         * @return {Object} The route.
+         */
+        getBarEditRoute: function (bar) {
+            if (bar.is_shared) {
+                return Bar.getBarEditRoute(bar);
+            } else {
+                var member = this.membersList.find(m => m.bar_id === bar.id);
+                return Bar.getUserBarEditRoute(member, this.community.default_bar_id);
+            }
         },
         highlight(value, buttons) {
             for (let a = 1; a < arguments.length; a++) {
@@ -1157,11 +1227,11 @@ export default {
             this.distributeItems(newValue);
         },
         "memberDetails.id": function (newValue, oldValue) {
-            this.updateAvailableBars();
+            this.updateBarLists();
             this.barSelectedInDropdown = this.memberDetails.bar_id;
         },
         barsList: function (newValue) {
-            this.updateAvailableBars();
+            this.updateBarLists();
         },
         makeAButtons: function (newValue, oldValue) {
             if (!this.dragMakeAButton) {
@@ -1238,7 +1308,6 @@ export default {
         return {
             // messages
             leavePageMessage: MESSAGES.leavePageAlert,
-            availableBars: [],
             barSelectedInDropdown: "",
             // flags
             addToBar: false,
@@ -1255,7 +1324,21 @@ export default {
             initialChangesDrawerItems: false,
             // data for the community manager
             community: {},
+            /**
+             * All bars
+             * @type {Array<BarDetails>} */
             barsList: [],
+            /**
+             * Community bars
+             * @type {Array<BarDetails>}
+             */
+            sharedBars: [],
+            /**
+             * User specific bars.
+             * @type {Array<BarDetails>}
+             */
+            userBars: [],
+            /** @type {Array<CommunityMember>} */
             membersList: [],
 
             /** @type {ButtonCatalog} Button catalog. */
