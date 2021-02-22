@@ -2,7 +2,7 @@
   <div id="CommunityManager" class="bar-people-controls fill-height bg-green p-3">
     <h4><b>{{ community.name }}</b></h4>
     <p class="text-right small">
-      (<b-link disabled>Community settings</b-link>)
+      (<b-link :to="{ name: 'MyCommunity'}">Community settings</b-link>)
     </p>
     <h5>
       <b>Community Bars</b>

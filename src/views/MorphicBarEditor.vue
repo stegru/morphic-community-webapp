@@ -1060,12 +1060,6 @@ export default {
             this.$refs["catalog_" + buttonId][0].focus();
 
         },
-        buttonToRemove: function (item) {
-            // remove from items list
-            // bar and drawer lists are automatically updated from watcher
-            this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
-            this.setBarChanged();
-        },
 
         /**
          * Shows the edit button dialog.
