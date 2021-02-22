@@ -13,7 +13,7 @@
     <h5>
       <div>
         <b>Members ({{community.member_count}} of {{community.member_limit}})</b>
-        <b-link to="/dashboard/member-invite" class="icon-add" id="AddNewMember"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon"></b-icon-plus-circle-fill></b-link>
+        <b-link to="/dashboard/member-invite" class="icon-add" id="AddNewMember"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon" ></b-icon-plus-circle-fill></b-link>
       </div>
     </h5>
     <MembersList :members="members" :community="community" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" ref="MembersList"/>

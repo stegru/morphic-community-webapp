@@ -21,8 +21,8 @@
       </div>
       <div v-else class="regular" :style="'background: '+colors.default_button">
         <div class="imageContainer" :style="'border-color: '+colors.default_button">
-          <b-img :src="getIconUrl(item.configuration.image_url)"/>
-        </div>`
+          <b-img :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'"></b-img>
+        </div>
       </div>
     </template>
 
@@ -44,13 +44,13 @@
       <div v-if="item.configuration.image_url && !noImage"
            :style="'border-color: ' + (item.configuration.color || colors.default_button) + '; color: ' + (item.configuration.color || colors.default_button) + ';'"
            class="iconHolder">
-        <b-img :src="getIconUrl(item.configuration.image_url)"/>
+        <b-img :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'"/>
       </div>
       <b :style="'background-color: ' + (item.configuration.color || colors.default_button) + ';'"
          v-bind:class="{ withImage: !noImage && item.configuration.image_url }">{{ item.configuration.label }}</b>
     </template>
 
-    <img v-if="hasError" id="warningIcon" class="errorIcon" src="/img/warning.svg" alt="This item has a problem." />
+    <img v-if="hasError" id="warningIcon" class="errorIcon" src="/img/warning.svg" alt="This item has a problem."  />
 
   </b-link>
 </template>
@@ -248,7 +248,7 @@ export default {
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.data.hasError;// && !item.data.catalogItem;
+            return item.data.hasError && !item.data.catalogItem;
         },
         /**
          * Determines how the item is displayed.

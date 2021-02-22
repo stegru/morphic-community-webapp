@@ -80,10 +80,7 @@ export function addItem(bar, sourceItem, index) {
  * @param {BarItem} barItem The bar item to remove.
  * @param {BarDetails} [bar] The bar.
  */
-export function removeItem(barItem, bar) {
-    if (!bar) {
-        bar = getItemBar(barItem);
-    }
+export function removeItem(barItem, bar = getItemBar(barItem)) {
     bar.items = bar.items.filter(x => x.id !== barItem.id);
 }
 

@@ -6,7 +6,7 @@
                @mouseleave="$emit('mouseleave', {data: barItem})"
                :to="editLink"
   />
-  <b-link v-else
+  <b-button v-else
           class="barItemLink"
           :style="{ color: barItem.configuration.color }"
           @click="$emit('click', {data: item})"
@@ -15,7 +15,7 @@
           :to="editLink"
     >{{
     barItem.configuration.label
-  }}</b-link>
+  }}</b-button>
 
 
 </template>
