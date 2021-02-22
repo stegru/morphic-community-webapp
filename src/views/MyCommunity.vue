@@ -1,90 +1,270 @@
 <template>
-  <b-jumbotron class="bg-light">
-    <b-modal id="deleteConfirm" @ok="deleteCommunity" title="Delete a community" footer-bg-variant="light" ok-title="Delete community">
-      <p class="my-4">Please confirm the deletion of that community?</p>
-    </b-modal>
-    <h3>My Communities</h3>
-    <p>Sed bibendum neque vel lorem maximus, ut euismod dui ultricies. Vestibulum sed ipsum in arcu facilisis posuere id sit amet risus. In sed cursus turpis. Duis ligula magna, tempor id mattis non, sollicitudin vel nisl. </p>
-    <b-button variant="primary" disabled>
-      Create New Community
-    </b-button>
-    <hr class="mt-5 mb-5" />
-    <b-card-group columns>
-      <b-card
-      v-for="community in communities"
-      :key="community.id"
-      :title="community.name"
-      tag="article"
-      style="width: 20rem;"
-      class="mb-5"
-      >
-        <b-card-text>
-          Community Page:
-          <br/>
-          <a :href="'https://' + community.name + '.' + host" class="card-link">{{ community.name + '.' + host }}</a>
-        </b-card-text>
-        <!-- <b-card-text>
-          Subscription Plan:
-          <br/>
-          <b :class="'text-' + community.subscriptionIdent">{{ community.subscriptionPlan }}</b>
-        </b-card-text> -->
-        <!-- <b-card-text>
-          Next Payment:
-          <br>
-          <b>
-            {{ community.paymentNext }}
-            <span v-if="community.paymentOk == false">
-              (<i class="text-danger">Overdue</i>)
-            </span>
-          </b>
-        </b-card-text> -->
-        <!-- <b-card-text>
-          Members:
-          <br>
-          <b>{{ community.memberCurrent }}</b> / {{ community.memberLimit }}
-        </b-card-text> -->
-        <b-card-text>
-          <!-- <b-button :href="'https://' + community.name + '.' + host" variant="success"> -->
-          <b-button :to="{ name: 'Dashboard', params: { community: community }}"   variant="success">
-            <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
-          </b-button>
-          <b-button variant="danger" class="ml-1" v-b-modal.deleteConfirm @click="setCommunityId(community.id)">Delete</b-button>
-        </b-card-text>
-      </b-card>
-    </b-card-group>
-  </b-jumbotron>
+  <div class="  ">
+    <h4>Community Settings</h4>
+    <div v-if="!community"></div>
+    <div v-else>
+      <TextInputDialog
+              id="communityNameDialog"
+              title="Rename community"
+              prompt="Enter the new community name"
+              v-model="community.name"
+              @ok="updateCommunityName"
+      />
+
+      <b-container fluid="sm">
+      <h1 class="communityName">
+        {{ community.name }}
+        <small>(<b-button variant="link" v-b-modal="'communityNameDialog'">Edit</b-button>)</small>
+      </h1>
+        <b-card v-if="plan" xno-body style="width: max-content; margin: 1em">
+          <b-card-title>Plan: {{ plan.name }}</b-card-title>
+          <b-card-sub-title>(up to {{plan.member_limit}} members)</b-card-sub-title>
+          <b-list-group flush>
+            <b-list-group-item>
+              <p>Current membership: {{community.member_count}}</p>
+
+              <b-button :to="{ name: 'Plans' }" variant="primary">Change Plan</b-button>
+            </b-list-group-item>
+
+            <b-list-group-item>
+              <p>Plan renews on November 5, 2021</p>
+
+              <b-button :to="{ name: 'BillingDetails' }" variant="primary">Billing Information</b-button>
+            </b-list-group-item>
+          </b-list-group>
+        </b-card>
+
+        <h3>Managers for this community</h3>
+        Managers can see, remove, and invite members, make and edit Morphic Bars, pay and change subscription plans
+        for the community, and remove other community members.
+
+        <ul class="memberList">
+          <li class="member" v-for="(member) in members"
+              :key="member.id"
+              :ref="'member_' + member.id"
+              @click="toggleExpand(member)">
+            <div class="memberIcon">
+              <b-icon icon="person-circle"/>
+            </div>
+            <div class="memberContent">
+              <b-link class="name" @click.self.stop="toggleExpand(member)">{{member.fullName}}</b-link>
+              <div class="details">
+                <span :tabindex="member.isThisUser ? -1 : undefined" :id="member.isThisUser ? 'RemoveMyself' : ''" @click.prevent.stop>
+                  <b-button variant="link"
+                              class="text-danger"
+                              @click.prevent.stop="removeManager(member)"
+                              :disabled="member.isThisUser"
+                    >Remove as community manager</b-button>
+                </span>
+                <b-tooltip v-if="member.isThisUser"
+                           target="RemoveMyself"
+                           variant="warning"
+                           placement="right"
+                  >You cannot demote yourself.</b-tooltip>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+      </b-container>
+    </div>
+  </div>
 </template>
+
+<style lang="scss">
+h1.communityName {
+  small {
+    font-size: small;
+  }
+  button {
+    padding: 0;
+  }
+  &:hover button {
+    opacity: 1;
+  }
+}
+
+@import "~bootstrap/scss/bootstrap";
+
+.memberList {
+
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding-inline-start: 0;
+
+  .member {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 0.5em;
+    margin: 1px;
+    width: fit-content;
+
+    border-radius: 1em;
+
+
+    & > * {
+      display: inline-block;
+    }
+
+    .name {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .memberIcon {
+      width: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    &:hover, &.expanded {
+      background-color: $gray-200;
+    }
+
+    &:not(.expanded) {
+      .details {
+        visibility: hidden;
+        height: 0;
+      }
+    }
+
+    &.expanded {
+      .name, .memberIcon  {
+        font-size: larger;
+      }
+      .details {
+        padding-top: 0.5em;
+      }
+    }
+  }
+
+  &:focus, .list-group-item:focus {
+    outline: none;
+  }
+
+  &.active {
+    background-color: inherit;
+    color: inherit;
+  }
+}
+
+
+</style>
 
 <script>
 
-import { getUserCommunities, deleteUserCommunity } from "@/services/communityService";
+import * as communityService from "@/services/communityService";
+import * as billingService from "@/services/billingService";
+import * as billing from "@/utils/billing";
+import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 
 export default {
+    components: {TextInputDialog},
     data() {
         return {
+            /** @type {Array<Community>} */
             communities: [],
-            communityId: "",
-            host: `${window.location.hostname}.com`
+            /** @type {Community} */
+            community: null,
+            /** @type {BillingInfo} */
+            billingInfo: null,
+            /** @type {BillingPlans} */
+            plans: null,
+            /** @type {Array<CommunityMember>} */
+            members: [],
+            /** @type {GUID} */
+            selectedMember: null,
+            expandedMembers: {}
         };
     },
     computed: {
-        userId: function () { return this.$store.getters.userId; }
+        userId: function () { return this.$store.getters.userId; },
+        /**
+         * The current plan for the community.
+         * @return {BillingPlan} The plan.
+         */
+        plan: function () {
+            return this.plans && this.billingInfo ? this.plans[this.billingInfo.plan_id] : null;
+        }
     },
     mounted() {
-        getUserCommunities(this.userId)
+        communityService.getUserCommunities(this.userId)
             .then(resp => {
                 this.communities = resp.data.communities;
             })
             .catch(err => {
                 console.error(err);
             });
+        this.loadCommunity();
+        this.loadBilling();
+        this.loadMembers();
     },
     methods: {
-        setCommunityId: function (communityId) {
-            this.communityId = communityId;
+        /**
+         * Loads the community details.
+         * @return {Promise} Resolves when complete.
+         */
+        loadCommunity: function () {
+            return communityService.getCommunity(this.communityId).then((community) => {
+                this.community = community.data;
+            });
         },
+
+        /**
+         * Loads the community members.
+         * @return {Promise} Resolves when complete.
+         */
+        loadMembers: function () {
+            return communityService.getCommunityMembers(this.communityId).then((memberResponse) => {
+                var members = memberResponse.data.members;
+
+                this.members = {};
+
+                members.forEach(member => {
+                    member.isThisUser = member.userId === this.userId;
+                    Object.defineProperty(member, "fullName", {
+                        get() {
+                            const full = this.first_name + " " + this.last_name;
+                            return this.isThisUser ? `${full} (You)` : full;
+                        }
+                    });
+
+                    this.members[member.id] = member;
+
+                });
+            });
+        },
+
+        /**
+         * Loads the community plan and billing details.
+         * @return {Promise} Resolves when complete.
+         */
+        loadBilling: function () {
+            return Promise.all([
+                billingService.getBillingInfo(this.communityId).then((r) => {
+                    this.billingInfo = r.data;
+                }),
+                billing.getPlans().then(plans => {
+                    this.plans = plans;
+                })
+            ]);
+        },
+
+        /**
+         * OK button on the community name dialog clicked.
+         * @param {TextInputOKEvent} event The event object.
+         */
+        updateCommunityName: function (event) {
+            event.promise =
+                communityService.updateCommunity(this.communityId, event.newValue, this.community.default_bar_id)
+                    .then(() => true);
+        },
+
         deleteCommunity: function () {
-            deleteUserCommunity(this.communityId)
+            communityService.deleteUserCommunity(this.communityId)
                 .then(resp => {
                     if (resp.status) {
                         const index = this.communities.map(item => item.id).indexOf(this.communityId);
@@ -94,6 +274,41 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
+        },
+
+        /**
+         * Toggles the detailed view of a member.
+         * @param {CommunityMember} member The member.
+         * @param {Boolean} [expand] true to expand, omit to toggle.
+         */
+        toggleExpand: function (member, expand) {
+            /**
+             * @type {HTMLElement}
+             */
+            const elem = this.$refs[`member_${member.id}`][0];
+            elem.classList.toggle("expanded", expand);
+        },
+
+        /**
+         * Removes a manager (making them a normal member).
+         * @param {CommunityMember} member The community member.
+         */
+        removeManager: function (member) {
+
+            if (!member.isThisUser) {
+                const confirm = this.showConfirm(
+                    `${member.fullName} will no longer be able to manage this community.`,
+                    ["Remove", "Cancel"],
+                    `Remove '${member.fullName}' as community manager`,
+                    {
+                        okVariant: "danger"
+                    });
+                confirm.then(result => {
+                    if (result) {
+                        //
+                    }
+                });
+            }
         }
     }
 };
