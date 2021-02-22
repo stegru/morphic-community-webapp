@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="focusButtonCatalog">
       <h1>Button Catalog: Buttons you can add</h1>
       <a href="#">How to use the morphic button catalog</a>
       <p />
@@ -15,10 +15,10 @@
           <h3 :class="'header_' + subkind">{{buttonGroup.title}}</h3>
           <ul class="ButtonsCatalogEntries">
             <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonsCatalogEntry">
-              <b-link v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" />
+              <b-button v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
                   {{ button.configuration.label }}
-              </b-link>
+              </b-button>
 
               <div v-else class="active" style="max-width: 400px">
                 <div style="width: 100%; display: inline-flex; align-items: center;">
@@ -52,6 +52,7 @@
 </template>
 
 <style lang="scss">
+
   .buttonsCatalogHeader {
       h3 {
         font-size: 1.30rem;

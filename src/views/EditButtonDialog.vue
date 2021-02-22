@@ -34,7 +34,7 @@
                             class="buttonsCatalogEntry editRelatedItem"
                             @click="setButton(item)">
                       <div class="imageWrapper">
-                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" />
+                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
                       </div>{{ item.data.catalogLabel || item.configuration.label }}
                     </b-link>
                   </li>
@@ -50,13 +50,13 @@
                               label-for="barItem_selectOther"
                               >
                 <div class="relatedLink">
-                  <b-link @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
+                  <b-button @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
                     <div class="imageWrapper">
-                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" />
+                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
                     </div>{{
                       relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                     }}
-                  </b-link>
+                  </b-button>
                 </div>
 
                 </b-form-group>
