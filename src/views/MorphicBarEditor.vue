@@ -241,23 +241,26 @@
           <template v-slot:drag-image="">
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
-          <div id="buttonsPanel" class="fill-height bg-silver p-3">
-            <!-- <b-input-group id="search-group" size="sm" class="mb-3">
-              <b-form-input type="text" disabled></b-form-input>
-              <b-input-group-append>
-                <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
-              </b-input-group-append>
-            </b-input-group> -->
 
-            <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
+          <div id="buttonsPanel" class="fill-height bg-silver">
+
+            <!-- search -->
+            <b-input-group id="search-group" class="catalogSearch" size="sm">
+              <b-form-input type="text"></b-form-input>
+              <b-input-group-append>
+                <b-button variant="primary"><b-icon-search></b-icon-search></b-button>
+              </b-input-group-append>
+            </b-input-group>
+
+            <ul class="buttonCatalogListing linkList list-unstyled" style="overflow-y: scroll; max-height: 630px;">
               <template v-for="(buttonGroup, subkind) in buttonCatalog">
-                <li v-if="!buttonGroup.hidden" :key="subkind" class="ButtonsCatalogHeader">
+                <li v-if="!buttonGroup.hidden" :key="subkind" class="catalogGroup">
                   <h3>{{buttonGroup.title}}</h3>
-                  <ul class="ButtonsCatalogEntries">
+                  <ul class="buttonCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
                       <li v-if="button.is_primary"
                           :key="buttonId"
-                          :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry"
+                          :class="button.configuration.image_url ? '':'noImage'" class="buttonCatalogEntry"
                           :ref="'catalog_' + buttonId"
                           tabindex="-1"
                           @keypress="onCatalogItemKeyPress($event, button)"
@@ -269,7 +272,7 @@
                             <PreviewItem :item="button" :noImage="true" class="noImage" />
                           </template>
                           <!-- Define looks when not selected -->
-                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
+                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonCatalogEntry nonExpandedCatalogEntry">
                             <div class="imageWrapper">
                               <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
                             </div>{{ button.data.catalogLabel || button.configuration.label }}
@@ -429,13 +432,9 @@
 
     #preview-bar {
       border: 1px solid #002957;
-      background: white;
-      border-left: 1px solid #002957;
       // vertical line separating bar from drawer
-      background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
-      background-repeat: no-repeat;
-      background-position: right 122px bottom 0px;
+      background: white linear-gradient(#000, #000) no-repeat right 122px bottom 0px;
 
       display: flex;
       justify-content: center;
@@ -503,77 +502,88 @@
 
   #buttonsPanel {
 
-    .ButtonsCatalogHeader {
+    padding: 0.5rem;
+
+    .catalogSearch {
+    }
+
+    img:before {
+      content: " ";
+    }
+
+    .buttonCatalogListing {
+      padding: 0.5rem;
+
       h3 {
         font-size: 1.30rem;
         margin-bottom: 6px;
-        margin-top: 15px;
+        margin-top: 0;
         font-weight: bold;
       }
-    }
-img:before {
-  content:  " ";
-}
-    .ButtonsCatalogEntries {
-      padding-left: 30px;
-      list-style: none;
 
-      .buttonsCatalogEntry {
+      .catalogGroup {
+        margin-bottom: 1em;
+        .buttonCatalogEntries {
+          padding-left: 30px;
+          list-style: none;
 
-        position: relative;
+          .buttonCatalogEntry {
+            position: relative;
 
-        .imageWrapper {
-          // Position the icon to the left, and remove it from the flow.
-          display: inline-block;
-          position: relative;
-          left: -23px;
-          width: 0;
-          overflow: visible;
+            .imageWrapper {
+              // Position the icon to the left, and remove it from the flow.
+              display: inline-block;
+              position: relative;
+              left: -23px;
+              width: 0;
+              overflow: visible;
 
-          img {
-            transition: all 0.2s ease-in-out;
-          }
-        }
+              img {
+                transition: all 0.2s ease-in-out;
+              }
+            }
 
-        a:hover {
-          .imageWrapper img {
-            transform: scale(1.5);
-          }
-        }
+            a:hover {
+              .imageWrapper img {
+                transform: scale(1.5);
+              }
+            }
 
-        &.noImage {
-          img {
-            display: none;
-          }
-        }
+            &.noImage {
+              img {
+                display: none;
+              }
+            }
 
-        .active {
-          background-color: #e0f1d7;
-          border: solid 1px #008145;
-          border-radius: 5px;
-          padding: 10px;
+            .active {
+              background-color: #e0f1d7;
+              border: solid 1px #008145;
+              border-radius: 5px;
+              padding: 10px;
 
-          .buttons {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-          }
+              .buttons {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+              }
 
-          h3 {
-            margin-top: 15px;
-            font-size: 20px;
-            margin-bottom: 0px;
-          }
+              h3 {
+                margin-top: 15px;
+                font-size: 20px;
+                margin-bottom: 0px;
+              }
 
-          div.description {
-            font-size: 14px;
-          }
+              div.description {
+                font-size: 14px;
+              }
 
-          div.help {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 15px;
-            line-height: 18px;
+              div.help {
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 15px;
+                line-height: 18px;
+              }
+            }
           }
         }
       }
@@ -668,14 +678,14 @@ img:before {
       display: inline-block;
     }
 
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       width: 100%;
       display: block;
     }
   }
 
   #preview-bar, #preview-drawer {
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       .active {
         background-color: transparent;
         border: 0;
