@@ -254,13 +254,26 @@
 
             <ul class="buttonCatalogListing linkList list-unstyled" style="overflow-y: scroll; max-height: 630px;">
               <template v-for="(buttonGroup, subkind) in buttonCatalog">
-                <li v-if="!buttonGroup.hidden" :key="subkind" class="catalogGroup">
+                <li v-if="!buttonGroup.hidden"
+                    :key="subkind"
+                    :ref="`catalogGroup_${subkind}`"
+                    class="catalogGroup"
+                    :class="{
+                        hasSecondary: buttonGroup.hasSecondary,
+                        showSecondary: secondaryItemsShown[subkind]
+                    }">
+
                   <h3>{{buttonGroup.title}}</h3>
+
                   <ul class="buttonCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
-                      <li v-if="button.is_primary"
-                          :key="buttonId"
-                          :class="button.configuration.image_url ? '':'noImage'" class="buttonCatalogEntry"
+                      <li :key="buttonId"
+                          class="buttonCatalogEntry"
+                          :class="{
+                              noImage: !button.configuration.image_url && !button.data.isExpander,
+                              secondaryItem: !button.is_primary,
+                              expander: button.data.isExpander,
+                          }"
                           :ref="'catalog_' + buttonId"
                           tabindex="-1"
                           @keypress="onCatalogItemKeyPress($event, button)"
@@ -271,12 +284,24 @@
                           <template v-slot:drag-image>
                             <PreviewItem :item="button" :noImage="true" class="noImage" />
                           </template>
+
                           <!-- Define looks when not selected -->
-                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonCatalogEntry nonExpandedCatalogEntry">
-                            <div class="imageWrapper">
-                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
+                          <b-link v-if="buttonId !== expandedCatalogButtonId"
+                                  @click="expandCatalogButton(button, buttonId, subkind)"
+                                  :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
+                                  class="buttonCatalogEntry nonExpandedCatalogEntry">
+                            <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
+                              <b-iconstack v-if="button.data.isExpander">
+                                <b-icon stacked icon="circle-fill" />
+                                <b-icon stacked icon="caret-right-fill"
+                                        scale="0.9"
+                                        class="text-white" />
+                              </b-iconstack>
+
+                              <b-img v-else-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
                             </div>{{ button.data.catalogLabel || button.configuration.label }}
                           </b-link>
+
                           <!-- Define looks when selected (expanded) -->
                           <div v-else class="active" @click="expandedCatalogButtonId = undefined"
                           >
@@ -523,12 +548,38 @@
 
       .catalogGroup {
         margin-bottom: 1em;
+
+        &:not(.showSecondary) {
+          .secondaryItem {
+            display: none;
+          }
+        }
+
+        &.showSecondary {
+          .expanderIcon > * {
+            transform: rotate(90deg) !important;
+          }
+        }
+
         .buttonCatalogEntries {
+          display: flex;
+          flex-direction: column;
           padding-left: 30px;
           list-style: none;
 
           .buttonCatalogEntry {
             position: relative;
+
+            // show the primary items first
+            &:not(.secondaryItem) {
+              order: 0;
+            }
+            &.expander {
+              order: 1;
+            }
+            &.secondaryItem {
+              order: 2;
+            }
 
             .imageWrapper {
               // Position the icon to the left, and remove it from the flow.
@@ -538,13 +589,13 @@
               width: 0;
               overflow: visible;
 
-              img {
+              & > * {
                 transition: all 0.2s ease-in-out;
               }
             }
 
             a:hover {
-              .imageWrapper img {
+              .imageWrapper > * {
                 transform: scale(1.5);
               }
             }
@@ -1054,11 +1105,29 @@ export default {
                 this.dropToBar({data: button});
             }
         },
-        expandCatalogButton: function (button, buttonId, e) {
-            this.expandedCatalogButtonId = buttonId;
-            this.expandedCatalogButton = button;
-            this.$refs["catalog_" + buttonId][0].focus();
+        expandCatalogButton: function (button, buttonId, subkind) {
+            if (button.data.isExpander) {
+                this.showSecondaryItems(subkind);
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else {
+                this.expandedCatalogButtonId = buttonId;
+                this.expandedCatalogButton = button;
+                this.$refs["catalog_" + buttonId][0].focus();
+            }
+        },
 
+        /**
+         * Toggles the catalog items under the "Other" - causes the secondary items to show/hide.
+         * @param {String} subkind The catalog group id.
+         * @param {Boolean} [show] true/false to show/hide, omit to toggle.
+         */
+        showSecondaryItems: function (subkind, show) {
+            if (show === undefined) {
+                this.secondaryItemsShown[subkind] = !this.secondaryItemsShown[subkind];
+            } else {
+                this.secondaryItemsShown[subkind] = show;
+            }
         },
 
         /**
@@ -1318,7 +1387,16 @@ export default {
             },
             predefinedBars: predefinedBars,
             colors: colors,
-            checkBarTimer: null
+            checkBarTimer: null,
+
+            /**
+             * The display of secondary items in each catalog group.
+             * @type {Object<String,Boolean>}
+             */
+            secondaryItemsShown: Object.keys(buttonCatalog).reduce((map, key) => {
+                map[key] = false;
+                return map;
+            }, {})
         };
     }
 };

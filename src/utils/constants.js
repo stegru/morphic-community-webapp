@@ -344,8 +344,7 @@ function getGroupItems(subkind) {
         values.forEach(button => { button.is_primary = true; });
     }
 
-
-    // If there are some non-primary buttons, add a place-holder which shows the selection dialog.
+    // If there are some non-primary buttons, add a place-holder that expands the extra items.
     const hasSecondary = !noPrimary && values.some(button => !button.is_primary);
     if (hasSecondary) {
         /** @type {BarItem} */
@@ -358,7 +357,7 @@ function getGroupItems(subkind) {
             },
             data: {
                 isPlaceholder: true,
-                catalogLabel: "Other"
+                isExpander: true
             }
         };
         buttonCatalog[subkind].more = Object.assign(placeHolder.configuration, buttonCatalog[subkind].more);
@@ -371,8 +370,9 @@ function getGroupItems(subkind) {
 
 Object.keys(buttonCatalog).forEach(key => {
     const group = buttonCatalog[key];
-    const items = getGroupItems(group.subkind || key);
-    group.items = items;
+    group.items = getGroupItems(group.subkind || key);
+    const expander = group.items[`more-${key}`];
+    group.hasSecondary = !!expander;
 
     if (!group.editTitle) {
         group.editTitle = group.title;
@@ -384,8 +384,12 @@ Object.keys(buttonCatalog).forEach(key => {
         group.editGroupTab = (group.editItemField || group.editTitle) + "s";
     }
 
+    if (expander) {
+        expander.data.catalogLabel = group.expanderTitle || `Other ${group.editTitle}s...`;
+    }
+
     // Get the kind of all items, if they're the same
-    const values = Object.values(items);
+    const values = Object.values(group.items);
     if (values.length > 0) {
         const kind = values[0].kind;
         if (values.every(button => button.kind === kind || button.data.isPlaceholder)) {
