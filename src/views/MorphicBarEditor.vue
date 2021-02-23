@@ -242,38 +242,54 @@
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
 
-          <div id="buttonsPanel" class="fill-height bg-silver">
+          <div id="buttonsPanel"
+               class="fill-height bg-silver" :class="{
+                noResults: searchState === 'noResults',
+                gotResults: searchState === 'gotResults',
+                searchResults: !!searchState
+               }" >
 
             <!-- search -->
-            <b-input-group id="search-group" class="catalogSearch" size="sm">
-              <b-form-input type="text"></b-form-input>
+            <b-input-group id="search-group" class="catalogSearch" size="sm" >
+              <b-form-input type="search" placeholder="Search buttons" v-model="searchText" />
               <b-input-group-append>
-                <b-button variant="primary"><b-icon-search></b-icon-search></b-button>
+                <b-button variant="outline-secondary"><b-icon-search /></b-button>
               </b-input-group-append>
             </b-input-group>
 
-            <ul class="buttonCatalogListing linkList list-unstyled" style="overflow-y: scroll; max-height: 630px;">
-              <template v-for="(buttonGroup, subkind) in buttonCatalog">
+            <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
+                :key="isSearchResult"
+                class="buttonCatalogListing linkList list-unstyled"
+                :class="{ searchResults: isSearchResult}"
+                style="overflow-y: scroll; max-height: 630px;">
+
+              <li v-if="isSearchResult && searchResult && searchResult.itemsFound.hidden">
+                <small>No buttons where found while searching for '<code>{{searchText}}</code>'</small>
+              </li>
+              <template v-for="(buttonGroup, subkind) in catalog">
                 <li v-if="!buttonGroup.hidden"
                     :key="subkind"
                     :ref="`catalogGroup_${subkind}`"
                     class="catalogGroup"
                     :class="{
                         hasSecondary: buttonGroup.hasSecondary,
-                        showSecondary: secondaryItemsShown[subkind]
+                        showSecondary: secondaryItemsShown[subkind],
+                        searchResult: buttonGroup.isSearchResult
                     }">
 
-                  <h3>{{buttonGroup.title}}</h3>
+                  <h3 v-if="buttonGroup.title">{{buttonGroup.title}}</h3>
 
                   <ul class="buttonCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
-                      <li :key="buttonId"
+                      <li :key="button.data.buttonKey"
                           class="buttonCatalogEntry"
                           :class="{
                               noImage: !button.configuration.image_url && !button.data.isExpander,
                               secondaryItem: !button.is_primary,
                               expander: button.data.isExpander,
                           }"
+                          :style="{order: button.searchResult && button.searchResult.order}"
+                          :title="button.configuration.description"
                           :ref="'catalog_' + buttonId"
                           tabindex="-1"
                           @keypress="onCatalogItemKeyPress($event, button)"
@@ -299,7 +315,10 @@
                               </b-iconstack>
 
                               <b-img v-else-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
-                            </div>{{ button.data.catalogLabel || button.configuration.label }}
+                            </div>
+                            <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
+<!--                            <span v-if="button.searchResult && button.searchResult.label" v-html="button.searchResult.label"/>-->
+<!--                            <span >{{ button.data.catalogLabel || button.configuration.label }}</span>-->
                           </b-link>
 
                           <!-- Define looks when selected (expanded) -->
@@ -536,6 +555,18 @@
       content: " ";
     }
 
+    // Hide the listing if search is used
+    &.searchResults {
+      .buttonCatalogListing:not(.searchResults) {
+        display: none;
+      }
+    }
+    &:not(.searchResults) {
+      .buttonCatalogListing.searchResults {
+        display: none;
+      }
+    }
+
     .buttonCatalogListing {
       padding: 0.5rem;
 
@@ -549,7 +580,8 @@
       .catalogGroup {
         margin-bottom: 1em;
 
-        &:not(.showSecondary) {
+        // Hide secondary items.
+        &:not(.showSecondary, .searchResult) {
           .secondaryItem {
             display: none;
           }
@@ -778,10 +810,11 @@ import {
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
-import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
+import { buttonCatalog, colors, MESSAGES, allButtons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
+import * as search from "@/utils/search";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 
@@ -1106,7 +1139,10 @@ export default {
             }
         },
         expandCatalogButton: function (button, buttonId, subkind) {
-            if (button.data.isExpander) {
+            if (!button) {
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else if (button.data.isExpander) {
                 this.showSecondaryItems(subkind);
                 this.expandedCatalogButtonId = undefined;
                 this.expandedCatalogButton = undefined;
@@ -1216,6 +1252,66 @@ export default {
                     }
                 });
             }
+        },
+        /**
+         * Returns the label for an item in the catalog.
+         * @param {BarItem} button The button
+         * @param {Array<String>} [searchWords] The words from the search, to highlight.
+         * @return {String} Label for the item, as raw HTML.
+         */
+        getCatalogItemLabel: function (button, searchWords) {
+            const label = button.data.catalogLabel || button.configuration.label;
+            // escape any html
+            const escaped = new Option(label).innerHTML;
+
+            let html;
+            if (searchWords && searchWords.length > 0) {
+                const highlight = new RegExp(searchWords.join("|"), "gi");
+                html = escaped.replace(highlight, "<b>$&</b>");
+            } else {
+                html = escaped;
+            }
+
+            return html;
+        },
+        searchCatalog() {
+            if (this.searchText.length > 0) {
+                const queryWords = this.searchText.toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/g);
+                // Only the top 20 - they are slow to render.
+                const results = search.catalogSearch(queryWords)
+                    .sort((a, b) => a.order - b.order)
+                    .slice(0, 20);
+
+                /** @type {ButtonCatalogItem} */
+                const groups = {
+                    itemsFound: {
+                        isSearchResult: true,
+                        searchWords: queryWords,
+                        hasSecondary: false,
+                        items: {},
+                        hidden: results.length === 0
+                    }
+                };
+
+                // Make a catalog group for the results.
+                results.forEach(result => {
+                    /** @type {BarItem} */
+                    if (result.buttonKey) {
+                        const item = JSON.parse(JSON.stringify(allButtons[result.buttonKey]));
+                        item.searchResult = result;
+
+                        groups.itemsFound.items[result.buttonKey] = item;
+                    } else if (result.groupKey) {
+                        groups[result.groupKey] = JSON.parse(JSON.stringify(buttonCatalog[result.groupKey]));
+                    }
+                });
+
+                this.searchResult = groups;
+                this.searchState = results.length > 0 ? "gotResults" : "noResults";
+            } else {
+                this.searchState = null;
+                this.searchResult = null;
+            }
         }
     },
     computed: {
@@ -1277,6 +1373,10 @@ export default {
                 Bar.checkBar(this.barDetails);
             },
             deep: true
+        },
+        searchText: function () {
+            this.expandCatalogButton(null);
+            this.searchCatalog();
         }
     },
     beforeRouteUpdate(to, from, next) {
@@ -1396,7 +1496,19 @@ export default {
             secondaryItemsShown: Object.keys(buttonCatalog).reduce((map, key) => {
                 map[key] = false;
                 return map;
-            }, {})
+            }, {}),
+
+            /**
+             * Catalog search text
+             * @type {String}
+             */
+            searchText: "",
+            /** null, "gotResults" or "noResults" */
+            searchState: null,
+            showSearchResults: false,
+
+            /** @type {ButtonCatalog} */
+            searchResult: false
         };
     }
 };

@@ -50,7 +50,6 @@
  * @property {GUID} barId The bar this item belongs to.
  * @property {String} id Unique identifier.
  * @property {String} kind The kind of item (url, application, action).
- * @property {String} subkind The item category (email, news).
  * @property {Boolean} is_primary
  * @property {BarItemData} data Web-app data.
  * @property {BarItemConfiguration} configuration Bar item options
@@ -60,6 +59,7 @@
  * BarItem data for the web-app
  * @typedef {Object} BarItemData
  * @property {String} buttonKey Key in the buttons object, where this item was taken from.
+ * @property {String} subkind The item category (email, news).
  * @property {Boolean} [isPlaceholder] true if this button is a place-holder, where the site has not been chosen.
  * @property {Boolean} [isExpander] true if this item is used in the catalog to show the secondary items.
  * @property {Boolean} catalogItem true if this instance is in the catalog (not added to the bar)

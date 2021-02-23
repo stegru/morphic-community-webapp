@@ -402,3 +402,19 @@ Object.keys(buttonCatalog).forEach(key => {
     }
 });
 
+// Distinguish buttons for an app and site of the same name.
+/** @type {Array<BarItem>} */
+const buttons = Object.values(allButtons);
+const linkButtons = {};
+
+buttons.filter(b => b.kind === "link")
+    .forEach(button => {
+        linkButtons[button.data.catalogLabel || button.configuration.label] = true;
+    });
+
+buttons.filter(b => b.kind === "application").forEach(button => {
+    const label = button.data.catalogLabel || button.configuration.label;
+    if (linkButtons[label]) {
+        button.data.catalogLabel = label + " App";
+    }
+});
