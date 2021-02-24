@@ -215,6 +215,7 @@
 <script>
 
 import { colors, icons } from "@/utils/constants";
+import * as params from "@/utils/params";
 
 export default {
     name: "PreviewItem",
@@ -248,7 +249,7 @@ export default {
         hasError: function () {
             /** @type {BarItem} */
             var item = this.item;
-            return item.data.hasError && !item.data.catalogItem;
+            return (item.data.hasError && !item.data.catalogItem) || params.hasProblem(item);
         },
         /**
          * Determines how the item is displayed.

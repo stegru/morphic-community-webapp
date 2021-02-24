@@ -20,10 +20,36 @@ These are then used to create input fields in the editor dialog.
  * @property {String} label Text displayed with the input field.
  * @property {Array<Object>} [selectOptions] A list of items for a select field.
  * @property {String} attrs The HTML attributes for the input element.
- * @property {Function} [isApplicable] A function, returning true if the field should be shown.
- * @property {Function} [isEnabled] A function, returning true if the field should be enabled.
- * @property {Object<String,Object>} validation The validation rules.
+ * @property {isEnabledFunc} [isApplicable] A function, returning true if the field should be shown.
+ * @property {isEnabledFunc} [isEnabled] A function, returning true if the field should be enabled.
+ * @property {Object<String,String>} validation The validation rules. Key is the key in {@link validators}, value is the message.
+ * @property {Object<String,Object>} checks The checks. Key is the key in {@link checks}.
  */
+
+/**
+ * Callback for isApplicable or isEnabled
+ * @callback isEnabledFunc
+ * @param {BarItem} item The bar item being checked.
+ */
+
+/**
+ * Validation function
+ * @callback validationFunc
+ * @param {String} value The value to validate.
+ * @return {Boolean} true if the value is valid.
+ */
+
+/**
+ * Function that checks for problems.
+ * @callback checkFunc
+ * @param {String} value The value to check.
+ * @param {BarItem} barItem The bar item being checked.
+ * @param {String} paramKey The parameter key.
+ * @return {Promise<CheckResult>} Resolves when complete.
+ */
+
+
+import axios from "axios";
 
 /**
  *
@@ -45,6 +71,9 @@ export const allParameters = {
         },
         validation: {
             required: "Site link is required."
+        },
+        checks: {
+            urlWorking: {}
         }
     },
     skypeId: {
@@ -80,6 +109,38 @@ export const allParameters = {
 };
 
 /**
+ * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
+ *
+ * @type {Object<String,validationFunc>}
+ */
+const validators = {
+    /**
+     * Checks if a field has a value.
+     * @param {Any} value The field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
+    required(value) {
+        return value && value !== "";
+    },
+    /**
+     * Checks if the defaultApp field has a value.
+     * @param {Any} value The defaultApp field value to check.
+     * @return {Boolean} true if the field has a value.
+     */
+    defaultAppRequired(value) {
+        return value !== "";
+    }
+};
+
+/**
+ * Similar to validators, but may take longer and are performs asynchronously.
+ * @type {Object<String,checkFunc>}
+ */
+const checks = {
+    urlWorking: checkUrl
+};
+
+/**
  * Returns a function which will return the given constant value.
  * @param {Any} result The constant value.
  * @return {Function} A function which returns `result`.
@@ -103,28 +164,6 @@ Object.values(allParameters).forEach(
             paramInfo.isEnabled = constantFunction(paramInfo.isEnabled === undefined ? true : paramInfo.isEnabled);
         }
     });
-
-/**
- * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
- */
-const validators = {
-    /**
-     * Checks if a field has a value.
-     * @param {Any} value The field value to check.
-     * @return {Boolean} true if the field has a value.
-     */
-    required(value) {
-        return value && value !== "";
-    },
-    /**
-     * Checks if the defaultApp field has a value.
-     * @param {Any} value The defaultApp field value to check.
-     * @return {Boolean} true if the field has a value.
-     */
-    defaultAppRequired(value) {
-        return value !== "";
-    }
-};
 
 const origFieldPrefix = "_orig_";
 
@@ -303,4 +342,223 @@ export function getValidationError(button, paramKey) {
         }
     }
     return errorMessage;
+}
+
+/**
+ * Determines if a parameter has any checks.
+ * @param {String} paramKey The parameter key.
+ * @return {Boolean} true if the parameter requires checks.
+ */
+export function hasChecks(paramKey) {
+    return allParameters[paramKey].checks && Object.keys(allParameters[paramKey].checks).length > 0;
+}
+
+/**
+ * Gets a for a parameter on a button, if it has a problem.
+ * @param {BarItem} button The button.
+ * @param {String} paramKey The parameter key.
+ * @return {ItemProblem} The problem, if it has one.
+ */
+/**
+ * Determines if a parameter already has a problem.
+ * @param {BarItem} button The button.
+ * @param {String} [paramKey] The parameter key. Omit to check all parameters.
+ * @return {Boolean} true if the parameter has a problem.
+ */
+export function hasProblem(button, paramKey) {
+    let result;
+    if (paramKey) {
+        result = !!getProblem(button, paramKey);
+    } else {
+        result = button.data.problems && Object.values(button.data.problems).find(p => p.isProblem);
+    }
+
+    return result;
+}
+
+/**
+ * Gets a for a parameter on a button, if it has a problem.
+ * @param {BarItem} button The button.
+ * @param {String} paramKey The parameter key.
+ * @return {ItemProblem} The problem, if it has one.
+ */
+export function getProblem(button, paramKey) {
+    return button.data.problems &&
+        Object.values(button.data.problems).find(p => p.isProblem && p.paramKey === paramKey);
+}
+
+
+/**
+ * The value a `checkFunc` will resolve with.
+ *
+ * @typedef {Object} CheckResult
+ * @property {Boolean} isProblem true if this object is an {@link ItemProblem}.
+ * @property {String} value The value that was checked.
+ * @property {String} [newValue] A new value to set, if any.
+ */
+
+/**
+ * @typedef {CheckResult} ItemProblem
+ * // Returned by the checker function:
+ * @property {Boolean} isProblem Always true.
+ * @property {Boolean} warning true to warn, false if it's bad.
+ * @property {String} alert Short message for the user.
+ * @property {String} message Message for the user.
+ * @property {String} details More info, for the user.
+ * // set in checkForProblems:
+ * @property {String} paramKey The parameter.
+ * @property {String} checkKey The check key name.
+ */
+
+/**
+ * Checks a bar item's parameter for problems. This type of check is similar to validation, but it takes longer
+ * and is performed asynchronously.
+ *
+ * @param {BarItem} button The button to check
+ * @param {String} paramKey The parameter to check (omit to check all).
+ * @param {Boolean} live true if the value is being checked as the user types (don't fix any parameter values).
+ * @return {Promise<ItemProblem|ItemProblem[]>} Resolves when done.
+ */
+export function checkForProblems(button, paramKey, live) {
+    let work;
+
+    if (!button.data.problems) {
+        /** @type {Object<String,ItemProblem>} */
+        button.data.problems = {};
+    }
+
+    if (paramKey) {
+        const paramInfo = allParameters[paramKey];
+
+        const value = button.data.parameters[paramKey];
+        if (paramInfo.checks) {
+            work = Object.keys(paramInfo.checks).map(key => {
+                const problemKey = `${paramKey}.${key}`;
+
+                let checkPromise;
+                const lastCheck = button.data.problems[problemKey];
+
+                if (lastCheck && lastCheck.value === value) {
+                    // Checking the same value as last time - return the same result.
+                    checkPromise = Promise.resolve(lastCheck);
+                } else if (lastCheck && lastCheck.checking) {
+                    // Already in a check
+                    if (lastCheck.checkingValue === value) {
+                        // This is a check on the same value, wait for that one.
+                        checkPromise = lastCheck.checking;
+                    } else {
+                        // Cancel the last check
+                        lastCheck.checking.cancel && lastCheck.checking.cancel();
+                        lastCheck.checking.cancelled = true;
+                        delete lastCheck.checking;
+                    }
+                }
+
+                if (!checkPromise) {
+                    // Perform the check.
+                    const checkFunc = checks[key];
+                    if (checkFunc) {
+                        checkPromise = checkFunc(value, button, paramKey);
+                    } else {
+                        checkPromise = Promise.reject(new Error(`No check function named ${key}`));
+                    }
+
+                    // Add the promise to the problem, so if another check is going to be made before this check
+                    // is over (and the value hasn't changed), it can wait on this one instead.
+                    button.data.problems[problemKey] = Object.assign({}, button.data.problems[problemKey], {
+                        checkingValue: value,
+                        checking: checkPromise
+                    });
+                }
+
+                return (lastCheck && lastCheck.checking) || checkPromise.then(checkResult => {
+                    if (!checkPromise.cancelled) {
+                        // Store the result
+                        button.data.problems[problemKey] = checkResult;
+                        if (checkResult) {
+                            checkResult.value = value;
+                            if (checkResult.isProblem) {
+                                checkResult.paramKey = paramKey;
+                                checkResult.checkKey = key;
+                            } else if (checkResult.newValue) {
+                                checkResult.value = checkResult.newValue;
+                                if (!live) {
+                                    button.data.parameters[paramKey] = checkResult.newValue;
+                                }
+                            }
+                        }
+                    }
+                    return checkResult;
+                });
+            });
+        }
+    } else {
+        work = Object.keys(button.data.parameters).map(key => checkForProblems(button, key, live));
+    }
+
+    return work && work.length > 0
+        ? Promise.all(work)
+        : Promise.resolve();
+};
+
+/**
+ * Checks if a url is working.
+ * @param {String} url The url
+ * @param {BarItem} button The button.
+ * @param {String} [paramKey] The parameter key (not used).
+ * @param {Number} [timeout] milliseconds to wait [default: 10000].
+ * @return {Promise} Resolves when done.
+ */
+async function checkUrl(url, button, paramKey, timeout = 10000) {
+    let togo;
+
+    console.log("Checking url", url);
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        // Try https
+        const httpsUrl = "https://" + url;
+        const httpsResult = await checkUrl(httpsUrl, button, paramKey, timeout);
+        let goodUrl;
+        if (httpsResult.isProblem) {
+            // Try http
+            const httpUrl = "http://" + url;
+            const httpResult = await checkUrl(httpUrl, button, paramKey, Math.min(3000, timeout));
+            if (httpResult.isProblem) {
+                togo = httpsResult;
+            } else {
+                goodUrl = httpUrl;
+            }
+        } else {
+            goodUrl = httpsUrl;
+        }
+
+        if (goodUrl) {
+            togo = {
+                newValue: goodUrl
+            };
+        }
+    } else {
+        const cancelSource = axios.CancelToken.source();
+        // HEAD the url, to see if it works.
+        /** @type {AxiosRequestConfig} */
+        const req = {
+            baseURL: url,
+            maxRedirects: 5,
+            timeout: timeout,
+            cancelToken: cancelSource.token
+        };
+        togo = axios.create(req).head().then(value => { return {}; }).catch(reason => {
+            return {
+                isProblem: true,
+                warn: !!reason.response,
+                alert: "Broken link",
+                message: "This link does not appear to work.",
+                details: `Unable access "${url}: ${reason.message}".`
+            };
+        });
+        togo.cancelSource = cancelSource;
+        togo.cancel = cancelSource.cancel;
+    }
+
+    return togo;
 }
