@@ -70,7 +70,8 @@ export const allParameters = {
             type: "url"
         },
         validation: {
-            required: "Site link is required."
+            required: "Site link is required.",
+            url: "This isn't a valid url."
         },
         checks: {
             urlWorking: {}
@@ -116,7 +117,7 @@ export const allParameters = {
 const validators = {
     /**
      * Checks if a field has a value.
-     * @param {Any} value The field value to check.
+     * @param {String} value The field value to check.
      * @return {Boolean} true if the field has a value.
      */
     required(value) {
@@ -124,11 +125,34 @@ const validators = {
     },
     /**
      * Checks if the defaultApp field has a value.
-     * @param {Any} value The defaultApp field value to check.
+     * @param {String} value The defaultApp field value to check.
      * @return {Boolean} true if the field has a value.
      */
     defaultAppRequired(value) {
         return value !== "";
+    },
+
+    /**
+     * Checks if the value is a URL, with or without the protocol prefix.
+     * @param {String} value The defaultApp field value to check.
+     * @return {Boolean} true if the value is a valid url.
+     */
+    url(value) {
+        let u;
+        let result;
+
+        try {
+            u = new URL(value);
+            result = (u.protocol === "https:" || u.protocol === "http:");
+        } catch (_) {
+            if (value.startsWith("http")) {
+                result = false;
+            } else {
+                result = validators.url(`http://${value}`);
+            }
+        }
+
+        return result;
     }
 };
 
