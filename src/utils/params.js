@@ -145,7 +145,7 @@ const validators = {
             u = new URL(value);
             result = (u.protocol === "https:" || u.protocol === "http:");
         } catch (_) {
-            if (value.startsWith("http")) {
+            if (value.startsWith("https://") || value.startsWith("http://")) {
                 result = false;
             } else {
                 result = validators.url(`http://${value}`);
