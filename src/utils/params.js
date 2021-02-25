@@ -50,6 +50,7 @@ These are then used to create input fields in the editor dialog.
 
 
 import axios from "axios";
+import { HTTP } from "@/services";
 
 /**
  *
@@ -562,26 +563,66 @@ async function checkUrl(url, button, paramKey, timeout = 10000) {
             };
         }
     } else {
-        const cancelSource = axios.CancelToken.source();
-        // HEAD the url, to see if it works.
-        /** @type {AxiosRequestConfig} */
-        const req = {
-            baseURL: url,
-            maxRedirects: 5,
-            timeout: timeout,
-            cancelToken: cancelSource.token
-        };
-        togo = axios.create(req).head().then(value => { return {}; }).catch(reason => {
-            return {
+        let urlParsed;
+        let error;
+        try {
+            urlParsed = new URL(url);
+            if (!urlParsed || (urlParsed.protocol !== "https:" && urlParsed.protocol !== "http:")) {
+                error = "Link is not a website address";
+            }
+        } catch {
+            error = "Link does not look valid";
+        }
+
+        if (error) {
+            togo = Promise.resolve({
                 isProblem: true,
-                warn: !!reason.response,
                 alert: "Broken link",
-                message: "This link does not appear to work.",
-                details: `Unable access "${url}: ${reason.message}".`
+                message: error
+            });
+        } else {
+            const cancelSource = axios.CancelToken.source();
+
+            let requestUrl;
+            let client;
+
+            // Use the API service for http requests - the browser will be unable to access http links
+            // from a https page.
+            const useApi = (urlParsed.protocol === "http:");
+            if (useApi) {
+                const u = encodeURIComponent(urlParsed.toString());
+                requestUrl = `/v1/validate/link/${u}`;
+                client = HTTP;
+            } else {
+                requestUrl = urlParsed.toString();
+                client = axios.create({
+                    baseURL: requestUrl
+                });
+            }
+
+            // HEAD the url, to see if it works.
+            /** @type {AxiosRequestConfig} */
+            const req = {
+                url: requestUrl,
+                maxRedirects: 5,
+                timeout: timeout,
+                cancelToken: cancelSource.token
             };
-        });
-        togo.cancelSource = cancelSource;
-        togo.cancel = cancelSource.cancel;
+
+            togo = client.head(requestUrl, req).then(value => {
+                return {};
+            }).catch(reason => {
+                return {
+                    isProblem: true,
+                    warn: !!reason.response,
+                    alert: "Broken link",
+                    message: "This link does not appear to work.",
+                    details: `Unable access "${url}: ${reason.message}".`
+                };
+            });
+            togo.cancelSource = cancelSource;
+            togo.cancel = cancelSource.cancel;
+        }
     }
 
     return togo;
