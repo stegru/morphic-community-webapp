@@ -152,6 +152,8 @@
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
               </template>
+
+              <!-- Bar item problems -->
               <div class="desktop-alerts" >
                 <b-alert v-for="(error) in barDetails.errors"
                          :key="error.key"
@@ -161,12 +163,14 @@
                   <div @mouseenter="highlight(true, error.item, error.duplicates)"
                        @mouseleave="highlight(false, error.item, error.duplicates)"
                        @click="showEditDialog(error.item)"
-                  >
+                       :title="error.details"
+                        >
 
                     <b-icon-exclamation-triangle-fill v-if="!error.level || error.level === 'error'" variant="danger"/>
                     <b-icon-info-circle-fill v-if="error.level === 'warn'" variant="info"/>
                     &nbsp;
 
+                    <!-- Duplicated labels -->
                     <template v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
                       <BarItemLink :bar-item="error.item"
                                    @click="showEditDialog(error.item)"
@@ -174,6 +178,8 @@
                                    @mouseleave="highlight(true, error.item)"
                       /> is duplicated.
                     </template>
+
+                    <!-- Duplicated actions -->
                     <template v-else-if="error.type === 'duplicate'">
                       <BarItemLink :bar-item="error.item"
                               @click="showEditDialog(error.item)"
@@ -189,6 +195,7 @@
                       />
                     </template>
 
+                    <!-- Generic problem -->
                     <template v-else>
                       <BarItemLink :bar-item="error.item"
                               @click="showEditDialog(error.item)"
@@ -199,6 +206,7 @@
                   </div>
                 </b-alert>
               </div>
+
             </drop>
 
             <!-- Buttons Bar -->
