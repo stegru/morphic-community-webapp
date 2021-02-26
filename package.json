@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node_modules/.bin/eslint src/ && NODE_ENV=local vue-cli-service serve",
+    "dev": "NODE_ENV=local vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build --mode development --dest dev",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@popperjs/core": "2.5.4",
     "arrow-line": "^0.7.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",

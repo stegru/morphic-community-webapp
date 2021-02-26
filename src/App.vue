@@ -90,6 +90,7 @@
 
   button.btn.btn-link {
     padding: 0;
+    vertical-align: baseline;
   }
 
 </style>

@@ -63,6 +63,28 @@ Vue.mixin({
                 toaster: "b-toaster-top-center"
             }, options));
         },
+
+        /**
+         * Shows a modal message with yes/no buttons.
+         *
+         * Wrapper for $bvModal.msgBoxConfirm.
+         *
+         * @see https://bootstrap-vue.org/docs/components/modal#modal-message-boxes
+         * @param {String} message The main message.
+         * @param {Array<String>} [buttons] Text for the two buttons (default: ["Yes","No"])
+         * @param {String} [title] A title for the dialog.
+         * @param {BvMsgBoxOptions} options Options passed to $bvModal.msgBoxConfirm (b-modal props)
+         * @return {Promise<Boolean>} Resolve to true for 'yes'
+         */
+        showConfirm(message, buttons, title, options) {
+            return this.$bvModal.msgBoxConfirm(message, Object.assign({
+                title: title,
+                okTitle: (buttons && buttons[0]) || "Yes",
+                cancelTitle: (buttons && buttons[1]) || "No",
+                centered: true
+            }, options));
+        },
+
         /**
          * Gets the url of an icon
          * @param {String} image The icon identified (from image_url)
@@ -100,7 +122,9 @@ Vue.mixin({
         focusMode: function () {
             return this.$route.path.includes("/focused/");
         },
-        communityId: function () { return this.$store.getters.communityId; }
+        communityId: function () { return this.$store.getters.communityId; },
+        userId: function () { return this.$store.getters.userId; },
+        console: () => console
     }
 });
 
