@@ -66,8 +66,9 @@
  * @property {String} catalogLabel Label in the catalog (if different to `label`).
  * @property {String} category Category in the catalog
  * @property {Boolean} [hasError] true if one of the parameter values has a validation error.
- * @property {ItemParameters} parameters Values of the named parameters used in fields.
+ * @property {Object<String,String>} parameters Values of the named parameters used in fields.
  * @property {Array<String>} paramFields The field names of this object which are parameterised.
+ * @property {Object<String,ItemProblem>} problems Results of the last problem check.
  */
 
 /**

@@ -7,12 +7,11 @@
            :ok-disabled="button && button.data.isPlaceholder"
            :title="dialogTitle">
 
-    <template #modal-footer="{ok, cancel, hide}">
-      <b-button @click="hide('remove')" variant="outline-danger" style="margin-right: 1em"><b-icon icon="trash" /> Remove button</b-button>
-      <b-button @click="cancel()" variant="secondary">Cancel</b-button>
-      <b-button @click="ok()" variant="primary">Update Button</b-button>
+    <template #modal-footer="{ok, cancel, hide}" >
+        <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove button</b-button>
+        <b-button @click="cancel()" variant="secondary">Cancel</b-button>
+        <b-button @click="ok()" variant="primary">Update Button</b-button>
     </template>
-
     <div v-if="button">
       <b-form>
         <b-row>
@@ -323,9 +322,9 @@ export default {
          * @param {Event} e The event object.
          */
         okClicked: function (e) {
+            e.preventDefault();
             if (this.siteTabActive || this.nextButton) {
                 this.activeTab = 1;
-                e.preventDefault();
             } else {
                 this.closeDialog(true);
             }
@@ -348,15 +347,41 @@ export default {
          * @param {Boolean} applyChanges true to apply the changes.
          */
         closeDialog: function (applyChanges) {
+
+            let promise;
             if (applyChanges) {
-                Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
-                if (this.selectedItem.data.isPlaceholder && !this.button.data.isPlaceholder) {
-                    delete this.selectedItem.data.isPlaceholder;
-                }
+                promise = params.checkForProblems(this.button).then(() => {
+                    const problems = Object.values(this.button.data.problems);
+                    if (problems.length > 0) {
+                        return this.showProblems(problems).then(value => value || "cancel");
+                    }
+                });
+            } else {
+                promise = Promise.resolve();
             }
 
-            this.$bvModal.hide("modalEditGeneric");
-            this.dialogClosed(applyChanges);
+            promise.then((value) => {
+                if (value !== "cancel") {
+                    if (applyChanges) {
+                        Object.assign(this.selectedItem, JSON.parse(JSON.stringify(this.button)));
+                        if (this.selectedItem.data.isPlaceholder && !this.button.data.isPlaceholder) {
+                            delete this.selectedItem.data.isPlaceholder;
+                        }
+                    }
+
+                    this.$bvModal.hide("modalEditGeneric");
+                    this.dialogClosed(applyChanges);
+                }
+            });
+        },
+
+        /**
+         * Shows a message of problems.
+         * @param {Array<ItemProblems>} problems The problems.
+         * @return {Promise<Boolean>} true to continue with saving.
+         */
+        showProblems: function (problems) {
+            return this.showConfirm("This button still has some problems.", ["Continue", "Go back"]);
         },
         /**
          * Shows the dialog, editing the selected item.
