@@ -129,6 +129,5 @@ export const allIcons = {
     youtube: "logo_youtube.svg",
     youtubemusic: "logo_youtubeMusic.svg",
     news$newspaper: "news/newspaper.svg",
-    provenance: "provenance.gsheet",
     windowmaximize: "window-maximize.svg"
 };
