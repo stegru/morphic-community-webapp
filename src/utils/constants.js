@@ -34,7 +34,7 @@ export const colors = {
     red: "#8c191b",
     green: "#46622d",
     orange: "#a33e1f",
-    default_button: "rgb(0, 47, 87)"
+    default_button: "#002f57"
 };
 
 
