@@ -89,7 +89,7 @@ Object.keys(allIconsSrc).forEach(iconId => {
     icons[iconId] = filename;
 
     const isSubKind = iconId.includes("$");
-    const isGeneric = !isSubKind && !filename.startsWith("logo_");
+    const isGeneric = !isSubKind && !filename.startsWith("logo_") && !filename.startsWith("favicon_");
 
     const group = isGeneric
         ? "generic"
