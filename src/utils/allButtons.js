@@ -203,17 +203,6 @@ export const allButtons = {
             image_url: "calendar"
         }
     },
-    calendar_website: {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            subkind: "calendar",
-            label: "Google Calendar",
-            color: "blue",
-            url: "https://calendar.google.com/calendar/r",
-            description: "Opens the Google Calendar for the user if they are signed in."
-        }
-    },
     calendly: {
         kind: "link",
         is_primary: true,
