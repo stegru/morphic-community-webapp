@@ -303,10 +303,10 @@
                           @keypress="onCatalogItemKeyPress($event, button)"
                       >
                         <!-- Render each button as draggable -->
-                        <drag :data="button" type="catalogButtonNoImage">
+                        <drag :data="button" type="catalogButtonWithImage">
                           <!-- Define looks when dragged -->
                           <template v-slot:drag-image>
-                            <PreviewItem :item="button" :noImage="true" class="noImage" />
+                            <PreviewItem :item="button" :noImage="false" xclass="noImage" />
                           </template>
 
                           <!-- Define looks when not selected -->
