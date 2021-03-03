@@ -17,6 +17,23 @@ jobs:
         with:
           node-version: '12.x'
 
+      - name: Commenting
+        uses: JungWinter/comment@v1.1.0
+        id: comment
+        with:
+          type: create
+          body: "hello 1"
+          issue_number: ${{ github.event.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commenting
+        uses: JungWinter/comment@v1.1.0
+        with:
+          type: edit
+          body: "hello 2"
+          comment_id: ${{ steps.comment.outputs.id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: npm install
         run: npm install
 
@@ -26,17 +43,12 @@ jobs:
       - name: Building prod
         run: npm run build
 
-      - name: Building dev
-        run: npm run build-dev
-
       - name: Archiving prod
         uses: actions/upload-artifact@v2
         with:
           name: webapp-prod
           path: dist/
 
-      - name: Archiving dev
-        uses: actions/upload-artifact@v2
-        with:
-          name: webapp-dev
-          path: dev/
+
+
+
