@@ -23,9 +23,7 @@ jobs:
       - name: Looking for crap code
         run: npm run lint
 
-      - name: Building
-        env:
-          VUE_APP_API_URL: https://api.morphic.ste-test.net/
+      - name: Building prod
         run: npm run build
 
       - name: Packing build
