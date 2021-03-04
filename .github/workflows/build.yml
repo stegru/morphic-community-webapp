@@ -30,14 +30,14 @@ jobs:
         run: tar -czvf web-app.tar.gz dist/
 
       - name: Getting build hash
-        run: sha256sum web-app.tar.gz | xxd -r -ps | base64 | sed 's,^,hash=,' >> $GITHUB_ENV
+        run: sha256sum web-app.tar.gz | cut -d ' ' -f 1 | xxd -r -ps | base64 | sed 's,^,hash=,' >> $GITHUB_ENV
 
       - name: Commenting
         uses: JungWinter/comment@v1.1.0
         id: comment
         with:
           type: create
-          body: "https://pr-${{ github.event.number }}.morphic.ste-test.net/\n\n${{ env.hash }}"
+          body: "# https://pr-${{ github.event.number }}.morphic.ste-test.net/\n\n${{ env.hash }}"
           issue_number: ${{ github.event.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
