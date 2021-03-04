@@ -17,23 +17,6 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: Commenting
-        uses: JungWinter/comment@v1.1.0
-        id: comment
-        with:
-          type: create
-          body: "hello 1"
-          issue_number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commenting
-        uses: JungWinter/comment@v1.1.0
-        with:
-          type: edit
-          body: "hello 2"
-          comment_id: ${{ steps.comment.outputs.id }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: npm install
         run: npm install
 
