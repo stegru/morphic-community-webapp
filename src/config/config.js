@@ -5,7 +5,7 @@ var ENV;
 if (href.host === "communitynew.morphic.dev") {
     // Hack to force the dev site to always use the dev api server.
     ENV = "DEVELOPMENT";
-} else if (href.host.match(/^pr-\d\.morphic\.ste-test\.net$/)) {
+} else if (href.host.match(/^pr-\d+\.morphic\.ste-test\.net$/)) {
     // A similar hack to force a test site to always use the test api server.
     ENV = "PR_TEST";
 } else {
