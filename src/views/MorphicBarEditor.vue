@@ -31,127 +31,168 @@
           <!-- Topmost area above desktop image -->
           <div id="bar-info">
             <div class="bar-name">
-              <h3 v-if="activeMemberId" class="mb-0">
-                <b>Bar for {{ memberDetails.first_name }} {{memberDetails.last_name}}</b>&nbsp;
-              </h3>
-              <b-form-group v-else-if="newBar" label="Bar Name" label-for="barName">
-                <b-form-input v-model="barDetails.name" id="barName" placeholder="Enter new bar name" class="mb-2"></b-form-input>
-              </b-form-group>
-              <h3 v-else class="mb-0">
-                <b>{{ barDetails.name === 'Default' ? 'Default Bar' : barDetails.name }}</b>&nbsp;
-                <span v-if="barDetails.name !== 'Default'" class="small">(<b-link @click="editBarName = !editBarName">Edit Bar name</b-link>)</span>
-              </h3>
-              <b-form-group v-if="!activeMemberId && editBarName" label-for="barName">
-                <br/>
-                <b-form-input @input="isChanged = true" v-model="barDetails.name" id="barName" placeholder="Edit bar name" class="mb-2"></b-form-input>
-              </b-form-group>
+              <!-- Bar selection -->
+              <h2>
+                {{barName}}
+
+                <!-- rename bar -->
+                <span v-if="!activeMemberId && barDetails.name !== 'Default'">
+                  <TextInputDialog id="barNameDialog"
+                                   title="Rename Bar"
+                                   prompt="Enter the new name for the bar"
+                                   v-model="barDetails.name"
+                                   @ok="renameBar"
+                                   />
+                  &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
+                </span>
+              </h2>
+
             </div>
+
             <div class="save-button-area">
-              <b-button v-if="isChanged && !newBar" @click="revertBar" variant='warning' class="revertButton" size="sm">Revert to last saved</b-button>
-              <b-button v-if="activeMemberId" @click="addPersonalBar" :variant="isChanged ? 'success' : 'outline-dark'" class="addButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save to member's MorphicBar</b-button>
-              <b-button v-else-if="newBar" @click="addBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Add new bar</b-button>
-              <b-button v-else @click="saveBar" :variant="isChanged ? 'success' : 'outline-dark'" class="updateButton" size="sm"><b-icon-arrow-clockwise></b-icon-arrow-clockwise> Save this to Community Bar</b-button>
+              <b-button v-if="isChanged && !newBar"
+                        @click="revertBar"
+                        variant="warning"
+                        class="revertButton"
+                        size="sm">Revert to last saved</b-button>
+
+              <b-button v-if="activeMemberId"
+                        @click="addPersonalBar"
+                        :variant="isChanged ? 'success' : 'outline-dark'"
+                        class="addButton"
+                        size="sm"><b-icon-arrow-repeat/> Save to member's MorphicBar</b-button>
+              <b-button v-else
+                        @click="saveBar"
+                        :variant="isChanged ? 'success' : 'outline-dark'"
+                        class="updateButton"
+                        size="sm"><b-icon-arrow-repeat/> Save this to Community Bar</b-button>
             </div>
           </div>
+
 
           <!-- Secondary area above desktop image -->
-          <div id="secondary-bar-info">
-            <b-nav id="editorNav" tabs class="small">
-              <b-nav-item :active="tab === 1" @click="tab = 1"><b-icon-person-circle></b-icon-person-circle>
-                <span v-if="activeMemberId">
-                  Member Details
-                </span>
-                <span v-else-if="getMembersCount() === 0">
-                  Unused Bar
-                </span>
-                <span v-else>
-                  Members ({{ getMembersCount() }})
-                </span>
-              </b-nav-item>
-              <b-nav-item disabled :active="tab === 2" @click="tab = 2"><b-icon-gear-fill></b-icon-gear-fill> Bar Settings</b-nav-item>
-              <span v-if="getBarRemoveValidity()">
-                <b-nav-item v-b-modal.barDeleteConfirm id="removeBar">Remove Bar</b-nav-item>
-              </span>
-            </b-nav>
-            <div class="barSelectorArea">
-              <div v-if="activeMemberId">
-                <b-form-select v-model="barSelectedInDropdown">
-                  <b-form-select-option value="customized" v-if="isChanged || barDetails.is_shared == false">Customized</b-form-select-option>
-                  <b-form-select-option v-for="bar in availableBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
-                </b-form-select>
+          <div v-if="true" id="secondary-bar-info" class="border-bottom">
+            <!-- tabs just above the desktop area -->
+            <b-tabs class="editorTabs"
+                    v-model="editorTabIndex"
+                    small
+                    :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
+
+              <!-- hidden tab to simulate no tab being selected -->
+              <b-tab title="" active title-item-class="d-none" class="d-none" />
+
+              <!-- Members tab -->
+              <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
+                <template #title>
+                  <b-icon-person-circle/>&nbsp;
+                  <span v-if="activeMemberId">Member Details</span>
+                  <span v-else-if="memberCount === 0">Unused Bar</span>
+                  <span v-else>Members ({{ memberCount }})</span>
+                </template>
+                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+                <b-card>
+                  <b-card-title>
+                    <span v-if="activeMemberId"><b-icon-person-circle /> {{ memberDetails.first_name }}</span>
+                    <span v-else-if="memberCount === 1"><b-icon-person-circle /> This Morphic Bar is used by 1 member</span>
+                    <span v-else-if="memberCount > 0"><b-icon-people-fill /> This Morphic Bar is used by {{memberCount}} members</span>
+                    <span v-else>This Morphic Bar is NOT used</span>
+                  </b-card-title>
+
+                  <!-- member's own bar -->
+                  <ul v-if="activeMemberId" class="list-unstyled">
+                    <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
+                    <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
+                    <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
+                    <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
+                    <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
+                  </ul>
+
+                  <!-- community bar -->
+                  <ul v-else-if="memberCount > 0" >
+                    <li v-for="member in members" v-bind:key="member.id">
+                      {{ member.first_name }} {{ member.last_name }}
+                    </li>
+                  </ul>
+
+                  <!-- unused community bar -->
+                  <b-card-sub-title v-else>You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</b-card-sub-title>
+                </b-card>
+
+              </b-tab>
+
+              <!-- Bar settings tab -->
+              <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled>
+                <template #title>
+                  <b-icon-gear-fill/> Morphic Bar settings
+                </template>
+                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+                <b-card>
+                  <b-card-title><b-icon-gear-fill/> Morphic Bar settings</b-card-title>
+
+                  <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
+                    Bar on the right of the screen
+                  </b-form-checkbox>
+                  <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
+                    Member cannot close bar
+                  </b-form-checkbox>
+                  <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
+                    Morphic Bar always starts open
+                  </b-form-checkbox>
+                </b-card>
+              </b-tab>
+
+              <!-- Bar settings tab -->
+              <b-tab @click="editorTabIndex = (editorTabIndex === 3 ? 0 : 3)" disabled>
+                <template #title>
+                  <b-icon-display/> Try it
+                </template>
+                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+                <b-card>
+                  <b-card-title><b-icon-display/> Try this bar on your own computer</b-card-title>
+
+                  <b-card-sub-title>
+                    You need to have Morphic installed on your computer to try out bars in your community.
+                  </b-card-sub-title>
+
+                  <p>
+                    <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>
+                  </p>
+                  <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
+                </b-card>
+              </b-tab>
+
+            </b-tabs>
+
+            <!-- Member's bar selection -->
+            <b-input-group v-if="activeMemberId"  size="sm" class="barSelection">
+              <b-form-select v-model="barSelectedInDropdown">
+                <b-form-select-option value="customized" v-if="isChanged || !barDetails.is_shared">Customized</b-form-select-option>
+                <b-form-select-option v-for="bar in sharedBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
+              </b-form-select>
+              <template #append>
                 <b-button class="changeButton" variant="success" :disabled="memberDetails.bar_id == barSelectedInDropdown || barSelectedInDropdown == 'customized'" @click="changeUserBarToCommunityBar">Change</b-button>
+              </template>
+            </b-input-group>
 
-              </div>
+            <div v-if="activeMemberId" class="userInvitationStatusArea">
+              <span :class="`${memberDetails.state}-state dot`" />&nbsp;
+              <span v-if="memberDetails.state === 'active'" class="text">Active</span>
+              <b-button v-else variant="link" @click="getEmailAndSendInvite()">{{ memberDetails.state === 'invited' ? 'Re-invite' : 'Invite' }} member</b-button>
             </div>
-            <div class="userInvitationStatusArea">
-              <span v-if="activeMemberId && memberDetails.state === 'active'">
-                <span class="green dot"></span>
-                <span class="text">active</span>
-              </span>
-              <span v-else-if="activeMemberId && memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()">
-                <span class="red dot"></span>
-                <button class="linkStyling">Invite member</button>
-              </span>
-              <span v-else-if="activeMemberId && memberDetails.state === 'invited'" @click="getEmailAndSendInvite()">
-                <span class="yellow dot"></span>
-                <button class="linkStyling">Re-invite member</button>
-              </span>
-            </div>
+
           </div>
 
-          <div v-if="tab === 1" class="bg-light p-3">
-            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <div v-if="activeMemberId">
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>{{ memberDetails.first_name }}</b></h5>
-              <ul class="list-unstyled small">
-                <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
-                <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
-                <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
-                <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
-                <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
-
-              </ul>
-            </div>
-            <div v-else-if="getMembersCount() === 0">
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is NOT used</b></h5>
-              <p class="mb-0">You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</p>
-            </div>
-            <div v-else>
-              <h5><b-icon-person-circle></b-icon-person-circle> <b>This Morphic Bar is used by {{ getMembersCount() }} members</b></h5>
-              <ul class="small mb-0">
-                <li v-for="member in members" v-bind:key="member.id">
-                  <p>{{ member.first_name }} {{ member.last_name }}</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div v-else-if="tab === 2" class="bg-light p-3">
-            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <h5><b-icon-gear-fill></b-icon-gear-fill> <b>Morphic Bar settings</b></h5>
-            <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
-              Bar on the right of the screen
-            </b-form-checkbox>
-            <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-              Member cannot close bar
-            </b-form-checkbox>
-            <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
-              Morphic Bar always starts open
-            </b-form-checkbox>
-          </div>
-          <div v-else-if="tab === 3" class="bg-light p-3">
-            <button @click="tab = 0" type="button" aria-label="Close" class="close">×</button>
-            <h5><b-icon-fullscreen></b-icon-fullscreen> <b>Try this bar on your own computer</b></h5>
-            <p>
-              You need to have Morphic installed on your computer to try out bars in your community.
-              <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>.
-            </p>
-            <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
-          </div>
-          <div id="preview-holder" class="desktop mt-3">
+          <!-- the desktop -->
+          <div id="preview-holder" class="desktop mt-3" @click="editorTabIndex = 0">
             <drop mode="cut" class="dragToDelete desktop-portion">
               <template v-slot:drag-image="">
                 <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
               </template>
+
+              <!-- Bar item problems -->
               <div class="desktop-alerts" >
                 <b-alert v-for="(error) in barDetails.errors"
                          :key="error.key"
@@ -161,12 +202,14 @@
                   <div @mouseenter="highlight(true, error.item, error.duplicates)"
                        @mouseleave="highlight(false, error.item, error.duplicates)"
                        @click="showEditDialog(error.item)"
-                  >
+                       :title="error.details"
+                        >
 
                     <b-icon-exclamation-triangle-fill v-if="!error.level || error.level === 'error'" variant="danger"/>
                     <b-icon-info-circle-fill v-if="error.level === 'warn'" variant="info"/>
                     &nbsp;
 
+                    <!-- Duplicated labels -->
                     <template v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
                       <BarItemLink :bar-item="error.item"
                                    @click="showEditDialog(error.item)"
@@ -174,6 +217,8 @@
                                    @mouseleave="highlight(true, error.item)"
                       /> is duplicated.
                     </template>
+
+                    <!-- Duplicated actions -->
                     <template v-else-if="error.type === 'duplicate'">
                       <BarItemLink :bar-item="error.item"
                               @click="showEditDialog(error.item)"
@@ -189,6 +234,7 @@
                       />
                     </template>
 
+                    <!-- Generic problem -->
                     <template v-else>
                       <BarItemLink :bar-item="error.item"
                               @click="showEditDialog(error.item)"
@@ -199,6 +245,7 @@
                   </div>
                 </b-alert>
               </div>
+
             </drop>
 
             <!-- Buttons Bar -->
@@ -226,9 +273,9 @@
                 <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
               </div>
               <div class="openDrawerIconHolder">
-                <b-button @click="openDrawer = !openDrawer">
+                <span @click="openDrawer = !openDrawer" class="">
                   <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                </b-button>
+                </span>
               </div>
             </div>
           </div>
@@ -241,39 +288,84 @@
           <template v-slot:drag-image="">
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
-          <div id="buttonsPanel" class="fill-height bg-silver p-3">
-            <!-- <b-input-group id="search-group" size="sm" class="mb-3">
-              <b-form-input type="text" disabled></b-form-input>
-              <b-input-group-append>
-                <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
-              </b-input-group-append>
-            </b-input-group> -->
 
-            <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
-              <template v-for="(buttonGroup, subkind) in buttonCatalog">
-                <li v-if="!buttonGroup.hidden" :key="subkind" class="ButtonsCatalogHeader">
-                  <h3>{{buttonGroup.title}}</h3>
-                  <ul class="ButtonsCatalogEntries">
+          <div id="buttonsPanel"
+               class="fill-height bg-silver" :class="{
+                noResults: searchState === 'noResults',
+                gotResults: searchState === 'gotResults',
+                searchResults: !!searchState
+               }" >
+
+            <!-- search -->
+            <b-input-group id="search-group" class="catalogSearch" size="sm" >
+              <b-form-input type="search" placeholder="Search buttons" v-model="searchText" />
+              <b-input-group-append>
+                <b-button variant="outline-secondary"><b-icon-search /></b-button>
+              </b-input-group-append>
+            </b-input-group>
+
+            <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
+                :key="isSearchResult"
+                class="buttonCatalogListing linkList list-unstyled"
+                :class="{ searchResults: isSearchResult}"
+                style="overflow-y: scroll; max-height: 630px;">
+
+              <li v-if="isSearchResult && searchResult && searchResult.itemsFound.hidden">
+                <small>No buttons where found while searching for '<code>{{searchText}}</code>'</small>
+              </li>
+              <template v-for="(buttonGroup, subkind) in catalog">
+                <li v-if="!buttonGroup.hidden"
+                    :key="subkind"
+                    :ref="`catalogGroup_${subkind}`"
+                    class="catalogGroup"
+                    :class="{
+                        hasSecondary: buttonGroup.hasSecondary,
+                        showSecondary: secondaryItemsShown[subkind],
+                        searchResult: buttonGroup.isSearchResult
+                    }">
+
+                  <h3 v-if="buttonGroup.title">{{buttonGroup.title}}</h3>
+
+                  <ul class="buttonCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
-                      <li v-if="button.is_primary"
-                          :key="buttonId"
-                          :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry"
+                      <li :key="button.data.buttonKey"
+                          class="buttonCatalogEntry"
+                          :class="{
+                              noImage: !button.configuration.image_url && !button.data.isExpander,
+                              secondaryItem: !button.is_primary,
+                              expander: button.data.isExpander,
+                          }"
+                          :style="{order: button.searchResult && button.searchResult.order}"
+                          :title="button.configuration.description"
                           :ref="'catalog_' + buttonId"
                           tabindex="-1"
                           @keypress="onCatalogItemKeyPress($event, button)"
                       >
                         <!-- Render each button as draggable -->
-                        <drag :data="button" type="catalogButtonNoImage">
+                        <drag :data="button" type="catalogButtonWithImage">
                           <!-- Define looks when dragged -->
                           <template v-slot:drag-image>
-                            <PreviewItem :item="button" :noImage="true" class="noImage" />
+                            <PreviewItem :item="button" :noImage="false" xclass="noImage" />
                           </template>
+
                           <!-- Define looks when not selected -->
-                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                            <div class="imageWrapper">
-                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
-                            </div>{{ button.data.catalogLabel || button.configuration.label }}
-                          </b-link>
+                          <b-button v-if="buttonId !== expandedCatalogButtonId"
+                                    variant="link"
+                                    @click="expandCatalogButton(button, buttonId, subkind)"
+                                    :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
+                                    class="buttonCatalogEntry nonExpandedCatalogEntry">
+                            <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
+                              <b-iconstack v-if="button.data.isExpander">
+                                <b-icon stacked icon="circle-fill" />
+                                <b-icon stacked icon="caret-right-fill"
+                                        scale="0.9"
+                                        class="text-white" />
+                              </b-iconstack>
+
+                              <b-img v-else-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
+                            </div>
+                            <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
+                          </b-button>
                           <!-- Define looks when selected (expanded) -->
                           <div v-else class="active" @click="expandedCatalogButtonId = undefined"
                           >
@@ -345,28 +437,47 @@
   }
 
   #secondary-bar-info {
-    display: grid;
-    grid-template-columns: 33% auto 33%;
+    display: flex;
+    align-items: center;
     margin-top: 13px;
 
-    #editorNav {
-      position: relative;
-      .addButton, .updateButton {
-        position: absolute;
-        right: 0;
-        top: 6px;
-      }
+    & > :not(:last-child) {
+      margin-right: 1em;
     }
 
-    .barSelectorArea {
-      select.custom-select {
-        width: inherit;
+    .editorTabs {
+      margin-bottom: -1px;
+      .tab-content {
+        position: absolute;
+        z-index: 10;
+        max-width: 70%;
+        min-width: 25rem;
+        border-radius: 0 3px 3px 3px;
+
+        & > div {
+          margin-top: 0;
+          padding: 0.3rem;
+        }
+
       }
-      button {
-        margin-left: 11px;
+      .hidden-tab {
+        display: none;
       }
+      .card {
+        border: 0;
+        .card-body {
+          padding: 0.5rem;
+        }
+      }
+
     }
+
+    .barSelection {
+      width: unset !important;
+    }
+
     .userInvitationStatusArea {
+      flex-grow: 1;
       text-align: right;
 
       .dot {
@@ -376,9 +487,9 @@
         border-radius: 50%;
         vertical-align: middle;
 
-        &.green { background-color: #3bc03b; }
-        &.yellow { background-color: #f3c702; }
-        &.red { background-color: #f20202; }
+        &.active-state { background-color: #3bc03b; }
+        &.invited-state { background-color: #f3c702; }
+        &.uninvited-state { background-color: #f20202; }
       }
 
       .linkStyling {
@@ -394,6 +505,7 @@
     width: 100%;
     height: 600px;
     display: flex;
+    margin-top: 0 !important;
 
     .desktop-portion {
       display: inline-block;
@@ -430,7 +542,6 @@
     #preview-bar {
       border: 1px solid #002957;
       background: white;
-      border-left: 1px solid #002957;
       // vertical line separating bar from drawer
       background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
@@ -498,82 +609,139 @@
         width: 120px;
         padding: 15px 0 15px 0;
       }
+
+      .openDrawerIconHolder > span {
+        cursor: pointer;
+      }
     }
   }
 
   #buttonsPanel {
 
-    .ButtonsCatalogHeader {
+    padding: 0.5rem;
+
+    .catalogSearch {
+    }
+
+    img:before {
+      content: " ";
+    }
+
+    // Hide the listing if search is used
+    &.searchResults {
+      .buttonCatalogListing:not(.searchResults) {
+        display: none;
+      }
+    }
+    &:not(.searchResults) {
+      .buttonCatalogListing.searchResults {
+        display: none;
+      }
+    }
+
+    .buttonCatalogListing {
+      padding: 0.5rem;
+
       h3 {
         font-size: 1.30rem;
         margin-bottom: 6px;
-        margin-top: 15px;
+        margin-top: 0;
         font-weight: bold;
       }
-    }
-img:before {
-  content:  " ";
-}
-    .ButtonsCatalogEntries {
-      padding-left: 30px;
-      list-style: none;
 
-      .buttonsCatalogEntry {
+      .catalogGroup {
+        margin-bottom: 1em;
 
-        position: relative;
-
-        .imageWrapper {
-          // Position the icon to the left, and remove it from the flow.
-          display: inline-block;
-          position: relative;
-          left: -23px;
-          width: 0;
-          overflow: visible;
-
-          img {
-            transition: all 0.2s ease-in-out;
-          }
-        }
-
-        a:hover {
-          .imageWrapper img {
-            transform: scale(1.5);
-          }
-        }
-
-        &.noImage {
-          img {
+        // Hide secondary items.
+        &:not(.showSecondary, .searchResult) {
+          .secondaryItem {
             display: none;
           }
         }
 
-        .active {
-          background-color: #e0f1d7;
-          border: solid 1px #008145;
-          border-radius: 5px;
-          padding: 10px;
-
-          .buttons {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
+        &.showSecondary {
+          .expanderIcon > * {
+            transform: rotate(90deg) !important;
           }
+        }
 
-          h3 {
-            margin-top: 15px;
-            font-size: 20px;
-            margin-bottom: 0px;
+        .buttonCatalogEntries {
+          display: flex;
+          flex-direction: column;
+          padding-left: 30px;
+          list-style: none;
+
+          .buttonCatalogEntry {
+            position: relative;
+
+            // show the primary items first
+            &:not(.secondaryItem) {
+              order: 0;
+            }
+            &.expander {
+              order: 1;
+            }
+            &.secondaryItem {
+              order: 2;
+            }
+
+            .imageWrapper {
+              // Position the icon to the left, and remove it from the flow.
+              display: inline-block;
+              position: relative;
+              left: -23px;
+              width: 0;
+              overflow: visible;
+
+              & > * {
+                transition: all 0.2s ease-in-out;
+              }
+            }
+
+        .buttonsCatalogLink {
+          text-align: left;
+          &:hover {
+            .imageWrapper > * {
+              transform: scale(1.5);
+            }
           }
+        }
 
-          div.description {
-            font-size: 14px;
-          }
+            &.noImage {
+              img {
+                display: none;
+              }
+            }
 
-          div.help {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 15px;
-            line-height: 18px;
+            .active {
+              background-color: #e0f1d7;
+              border: solid 1px #008145;
+              border-radius: 5px;
+              padding: 10px;
+
+              .buttons {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+              }
+
+              h3 {
+                margin-top: 15px;
+                font-size: 20px;
+                margin-bottom: 0px;
+              }
+
+              div.description {
+                font-size: 14px;
+              }
+
+              div.help {
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 15px;
+                line-height: 18px;
+              }
+            }
           }
         }
       }
@@ -668,14 +836,14 @@ img:before {
       display: inline-block;
     }
 
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       width: 100%;
       display: block;
     }
   }
 
   #preview-bar, #preview-drawer {
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       .active {
         background-color: transparent;
         border: 0;
@@ -717,16 +885,19 @@ import {
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
-import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
+import { buttonCatalog, colors, MESSAGES, allButtons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
+import * as search from "@/utils/search";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
+import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        TextInputDialog,
         BarItemLink,
         EditButtonDialog,
         CommunityManager,
@@ -1044,17 +1215,32 @@ export default {
                 this.dropToBar({data: button});
             }
         },
-        expandCatalogButton: function (button, buttonId, e) {
-            this.expandedCatalogButtonId = buttonId;
-            this.expandedCatalogButton = button;
-            this.$refs["catalog_" + buttonId][0].focus();
-
+        expandCatalogButton: function (button, buttonId, subkind) {
+            if (!button) {
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else if (button.data.isExpander) {
+                this.showSecondaryItems(subkind);
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else {
+                this.expandedCatalogButtonId = buttonId;
+                this.expandedCatalogButton = button;
+                this.$refs["catalog_" + buttonId][0].focus();
+            }
         },
-        buttonToRemove: function (item) {
-            // remove from items list
-            // bar and drawer lists are automatically updated from watcher
-            this.barDetails.items = this.barDetails.items.filter(x => x.id !== item.id);
-            this.setBarChanged();
+
+        /**
+         * Toggles the catalog items under the "Other" - causes the secondary items to show/hide.
+         * @param {String} subkind The catalog group id.
+         * @param {Boolean} [show] true/false to show/hide, omit to toggle.
+         */
+        showSecondaryItems: function (subkind, show) {
+            if (show === undefined) {
+                this.secondaryItemsShown[subkind] = !this.secondaryItemsShown[subkind];
+            } else {
+                this.secondaryItemsShown[subkind] = show;
+            }
         },
 
         /**
@@ -1073,12 +1259,6 @@ export default {
                 });
             }
         },
-        getMembersCount: function () {
-            if (this.members && this.members.length > 0) {
-                return this.members.length;
-            }
-            return 0;
-        },
         loadBarMembers: function () {
             getCommunityBars(this.communityId)
                 .then(resp => {
@@ -1088,6 +1268,7 @@ export default {
                             this.barsList = barsData;
                             this.membersList = resp.data.members;
                             this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id }); });
+                            this.members = [];
 
                             if (resp.data.members.length > 0) {
                                 for (let i = 0; i < resp.data.members.length; i++) {
@@ -1096,6 +1277,8 @@ export default {
                                     }
                                 }
                             }
+
+                            this.memberCount = this.members.length;
                         })
                         .catch(err => {
                             console.error(err);
@@ -1106,7 +1289,7 @@ export default {
                 });
         },
         getBarRemoveValidity: function () {
-            if (this.barDetails.name !== "Default" && this.getMembersCount() === 0) {
+            if (this.barDetails.name !== "Default" && this.memberCount === 0) {
                 return true;
             }
             return false;
@@ -1129,10 +1312,52 @@ export default {
                     console.error(err);
                 });
         },
-        updateAvailableBars() {
-            this.availableBars = this.barsList.filter((bar) => {
-                return bar.is_shared;
+        /**
+         * Update the filtered arrays of bars.
+         */
+        updateBarLists() {
+            this.sharedBars = [];
+            this.userBars = [];
+            this.barsList.forEach(bar => {
+                const list = bar.is_shared
+                    ? this.sharedBars
+                    : this.userBars;
+                list.push(bar);
             });
+        },
+        /**
+         * OK button on the bar name dialog clicked.
+         * @param {TextInputOKEvent} event The event object.
+         */
+        renameBar: function (event) {
+            // only saving the name - so, get the currently stored bar and change that.
+            event.promise = getCommunityBar(this.communityId, this.barDetails.id).then(resp => {
+                /** @type {BarDetails} */
+                const bar = resp.data;
+                bar.name = event.newValue;
+                return updateCommunityBar(this.communityId, this.barDetails.id, bar).then(() => {
+                    // Update the item in the full list, to reload it in the community manager component.
+                    const listed = this.barsList.find(b => b.id === this.barDetails.id);
+                    if (listed) {
+                        listed.name = bar.name;
+                    }
+                    return true;
+                });
+            });
+        },
+        /**
+         * Gets the edit route for a bar.
+         * @param {BarDetails} bar The bar.
+         * @return {Object} The route.
+         */
+        getBarEditRoute: function (bar) {
+            let route;
+            if (!bar.is_shared) {
+                var member = this.membersList.find(m => m.bar_id === bar.id);
+                route = member && Bar.getUserBarEditRoute(member, this.community.default_bar_id);
+            }
+
+            return route || Bar.getBarEditRoute(bar);
         },
         highlight(value, buttons) {
             for (let a = 1; a < arguments.length; a++) {
@@ -1143,25 +1368,105 @@ export default {
                     }
                 });
             }
+        },
+        /**
+         * Returns the label for an item in the catalog.
+         * @param {BarItem} button The button
+         * @param {Array<String>} [searchWords] The words from the search, to highlight.
+         * @return {String} Label for the item, as raw HTML.
+         */
+        getCatalogItemLabel: function (button, searchWords) {
+            const label = button.data.catalogLabel || button.configuration.label;
+            // escape any html
+            const escaped = new Option(label).innerHTML;
+
+            let html;
+            if (searchWords && searchWords.length > 0) {
+                const highlight = new RegExp(searchWords.join("|"), "gi");
+                html = escaped.replace(highlight, "<b>$&</b>");
+            } else {
+                html = escaped;
+            }
+
+            return html;
+        },
+        searchCatalog() {
+            if (this.searchText.length > 0) {
+                const queryWords = this.searchText.toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/g);
+                // Only the top 20 - they are slow to render.
+                const results = search.catalogSearch(queryWords)
+                    .sort((a, b) => a.order - b.order)
+                    .slice(0, 20);
+
+                /** @type {ButtonCatalogItem} */
+                const groups = {
+                    itemsFound: {
+                        isSearchResult: true,
+                        searchWords: queryWords,
+                        hasSecondary: false,
+                        items: {},
+                        hidden: results.length === 0
+                    }
+                };
+
+                // Make a catalog group for the results.
+                results.forEach(result => {
+                    /** @type {BarItem} */
+                    if (result.buttonKey) {
+                        const item = JSON.parse(JSON.stringify(allButtons[result.buttonKey]));
+                        item.searchResult = result;
+
+                        groups.itemsFound.items[result.buttonKey] = item;
+                    } else if (result.groupKey) {
+                        groups[result.groupKey] = JSON.parse(JSON.stringify(buttonCatalog[result.groupKey]));
+                    }
+                });
+
+                this.searchResult = groups;
+                this.searchState = results.length > 0 ? "gotResults" : "noResults";
+            } else {
+                this.searchState = null;
+                this.searchResult = null;
+            }
         }
     },
     computed: {
         activeMemberId: function () { return this.$route.query.memberId; },
-        editDialog: function () { return this.$refs.editDialog; }
+        editDialog: function () { return this.$refs.editDialog; },
+        /**
+         * @return {String} The bar title.
+         */
+        barName: function () {
+            var name;
+            if (this.barDetails.name === "Default") {
+                name = "Default Bar";
+            } else if (this.barDetails.is_shared) {
+                name = this.barDetails.name;
+            } else {
+                name = `Bar for ${this.barDetails.name}`;
+            }
+            return name;
+        }
+
     },
     mounted() {
         this.loadAllData();
     },
     watch: {
+        "barDetails.is_shared": function (newValue, oldValue) {
+            this.barSelectedInDropdown = newValue ? this.memberDetails.bar_id : "customized";
+        },
         "barDetails.items": function (newValue, oldValue) {
             this.distributeItems(newValue);
         },
         "memberDetails.id": function (newValue, oldValue) {
-            this.updateAvailableBars();
-            this.barSelectedInDropdown = this.memberDetails.bar_id;
+            this.updateBarLists();
+            if (this.barDetails.is_shared) {
+                this.barSelectedInDropdown = this.memberDetails.bar_id;
+            }
         },
         barsList: function (newValue) {
-            this.updateAvailableBars();
+            this.updateBarLists();
         },
         makeAButtons: function (newValue, oldValue) {
             if (!this.dragMakeAButton) {
@@ -1204,6 +1509,10 @@ export default {
                 Bar.checkBar(this.barDetails);
             },
             deep: true
+        },
+        searchText: function () {
+            this.expandCatalogButton(null);
+            this.searchCatalog();
         }
     },
     beforeRouteUpdate(to, from, next) {
@@ -1238,7 +1547,6 @@ export default {
         return {
             // messages
             leavePageMessage: MESSAGES.leavePageAlert,
-            availableBars: [],
             barSelectedInDropdown: "",
             // flags
             addToBar: false,
@@ -1247,6 +1555,7 @@ export default {
             openDrawer: true,
             editDialogShown: false,
             tab: 0,
+            editorTabIndex: 0,
             dragFromEditor: false,
             isChanged: false,
             editBarName: false,
@@ -1255,7 +1564,21 @@ export default {
             initialChangesDrawerItems: false,
             // data for the community manager
             community: {},
+            /**
+             * All bars
+             * @type {Array<BarDetails>} */
             barsList: [],
+            /**
+             * Community bars
+             * @type {Array<BarDetails>}
+             */
+            sharedBars: [],
+            /**
+             * User specific bars.
+             * @type {Array<BarDetails>}
+             */
+            userBars: [],
+            /** @type {Array<CommunityMember>} */
             membersList: [],
 
             /** @type {ButtonCatalog} Button catalog. */
@@ -1282,6 +1605,8 @@ export default {
             /** @type {BarDetails} */
             barDetails: {},
             originalBarDetails: {},
+
+            memberCount: 0,
             members: [],
             memberDetails: {},
             // drawerItems: [],
@@ -1314,7 +1639,28 @@ export default {
             },
             predefinedBars: predefinedBars,
             colors: colors,
-            checkBarTimer: null
+            checkBarTimer: null,
+
+            /**
+             * The display of secondary items in each catalog group.
+             * @type {Object<String,Boolean>}
+             */
+            secondaryItemsShown: Object.keys(buttonCatalog).reduce((map, key) => {
+                map[key] = false;
+                return map;
+            }, {}),
+
+            /**
+             * Catalog search text
+             * @type {String}
+             */
+            searchText: "",
+            /** null, "gotResults" or "noResults" */
+            searchState: null,
+            showSearchResults: false,
+
+            /** @type {ButtonCatalog} */
+            searchResult: false
         };
     }
 };

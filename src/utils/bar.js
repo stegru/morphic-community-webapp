@@ -76,6 +76,15 @@ export function addItem(bar, sourceItem, index) {
 }
 
 /**
+ * Removes an item from its bar.
+ * @param {BarItem} barItem The bar item to remove.
+ * @param {BarDetails} [bar] The bar.
+ */
+export function removeItem(barItem, bar = getItemBar(barItem)) {
+    bar.items = bar.items.filter(x => x.id !== barItem.id);
+}
+
+/**
  * Checks a bar for problems.
  * @param {BarDetails} bar The bar.
  * @return {Boolean} true if the bar has no problems.
@@ -86,23 +95,15 @@ export function checkBar(bar) {
         return;
     }
 
+    /** @type {BarError[]} */
     const errors = [];
 
     // Check for duplicate items.
     errors.push.apply(errors, checkDuplicates(bar));
 
     bar.items.forEach((item) => {
-        // Validation
-        const errorMessage = params.getValidationError(item);
-        if (errorMessage) {
-            errors.push({
-                item: item,
-                type: "validation",
-                message: errorMessage
-            });
-        }
+        errors.push.apply(errors, getItemErrors(item));
     });
-
 
     errors.forEach(err => {
         err.key = `${err.item.id}-${err.type}-${err.message}`;
@@ -110,6 +111,44 @@ export function checkBar(bar) {
 
     bar.errors = errors;
     return errors.length === 0;
+}
+
+/**
+ * Gets the errors of a bar item.
+ * @param {BarItem} item The item.
+ * @return {BarError[]} The errors.
+ */
+export function getItemErrors(item) {
+    /** @type {BarError[]} */
+    const errors = [];
+
+    // Validation
+    const errorMessage = params.getValidationError(item);
+    if (errorMessage) {
+        errors.push({
+            item: item,
+            type: "validation",
+            message: errorMessage
+        });
+    }
+
+    // Problems
+    /** @type {ItemProblem[]} */
+    const problems = item.data.problems && Object.values(item.data.problems);
+    if (problems) {
+        problems.forEach(problem => {
+            if (problem.isProblem) {
+                errors.push({
+                    item: item,
+                    type: problem.checkKey,
+                    message: problem.alert || problem.message,
+                    details: problem.alert && problem.message
+                });
+            }
+        });
+    }
+
+    return errors;
 }
 
 /**
@@ -176,3 +215,35 @@ function itemSimilar(a, b) {
 
     return similar;
 };
+
+/**
+ * Gets the route to edit a community bar.
+ * @param {BarDetails} bar The bar.
+ * @param {Boolean} [focused] If true, link to the focused editor.
+ * @return {Object} A location descriptor object to the bar editor.
+ */
+export function getBarEditRoute(bar, focused) {
+    return {
+        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        query: {
+            barId: bar.id
+        }
+    };
+}
+
+/**
+ * Gets the route to edit a user's bar.
+ * @param {CommunityMember} member The member who the bar belongs to, if editing a user-specific bar.
+ * @param {GUID} defaultBarId The default community bar if the member does not have their own bar.
+ * @param {Boolean} [focused] If true, link to the focused editor.
+ * @return {Object} A location descriptor object to the bar editor.
+ */
+export function getUserBarEditRoute(member, defaultBarId, focused) {
+    return {
+        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        query: {
+            barId: member.bar_id || defaultBarId,
+            memberId: member.id
+        }
+    };
+}

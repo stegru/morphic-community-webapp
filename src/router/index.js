@@ -6,6 +6,12 @@ import store from "@/store";
 import Home from "@/views/Home.vue";
 import Terms from "@/views/Terms.vue";
 
+import MyCommunity from "@/views/MyCommunity.vue";
+import MyCommunities from "@/views/MyCommunities.vue";
+
+import Plans from "@/views/billing/Plans.vue";
+import BillingDetails from "@/views/billing/BillingDetails.vue";
+
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
 import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
@@ -61,15 +67,42 @@ const routes = [
     //     locked: true
     //   }
     // },
-    // {
-    //   path: '/my-community',
-    //   name: 'My Community',
-    //   component: MyCommunity,
-    //   meta: {
-    //     title: 'My Community :: Morphic Community',
-    //     authRoute: true
-    //   }
-    // },
+    {
+        path: "/my-community",
+        name: "MyCommunity",
+        component: MyCommunity,
+        meta: {
+            title: "My Community :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/my-communities",
+        name: "MyCommunities",
+        component: MyCommunities,
+        meta: {
+            title: "My Communities :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/billing/plans",
+        name: "Plans",
+        component: Plans,
+        meta: {
+            title: "Plans :: Morphic Community",
+            authRoute: true
+        }
+    },
+    {
+        path: "/billing/details",
+        name: "BillingDetails",
+        component: BillingDetails,
+        meta: {
+            title: "Billing :: Morphic Community",
+            authRoute: true
+        }
+    },
     // {
     //   path: '/reset-password',
     //   name: 'Reset Password',

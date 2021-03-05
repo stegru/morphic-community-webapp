@@ -113,7 +113,6 @@ export default {
         };
     },
     computed: {
-        userId: function () { return this.$store.getters.userId; },
         membersNotInvited: function () {
             const list = [];
             for (let i = 0; i < this.members.length; i++) {

@@ -7,6 +7,7 @@
                :to="editLink"
   />
   <b-button v-else
+          variant="link"
           class="barItemLink"
           :style="{ color: barItem.configuration.color }"
           @click="$emit('click', {data: item})"
@@ -21,7 +22,7 @@
 </template>
 
 <style lang="scss">
-a.barItemLink {
+a.barItemLink, button.barItemLink {
   font-weight: bold;
 }
 
